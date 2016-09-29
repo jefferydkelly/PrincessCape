@@ -14,6 +14,7 @@ public class Controller
 
 	//The action keys
 	private string attackKey;
+	private string spellKey;
 	private string interactKey;
 	private string nextItemKey;
 	private string prevItemKey;
@@ -24,12 +25,25 @@ public class Controller
 	public Controller()
 	{
 		controllerType = (Input.GetJoystickNames().Length > 0) ? ControllerType.Gamepad : ControllerType.Keyboard;
+		LoadController();
 	}
 
 	void LoadController()
 	{
 		if (IsKeyboard)
 		{
+			leftKey = "left";
+			rightKey = "right";
+			upKey = "up";
+			downKey = "down";
+			jumpKey = "space";
+			interactKey = "f";
+			attackKey = "c";
+			spellKey = "x";
+			useItemKey = "z";
+
+		}
+		else {
 		}
 	}
 	public virtual int Horizontal
@@ -40,7 +54,6 @@ public class Controller
 			{
 				return (Input.GetKey(rightKey) ? 1 : 0) - (Input.GetKey(leftKey) ? 1 : 0);
 			}
-
 			return (int)Mathf.Sign(Input.GetAxis(leftKey));
 
 		}
@@ -65,6 +78,14 @@ public class Controller
 		get
 		{
 			return Input.GetKeyDown(attackKey);
+		}
+	}
+
+	public bool UseSpell
+	{
+		get
+		{
+			return Input.GetKeyDown(spellKey);
 		}
 	}
 
@@ -211,6 +232,8 @@ public class Controller
 			return (controllerType & ControllerType.Keyboard) > 0;
 		}
 	}
+
+	/*
 	public ControllerSetup Setup
 	{
 		get
@@ -248,9 +271,10 @@ public class Controller
 			prevSpellKey = value.prevSpellKey;
 
 		}
-	}
+	}*/
 }
 
+/*
 [System.Serializable]
 public class ControllerSetup
 {
@@ -268,7 +292,7 @@ public class ControllerSetup
 	public string prevItemKey;
 	public string nextSpellKey;
 	public string prevSpellKey;
-}
+}*/
 
 [System.Flags]
 public enum ControllerType
