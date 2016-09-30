@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
 
 	public float maxSpeed = 1;
 	public float jumpImpulse = 10;
-
+	private float lastYVel = 0;
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -64,11 +64,29 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	void FixedUpdate()
+	{
+		lastYVel = myRigidBody.velocity.y;
+	}
+
 	bool IsOnGround
 	{
 		get
 		{
 			return Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		if (col.collider.CompareTag("Platform"))
+		{
+			
+			if (lastYVel < -10)
+			{
+				Debug.Log(lastYVel);
+				Debug.Log("I should be taking damage");
+			}
 		}
 	}
 
