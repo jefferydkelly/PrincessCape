@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
 	private SpriteRenderer myRenderer;
 
 	public float maxSpeed = 1;
+	public float jumpImpulse = 10;
 
 	// Use this for initialization
 	void Start () {
@@ -30,9 +31,35 @@ public class Player : MonoBehaviour {
 				myRigidBody.velocity = vel;
 			}
 
-			if (IsOnGround && controller.Jump)
+			if (IsOnGround)
 			{
-				myRigidBody.AddForce(new Vector2(0, 300));
+				if (controller.Jump)
+				{
+					foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
+					{
+						PlatformObject po = hit.collider.GetComponent<PlatformObject>();
+						if (po.passThrough)
+						{
+							po.AllowPassThrough();
+						}
+					}
+					myRigidBody.AddForce(new Vector2(0, jumpImpulse), ForceMode2D.Impulse);
+				
+				}
+				else if (controller.Vertical == -1 && controller.Interact)
+				{
+					RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
+
+					PlatformObject po = hit.collider.GetComponent<PlatformObject>();
+
+					if (po)
+					{
+						if (po.passThrough)
+						{
+							po.AllowPassThrough();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -42,6 +69,21 @@ public class Player : MonoBehaviour {
 		get
 		{
 			return Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
+		}
+	}
+
+	float JumpHeight
+	{
+		get
+		{
+			return Mathf.Pow(jumpImpulse, 2) / (Physics.gravity.y * myRigidBody.gravityScale * -2);
+		}
+	}
+	bool CanPassThrough
+	{
+		get
+		{
+			return false;
 		}
 	}
 

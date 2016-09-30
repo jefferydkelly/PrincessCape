@@ -66,6 +66,18 @@ public static class ExtensionMethods{
 		return go.transform.localScale.y / 2;
 	}
 
+	public static bool IsAbove(this GameObject g, GameObject go)
+	{
+		Vector3 dif = (go.transform.position - g.transform.position).normalized;
+		float dot = Vector3.Dot(Vector3.down, dif);
+		return dot > 0;
+	}
+
+	public static bool IsBelow(this GameObject g, GameObject go)
+	{
+		return go.IsAbove(g);
+	}
+
 	public static void Remove<T>(this List<T> li, List<T> list)
 	{
 		if (li.GetType() == list.GetType())
