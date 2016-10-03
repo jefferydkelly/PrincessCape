@@ -26,7 +26,6 @@ public class VisionCone : MonoBehaviour {
 
 		set
 		{
-			Debug.Log(value);
 			transform.localRotation = Quaternion.AngleAxis(value, Vector3.forward);
 		}
 	}

@@ -26,5 +26,6 @@ public enum DamageType
 	Wind = 4,
 	Water = 8,
 	Light = 16,
-	Dark = 32
+	Dark = 32,
+	Physical = 64
 }

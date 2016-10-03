@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, DamageableObject {
 
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
@@ -10,11 +10,19 @@ public class Player : MonoBehaviour {
 	public float maxSpeed = 1;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
+
+	private int curHP = 0;
+	public int maxHP = 100;
+
+	private int curMP = 0;
+	public int maxMP = 100;
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
+		curHP = maxHP;
+		curMP = maxMP;
 	}
 	
 	// Update is called once per frame
@@ -79,8 +87,7 @@ public class Player : MonoBehaviour {
 			
 			if (lastYVel < -10)
 			{
-				Debug.Log(lastYVel);
-				Debug.Log("I should be taking damage");
+				TakeDamage(new DamageSource(DamageType.Physical, 10));
 			}
 		}
 	}
@@ -92,14 +99,12 @@ public class Player : MonoBehaviour {
 			return Mathf.Pow(jumpImpulse, 2) / (Physics.gravity.y * myRigidBody.gravityScale * -2);
 		}
 	}
-	bool CanPassThrough
-	{
-		get
-		{
-			return false;
-		}
-	}
 
+	public bool TakeDamage(DamageSource ds)
+	{
+		curHP -= ds.damage;
+		return curHP <= 0;
+	}
 	public float HalfWidth
 	{
 		get
@@ -113,6 +118,22 @@ public class Player : MonoBehaviour {
 		get
 		{
 			return myRenderer.bounds.extents.y;
+		}
+	}
+
+	public float HPPercent
+	{
+		get
+		{
+			return (float)curHP / (float)maxHP;
+		}
+	}
+
+	public float MPPercent
+	{
+		get
+		{
+			return (float)curMP / (float)maxMP;
 		}
 	}
 }
