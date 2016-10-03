@@ -21,15 +21,10 @@ public class Player : MonoBehaviour {
 	void Update () {
 		if (!GameManager.Instance.IsPaused)
 		{
-			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 5;
+			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
-			if (Mathf.Abs(myRigidBody.velocity.x) > maxSpeed)
-			{
-				Vector2 vel = myRigidBody.velocity;
-				vel.x = Mathf.Sign(vel.x) * maxSpeed;
-				myRigidBody.velocity = vel;
-			}
+			myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
 			if (IsOnGround)
 			{
