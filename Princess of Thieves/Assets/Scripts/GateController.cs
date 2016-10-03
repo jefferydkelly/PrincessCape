@@ -11,7 +11,7 @@ public class GateController : MonoBehaviour, ActivateableObject {
 	void Start () {
 		
 		startPosition = transform.position;
-		endPosition = startPosition - new Vector3(0, GetComponent<SpriteRenderer>().bounds.extents.y * 2);
+		endPosition = startPosition + new Vector3(0, GetComponent<SpriteRenderer>().bounds.extents.y * 2);
 	}
 
 	public void Activate()

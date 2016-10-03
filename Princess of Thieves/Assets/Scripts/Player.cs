@@ -7,6 +7,7 @@ public class Player : MonoBehaviour, DamageableObject {
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
 
+	private int fwdX = 1;
 	public float maxSpeed = 1;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
@@ -16,6 +17,8 @@ public class Player : MonoBehaviour, DamageableObject {
 
 	private int curMP = 0;
 	public int maxMP = 100;
+
+	private Spell curSpell = new FireSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -64,6 +67,18 @@ public class Player : MonoBehaviour, DamageableObject {
 					}
 				}
 			}
+
+			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+			{
+				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+			}
+			if (controller.UseSpell)
+			{
+				SpellProjectile sp = curSpell.Cast();
+				sp.transform.position = transform.position;
+				sp.fwd = Forward;
+				sp.allegiance = Allegiance.Player;
+			}
 		}
 	}
 
@@ -102,8 +117,19 @@ public class Player : MonoBehaviour, DamageableObject {
 
 	public bool TakeDamage(DamageSource ds)
 	{
-		curHP -= ds.damage;
+		if (ds.allegiance != Allegiance.Player)
+		{
+			curHP -= ds.damage;
+		}
 		return curHP <= 0;
+	}
+
+	public Allegiance Allegiance
+	{
+		get
+		{
+			return Allegiance.Player;
+		}
 	}
 	public float HalfWidth
 	{
@@ -134,6 +160,14 @@ public class Player : MonoBehaviour, DamageableObject {
 		get
 		{
 			return (float)curMP / (float)maxMP;
+		}
+	}
+
+	public Vector3 Forward
+	{
+		get
+		{
+			return new Vector3(fwdX, 0, 0);
 		}
 	}
 }

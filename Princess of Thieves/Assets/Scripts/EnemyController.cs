@@ -8,24 +8,35 @@ public class EnemyController : MonoBehaviour, DamageableObject {
 	protected EnemyState state = EnemyState.Patrol;
 
 	[EnumFlag]
-	public DamageType resistances = DamageType.None;
+	public DamageType resistances = DamageType.Physical;
 	[EnumFlag]
-	public DamageType weaknesses = DamageType.None;
+	public DamageType weaknesses = DamageType.Physical;
 
 	public bool TakeDamage(DamageSource ds)
 	{
-		int totalDmg = ds.damage;
+		if (ds.allegiance != Allegiance.Enemy)
+		{
+			int totalDmg = ds.damage;
 
-		if (Resists(ds.type))
-		{
-			totalDmg /= 2;
+			if (Resists(ds.type))
+			{
+				totalDmg /= 2;
+			}
+			else if (IsWeakAgainst(ds.type))
+			{
+				totalDmg *= 2;
+			}
+			curHP -= totalDmg;
 		}
-		else if (IsWeakAgainst(ds.type))
-		{
-			totalDmg *= 2;
-		}
-		curHP -= totalDmg;
 		return curHP <= 0;
+	}
+
+	public Allegiance Allegiance
+	{
+		get
+		{
+			return Allegiance.Enemy;
+		}
 	}
 
 	protected bool Resists(DamageType dt)
