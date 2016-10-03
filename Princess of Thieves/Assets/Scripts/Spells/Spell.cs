@@ -2,10 +2,10 @@
 using System.Collections;
 
 public abstract class Spell {
-	private string spellName = "Generic Spell";
-	private int cost = 50;
+	protected string spellName = "Generic Spell";
+	protected int cost = 50;
 
-	public abstract SpellProjectile Cast();
+	public abstract SpellProjectile Cast(CasterObject c);
 
 	public string SpellName
 	{

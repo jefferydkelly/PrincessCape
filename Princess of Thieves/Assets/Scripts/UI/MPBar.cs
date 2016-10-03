@@ -10,7 +10,6 @@ public class MPBar : MonoBehaviour {
 
 	void OnGUI()
 	{
-		Debug.Log(GameManager.Instance.Player.MPPercent);
 		GUI.BeginGroup(new Rect(pos, size));
 		GUI.Box(new Rect(pos, size), backgroundTexture);
 		GUI.BeginGroup(new Rect(0, 0, size.x * GameManager.Instance.Player.MPPercent, size.y));

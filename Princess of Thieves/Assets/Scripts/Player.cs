@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour, DamageableObject {
+public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
@@ -18,7 +18,7 @@ public class Player : MonoBehaviour, DamageableObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new FireSpell();
+	private Spell curSpell = new WindSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -72,12 +72,15 @@ public class Player : MonoBehaviour, DamageableObject {
 			{
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
 			}
-			if (controller.UseSpell)
+			if (controller.UseSpell && curMP >= curSpell.Cost)
 			{
-				SpellProjectile sp = curSpell.Cast();
-				sp.transform.position = transform.position;
-				sp.fwd = Forward;
+				SpellProjectile sp = curSpell.Cast(this);
+				Vector3 fwd = new Vector3(controller.Horizontal * (HalfWidth + sp.gameObject.HalfWidth()), controller.Vertical * (HalfHeight + sp.gameObject.HalfHeight()));
+				sp.transform.position = transform.position + fwd;
+				Debug.Log(fwd.normalized);
+				sp.fwd = fwd.normalized;
 				sp.allegiance = Allegiance.Player;
+				curMP -= curSpell.Cost;
 			}
 		}
 	}
@@ -155,6 +158,13 @@ public class Player : MonoBehaviour, DamageableObject {
 		}
 	}
 
+	public int MP
+	{
+		get
+		{
+			return curMP;
+		}
+	}
 	public float MPPercent
 	{
 		get
@@ -168,6 +178,14 @@ public class Player : MonoBehaviour, DamageableObject {
 		get
 		{
 			return new Vector3(fwdX, 0, 0);
+		}
+	}
+
+	public Rigidbody2D RigidBody
+	{
+		get
+		{
+			return myRigidBody;
 		}
 	}
 }
