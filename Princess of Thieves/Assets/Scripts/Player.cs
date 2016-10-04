@@ -18,7 +18,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new EarthSpell();
+	private Spell curSpell = new WaterSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
