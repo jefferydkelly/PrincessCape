@@ -45,6 +45,15 @@ public class GuardController : EnemyController, AlertableObject {
 		}
 	}
 
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		if (!col.collider.CompareTag("Player") && !col.collider.CompareTag("Platform"))
+		{
+			Debug.Log(col.collider.name);
+			FWD *= -1;
+		}
+	}
+
 	public void Alert()
 	{
 		Debug.Log("I've been alerted to the player");
