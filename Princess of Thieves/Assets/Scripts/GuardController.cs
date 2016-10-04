@@ -55,6 +55,6 @@ public class GuardController : EnemyController, AlertableObject {
 
 	public void Alert()
 	{
-		Debug.Log("I've been alerted to the player");
+		
 	}
 }
