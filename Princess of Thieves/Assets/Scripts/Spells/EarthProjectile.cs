@@ -55,6 +55,13 @@ public class EarthProjectile : SpellProjectile {
 			{
 				rb.AddForce(Vector2.up * pushForce, ForceMode2D.Impulse);
 			}
+
+			DamageableObject dObj = col.gameObject.GetComponent<DamageableObject>();
+
+			if (dObj != null)
+			{
+				dObj.TakeDamage(new DamageSource(DamageType.Earth, damage, allegiance));
+			}
 		}
 	}
 }
