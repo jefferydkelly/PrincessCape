@@ -49,7 +49,6 @@ public class GuardController : EnemyController, AlertableObject {
 	{
 		if (!col.collider.CompareTag("Player") && !col.collider.CompareTag("Platform"))
 		{
-			Debug.Log(col.collider.name);
 			FWD *= -1;
 		}
 	}
