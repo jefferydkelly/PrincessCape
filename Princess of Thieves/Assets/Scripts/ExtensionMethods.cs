@@ -103,4 +103,35 @@ public static class ExtensionMethods{
 	{
 		return new Vector2(t.width, t.height) / 2;
 	}
+
+	public static void ClampVelocity(this Rigidbody2D rb, float maxSpeed, VelocityType vt = VelocityType.Full)
+	{
+		if (vt == VelocityType.Full)
+		{
+			if (rb.velocity.sqrMagnitude > maxSpeed * maxSpeed)
+			{
+				rb.velocity = rb.velocity.normalized * maxSpeed;
+			}
+		}
+		else if (vt == VelocityType.X)
+		{
+
+			if (Mathf.Abs(rb.velocity.x) > maxSpeed)
+			{
+				rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
+			}
+		}
+		else if (vt == VelocityType.Y)
+		{
+			if (Mathf.Abs(rb.velocity.y) > maxSpeed)
+			{
+				rb.velocity = new Vector2(rb.velocity.x, Mathf.Sign(rb.velocity.y) * maxSpeed);
+			}
+		}
+	}
+}
+
+public enum VelocityType
+{
+	X, Y, Full
 }

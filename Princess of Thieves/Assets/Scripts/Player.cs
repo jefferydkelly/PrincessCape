@@ -1,35 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
 
+	private int fwdX = 1;
 	public float maxSpeed = 1;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
+
+	private int curHP = 0;
+	public int maxHP = 100;
+
+	private int curMP = 0;
+	public int maxMP = 100;
+
+	private Spell curSpell = new WindSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
+		curHP = maxHP;
+		curMP = maxMP;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (!GameManager.Instance.IsPaused)
 		{
-			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 5;
+			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
-			if (Mathf.Abs(myRigidBody.velocity.x) > maxSpeed)
-			{
-				Vector2 vel = myRigidBody.velocity;
-				vel.x = Mathf.Sign(vel.x) * maxSpeed;
-				myRigidBody.velocity = vel;
-			}
+			myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
 			if (IsOnGround)
 			{
@@ -61,6 +67,21 @@ public class Player : MonoBehaviour {
 					}
 				}
 			}
+
+			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+			{
+				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+			}
+			if (controller.UseSpell && curMP >= curSpell.Cost)
+			{
+				SpellProjectile sp = curSpell.Cast(this);
+				Vector3 fwd = new Vector3(controller.Horizontal * (HalfWidth + sp.gameObject.HalfWidth()), controller.Vertical * (HalfHeight + sp.gameObject.HalfHeight()));
+				sp.transform.position = transform.position + fwd;
+				Debug.Log(fwd.normalized);
+				sp.fwd = fwd.normalized;
+				sp.allegiance = Allegiance.Player;
+				curMP -= curSpell.Cost;
+			}
 		}
 	}
 
@@ -84,8 +105,7 @@ public class Player : MonoBehaviour {
 			
 			if (lastYVel < -10)
 			{
-				Debug.Log(lastYVel);
-				Debug.Log("I should be taking damage");
+				TakeDamage(new DamageSource(DamageType.Physical, 10));
 			}
 		}
 	}
@@ -97,14 +117,23 @@ public class Player : MonoBehaviour {
 			return Mathf.Pow(jumpImpulse, 2) / (Physics.gravity.y * myRigidBody.gravityScale * -2);
 		}
 	}
-	bool CanPassThrough
+
+	public bool TakeDamage(DamageSource ds)
+	{
+		if (ds.allegiance != Allegiance.Player)
+		{
+			curHP -= ds.damage;
+		}
+		return curHP <= 0;
+	}
+
+	public Allegiance Allegiance
 	{
 		get
 		{
-			return false;
+			return Allegiance.Player;
 		}
 	}
-
 	public float HalfWidth
 	{
 		get
@@ -118,6 +147,45 @@ public class Player : MonoBehaviour {
 		get
 		{
 			return myRenderer.bounds.extents.y;
+		}
+	}
+
+	public float HPPercent
+	{
+		get
+		{
+			return (float)curHP / (float)maxHP;
+		}
+	}
+
+	public int MP
+	{
+		get
+		{
+			return curMP;
+		}
+	}
+	public float MPPercent
+	{
+		get
+		{
+			return (float)curMP / (float)maxMP;
+		}
+	}
+
+	public Vector3 Forward
+	{
+		get
+		{
+			return new Vector3(fwdX, 0, 0);
+		}
+	}
+
+	public Rigidbody2D RigidBody
+	{
+		get
+		{
+			return myRigidBody;
 		}
 	}
 }
