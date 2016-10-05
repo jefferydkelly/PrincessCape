@@ -18,6 +18,7 @@ public class GateController : MonoBehaviour, ActivateableObject {
 	{
 		if (!isActive)
 		{
+			StopAllCoroutines();
 			isActive = true;
 			StartCoroutine(Open());
 		}
@@ -41,6 +42,7 @@ public class GateController : MonoBehaviour, ActivateableObject {
 		if (isActive)
 		{
 			isActive = false;
+			StopAllCoroutines();
 			StartCoroutine(Close());
 		}
 	}

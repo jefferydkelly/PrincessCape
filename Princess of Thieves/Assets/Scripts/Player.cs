@@ -18,7 +18,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new WindSpell();
+	private Spell curSpell = new WaterSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -75,10 +75,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			if (controller.UseSpell && curMP >= curSpell.Cost)
 			{
 				SpellProjectile sp = curSpell.Cast(this);
-				Vector3 fwd = new Vector3(controller.Horizontal * (HalfWidth + sp.gameObject.HalfWidth()), controller.Vertical * (HalfHeight + sp.gameObject.HalfHeight()));
-				sp.transform.position = transform.position + fwd;
-				Debug.Log(fwd.normalized);
-				sp.fwd = fwd.normalized;
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
 			}
@@ -186,6 +182,22 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		get
 		{
 			return myRigidBody;
+		}
+	}
+
+	public GameObject GameObject
+	{
+		get
+		{
+			return gameObject;
+		}
+	}
+
+	public Vector3 Position
+	{
+		get
+		{
+			return transform.position;
 		}
 	}
 }
