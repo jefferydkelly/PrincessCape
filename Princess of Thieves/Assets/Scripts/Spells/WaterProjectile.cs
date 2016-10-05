@@ -36,6 +36,13 @@ public class WaterProjectile : SpellProjectile {
 				dObj.TakeDamage(new DamageSource(DamageType.Water, damage, allegiance));
 			}
 
+			BurnableObject bob = col.gameObject.GetComponent<BurnableObject>();
+
+			if (bob != null)
+			{
+				bob.Douse();
+			}
+
 			Physics2D.IgnoreCollision(GetComponent<Collider2D>(), col.collider);
 			myRigidbody.velocity = new Vector2(oldXVel, myRigidbody.velocity.y);
 
@@ -45,6 +52,16 @@ public class WaterProjectile : SpellProjectile {
 			{
 				Destroy();
 			}
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		BurnableObject bob = col.gameObject.GetComponent<BurnableObject>();
+
+		if (bob != null)
+		{
+			bob.Douse();
 		}
 	}
 

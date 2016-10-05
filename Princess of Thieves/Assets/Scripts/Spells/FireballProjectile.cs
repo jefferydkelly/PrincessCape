@@ -19,6 +19,13 @@ public class FireballProjectile : SpellProjectile {
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
+		BurnableObject bob = col.GetComponent<BurnableObject>();
+
+		if (bob != null)
+		{
+			bob.Burn();
+		}
+
 		DamageableObject dObj = col.GetComponent<DamageableObject>();
 
 		if (dObj != null && dObj.Allegiance != allegiance)
@@ -26,5 +33,6 @@ public class FireballProjectile : SpellProjectile {
 			dObj.TakeDamage(new DamageSource(DamageType.Fire, damage, allegiance));
 			Destroy(gameObject);
 		}
+
 	}
 }
