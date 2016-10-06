@@ -26,6 +26,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
+		UIManager.Instance.ShowSpell = true;
 	}
 	
 	// Update is called once per frame
@@ -203,6 +204,14 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		get
 		{
 			return transform.position;
+		}
+	}
+
+	public string SpellName
+	{
+		get
+		{
+			return curSpell.SpellName;
 		}
 	}
 }

@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
 	private static UIManager instance = null;
 
 	//The text box that shows messages at the top of the screen
-	ImageTextCombo messageBox, dialogBox, nameBox, equipBox;
+	ImageTextCombo messageBox, dialogBox, nameBox, spellBox;
 
 	//The HP and MP bars
 	//public PlayerBarController hpBar, mpBar;
@@ -48,14 +48,11 @@ public class UIManager : MonoBehaviour
 	public void Reload()
 	{
 		CancelInvoke();
-		//messageBox = new ImageTextCombo("MessageBG");
-		//messageBox.Enabled = false;
+		messageBox = new ImageTextCombo("MessageBox");
+		messageBox.Enabled = false;
 
-		//dialogBox = new ImageTextCombo("DialogBG");
-		//dialogBox.Enabled = false;
-
-		//nameBox = new ImageTextCombo("NameBG");
-		//nameBox.Enabled = false;
+		nameBox = new ImageTextCombo("NameBox");
+		nameBox.Enabled = false;
 
 		hpBar = GameObject.Find("HPBar").GetComponent<HPBar>();
 
@@ -63,9 +60,9 @@ public class UIManager : MonoBehaviour
 
 		dialogBox = new ImageTextCombo("DialogBox");
 		dialogBox.Enabled = false;
-		//equipBox = new ImageTextCombo("EquipBG");
-		//equipBox.Enabled = false;
 
+		spellBox = new ImageTextCombo("SpellNameBox");
+		spellBox.Enabled = false;
 
 		//itemLeft = GameObject.Find("ItemLeft").GetComponent<Image>();
 		//itemLeft.enabled = false;
@@ -101,8 +98,8 @@ public class UIManager : MonoBehaviour
 
 	public void RevealDialog(string msg, string spker)
 	{
-		//nameBox.Enabled = true;
-		//nameBox.Text = spker;
+		nameBox.Enabled = true;
+		nameBox.Text = spker;
 		dialogBox.Enabled = true;
 		StartCoroutine(RevealLetters(msg));
 	}
@@ -206,23 +203,23 @@ public class UIManager : MonoBehaviour
 	}*/
 
 	//Shows/Hides the equipment box 
-	public bool ShowEquipment
+	public bool ShowSpell
 	{
 		get
 		{
-			return equipBox.Enabled;
+			return spellBox.Enabled;
 		}
 
 		set
 		{
-			equipBox.Enabled = value;
-			//equipBox.Text = GameManager.Instance.Player.CurrentlyEquipped;
+			spellBox.Enabled = value;
+			spellBox.Text = GameManager.Instance.Player.SpellName;
 		}
 	}
 
 	public void UpdateSpellName(string spellName)
 	{
-		equipBox.Text = spellName;
+		spellBox.Text = spellName;
 	}
 
 	/*
