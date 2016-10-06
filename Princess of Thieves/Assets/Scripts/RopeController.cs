@@ -4,12 +4,16 @@ using System.Collections;
 public class RopeController : MonoBehaviour {
 
     private bool completeRope = false;
+    private Vector3 originalLocation;
+    private bool moved = false;
+    private float dTimeMove;
     [SerializeField]
     GameObject ropePrefab;
     //private float hit;
     GameObject nextRope;
     // Use this for initialization
     void Start () {
+        originalLocation = transform.position;
        // ropePrefab = this.gameObject;
         //GenerateRope();
 	}
@@ -33,23 +37,46 @@ public class RopeController : MonoBehaviour {
         {
             GenerateRope();
         }
+        if(Time.fixedTime - dTimeMove > 3f && moved)
+        {
+            Debug.Log("Reset to OL " + originalLocation);
+            this.gameObject.transform.position = originalLocation;
+            gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            moved = false;
+        }
 	}
     //generateRope
     void GenerateRope()
     {
         //Creates a rope segment below this one.
-        GameObject newRope = (GameObject)Instantiate(ropePrefab,
+        GameObject newRope = new GameObject();
+        newRope.transform.parent = transform;
+        newRope = (GameObject)Instantiate(ropePrefab,
             new Vector3(transform.position.x, transform.position.y-0.5f, transform.position.z),
             this.transform.rotation);
+        
         completeRope = true;
         nextRope = newRope;
     }
+    public void MoveRope(Vector2 velocity)
+    {
+        dTimeMove = Time.fixedTime;
+        gameObject.GetComponent<Rigidbody2D>().AddForceAtPosition(velocity, new Vector2(0, -gameObject.GetComponent<Renderer>().bounds.extents.y));
+        //gameObject.GetComponent<Rigidbody2D>().AddForce(velocity);
+        if (!completeRope) 
+            nextRope.GetComponent<RopeController>().MoveRope(velocity*1.5f);
+       
+
+
+        moved = true;
+    }
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.GetComponent<Rigidbody2D>())
+        if (col.gameObject.GetComponent<Rigidbody2D>() && col.gameObject.tag == "Player")
         {
-            gameObject.GetComponent<Rigidbody2D>().AddForce(col.gameObject.GetComponent<Rigidbody2D>().velocity);
-            nextRope.GetComponent<Rigidbody2D>().AddForce(col.gameObject.GetComponent<Rigidbody2D>().velocity);
+            if(!moved)
+            MoveRope(col.gameObject.GetComponent<Rigidbody2D>().velocity);
+           
         }
         //Problematic?
         if(col.gameObject.tag != gameObject.tag)
