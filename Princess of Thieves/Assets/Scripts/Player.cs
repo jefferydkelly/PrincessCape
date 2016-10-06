@@ -18,9 +18,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-
-    private bool isOnRope = false;
-	private Spell curSpell = new WaterSpell();
+	private Spell curSpell = new WindSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -28,6 +26,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
+		UIManager.Instance.ShowSpell = true;
 	}
 	
 	// Update is called once per frame
@@ -67,14 +66,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 							po.AllowPassThrough();
 						}
 					}
-				}else if((isOnRope==true))
-                {
-                    Debug.Log("We on rope and moving up");
-                    Vector2 yForce = new Vector2(0, controller.Vertical) * 15;
-                    myRigidBody.AddForce(yForce, ForceMode2D.Force);
-
-                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
-                }
+				}
 			}
 
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
@@ -86,6 +78,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				SpellProjectile sp = curSpell.Cast(this);
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
+			}
+			else if (controller.Attack)
+			{
+				SpellProjectile sp = new EarthSpell().Cast(this);
+				sp.allegiance = Allegiance.Player;
 			}
 		}
 	}
@@ -103,9 +100,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-
-    #region colliders
-    void OnCollisionEnter2D(Collision2D col)
+	void OnCollisionEnter2D(Collision2D col)
 	{
 		if (col.collider.CompareTag("Platform"))
 		{
@@ -117,17 +112,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (col.CompareTag("Rope"))
-        {
-            Debug.Log("OnRope");
-           isOnRope= true;
-        }
-
-    }
-    #endregion colliders
-    float JumpHeight
+	float JumpHeight
 	{
 		get
 		{
@@ -219,6 +204,14 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		get
 		{
 			return transform.position;
+		}
+	}
+
+	public string SpellName
+	{
+		get
+		{
+			return curSpell.SpellName;
 		}
 	}
 }
