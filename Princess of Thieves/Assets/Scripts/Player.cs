@@ -18,7 +18,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new WaterSpell();
+	private Spell curSpell = new WindSpell();
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -77,6 +77,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				SpellProjectile sp = curSpell.Cast(this);
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
+			}
+			else if (controller.Attack)
+			{
+				SpellProjectile sp = new EarthSpell().Cast(this);
+				sp.allegiance = Allegiance.Player;
 			}
 		}
 	}
