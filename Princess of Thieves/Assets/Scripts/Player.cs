@@ -18,6 +18,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
+
+    private bool isOnRope = false;
 	private Spell curSpell = new WaterSpell();
 	// Use this for initialization
 	void Start () {
@@ -65,7 +67,14 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 							po.AllowPassThrough();
 						}
 					}
-				}
+				}else if((isOnRope==true))
+                {
+                    Debug.Log("We on rope and moving up");
+                    Vector2 yForce = new Vector2(0, controller.Vertical) * 15;
+                    myRigidBody.AddForce(yForce, ForceMode2D.Force);
+
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+                }
 			}
 
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
@@ -94,7 +103,9 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D col)
+
+    #region colliders
+    void OnCollisionEnter2D(Collision2D col)
 	{
 		if (col.collider.CompareTag("Platform"))
 		{
@@ -106,7 +117,17 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-	float JumpHeight
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Rope"))
+        {
+            Debug.Log("OnRope");
+           isOnRope= true;
+        }
+
+    }
+    #endregion colliders
+    float JumpHeight
 	{
 		get
 		{
