@@ -11,6 +11,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	public float maxSpeed = 1;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
+    private bool onRope = false;
 
 	private int curHP = 0;
 	public int maxHP = 100;
@@ -37,28 +38,37 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		{
 			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
-
-			myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+            myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+            /*
+			if (onRope)
+            {
+                if(controller.Vertical != 0)
+                {
+                    GrabRope();
+                }
+                Vector2 yForce = new Vector2(0,controller.Vertical) * 35;
+                myRigidBody.AddForce(yForce, ForceMode2D.Force);
+                myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+            }*/
+			
 
 			if (IsOnRope)
 			{
 				Vector2 vel = myRigidBody.velocity;
-				vel.y = controller.Vertical * 5;
+				vel.x = 0;
 				myRigidBody.velocity = vel;
-			} else if (IsOnGround)
+				myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+				myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+
+				if (controller.Jump)
+				{
+					Jump();
+				}
+			}else if (IsOnGround)
 			{
 				if (controller.Jump)
 				{
-					foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
-					{
-						PlatformObject po = hit.collider.GetComponent<PlatformObject>();
-						if (po.passThrough)
-						{
-							po.AllowPassThrough();
-						}
-					}
-					myRigidBody.AddForce(new Vector2(0, jumpImpulse), ForceMode2D.Impulse);
-				
+					Jump();
 				}
 				else if (controller.Vertical == -1 && controller.Interact)
 				{
@@ -94,12 +104,26 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	void Jump()
+	{
+		foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
+		{
+			PlatformObject po = hit.collider.GetComponent<PlatformObject>();
+			if (po.passThrough)
+			{
+				po.AllowPassThrough();
+			}
+		}
+		myRigidBody.AddForce(new Vector2(0, jumpImpulse), ForceMode2D.Impulse);
+	}
+
 	void FixedUpdate()
 	{
 		lastYVel = myRigidBody.velocity.y;
 	}
 
-	bool IsOnGround
+    #region Gets
+    bool IsOnGround
 	{
 		get
 		{
@@ -125,6 +149,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		if (col.CompareTag("Rope"))
 		{
 			numRopesTouching++;
+
+			if (numRopesTouching > 0)
+			{
+				myRigidBody.gravityScale = 0;
+			}
 		}
 	}
 
@@ -133,6 +162,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		if (col.CompareTag("Rope"))
 		{
 			numRopesTouching--;
+
+			if (numRopesTouching == 0)
+			{
+				myRigidBody.gravityScale = 1.5f;
+			}
 		}	
 	}
 	#endregion
@@ -246,4 +280,42 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return curSpell.SpellName;
 		}
 	}
+    #endregion gets
+
+    /// <summary>
+    /// turns off gravity scale for the player if they press up or down while on a rope
+    /// </summary>
+    void GrabRope()
+    {
+		myRigidBody.gravityScale = 0;
+    }
+    /// <summary>
+    /// turns on gravity scale for the player if they leave the rope
+    /// </summary>
+    void LetGoOfRope()
+    {
+		myRigidBody.gravityScale = 1.5f;
+    }
+	/*
+    #region collision
+ 
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Rope")
+        {
+            onRope = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Rope")
+        {
+            LetGoOfRope();
+            onRope = false;
+        }
+    }
+
+    #endregion
+    */
 }
