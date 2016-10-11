@@ -18,7 +18,6 @@ public class WindProjectile : SpellProjectile {
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		Debug.Log("Wind collision");
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
 
 		if (rb)
