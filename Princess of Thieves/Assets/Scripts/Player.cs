@@ -11,6 +11,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	public float maxSpeed = 1;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
+    private bool onRope = false;
 
 	private int curHP = 0;
 	public int maxHP = 100;
@@ -35,8 +36,18 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		{
 			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
-
-			myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+            myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+            if (onRope)
+            {
+                if(controller.Vertical != 0)
+                {
+                    GrabRope();
+                }
+                Vector2 yForce = new Vector2(0,controller.Vertical) * 35;
+                myRigidBody.AddForce(yForce, ForceMode2D.Force);
+                myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+            }
+			
 
 			if (IsOnGround)
 			{
@@ -92,7 +103,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		lastYVel = myRigidBody.velocity.y;
 	}
 
-	bool IsOnGround
+    #region Gets
+    bool IsOnGround
 	{
 		get
 		{
@@ -100,17 +112,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D col)
-	{
-		if (col.collider.CompareTag("Platform"))
-		{
-			
-			if (lastYVel < -10)
-			{
-				TakeDamage(new DamageSource(DamageType.Physical, 10));
-			}
-		}
-	}
+	
 
 	float JumpHeight
 	{
@@ -214,4 +216,49 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return curSpell.SpellName;
 		}
 	}
+    #endregion gets
+
+    /// <summary>
+    /// turns off gravity scale for the player if they press up or down while on a rope
+    /// </summary>
+    void GrabRope()
+    {
+        gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+    }
+    /// <summary>
+    /// turns on gravity scale for the player if they leave the rope
+    /// </summary>
+    void LetGoOfRope()
+    {
+        gameObject.GetComponent<Rigidbody2D>().gravityScale = 1.5f;
+    }
+    #region collision
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.collider.CompareTag("Platform"))
+        {
+
+            if (lastYVel < -10)
+            {
+                TakeDamage(new DamageSource(DamageType.Physical, 10));
+            }
+        }
+    }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Rope")
+        {
+            onRope = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Rope")
+        {
+            LetGoOfRope();
+            onRope = false;
+        }
+    }
+
+    #endregion
 }
