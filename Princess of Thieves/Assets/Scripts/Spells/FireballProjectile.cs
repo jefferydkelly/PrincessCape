@@ -4,6 +4,7 @@ using System.Collections;
 public class FireballProjectile : SpellProjectile {
 
 	void Start () {
+		name = "Fireball";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/Fireball");
 		Collider2D col = gameObject.AddComponent<CircleCollider2D>();

@@ -18,7 +18,9 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new WaterSpell();
+	private Spell curSpell = new LightSpell();
+
+	private int numRopesTouching = 0;
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -26,7 +28,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
-		UIManager.Instance.ShowSpell = true;
+		//UIManager.Instance.ShowSpell = true;
 	}
 	
 	// Update is called once per frame
@@ -38,7 +40,12 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 			myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
-			if (IsOnGround)
+			if (IsOnRope)
+			{
+				Vector2 vel = myRigidBody.velocity;
+				vel.y = controller.Vertical * 5;
+				myRigidBody.velocity = vel;
+			} else if (IsOnGround)
 			{
 				if (controller.Jump)
 				{
@@ -100,6 +107,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
 	{
 		if (col.collider.CompareTag("Platform"))
@@ -112,6 +120,30 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.CompareTag("Rope"))
+		{
+			numRopesTouching++;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col)
+	{
+		if (col.CompareTag("Rope"))
+		{
+			numRopesTouching--;
+		}	
+	}
+	#endregion
+
+	bool IsOnRope
+	{
+		get
+		{
+			return numRopesTouching > 0;
+		}
+	}
 	float JumpHeight
 	{
 		get

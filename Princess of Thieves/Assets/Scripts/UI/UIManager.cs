@@ -47,32 +47,36 @@ public class UIManager : MonoBehaviour
 	//Resets the objects when the scene changes
 	public void Reload()
 	{
-		CancelInvoke();
-		messageBox = new ImageTextCombo("MessageBox");
-		messageBox.Enabled = false;
+		if (FindObjectOfType<Canvas>())
+		{
+			CancelInvoke();
+			messageBox = new ImageTextCombo("MessageBox");
+			messageBox.Enabled = false;
 
-		nameBox = new ImageTextCombo("NameBox");
-		nameBox.Enabled = false;
+			nameBox = new ImageTextCombo("NameBox");
+			nameBox.Enabled = false;
 
-		hpBar = GameObject.Find("HPBar").GetComponent<HPBar>();
+			hpBar = GameObject.Find("HPBar").GetComponent<HPBar>();
 
-		mpBar = GameObject.Find("MPBar").GetComponent<MPBar>();
+			mpBar = GameObject.Find("MPBar").GetComponent<MPBar>();
 
-		dialogBox = new ImageTextCombo("DialogBox");
-		dialogBox.Enabled = false;
+			dialogBox = new ImageTextCombo("DialogBox");
+			dialogBox.Enabled = false;
 
-		spellBox = new ImageTextCombo("SpellNameBox");
-		spellBox.Enabled = false;
+			spellBox = new ImageTextCombo("SpellNameBox");
+			spellBox.Enabled = false;
 
-		//itemLeft = GameObject.Find("ItemLeft").GetComponent<Image>();
-		//itemLeft.enabled = false;
-		//itemCenter = GameObject.Find("ItemCenter").GetComponent<Image>();
-		//itemCenter.enabled = false;
-		//itemRight = GameObject.Find("ItemRight").GetComponent<Image>();
-		//itemRight.enabled = false;
 
-		//areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
-		//areaNameBox.enabled = false;
+			//itemLeft = GameObject.Find("ItemLeft").GetComponent<Image>();
+			//itemLeft.enabled = false;
+			//itemCenter = GameObject.Find("ItemCenter").GetComponent<Image>();
+			//itemCenter.enabled = false;
+			//itemRight = GameObject.Find("ItemRight").GetComponent<Image>();
+			//itemRight.enabled = false;
+
+			//areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
+			//areaNameBox.enabled = false;
+		}
 	}
 
 	//Getter for the static instance of UIManager

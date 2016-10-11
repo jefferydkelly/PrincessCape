@@ -5,6 +5,7 @@ public class WindProjectile : SpellProjectile {
 	public float pushForce = 10;
 	// Use this for initialization
 	void Start () {
+		name = "Cyclone";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/WindProjectile");
 		Collider2D col = gameObject.AddComponent<BoxCollider2D>();

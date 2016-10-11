@@ -10,6 +10,7 @@ public class EarthProjectile : SpellProjectile {
 	PillarState state = PillarState.Rising;
 
 	void Start () {
+		name = "Stone Pillar";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/StoneWall");
 		gameObject.AddComponent<BoxCollider2D>();

@@ -11,6 +11,7 @@ public class WaterProjectile : SpellProjectile {
 	Rigidbody2D myRigidbody;
 	// Use this for initialization
 	void Start () {
+		name = "Tsunami";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/Wave");
 		gameObject.AddComponent<BoxCollider2D>();
