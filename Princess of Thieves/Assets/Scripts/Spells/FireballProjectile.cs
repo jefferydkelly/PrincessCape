@@ -3,6 +3,7 @@ using System.Collections;
 
 public class FireballProjectile : SpellProjectile {
 
+	bool enhanced = false;
 	void Start () {
 		name = "Fireball";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
@@ -32,17 +33,24 @@ public class FireballProjectile : SpellProjectile {
 		if (dObj != null && dObj.Allegiance != allegiance)
 		{
 			dObj.TakeDamage(new DamageSource(DamageType.Fire, damage, allegiance));
-			Destroy(gameObject);
+			if (!enhanced)
+			{
+				Destroy(gameObject);
+			}
+			else {
+				enhanced = false;
+			}
 		}
 
 	}
 
 	public override void Enhance()
 	{
+		enhanced = true;
 	}
 
 	public override void Diminish()
 	{
-		
+		Destroy(gameObject);
 	}
 }

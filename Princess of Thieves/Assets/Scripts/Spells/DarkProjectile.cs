@@ -5,7 +5,7 @@ public class DarkProjectile : SpellProjectile {
 
 	Rigidbody2D myRigidbody;
 	float lifeTime = 3.0f;
-	float speed = 5.0f;
+	float speed = 15.0f;
 	// Use this for initialization
 	void Awake () {
 		name = "Dark Bomb";

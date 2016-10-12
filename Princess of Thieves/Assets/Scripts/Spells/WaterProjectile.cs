@@ -74,10 +74,11 @@ public class WaterProjectile : SpellProjectile {
 
 	public override void Enhance()
 	{
+		transform.localScale *= 2;
 	}
 
 	public override void Diminish()
 	{
-
+		transform.localScale /= 2;
 	}
 }
