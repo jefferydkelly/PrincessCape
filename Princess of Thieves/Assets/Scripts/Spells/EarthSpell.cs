@@ -12,7 +12,7 @@ public class EarthSpell : Spell {
 	{
 		GameObject go = new GameObject();
 		EarthProjectile ep = go.AddComponent<EarthProjectile>();
-
+		ep.caster = c;
 		go.transform.position = c.Position + (c.Forward * (c.GameObject.HalfWidth() + go.HalfWidth() * 1.5f)) - (Vector3.up * c.GameObject.HalfHeight());
 		return ep;
 	}

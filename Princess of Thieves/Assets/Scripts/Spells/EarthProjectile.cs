@@ -8,15 +8,17 @@ public class EarthProjectile : SpellProjectile {
 	float stayTime = 5.0f;
 	float pushForce = 25.0f;
 	PillarState state = PillarState.Rising;
-
+	public CasterObject caster;
+	bool isSliding = false;
+	Rigidbody2D myRigidbody;
 	void Start () {
 		name = "Stone Pillar";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/StoneWall");
 		gameObject.AddComponent<BoxCollider2D>();
-		Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-		rb.gravityScale = 0;
-		rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		myRigidbody = gameObject.AddComponent<Rigidbody2D>();
+		myRigidbody.gravityScale = 0;
+		myRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 		transform.localScale = new Vector3(1, 0, 1);
 		StartCoroutine(Rise());
 	}
@@ -36,7 +38,7 @@ public class EarthProjectile : SpellProjectile {
 			yield return null;
 		} while (totalTime < riseTime);
 		transform.localScale = new Vector3(1, 1, 1);
-		GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+		myRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
 		state = PillarState.Standing;
 		Invoke("Crumble", stayTime);
 		yield return null;
@@ -46,9 +48,8 @@ public class EarthProjectile : SpellProjectile {
 	{
 		float totalTime = 0.0f;
 		float tPer = 0.0f;
-		Rigidbody2D rb = GetComponent<Rigidbody2D>();
-		rb.gravityScale = 1.0f;
-		rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		myRigidbody.gravityScale = 1.0f;
+		myRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 		do
 		{
 			totalTime += Time.deltaTime;
@@ -71,6 +72,10 @@ public class EarthProjectile : SpellProjectile {
 
 	void OnCollisionEnter2D(Collision2D col)
 	{
+		if (isSliding && !col.collider.CompareTag("Platform"))
+		{
+			IsSliding = false;
+		}
 		if (state == PillarState.Rising)
 		{
 			Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
@@ -107,15 +112,57 @@ public class EarthProjectile : SpellProjectile {
 
 			if (wp)
 			{
-				Rigidbody2D mine = GetComponent<Rigidbody2D>();
-				mine.constraints = RigidbodyConstraints2D.FreezeRotation;
-				mine.gravityScale = 1.0f;
-				mine.AddForce(wp.FWD * 10, ForceMode2D.Impulse);
+				IsSliding = true;
+				myRigidbody.AddForce(wp.FWD * 10, ForceMode2D.Impulse);
+			}
+		}
+
+		if (isSliding && !col.CompareTag("Platform"))
+		{
+			IsSliding = false;
+		}
+	}
+
+	private bool IsSliding
+	{
+		get
+		{
+			return isSliding;
+		}
+
+		set
+		{
+			isSliding = value;
+
+			if (isSliding)
+			{
+				myRigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+				myRigidbody.gravityScale = 1.0f;
+			}
+			else {
+				myRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+				if (state == PillarState.Standing)
+				{
+					myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionY;
+					myRigidbody.gravityScale = 0f;
+				}
+
 			}
 		}
 	}
+	public override void Diminish()
+	{
+		IsSliding = true;
+		myRigidbody.AddForce((caster.Position - transform.position).normalized * pushForce, ForceMode2D.Impulse);
+	}
+
+	public override void Enhance()
+	{
+		//This will do something
+	}
 }
 
+[System.Flags]
 public enum PillarState
 {
 	Rising, Standing, Melting

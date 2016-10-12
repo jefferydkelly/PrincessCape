@@ -27,4 +27,13 @@ public class WindProjectile : SpellProjectile {
 			Destroy(gameObject);
 		}
 	}
+
+	public override void Enhance()
+	{
+	}
+
+	public override void Diminish()
+	{
+
+	}
 }

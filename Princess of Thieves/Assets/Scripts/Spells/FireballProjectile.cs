@@ -36,4 +36,13 @@ public class FireballProjectile : SpellProjectile {
 		}
 
 	}
+
+	public override void Enhance()
+	{
+	}
+
+	public override void Diminish()
+	{
+		
+	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpellProjectile : MonoBehaviour {
+public abstract class SpellProjectile : MonoBehaviour {
 	public Vector3 fwd = new Vector3(1, 0, 0);
 	public float moveSpeed = 10;
 	public Allegiance allegiance = Allegiance.None;
@@ -20,4 +20,8 @@ public class SpellProjectile : MonoBehaviour {
 			transform.localRotation = Quaternion.AngleAxis(90 - (90 * fwd.x), Vector3.up);
 		}
 	}
+
+	public abstract void Enhance();
+
+	public abstract void Diminish();
 }

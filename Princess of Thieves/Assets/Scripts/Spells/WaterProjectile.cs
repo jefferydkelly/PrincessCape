@@ -71,4 +71,13 @@ public class WaterProjectile : SpellProjectile {
 		CancelInvoke();
 		Destroy(gameObject);
 	}
+
+	public override void Enhance()
+	{
+	}
+
+	public override void Diminish()
+	{
+
+	}
 }

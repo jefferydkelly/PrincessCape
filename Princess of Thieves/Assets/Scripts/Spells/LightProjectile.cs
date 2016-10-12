@@ -28,4 +28,13 @@ public class LightProjectile : SpellProjectile {
 
 	}
 
+	public override void Enhance()
+	{
+	}
+
+	public override void Diminish()
+	{
+		Destroy(gameObject);
+	}
+
 }
