@@ -22,9 +22,15 @@ public class LightProjectile : SpellProjectile {
 		myRigidbody.velocity = FWD * speed;
 	}
 
-	void OnTriggerEnter2D()
+	void OnTriggerEnter2D(Collider2D col)
 	{
-		//Power up objects or spells that it hits
+		SpellProjectile sp = col.GetComponent<SpellProjectile>();
+
+		if (sp)
+		{
+			sp.Enhance();
+			Destroy(gameObject);
+		}
 
 	}
 

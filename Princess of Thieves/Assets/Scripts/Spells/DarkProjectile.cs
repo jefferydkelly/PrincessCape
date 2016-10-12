@@ -26,6 +26,7 @@ public class DarkProjectile : SpellProjectile {
 		if (sp)
 		{
 			sp.Diminish();
+			Destroy(gameObject);
 		}
 	}
 

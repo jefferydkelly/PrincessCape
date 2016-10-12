@@ -7,9 +7,11 @@ public class EarthProjectile : SpellProjectile {
 	float riseTime = 1.0f;
 	float stayTime = 5.0f;
 	float pushForce = 25.0f;
+	float expandScale = 2.0f;
 	PillarState state = PillarState.Rising;
 	public CasterObject caster;
 	bool isSliding = false;
+
 	Rigidbody2D myRigidbody;
 	void Start () {
 		name = "Stone Pillar";
@@ -41,6 +43,24 @@ public class EarthProjectile : SpellProjectile {
 		myRigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
 		state = PillarState.Standing;
 		Invoke("Crumble", stayTime);
+		yield return null;
+	}
+
+	IEnumerator Expand()
+	{
+		float totalTime = 0.0f;
+		float tPer = 0.0f;
+
+		do
+		{
+			totalTime += Time.deltaTime;
+			tPer = totalTime / riseTime;
+			Vector3 lScale = transform.localScale;
+			lScale.x = 1 + (tPer * (expandScale - 1));
+			transform.localScale = lScale;
+			yield return null;
+		} while (totalTime < riseTime);
+		///transform.localScale = new Vector3(1, 1, 1);
 		yield return null;
 	}
 
@@ -158,7 +178,7 @@ public class EarthProjectile : SpellProjectile {
 
 	public override void Enhance()
 	{
-		//This will do something
+		StartCoroutine(Expand());
 	}
 }
 
