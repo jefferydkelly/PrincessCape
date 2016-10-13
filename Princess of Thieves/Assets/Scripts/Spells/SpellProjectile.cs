@@ -7,7 +7,7 @@ public abstract class SpellProjectile : MonoBehaviour {
 	public Allegiance allegiance = Allegiance.None;
 	public int damage = 10;
 
-	public Vector3 FWD
+	public virtual Vector3 FWD
 	{
 		get
 		{

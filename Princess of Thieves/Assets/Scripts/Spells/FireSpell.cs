@@ -11,7 +11,10 @@ public class FireSpell : Spell {
 	public override SpellProjectile Cast(CasterObject c)
 	{
 		GameObject go = new GameObject();
-		return go.AddComponent<FireballProjectile>();
+		FireballProjectile w = go.AddComponent<FireballProjectile>();
+		w.FWD = c.Forward;
+		go.transform.position = c.Position + (c.Forward * (c.GameObject.HalfWidth() + go.HalfWidth() + 0.1f));
+		return w;
 
 	}
 }
