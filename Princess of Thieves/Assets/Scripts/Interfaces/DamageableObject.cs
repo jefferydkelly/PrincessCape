@@ -27,9 +27,10 @@ public enum DamageType
 	Fire = 2,
 	Wind = 4,
 	Water = 8,
-	Light = 16,
-	Dark = 32,
-	Physical = 64
+	Ice = 16,
+	Light = 32,
+	Dark = 64,
+	Physical = 128
 }
 
 public enum Allegiance

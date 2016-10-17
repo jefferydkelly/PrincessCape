@@ -1,17 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CutsceneTrigger : MonoBehaviour {
-	bool triggered = false;
-	void OnTriggerEnter2D(Collider2D col)
+public class CutsceneTrigger : TriggerBase {
+	public string cutsceneName = "testCutscene";
+	protected override void Trigger()
 	{
-		if (col.CompareTag("Player"))
+		if (!triggered)
 		{
-			if (!triggered)
-			{
-				triggered = true;
-				GameManager.Instance.StartCutscene("testCutscene");
-			}
+			triggered = true;
+			GameManager.Instance.StartCutscene(cutsceneName);
 		}
 	}
 }

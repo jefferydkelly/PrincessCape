@@ -20,7 +20,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new LightSpell();
+	private Spell curSpell = new FireSpell();
 
 	private int numRopesTouching = 0;
 

@@ -4,6 +4,7 @@ using System.Collections;
 public class WindProjectile : SpellProjectile {
 	public float pushForce = 10;
 	// Use this for initialization
+	bool swapped = false;
 	void Start () {
 		name = "Cyclone";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
@@ -23,8 +24,24 @@ public class WindProjectile : SpellProjectile {
 
 		if (rb)
 		{
-			rb.AddForce(fwd * pushForce, ForceMode2D.Impulse);
+			if (!swapped)
+			{
+				rb.AddForce(fwd * pushForce, ForceMode2D.Impulse);
+			}
+			else {
+				rb.AddForce(-fwd * pushForce, ForceMode2D.Impulse);
+			}
 			Destroy(gameObject);
 		}
+	}
+
+	public override void Enhance()
+	{
+		pushForce = 20;
+	}
+
+	public override void Diminish()
+	{
+		swapped = true;
 	}
 }
