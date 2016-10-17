@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
 {
 	public float fadeOutDelay = 1.0f;
 	public float fadeOutTime = 0.5f;
-	private string areaName = "";
+
 	//The one static instance of UIManager
 	private static UIManager instance = null;
 
@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
 
 	//public Image itemLeft, itemCenter, itemRight;
 
-	//public Text areaNameBox;
+	public Text areaNameBox;
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
 	 */
@@ -74,8 +74,8 @@ public class UIManager : MonoBehaviour
 			//itemRight = GameObject.Find("ItemRight").GetComponent<Image>();
 			//itemRight.enabled = false;
 
-			//areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
-			//areaNameBox.enabled = false;
+			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
+			areaNameBox.enabled = false;
 		}
 	}
 
@@ -257,13 +257,12 @@ public class UIManager : MonoBehaviour
 		}
 
 		img.sprite = sp;
-	}
+	}*/
 
 	public void EnterArea(string s)
 	{
-		if (s != areaName)
+		if (s != areaNameBox.text)
 		{
-			areaName = s;
 			areaNameBox.enabled = true;
 			areaNameBox.text = s;
 			Invoke("StartFadeOut", fadeOutDelay);
@@ -281,7 +280,7 @@ public class UIManager : MonoBehaviour
 		Color ac = areaNameBox.color;
 		ac.a = 1;
 		areaNameBox.color = ac;
-	}*/
+	}
 }
 
 /*
