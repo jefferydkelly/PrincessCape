@@ -5,10 +5,10 @@ public class WindProjectile : SpellProjectile {
 	public float pushForce = 10;
 	// Use this for initialization
 	bool swapped = false;
-	void Start () {
+	void Awake () {
 		name = "Cyclone";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-		sr.sprite = Resources.Load<Sprite>("Sprites/WindProjectile");
+		sr.sprite = Resources.Load<Sprite>("Sprites/Wind");
 		Collider2D col = gameObject.AddComponent<BoxCollider2D>();
 		col.isTrigger = true;
 	}
