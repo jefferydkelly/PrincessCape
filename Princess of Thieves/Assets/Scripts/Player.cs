@@ -9,7 +9,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
-	public float jumpImpulse = 10;
+    public float sneakSpeed = 0.8f;
+    public float jumpImpulse = 10;
 	private float lastYVel = 0;
     private bool onRope = false;
 
@@ -22,6 +23,9 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private Spell curSpell = new WaterSpell();
 
 	private int numRopesTouching = 0;
+
+    bool sneaking = false;
+    bool hidden = false;
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -32,27 +36,43 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		//UIManager.Instance.ShowSpell = true;
 	}
 	
+    
 	// Update is called once per frame
 	void Update () {
 		if (!GameManager.Instance.IsPaused)
 		{
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                GoStealth();
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                Hide();
+            }
+            if (hidden) //stops in place hiding
+            {
+                if(new Vector2(controller.Horizontal,controller.Vertical) != Vector2.zero)
+                {
+                    Material mat = GetComponent<SpriteRenderer>().material;
+
+                    Color newColor = mat.color;
+                    if (newColor.a != 1)
+                    {
+
+                        newColor.a = 0.7f;
+                        mat.color = newColor;
+                    }
+                    hidden = false;
+                }
+            }
 			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
-            myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
-            /*
-			if (onRope)
-            {
-                if(controller.Vertical != 0)
-                {
-                    GrabRope();
-                }
-                Vector2 yForce = new Vector2(0,controller.Vertical) * 35;
-                myRigidBody.AddForce(yForce, ForceMode2D.Force);
-                myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
-            }*/
-			
+            if(!sneaking)
+                myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+            else
+                myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
 
-			if (IsOnRope)
+            if (IsOnRope)
 			{
 				Vector2 vel = myRigidBody.velocity;
 				vel.x = 0;
@@ -120,8 +140,51 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	void FixedUpdate()
 	{
 		lastYVel = myRigidBody.velocity.y;
-	}
+        if (sneaking)
+            Debug.Log("Sneaking");
+        if (hidden)
+            Debug.Log("Hidden");
+    }
 
+    #region CollisionHandling
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.collider.CompareTag("Platform"))
+        {
+
+            if (lastYVel < -10)
+            {
+                TakeDamage(new DamageSource(DamageType.Physical, 10));
+            }
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Rope"))
+        {
+            numRopesTouching++;
+
+            if (numRopesTouching > 0)
+            {
+                myRigidBody.gravityScale = 0;
+            }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("Rope"))
+        {
+            numRopesTouching--;
+
+            if (numRopesTouching == 0)
+            {
+                myRigidBody.gravityScale = 1.5f;
+            }
+        }
+    }
+    #endregion
     #region Gets
     bool IsOnGround
 	{
@@ -131,45 +194,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-	#region CollisionHandling
-	void OnCollisionEnter2D(Collision2D col)
-	{
-		if (col.collider.CompareTag("Platform"))
-		{
-			
-			if (lastYVel < -10)
-			{
-				TakeDamage(new DamageSource(DamageType.Physical, 10));
-			}
-		}
-	}
-
-	void OnTriggerEnter2D(Collider2D col)
-	{
-		if (col.CompareTag("Rope"))
-		{
-			numRopesTouching++;
-
-			if (numRopesTouching > 0)
-			{
-				myRigidBody.gravityScale = 0;
-			}
-		}
-	}
-
-	void OnTriggerExit2D(Collider2D col)
-	{
-		if (col.CompareTag("Rope"))
-		{
-			numRopesTouching--;
-
-			if (numRopesTouching == 0)
-			{
-				myRigidBody.gravityScale = 1.5f;
-			}
-		}	
-	}
-	#endregion
+	
 
 	bool IsOnRope
 	{
@@ -282,40 +307,42 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	}
     #endregion gets
 
-    /// <summary>
-    /// turns off gravity scale for the player if they press up or down while on a rope
-    /// </summary>
-    void GrabRope()
-    {
-		myRigidBody.gravityScale = 0;
-    }
-    /// <summary>
-    /// turns on gravity scale for the player if they leave the rope
-    /// </summary>
-    void LetGoOfRope()
-    {
-		myRigidBody.gravityScale = 1.5f;
-    }
-	/*
-    #region collision
- 
 
-    void OnTriggerEnter2D(Collider2D col)
+    #region abilites 
+    /// <summary>
+    /// Activates the player being stealthed. Probably will use ability scripts that are preferred.
+    /// Certainly could be created within the player itself
+    /// </summary>
+    void GoStealth()
     {
-        if (col.gameObject.tag == "Rope")
+        sneaking = true;
+        Material mat = GetComponent<SpriteRenderer>().material;        
+        Color newColor = mat.color;
+        if (newColor.a == 1) {
+            newColor.a = 0.7f;
+            mat.color = newColor;
+        }    
+    }
+    void Hide()
+    {
+        if (sneaking)
         {
-            onRope = true;
+            hidden = true;
+            Material mat = GetComponent<SpriteRenderer>().material;
+            Color newColor = mat.color;
+            if (newColor.a != 1)
+            {
+                newColor.a = 0.4f;
+                mat.color = newColor;
+            }
         }
     }
-    void OnTriggerExit2D(Collider2D col)
+    /// <summary>
+    /// Throws a dagger, so far only one dagger, coated in a slowing poison.
+    /// </summary>
+    void ThrowDagger()
     {
-        if (col.gameObject.tag == "Rope")
-        {
-            LetGoOfRope();
-            onRope = false;
-        }
-    }
 
+    }
     #endregion
-    */
 }
