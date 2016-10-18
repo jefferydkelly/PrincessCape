@@ -9,7 +9,8 @@ public class WindProjectile : SpellProjectile {
 		name = "Cyclone";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/Wind");
-		Collider2D col = gameObject.AddComponent<BoxCollider2D>();
+		BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
+		col.size = new Vector2(2.2f, 1.0f);
 		col.isTrigger = true;
 	}
 	

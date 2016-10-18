@@ -9,7 +9,9 @@ public class FireballProjectile : SpellProjectile {
 		name = "Fireball";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/fireprojectile");
-		Collider2D col = gameObject.AddComponent<CircleCollider2D>();
+		BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
+		col.size = new Vector2(1.3f, 0.5f);
+		col.offset = new Vector2(0.1f, -0.05f);
 		col.isTrigger = true;
 		Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
 		rb.gravityScale = 0;
