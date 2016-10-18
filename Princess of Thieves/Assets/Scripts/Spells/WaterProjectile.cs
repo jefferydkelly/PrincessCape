@@ -10,10 +10,10 @@ public class WaterProjectile : SpellProjectile {
 	int passedThrough = 0;
 	Rigidbody2D myRigidbody;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		name = "Tsunami";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-		sr.sprite = Resources.Load<Sprite>("Sprites/Wave");
+		sr.sprite = Resources.Load<Sprite>("Sprites/Water");
 		gameObject.AddComponent<BoxCollider2D>();
 		myRigidbody = gameObject.AddComponent<Rigidbody2D>();
 		myRigidbody.AddForce(fwd * startForce, ForceMode2D.Impulse);
