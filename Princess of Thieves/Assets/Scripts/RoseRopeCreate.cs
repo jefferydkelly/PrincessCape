@@ -101,25 +101,11 @@ public class RoseRopeCreate : MonoBehaviour {
                 // Scale the prefab
                 ropeBitPref.transform.localScale = new Vector3(1, 1, 1);
 
-                // Add Gizmos to see the CircleCollider2D component
-                if (ropeBitPref.GetComponent<CircleCollider2D>() == null)
-                {
-                    Debug.LogError("Rope Creator: No CircleCollider2D added to the ropeBit prefab!");
-                }
-                else
-                {
-                    ropeBitPref.AddComponent<Rope2DCircleGizmo>();
-                    ropeBitPref.GetComponent<Rope2DCircleGizmo>().gizmoRadius = ropeBitPref.GetComponent<CircleCollider2D>().radius;
-
-                    //if (addPhysicsMaterial && physicsMaterial != null)
-                    //{
-                    //    physicsMaterial = Resources.Load("Materials/" + namePhysicsMaterial) as PhysicsMaterial2D;
-                    //    ropeBitPref.GetComponent<CircleCollider2D>().sharedMaterial = physicsMaterial;
-                    //}
-                    //else if (addPhysicsMaterial && physicsMaterial == null)
-                    //    Debug.LogError("Rope2D: The LphysicsMaterial is not loaded!Place the Line Material in the Resources/Materials/ folder");
-
-                }
+				// Add Gizmos to see the CircleCollider2D component
+				if (ropeBitPref.GetComponent<CircleCollider2D>() == null)
+				{
+					Debug.LogError("Rope Creator: No CircleCollider2D added to the ropeBit prefab!");
+				}
 
                 // Add the prefabs to a list
                 ropeBitsList.Add(ropeBitPref);

@@ -112,7 +112,7 @@ public class UIManager : MonoBehaviour
 	public void HideDialog()
 	{
 		dialogBox.Enabled = false;
-		//nameBox.Enabled = false;
+		nameBox.Enabled = false;
 	}
 
 	/*
@@ -298,8 +298,8 @@ public struct ImageTextCombo
 
 	public ImageTextCombo(string s)
 	{
-		bg = GameObject.Find(s).GetComponent<Image>();
-
+        bg = GameObject.Find(s).GetComponent<Image>();
+        Debug.Log(s + " " + (bg == null));
 		img = bg.GetComponentsInChildren<Image>()[1];
 		txt = img.GetComponentInChildren<Text>();
 		txt.text = "";

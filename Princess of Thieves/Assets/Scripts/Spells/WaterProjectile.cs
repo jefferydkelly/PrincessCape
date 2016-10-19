@@ -14,17 +14,27 @@ public class WaterProjectile : SpellProjectile {
 		name = "Tsunami";
 		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
 		sr.sprite = Resources.Load<Sprite>("Sprites/Water");
-		gameObject.AddComponent<BoxCollider2D>();
+		BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
+		col.size = new Vector2(2, 1);
+		col.offset = new Vector2(0.07f, 0);
 		myRigidbody = gameObject.AddComponent<Rigidbody2D>();
-		myRigidbody.AddForce(fwd * startForce, ForceMode2D.Impulse);
 		myRigidbody.freezeRotation = true;
 		myRigidbody.mass = 0.5f;
 		Invoke("Destroy", lifeTime);
 	}
 
+	public void Init()
+	{
+		myRigidbody.AddForce(fwd * startForce, ForceMode2D.Impulse);
+	}
 	void FixedUpdate()
 	{
 		oldXVel = myRigidbody.velocity.x;
+
+		if (Mathf.Abs(oldXVel) < Mathf.Epsilon)
+		{
+			Destroy();
+		}
 	}
 	void OnCollisionEnter2D(Collision2D col)
 	{

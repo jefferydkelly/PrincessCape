@@ -15,6 +15,7 @@ public class WaterSpell : Spell {
 		WaterProjectile w = go.AddComponent<WaterProjectile>();
 		w.FWD = c.Forward;
 		go.transform.position = c.Position + (c.Forward * (c.GameObject.HalfWidth() + go.HalfWidth() + 0.1f));
+		w.Init();
 		return w;
 	}
 }
