@@ -109,6 +109,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
 			{
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+                myRenderer.flipX = (fwdX == -1);
 			}
 			if (controller.UseSpell && curMP >= curSpell.Cost)
 			{
