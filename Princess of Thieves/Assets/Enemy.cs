@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour {
     EnemyState curState = EnemyState.Stationary;
 
     private bool playerInSight = false;
+    private GameObject playerObj;
     // Use this for initialization
     void Start () {
         myRigidBody = GetComponent<Rigidbody2D>();
@@ -22,7 +23,16 @@ public class Enemy : MonoBehaviour {
 	void Update () {
         Debug.Log(playerInSight);
 	}
+    EnemyState CheckState()
+    {
+        if (playerInSight && Vector3.Distance(this.transform.position,playerObj.transform.position) < 10)
+        {
+            return EnemyState.Charge;
+        }
 
+        //if nothing else is happening
+        return EnemyState.Stationary;
+    }
     void FixedUpdate()
     {
         LookForward(fwdX);
