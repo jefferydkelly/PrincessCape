@@ -61,6 +61,7 @@ public class FireballProjectile : SpellProjectile {
 	public override void Diminish()
 	{
 		flipped = true;
+		GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/iceprojectile");
 	}
 
 	public override Vector3 FWD
