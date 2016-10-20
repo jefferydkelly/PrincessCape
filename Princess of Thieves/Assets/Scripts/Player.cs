@@ -135,7 +135,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				po.AllowPassThrough();
 			}
 		}
-		myRigidBody.AddForce(new Vector2(0, jumpImpulse), ForceMode2D.Impulse);
+		myRigidBody.AddForce(new Vector2(0, jumpImpulse * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
 	}
 
 	void FixedUpdate()
@@ -191,7 +191,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	{
 		get
 		{
-			return Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
+			Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
+			return Physics2D.Raycast(transform.position, down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
 		}
 	}
 

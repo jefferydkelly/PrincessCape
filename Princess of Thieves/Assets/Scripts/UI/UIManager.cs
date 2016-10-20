@@ -173,39 +173,6 @@ public class UIManager : MonoBehaviour
 		messageBox.Enabled = false;
 	}
 
-	/*
-	public void SetVisibleItems(Inventory playerInv)
-	{
-		if (playerInv.curItemSelected.itemIcon)
-		{
-			itemCenter.enabled = true;
-			itemCenter.sprite = playerInv.curItemSelected.itemIcon;
-		}
-		else
-		{
-			itemCenter.GetComponent<Image>().enabled = false;
-		}
-		if (playerInv.LeftItem)
-		{
-			itemLeft.enabled = true;
-			itemLeft.sprite = playerInv.LeftItem;
-		}
-		else
-		{
-			itemLeft.GetComponent<Image>().enabled = false;
-		}
-
-		if (playerInv.RightItem)
-		{
-			itemRight.enabled = true;
-			itemRight.sprite = playerInv.RightItem;
-		}
-		else
-		{
-			itemRight.GetComponent<Image>().enabled = false;
-		}
-	}*/
-
 	//Shows/Hides the equipment box 
 	public bool ShowSpell
 	{
@@ -225,39 +192,6 @@ public class UIManager : MonoBehaviour
 	{
 		spellBox.Text = spellName;
 	}
-
-	/*
-	public void EnableItemBox(ItemBox ib, bool enabled)
-	{
-		Image img = itemCenter;
-
-		if (ib == ItemBox.Left)
-		{
-			img = itemLeft;
-		}
-		else if (ib == ItemBox.Right)
-		{
-			img = itemRight;
-		}
-
-		img.enabled = enabled;
-	}
-
-	public void SetItemBoxSprite(ItemBox ib, Sprite sp)
-	{
-		Image img = itemCenter;
-
-		if (ib == ItemBox.Left)
-		{
-			img = itemLeft;
-		}
-		else if (ib == ItemBox.Right)
-		{
-			img = itemRight;
-		}
-
-		img.sprite = sp;
-	}*/
 
 	public void EnterArea(string s)
 	{
@@ -299,7 +233,7 @@ public struct ImageTextCombo
 	public ImageTextCombo(string s)
 	{
         bg = GameObject.Find(s).GetComponent<Image>();
-        Debug.Log(s + " " + (bg == null));
+
 		img = bg.GetComponentsInChildren<Image>()[1];
 		txt = img.GetComponentInChildren<Text>();
 		txt.text = "";
@@ -335,11 +269,4 @@ public struct ImageTextCombo
 			return txt.text;
 		}
 	}
-}
-
-public enum ItemBox
-{
-	Left,
-	Center,
-	Right
 }
