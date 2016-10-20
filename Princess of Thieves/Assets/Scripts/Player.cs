@@ -26,6 +26,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
     bool sneaking = false;
     bool hidden = false;
+	bool canUseMagic = true;
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -111,7 +112,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
                 myRenderer.flipX = (fwdX == -1);
 			}
-			if (controller.UseSpell && curMP >= curSpell.Cost)
+			if (canUseMagic && controller.UseSpell && curMP >= curSpell.Cost)
 			{
 				SpellProjectile sp = curSpell.Cast(this);
 				sp.allegiance = Allegiance.Player;
@@ -162,15 +163,19 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Rope"))
-        {
-            numRopesTouching++;
+		if (col.CompareTag("Rope"))
+		{
+			numRopesTouching++;
 
-            if (numRopesTouching > 0)
-            {
-                myRigidBody.gravityScale = 0;
-            }
-        }
+			if (numRopesTouching > 0)
+			{
+				myRigidBody.gravityScale = 0;
+			}
+		}
+		else if (col.CompareTag("NoMagicArea"))
+		{
+			canUseMagic = false;
+		}
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -183,7 +188,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
             {
                 myRigidBody.gravityScale = 1.5f;
             }
-        }
+        } else if (col.CompareTag("NoMagicArea"))
+		{
+			canUseMagic = true;
+		}
     }
     #endregion
     #region Gets
