@@ -57,7 +57,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
                     Material mat = GetComponent<SpriteRenderer>().material;
 
                     Color newColor = mat.color;
-                    if (newColor.a != 1)
+                    if (newColor.a != 1f)
                     {
 
                         newColor.a = 0.7f;
@@ -91,6 +91,19 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				{
 					Jump();
 				}
+				else {
+					if (controller.Interact)
+					{
+						RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
+						InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+
+						if (io != null)
+						{
+							io.Interact();
+						}
+					}
+				}
+				/*
 				else if (controller.Vertical == -1 && controller.Interact)
 				{
 					RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
@@ -104,7 +117,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 							po.AllowPassThrough();
 						}
 					}
-				}
+				}*/
 			}
 
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
@@ -117,11 +130,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				SpellProjectile sp = curSpell.Cast(this);
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
-			}
-			else if (controller.Attack)
-			{
-				SpellProjectile sp = new EarthSpell().Cast(this);
-				sp.allegiance = Allegiance.Player;
 			}
 		}
 	}
@@ -147,6 +155,20 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
         if (hidden)
             Debug.Log("Hidden");
     }
+
+	/// <summary>
+	/// Handles the Player taking damage.
+	/// </summary>
+	/// <returns><c>true</c>, if the player is killed, <c>false</c> otherwise.</returns>
+	/// <param name="ds">Ds.</param>
+	public bool TakeDamage(DamageSource ds)
+	{
+		if (ds.allegiance != Allegiance.Player)
+		{
+			curHP -= ds.damage;
+		}
+		return curHP <= 0;
+	}
 
     #region CollisionHandling
     void OnCollisionEnter2D(Collision2D col)
@@ -195,6 +217,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     }
     #endregion
     #region Gets
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> is on ground.
+	/// </summary>
+	/// <value><c>true</c> if is on ground; otherwise, <c>false</c>.</value>
     bool IsOnGround
 	{
 		get
@@ -205,7 +231,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	}
 
 	
-
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> is on rope.
+	/// </summary>
+	/// <value><c>true</c> if is on rope; otherwise, <c>false</c>.</value>
 	bool IsOnRope
 	{
 		get
@@ -213,6 +242,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return numRopesTouching > 0;
 		}
 	}
+
+	/// <summary>
+	/// Gets the height of the jump.
+	/// </summary>
+	/// <value>The height of the jump.</value>
 	float JumpHeight
 	{
 		get
@@ -221,15 +255,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-	public bool TakeDamage(DamageSource ds)
-	{
-		if (ds.allegiance != Allegiance.Player)
-		{
-			curHP -= ds.damage;
-		}
-		return curHP <= 0;
-	}
-
+	/// <summary>
+	/// Gets the allegiance.
+	/// </summary>
+	/// <value>The allegiance.</value>
 	public Allegiance Allegiance
 	{
 		get
@@ -237,6 +266,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return Allegiance.Player;
 		}
 	}
+
+	/// <summary>
+	/// Gets half of the width.
+	/// </summary>
+	/// <value>The half of the width.</value>
 	public float HalfWidth
 	{
 		get
@@ -245,6 +279,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets half of the height
+	/// </summary>
+	/// <value>Half of the height.</value>
 	public float HalfHeight
 	{
 		get
@@ -253,6 +291,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the percent of HP the player has.
+	/// </summary>
+	/// <value>The percent of HP the player has.</value>
 	public float HPPercent
 	{
 		get
@@ -261,6 +303,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the mp the player has.
+	/// </summary>
+	/// <value>The mp the player has.</value>
 	public int MP
 	{
 		get
@@ -268,6 +314,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return curMP;
 		}
 	}
+
+	/// <summary>
+	/// Gets the percent of MP the player has.
+	/// </summary>
+	/// <value>The percent of MP the player has.</value>
 	public float MPPercent
 	{
 		get
@@ -276,6 +327,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the Player's forward vector.
+	/// </summary>
+	/// <value>The Player's forward vector.</value>
 	public Vector3 Forward
 	{
 		get
@@ -284,6 +339,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the Player's rigid body.
+	/// </summary>
+	/// <value>The Player's rigid body.</value>
 	public Rigidbody2D RigidBody
 	{
 		get
@@ -292,6 +351,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the game object this object is attached to.
+	/// </summary>
+	/// <value>The game object this is attached to.</value>
 	public GameObject GameObject
 	{
 		get
@@ -300,6 +363,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the position.
+	/// </summary>
+	/// <value>The position.</value>
 	public Vector3 Position
 	{
 		get
@@ -308,11 +375,32 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the name of the currently equipped spell.
+	/// </summary>
+	/// <value>The name of the equipped spell.</value>
 	public string SpellName
 	{
 		get
 		{
 			return curSpell.SpellName;
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is hidden.
+	/// </summary>
+	/// <value><c>true</c> if hidden; otherwise, <c>false</c>.</value>
+	public bool Hidden
+	{
+		get
+		{
+			return hidden;
+		}
+
+		set
+		{
+			hidden = value;
 		}
 	}
     #endregion gets
@@ -328,7 +416,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
         sneaking = true;
         Material mat = GetComponent<SpriteRenderer>().material;        
         Color newColor = mat.color;
-        if (newColor.a == 1) {
+		if (newColor.a == 1.0f) {
             newColor.a = 0.7f;
             mat.color = newColor;
         }    
