@@ -16,6 +16,7 @@ public class Controller
 	private string attackKey;
 	private string spellKey;
 	private string interactKey;
+	private string sneakKey;
 	private string nextItemKey;
 	private string prevItemKey;
 	private string useItemKey;
@@ -41,6 +42,8 @@ public class Controller
 			attackKey = "c";
 			spellKey = "x";
 			useItemKey = "z";
+			sneakKey = "left shift";
+
 
 		}
 		else {
@@ -113,6 +116,13 @@ public class Controller
 		}
 	}
 
+	public bool Sneak
+	{
+		get
+		{
+			return Input.GetKey(sneakKey);
+		}
+	}
 	public virtual int ItemChange
 	{
 		get

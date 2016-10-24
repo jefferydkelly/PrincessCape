@@ -9,7 +9,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
-    public float sneakSpeed = 0.8f;
+    public float sneakSpeed = 0.5f;
     public float jumpImpulse = 10;
 	private float lastYVel = 0;
     private bool onRope = false;
@@ -24,7 +24,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	private int numRopesTouching = 0;
 
-    bool sneaking = false;
     bool hidden = false;
 	bool canUseMagic = true;
 	// Use this for initialization
@@ -40,40 +39,17 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     
 	// Update is called once per frame
 	void Update () {
-		if (!GameManager.Instance.IsPaused)
+		if (!GameManager.Instance.IsPaused && !Hidden)
 		{
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                GoStealth();
-            }
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                Hide();
-            }
-            if (hidden) //stops in place hiding
-            {
-                if(new Vector2(controller.Horizontal,controller.Vertical) != Vector2.zero)
-                {
-                    Material mat = GetComponent<SpriteRenderer>().material;
-
-                    Color newColor = mat.color;
-                    if (newColor.a != 1f)
-                    {
-
-                        newColor.a = 0.7f;
-                        mat.color = newColor;
-                    }
-                    hidden = false;
-                }
-            }
 			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
-            if(!sneaking)
-                myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
-            else
-                myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
 
-            if (IsOnRope)
+            if(controller.Sneak)
+				myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+            else
+				myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+
+			if (IsOnRope)
 			{
 				Vector2 vel = myRigidBody.velocity;
 				vel.x = 0;
@@ -85,7 +61,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				{
 					Jump();
 				}
-			}else if (IsOnGround)
+			}
+			else if (IsOnGround)
 			{
 				if (controller.Jump)
 				{
@@ -95,11 +72,16 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 					if (controller.Interact)
 					{
 						RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
-						InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
 
-						if (io != null)
+						if (hit.collider != null)
 						{
-							io.Interact();
+							InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+
+							if (io != null)
+							{
+								Debug.Log("Interacting");
+								io.Interact();
+							}
 						}
 					}
 				}
@@ -131,7 +113,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
 			}
+		} else if (!GameManager.Instance.IsPaused && Hidden && controller.Interact)
+		{
+			Hidden = false;
 		}
+
 	}
 
 	void Jump()
@@ -150,10 +136,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	void FixedUpdate()
 	{
 		lastYVel = myRigidBody.velocity.y;
-        if (sneaking)
-            Debug.Log("Sneaking");
-        if (hidden)
-            Debug.Log("Hidden");
     }
 
 	/// <summary>
@@ -404,43 +386,4 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
     #endregion gets
-
-
-    #region abilites 
-    /// <summary>
-    /// Activates the player being stealthed. Probably will use ability scripts that are preferred.
-    /// Certainly could be created within the player itself
-    /// </summary>
-    void GoStealth()
-    {
-        sneaking = true;
-        Material mat = GetComponent<SpriteRenderer>().material;        
-        Color newColor = mat.color;
-		if (newColor.a == 1.0f) {
-            newColor.a = 0.7f;
-            mat.color = newColor;
-        }    
-    }
-    void Hide()
-    {
-        if (sneaking)
-        {
-            hidden = true;
-            Material mat = GetComponent<SpriteRenderer>().material;
-            Color newColor = mat.color;
-            if (newColor.a != 1)
-            {
-                newColor.a = 0.4f;
-                mat.color = newColor;
-            }
-        }
-    }
-    /// <summary>
-    /// Throws a dagger, so far only one dagger, coated in a slowing poison.
-    /// </summary>
-    void ThrowDagger()
-    {
-
-    }
-    #endregion
 }

@@ -3,18 +3,14 @@ using System.Collections;
 
 public class CoverController : MonoBehaviour, InteractiveObject {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
+	/// <summary>
+	/// Hides the player behind the cover of the object or causes the Player to leave cover.
+	/// </summary>
 	public void Interact()
 	{
-		//Hide the player
+		Player player = GameManager.Instance.Player;
+		player.Hidden = true;
+		player.transform.position = transform.position;
+
 	}
 }
