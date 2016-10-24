@@ -47,6 +47,14 @@ public class Controller
 
 		}
 		else {
+			Controller360 c = new Controller360(1);
+			leftKey = c.horizontalAxis;
+			upKey = c.verticalAxis;
+			interactKey = c.interactKey;
+			spellKey = c.spellKey;
+			sneakKey = c.sneakKey;
+			jumpKey = c.jumpKey;
+
 		}
 	}
 	public virtual int Horizontal
@@ -57,7 +65,8 @@ public class Controller
 			{
 				return (Input.GetKey(rightKey) ? 1 : 0) - (Input.GetKey(leftKey) ? 1 : 0);
 			}
-			return (int)Mathf.Sign(Input.GetAxis(leftKey));
+			float h = Input.GetAxis(leftKey);
+			return Mathf.Abs(h) > 0.9 ? (int)Mathf.Sign(h) : 0;
 
 		}
 	}
@@ -71,7 +80,8 @@ public class Controller
 				return (Input.GetKey(upKey) ? 1 : 0) - (Input.GetKey(downKey) ? 1 : 0);
 			}
 
-			return (int)Mathf.Sign(Input.GetAxis(upKey));
+			float v = Input.GetAxis(upKey);
+			return Mathf.Abs(v) > 0.9 ? (int)Mathf.Sign(v) : 0;
 
 		}
 	}
@@ -310,4 +320,36 @@ public enum ControllerType
 	None,
 	Keyboard,
 	Gamepad
+}
+
+public struct Controller360
+{
+	public string horizontalAxis;
+	public string verticalAxis;
+	public string jumpKey;
+	public string sneakKey;
+	public string interactKey;
+	public string spellKey;
+
+	public Controller360(int controllerNumber)
+	{
+		string os = SystemInfo.operatingSystem;
+		horizontalAxis = "Horizontal";
+		verticalAxis = "Vertical";
+
+		if (os.Contains("Mac"))
+		{
+			jumpKey = "joystick button 16";
+			sneakKey = "joystick button 17";
+			interactKey = "joystick button 18";
+			spellKey = "joystick button 19";
+		}
+		else
+		{
+			jumpKey = "joystick button 0";
+			sneakKey = "joystick button 1";
+			interactKey = "joystick button 2";
+			spellKey = "joystick button 3";
+		}
+	}
 }
