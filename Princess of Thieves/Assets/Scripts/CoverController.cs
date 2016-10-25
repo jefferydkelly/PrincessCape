@@ -1,0 +1,16 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class CoverController : MonoBehaviour, InteractiveObject {
+
+	/// <summary>
+	/// Hides the player behind the cover of the object or causes the Player to leave cover.
+	/// </summary>
+	public void Interact()
+	{
+		Player player = GameManager.Instance.Player;
+		player.Hidden = true;
+		player.transform.position = transform.position;
+
+	}
+}

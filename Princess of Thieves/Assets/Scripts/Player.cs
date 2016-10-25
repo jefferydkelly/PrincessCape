@@ -6,34 +6,28 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-    //private CircleCollider2D lightDetector;
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
-    public float sneakSpeed = 0.8f;
+    public float sneakSpeed = 0.5f;
     public float jumpImpulse = 10;
 	private float lastYVel = 0;
     private bool onRope = false;
-    /// <summary>
-    /// Light Level is a variable that keeps track of how close Elwynn is to a light source
-    /// </summary>
-    private float lightLevel = 0;
+
 	private int curHP = 0;
 	public int maxHP = 100;
 
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new WaterSpell();
+	private Spell curSpell = new FireSpell();
 
 	private int numRopesTouching = 0;
 
-    bool sneaking = false;
     bool hidden = false;
+	bool canUseMagic = true;
 	// Use this for initialization
 	void Start () {
-        //lightDetector = gameObject.AddComponent<CircleCollider2D>();
-        //lightDetector.radius = 10f;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
@@ -45,40 +39,17 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     
 	// Update is called once per frame
 	void Update () {
-		if (!GameManager.Instance.IsPaused)
+		if (!GameManager.Instance.IsPaused && !Hidden)
 		{
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                GoStealth();
-            }
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                Hide();
-            }
-            if (hidden) //stops in place hiding
-            {
-                if(new Vector2(controller.Horizontal,controller.Vertical) != Vector2.zero)
-                {
-                    Material mat = GetComponent<SpriteRenderer>().material;
-
-                    Color newColor = mat.color;
-                    if (newColor.a != 1)
-                    {
-
-                        newColor.a = 0.7f;
-                        mat.color = newColor;
-                    }
-                    hidden = false;
-                }
-            }
 			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
-            if(!sneaking)
-                myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
-            else
-                myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
 
-            if (IsOnRope)
+            if(controller.Sneak)
+				myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+            else
+				myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+
+			if (IsOnRope)
 			{
 				Vector2 vel = myRigidBody.velocity;
 				vel.x = 0;
@@ -90,12 +61,31 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				{
 					Jump();
 				}
-			}else if (IsOnGround)
+			}
+			else if (IsOnGround)
 			{
 				if (controller.Jump)
 				{
 					Jump();
 				}
+				else {
+					if (controller.Interact)
+					{
+						RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
+
+						if (hit.collider != null)
+						{
+							InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+
+							if (io != null)
+							{
+								Debug.Log("Interacting");
+								io.Interact();
+							}
+						}
+					}
+				}
+				/*
 				else if (controller.Vertical == -1 && controller.Interact)
 				{
 					RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
@@ -109,7 +99,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 							po.AllowPassThrough();
 						}
 					}
-				}
+				}*/
 			}
 
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
@@ -117,18 +107,17 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
                 myRenderer.flipX = (fwdX == -1);
 			}
-			if (controller.UseSpell && curMP >= curSpell.Cost)
+			if (canUseMagic && controller.UseSpell && curMP >= curSpell.Cost)
 			{
 				SpellProjectile sp = curSpell.Cast(this);
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
 			}
-			else if (controller.Attack)
-			{
-				SpellProjectile sp = new EarthSpell().Cast(this);
-				sp.allegiance = Allegiance.Player;
-			}
+		} else if (!GameManager.Instance.IsPaused && Hidden && controller.Interact)
+		{
+			Hidden = false;
 		}
+
 	}
 
 	void Jump()
@@ -146,14 +135,22 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	void FixedUpdate()
 	{
-        lightLevel = DistToLight();
-       // Debug.Log("I'm in this much light: " + lightLevel);
 		lastYVel = myRigidBody.velocity.y;
-        if (sneaking)
-            Debug.Log("Sneaking");
-        if (hidden)
-            Debug.Log("Hidden");
     }
+
+	/// <summary>
+	/// Handles the Player taking damage.
+	/// </summary>
+	/// <returns><c>true</c>, if the player is killed, <c>false</c> otherwise.</returns>
+	/// <param name="ds">Ds.</param>
+	public bool TakeDamage(DamageSource ds)
+	{
+		if (ds.allegiance != Allegiance.Player)
+		{
+			curHP -= ds.damage;
+		}
+		return curHP <= 0;
+	}
 
     #region CollisionHandling
     void OnCollisionEnter2D(Collision2D col)
@@ -170,15 +167,19 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Rope"))
-        {
-            numRopesTouching++;
+		if (col.CompareTag("Rope"))
+		{
+			numRopesTouching++;
 
-            if (numRopesTouching > 0)
-            {
-                myRigidBody.gravityScale = 0;
-            }
-        }
+			if (numRopesTouching > 0)
+			{
+				myRigidBody.gravityScale = 0;
+			}
+		}
+		else if (col.CompareTag("NoMagicArea"))
+		{
+			canUseMagic = false;
+		}
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -191,30 +192,17 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
             {
                 myRigidBody.gravityScale = 1.5f;
             }
-        }
+        } else if (col.CompareTag("NoMagicArea"))
+		{
+			canUseMagic = true;
+		}
     }
     #endregion
     #region Gets
-
-    float DistToLight()
-    {
-        float returnValueF = 100f; //way too far if it doesn't grab anything else
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, 100f);
-        int i = 0;
-        while (i < hitColliders.Length)
-        {
-            if(hitColliders[i].GetComponent<Light>())
-            {
-                if (Vector3.Distance(transform.position,hitColliders[i].transform.position) < returnValueF)
-                {
-                    returnValueF = Vector3.Distance(transform.position, hitColliders[i].transform.position);
-                   
-                }
-            }
-            i++;
-        }
-        return returnValueF;
-    }
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> is on ground.
+	/// </summary>
+	/// <value><c>true</c> if is on ground; otherwise, <c>false</c>.</value>
     bool IsOnGround
 	{
 		get
@@ -225,7 +213,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	}
 
 	
-
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> is on rope.
+	/// </summary>
+	/// <value><c>true</c> if is on rope; otherwise, <c>false</c>.</value>
 	bool IsOnRope
 	{
 		get
@@ -233,6 +224,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return numRopesTouching > 0;
 		}
 	}
+
+	/// <summary>
+	/// Gets the height of the jump.
+	/// </summary>
+	/// <value>The height of the jump.</value>
 	float JumpHeight
 	{
 		get
@@ -241,15 +237,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
-	public bool TakeDamage(DamageSource ds)
-	{
-		if (ds.allegiance != Allegiance.Player)
-		{
-			curHP -= ds.damage;
-		}
-		return curHP <= 0;
-	}
-
+	/// <summary>
+	/// Gets the allegiance.
+	/// </summary>
+	/// <value>The allegiance.</value>
 	public Allegiance Allegiance
 	{
 		get
@@ -257,6 +248,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return Allegiance.Player;
 		}
 	}
+
+	/// <summary>
+	/// Gets half of the width.
+	/// </summary>
+	/// <value>The half of the width.</value>
 	public float HalfWidth
 	{
 		get
@@ -265,6 +261,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets half of the height
+	/// </summary>
+	/// <value>Half of the height.</value>
 	public float HalfHeight
 	{
 		get
@@ -273,6 +273,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the percent of HP the player has.
+	/// </summary>
+	/// <value>The percent of HP the player has.</value>
 	public float HPPercent
 	{
 		get
@@ -281,6 +285,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the mp the player has.
+	/// </summary>
+	/// <value>The mp the player has.</value>
 	public int MP
 	{
 		get
@@ -288,6 +296,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return curMP;
 		}
 	}
+
+	/// <summary>
+	/// Gets the percent of MP the player has.
+	/// </summary>
+	/// <value>The percent of MP the player has.</value>
 	public float MPPercent
 	{
 		get
@@ -296,6 +309,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the Player's forward vector.
+	/// </summary>
+	/// <value>The Player's forward vector.</value>
 	public Vector3 Forward
 	{
 		get
@@ -304,6 +321,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the Player's rigid body.
+	/// </summary>
+	/// <value>The Player's rigid body.</value>
 	public Rigidbody2D RigidBody
 	{
 		get
@@ -312,6 +333,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the game object this object is attached to.
+	/// </summary>
+	/// <value>The game object this is attached to.</value>
 	public GameObject GameObject
 	{
 		get
@@ -320,6 +345,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the position.
+	/// </summary>
+	/// <value>The position.</value>
 	public Vector3 Position
 	{
 		get
@@ -328,6 +357,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 	}
 
+	/// <summary>
+	/// Gets the name of the currently equipped spell.
+	/// </summary>
+	/// <value>The name of the equipped spell.</value>
 	public string SpellName
 	{
 		get
@@ -335,44 +368,22 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return curSpell.SpellName;
 		}
 	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is hidden.
+	/// </summary>
+	/// <value><c>true</c> if hidden; otherwise, <c>false</c>.</value>
+	public bool Hidden
+	{
+		get
+		{
+			return hidden;
+		}
+
+		set
+		{
+			hidden = value;
+		}
+	}
     #endregion gets
-
-
-    #region abilites 
-    /// <summary>
-    /// Activates the player being stealthed. Probably will use ability scripts that are preferred.
-    /// Certainly could be created within the player itself
-    /// </summary>
-    void GoStealth()
-    {
-        sneaking = true;
-        Material mat = GetComponent<SpriteRenderer>().material;        
-        Color newColor = mat.color;
-        if (newColor.a == 1) {
-            newColor.a = 0.7f;
-            mat.color = newColor;
-        }    
-    }
-    void Hide()
-    {
-        if (sneaking)
-        {
-            hidden = true;
-            Material mat = GetComponent<SpriteRenderer>().material;
-            Color newColor = mat.color;
-            if (newColor.a != 1)
-            {
-                newColor.a = 0.4f;
-                mat.color = newColor;
-            }
-        }
-    }
-    /// <summary>
-    /// Throws a dagger, so far only one dagger, coated in a slowing poison.
-    /// </summary>
-    void ThrowDagger()
-    {
-
-    }
-    #endregion
 }
