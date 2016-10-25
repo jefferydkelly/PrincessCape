@@ -184,8 +184,13 @@ public class UIManager : MonoBehaviour
 		set
 		{
 			spellBox.Enabled = value;
-			spellBox.Text = GameManager.Instance.Player.SpellName;
+			UpdateSpellInfo();
 		}
+	}
+
+	public void UpdateSpellInfo()
+	{
+		spellBox.Text = GameManager.Instance.Player.SpellName;
 	}
 
 	public void UpdateSpellName(string spellName)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
@@ -20,7 +21,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private int curMP = 0;
 	public int maxMP = 100;
 
-	private Spell curSpell = new FireSpell();
+	List<Spell> spells = new List<Spell>();
+	int curSpell = 0;
 	bool onCooldown = false;
 	private int numRopesTouching = 0;
 
@@ -33,7 +35,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
-		//UIManager.Instance.ShowSpell = true;
+		spells.Add(new FireSpell());
+		UIManager.Instance.ShowSpell = true;
 	}
 	
     
@@ -79,7 +82,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 							if (io != null)
 							{
-								Debug.Log("Interacting");
 								io.Interact();
 							}
 						}
@@ -92,13 +94,13 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
                 myRenderer.flipX = (fwdX == -1);
 			}
-			if (!onCooldown && controller.UseSpell && curMP >= curSpell.Cost)
+			if (!onCooldown && controller.UseSpell && curMP >= CurSpell.Cost)
 			{
-				SpellProjectile sp = curSpell.Cast(this);
+				SpellProjectile sp = CurSpell.Cast(this);
 				onCooldown = true;
 				Invoke("SpellCooldown", 1.0f);
 				sp.allegiance = Allegiance.Player;
-				curMP -= curSpell.Cost;
+				curMP -= CurSpell.Cost;
 			}
 		} else if (!GameManager.Instance.IsPaused && Hidden && controller.Interact)
 		{
@@ -112,6 +114,15 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		onCooldown = false;
 	}
 
+	public void AddSpell(Spell s)
+	{
+		if (!spells.Contains(s))
+		{
+			spells.Add(s);
+
+			CurrentSpell = spells.Count - 1;
+		}
+	}
 	void Jump()
 	{
 		foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
@@ -357,7 +368,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	{
 		get
 		{
-			return curSpell.SpellName;
+			return CurSpell.SpellName;
 		}
 	}
 
@@ -377,5 +388,34 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			hidden = value;
 		}
 	}
+
+	public int CurrentSpell
+	{
+		get
+		{
+			return curSpell;
+		}
+
+		set
+		{
+			curSpell = value % spells.Count;
+	
+			while (curSpell < 0)
+			{
+				curSpell += spells.Count;
+			}
+
+			UIManager.Instance.UpdateSpellInfo();
+		}
+	}
+
+	public Spell CurSpell
+	{
+		get
+		{
+			return spells[CurrentSpell];
+		}
+	}
     #endregion gets
+
 }
