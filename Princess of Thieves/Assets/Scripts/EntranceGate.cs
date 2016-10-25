@@ -5,6 +5,6 @@ public class EntranceGate : GateController {
 
     protected override void OnClose()
     {
-        //GameManager.Instance.StartCutscene("EntranceCutscene");
+        GameManager.Instance.StartCutscene("EntranceCutscene");
     }
 }

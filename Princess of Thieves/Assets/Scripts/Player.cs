@@ -21,7 +21,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	public int maxMP = 100;
 
 	private Spell curSpell = new FireSpell();
-
+	bool onCooldown = false;
 	private int numRopesTouching = 0;
 
     bool hidden = false;
@@ -85,21 +85,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 						}
 					}
 				}
-				/*
-				else if (controller.Vertical == -1 && controller.Interact)
-				{
-					RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
-
-					PlatformObject po = hit.collider.GetComponent<PlatformObject>();
-
-					if (po)
-					{
-						if (po.passThrough)
-						{
-							po.AllowPassThrough();
-						}
-					}
-				}*/
 			}
 
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
@@ -107,9 +92,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
                 myRenderer.flipX = (fwdX == -1);
 			}
-			if (canUseMagic && controller.UseSpell && curMP >= curSpell.Cost)
+			if (!onCooldown && controller.UseSpell && curMP >= curSpell.Cost)
 			{
 				SpellProjectile sp = curSpell.Cast(this);
+				onCooldown = true;
+				Invoke("SpellCooldown", 1.0f);
 				sp.allegiance = Allegiance.Player;
 				curMP -= curSpell.Cost;
 			}
@@ -118,6 +105,11 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			Hidden = false;
 		}
 
+	}
+
+	void SpellCooldown()
+	{
+		onCooldown = false;
 	}
 
 	void Jump()

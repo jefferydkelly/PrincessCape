@@ -14,7 +14,7 @@ public class FireballProjectile : SpellProjectile {
 		col.offset = new Vector2(0.1f, -0.05f);
 		col.isTrigger = true;
 		Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-		rb.gravityScale = 0;
+		rb.gravityScale = 0;//.25f;
 	}
 	
 	// Update is called once per frame
