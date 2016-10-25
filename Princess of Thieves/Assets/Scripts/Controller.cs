@@ -23,6 +23,10 @@ public class Controller
 	private string nextSpellKey;
 	private string prevSpellKey;
 
+    //Axis Check Bools
+    float resetTime = 0.5f;
+    bool spellAxisFrozen = false;
+
 	public Controller()
 	{
 		if (Input.GetJoystickNames().Length == 0)
@@ -39,8 +43,10 @@ public class Controller
 				controllerType = ControllerType.GamepadWindows;
 			}
 		}
-		LoadController();
-	}
+
+        LoadController();
+
+    }
 
 	void LoadController()
 	{
@@ -164,7 +170,14 @@ public class Controller
 		{
 			if (controllerType == ControllerType.GamepadWindows)
 			{
-				return (int)Mathf.Sign(Input.GetAxis(nextSpellKey));
+                float val = Input.GetAxis(nextSpellKey);
+                if (Mathf.Abs(val) > 0.5 && !spellAxisFrozen)
+                {
+                    spellAxisFrozen = true;
+                    GameManager.Instance.Player.HandleSpellAxisCooldownForController(resetTime);
+                    return (int)Mathf.Sign(val);
+                }
+                return 0;
 
 			}
 			else {
@@ -172,6 +185,11 @@ public class Controller
 			}
 		}
 	}
+
+    public void UnfreezeSpellAxis()
+    {
+        spellAxisFrozen = false;
+    }
 
 	public virtual string LeftKey
 	{
@@ -273,7 +291,7 @@ public class Controller
 	{
 		get
 		{
-			return (controllerType & ControllerType.Keyboard) > 0;
+			return controllerType == ControllerType.Keyboard;
 		}
 	}
 
@@ -379,8 +397,8 @@ public struct Controller360
 			sneakKey = "joystick button 1";
 			interactKey = "joystick button 2";
 			spellKey = "joystick button 3";
-			nextSpellKey = "DPadXHorizontal";
-			prevSpellKey = "DPadXHorizontal";
+			nextSpellKey = "DPadXWindows";
+			prevSpellKey = "DPadXWindows";
 		}
 	}
 }

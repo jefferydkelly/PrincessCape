@@ -1,9 +1,5 @@
 5.4.1f1:2.3.0.0
-<<<<<<< HEAD
-StandaloneWindows
-=======
 StandaloneOSXIntel64
->>>>>>> 641257c37a105e3c77902caf094ada9f8d3a6b4a
 C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll
 C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
 C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll
@@ -17,8 +13,5 @@ C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/Unity
 C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll
 C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll
 C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll
-<<<<<<< HEAD
-=======
 C:/Program Files/Unity/Editor/Data/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
->>>>>>> 641257c37a105e3c77902caf094ada9f8d3a6b4a
 C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/2015/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll

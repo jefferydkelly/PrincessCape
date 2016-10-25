@@ -119,6 +119,15 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	}
 
+    public void HandleSpellAxisCooldownForController(float t)
+    {
+        Invoke("SpellAxisCooldown", t);
+    }
+
+    void SpellAxisCooldown()
+    {
+        controller.UnfreezeSpellAxis();
+    }
 	void SpellCooldown()
 	{
 		onCooldown = false;
