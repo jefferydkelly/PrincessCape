@@ -6,6 +6,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
+    //private CircleCollider2D lightDetector;
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
@@ -13,7 +14,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     public float jumpImpulse = 10;
 	private float lastYVel = 0;
     private bool onRope = false;
-
+    /// <summary>
+    /// Light Level is a variable that keeps track of how close Elwynn is to a light source
+    /// </summary>
+    private float lightLevel = 0;
 	private int curHP = 0;
 	public int maxHP = 100;
 
@@ -28,6 +32,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     bool hidden = false;
 	// Use this for initialization
 	void Start () {
+        //lightDetector = gameObject.AddComponent<CircleCollider2D>();
+        //lightDetector.radius = 10f;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
@@ -140,6 +146,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	void FixedUpdate()
 	{
+        lightLevel = DistToLight();
+       // Debug.Log("I'm in this much light: " + lightLevel);
 		lastYVel = myRigidBody.velocity.y;
         if (sneaking)
             Debug.Log("Sneaking");
@@ -187,6 +195,26 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     }
     #endregion
     #region Gets
+
+    float DistToLight()
+    {
+        float returnValueF = 100f; //way too far if it doesn't grab anything else
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, 100f);
+        int i = 0;
+        while (i < hitColliders.Length)
+        {
+            if(hitColliders[i].GetComponent<Light>())
+            {
+                if (Vector3.Distance(transform.position,hitColliders[i].transform.position) < returnValueF)
+                {
+                    returnValueF = Vector3.Distance(transform.position, hitColliders[i].transform.position);
+                   
+                }
+            }
+            i++;
+        }
+        return returnValueF;
+    }
     bool IsOnGround
 	{
 		get
