@@ -38,18 +38,22 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		spells.Add(new FireSpell());
 		UIManager.Instance.ShowSpell = true;
 	}
-	
-    
+
+
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		if (!GameManager.Instance.IsPaused && !Hidden)
 		{
+
+			CurrentSpell += controller.SpellChange;
+
 			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
-            if(controller.Sneak)
+			if (controller.Sneak)
 				myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
-            else
+			else
 				myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
 			if (IsOnRope)
@@ -92,7 +96,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
 			{
 				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
-                myRenderer.flipX = (fwdX == -1);
+				myRenderer.flipX = (fwdX == -1);
 			}
 			if (!onCooldown && controller.UseSpell && curMP >= CurSpell.Cost)
 			{
@@ -102,9 +106,15 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				sp.allegiance = Allegiance.Player;
 				curMP -= CurSpell.Cost;
 			}
-		} else if (!GameManager.Instance.IsPaused && Hidden && controller.Interact)
-		{
-			Hidden = false;
+		}
+		else if (!GameManager.Instance.IsPaused && Hidden) {
+
+			if (controller.Interact)
+			{
+				Hidden = false;
+			}
+
+			CurrentSpell += controller.SpellChange;
 		}
 
 	}

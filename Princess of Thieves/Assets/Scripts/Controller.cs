@@ -42,6 +42,8 @@ public class Controller
 			attackKey = "c";
 			spellKey = "x";
 			useItemKey = "z";
+			nextSpellKey = "v";
+			prevSpellKey = "d";
 			sneakKey = "left shift";
 
 
