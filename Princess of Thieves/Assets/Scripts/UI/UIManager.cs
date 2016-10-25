@@ -173,6 +173,16 @@ public class UIManager : MonoBehaviour
 		messageBox.Enabled = false;
 	}
 
+	public bool InCutscene
+	{
+		set
+		{
+			bool val = !value;
+			ShowSpell = val;
+			hpBar.enabled = val;
+			mpBar.enabled = val;
+		}
+	}
 	//Shows/Hides the equipment box 
 	public bool ShowSpell
 	{
