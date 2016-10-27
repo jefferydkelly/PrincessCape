@@ -34,7 +34,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
-		curMP = maxMP;
+		curMP = maxMP; 
 		spells.Add(new FireSpell());
 		UIManager.Instance.ShowSpell = true;
 	}
