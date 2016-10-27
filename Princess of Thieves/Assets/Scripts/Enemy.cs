@@ -15,6 +15,14 @@ public class Enemy : MonoBehaviour {
     private bool playerInSight = false;
     private GameObject playerObj;
     GameObject tempGameObj; //bad move but unavoidable
+    /// <summary>
+    /// Float time value that represent the last time the enemy saw the player. Used to Chasing
+    /// </summary>
+    private float lastTimeSeenPlayer = 0f;
+    private Vector3 playerChaseDest = Vector3.zero;
+    private bool atChaseDest = true;
+    private Vector3 patrolDest = Vector3.zero;
+    private bool atPatrolDest = true;
     //Enemy Ability Things
     /// <summary>
     /// This float keeps track of the time the enemy started it's ability.
@@ -71,11 +79,14 @@ public class Enemy : MonoBehaviour {
     }
     void ShootChargedShot()
     {
-        //Vector2 temp = Vector2.D(this.gameObject.transform.position, playerObj.transform.position);
-        float x = playerObj.transform.position.x - this.gameObject.transform.position.x;
-        float y = playerObj.transform.position.y - this.gameObject.transform.position.y;
-        Vector2 target = new Vector2(x,y);
-        tempGameObj.GetComponent<Rigidbody2D>().AddForce(target * 100);
+        if (tempGameObj)
+        {
+            //Vector2 temp = Vector2.D(this.gameObject.transform.position, playerObj.transform.position);
+            float x = playerObj.transform.position.x - this.gameObject.transform.position.x;
+            float y = playerObj.transform.position.y - this.gameObject.transform.position.y;
+            Vector2 target = new Vector2(x, y);
+            tempGameObj.GetComponent<Rigidbody2D>().AddForce(target * 100);
+        }
 
     }
     GameObject Chargeshot()
@@ -87,11 +98,29 @@ public class Enemy : MonoBehaviour {
         //uses lastKnownLocation if the player disappeared
         return shot;
     }
+
+    /// <summary>
+    /// currently just goes wherever it wants
+    /// </summary>
+    /// <returns></returns>
+    Vector3 GetPatrolLocation()
+    {
+        //Get a random X value for the player to move to
+        int tempLoR = Random.Range(-1, 1); //should force it to -1 or 1
+        int tempX = Random.Range(1, 5);
+        if(tempLoR == 0)
+        {
+            tempLoR = 1;
+        }
+        Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
+
+        return returnVal;
+    }
     // Update is called once per frame
     void Update () {
         curState = CheckState();
-       // Debug.Log(playerInSight + " So I am now " + curState);
-
+       // Debug.Log("patrol Dest is: " + patrolDest);
+        Debug.Log("Chase is: " + curState);
         switch (curState)
         {
             case EnemyState.Charge:
@@ -102,12 +131,53 @@ public class Enemy : MonoBehaviour {
             case EnemyState.ActualShoot:
                 ChargeAttack();
                 break;
+            case EnemyState.Patrol:
+                
+                break;
+            case EnemyState.Chase:
+
+                break;
         }
+        if (curState == EnemyState.Chase)
+        {
+            if (atChaseDest)
+            {
+                Debug.Log("Am I at the player? " + atChaseDest);
+                playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
+                atChaseDest = false;
+            }
+            else
+            {
+                transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
+                if (transform.position == playerChaseDest)
+                {
+                    atChaseDest = true;
+                }
+            }
+        }
+        if (curState == EnemyState.Patrol)
+        {
+            if (atPatrolDest)
+            {
+                Debug.Log("Am I here? " + atPatrolDest);
+                patrolDest = GetPatrolLocation();      
+                atPatrolDest = false;
+            }
+            else
+            { 
+                transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
+                if (transform.position == patrolDest)
+                {
+                    atPatrolDest = true;
+                }
+            }
+        }   
+        
 
 	}
     EnemyState CheckState()
     {
-        Debug.Log("Player? : " + playerInSight);
+       // Debug.Log("Player? : " + playerInSight);
         if(curState == EnemyState.ActualShoot) //override all else
         {
             //except one 
@@ -144,7 +214,7 @@ public class Enemy : MonoBehaviour {
 
         for (double x = 0;  x < 1; x += 0.1)
         {
-            RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 10.0f, (1 << LayerMask.NameToLayer("Player")));
+            RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 20.0f, (1 << LayerMask.NameToLayer("Player")));
             color = Color.red;
             if ((hitRecast.collider != null && hitRecast.collider.gameObject.name == "Player") )
             {
@@ -155,9 +225,12 @@ public class Enemy : MonoBehaviour {
                 return;
             }
         }
+        if (playerInSight)
+        {
+            lastTimeSeenPlayer = Time.time;
+        }
         playerInSight = false;  
-       // Debug.DrawRay(transform.position, Forward * 10, color);
-       // Debug.DrawRay(transform.position, new Vector2(Forward.x, 0.7f) * 10, color);
+
     }
 
     private void Flip()
