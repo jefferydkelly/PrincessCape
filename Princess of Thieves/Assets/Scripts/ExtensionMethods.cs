@@ -129,6 +129,11 @@ public static class ExtensionMethods{
 			}
 		}
 	}
+
+	public static void ReverseGravity(this Rigidbody2D rb)
+	{
+		rb.gravityScale *= -1;
+	}
 }
 
 public enum VelocityType

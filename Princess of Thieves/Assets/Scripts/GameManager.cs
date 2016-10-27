@@ -69,6 +69,7 @@ public class GameManager {
 
 		set
 		{
+			UIManager.Instance.InCutscene = value;
 			if (value)
 			{
 				state |= GameState.Cutscene | GameState.Paused;

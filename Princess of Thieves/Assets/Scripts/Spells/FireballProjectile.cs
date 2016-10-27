@@ -14,7 +14,7 @@ public class FireballProjectile : SpellProjectile {
 		col.offset = new Vector2(0.1f, -0.05f);
 		col.isTrigger = true;
 		Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
-		rb.gravityScale = 0;
+		rb.gravityScale = 0;//.25f;
 	}
 	
 	// Update is called once per frame
@@ -61,7 +61,7 @@ public class FireballProjectile : SpellProjectile {
 	public override void Diminish()
 	{
 		flipped = true;
-		GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/iceprojectile");
+		GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/ice");
 	}
 
 	public override Vector3 FWD
