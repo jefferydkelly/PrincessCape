@@ -120,7 +120,7 @@ public class Enemy : MonoBehaviour {
     void Update () {
         curState = CheckState();
        // Debug.Log("patrol Dest is: " + patrolDest);
-        Debug.Log("Chase is: " + curState);
+        //Debug.Log("Chase is: " + curState);
         switch (curState)
         {
             case EnemyState.Charge:
@@ -142,7 +142,7 @@ public class Enemy : MonoBehaviour {
         {
             if (atChaseDest)
             {
-                Debug.Log("Am I at the player? " + atChaseDest);
+               // Debug.Log("Am I at the player? " + atChaseDest);
                 playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
                 atChaseDest = false;
             }
@@ -159,7 +159,7 @@ public class Enemy : MonoBehaviour {
         {
             if (atPatrolDest)
             {
-                Debug.Log("Am I here? " + atPatrolDest);
+              //  Debug.Log("Am I here? " + atPatrolDest);
                 patrolDest = GetPatrolLocation();      
                 atPatrolDest = false;
             }
@@ -172,8 +172,6 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }   
-        
-
 	}
     EnemyState CheckState()
     {
@@ -181,16 +179,16 @@ public class Enemy : MonoBehaviour {
         if(curState == EnemyState.ActualShoot) //override all else
         {
             //except one 
-            if (!playerInSight)
+            if (playerInSight)
                 return EnemyState.ActualShoot;
             else
                 return EnemyState.Chase;
         }
-        if (playerInSight && Vector3.Distance(this.transform.position,playerObj.transform.position) < 10)
+        if (playerInSight && Vector3.Distance(this.transform.position,playerObj.transform.position) < 15)
         {
             return EnemyState.Charge;
         }
-        else if (playerInSight && Vector3.Distance(this.transform.position, playerObj.transform.position) >= 10)
+        else if (playerInSight && Vector3.Distance(this.transform.position, playerObj.transform.position) >= 15)
         {
             return EnemyState.Chase;
         }
@@ -212,17 +210,26 @@ public class Enemy : MonoBehaviour {
     {
         Color color = Color.red;
 
-        for (double x = 0;  x < 1; x += 0.1)
+        for (double x = 0;  x < 1; x += 0.1 * fwd)
         {
-            RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 20.0f, (1 << LayerMask.NameToLayer("Player")));
+            RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 15.0f, (1 << LayerMask.NameToLayer("Player")));
             color = Color.red;
             if ((hitRecast.collider != null && hitRecast.collider.gameObject.name == "Player") )
             {
                 playerObj = hitRecast.collider.gameObject;
-                color = Color.green;
-                Debug.DrawRay(transform.position, new Vector2(Forward.x, (float)x) * 10, color);
-                playerInSight = true;
-                return;
+                //throw  line to make sure it's not hitting a platform first
+                color = Color.red;
+                RaycastHit2D hitRecast2 = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x),
+                    Vector2.Distance(this.transform.position,playerObj.transform.position), (1 << LayerMask.NameToLayer("Platforms")));
+                if(hitRecast2.collider == null /*&& hitRecast2.collider.gameObject.tag != "Platforms"*/)
+                {
+                    color = Color.green;
+                    Debug.Log("Draw ray because I can see the player because there are no platforms in the way");
+                    Debug.DrawRay(transform.position, playerObj.transform.position-transform.position, color);
+                    playerInSight = true;
+                    return;
+                }
+                playerInSight = false;
             }
         }
         if (playerInSight)

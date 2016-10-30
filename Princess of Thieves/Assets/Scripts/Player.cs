@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -25,9 +26,14 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	int curSpell = 0;
 	bool onCooldown = false;
 	private int numRopesTouching = 0;
-
+    /// <summary>
+    /// This will be a access point for the UI element that shows how hidden the player is.
+    /// </summary>
+    [SerializeField]
+    private Image stealthMeter;
     bool hidden = false;
 	bool canUseMagic = true;
+    private float lightFactor;
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -36,7 +42,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		curHP = maxHP;
 		curMP = maxMP; 
 		spells.Add(new FireSpell());
-		UIManager.Instance.ShowSpell = true;
+		//UIManager.Instance.ShowSpell = true;
+        lightFactor = 0f;
 	}
 
 
@@ -48,7 +55,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 			CurrentSpell += controller.SpellChange;
 
-			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 15;
+			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
 			myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
 			if (controller.Sneak)
@@ -157,6 +164,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	void FixedUpdate()
 	{
+        lightFactor = GetLocalLight();
+        stealthMeter.fillAmount = lightFactor;
 		lastYVel = myRigidBody.velocity.y;
     }
 
@@ -173,6 +182,33 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 		return curHP <= 0;
 	}
+    
+    /// <summary>
+    /// gets the closest light value within 10 float units or whatevder unit is provided. Optional
+    /// </summary>
+    float GetLocalLight(float optionalFloat = 20f)
+    {
+        float lowestDist = optionalFloat; //assume that the furthest light is optDist awawy
+        //this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
+        Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, optionalFloat, 1 << LayerMask.NameToLayer("Light"));
+        //each collider that was hit, we should mask
+        //mask'd
+        
+        foreach (Collider2D col in cols)
+        {
+            //Debug.Log("Col is : " + col);
+            //Better than two v2Distance calls
+            float tempD = (Vector2.Distance(this.transform.position, col.transform.position));
+            if (tempD < lowestDist)
+            {
+                lowestDist = tempD;
+            }
+
+        }
+       // Debug.Log("Light level is : " + lowestDist/10);
+        return lowestDist/optionalFloat;
+    }
+    
 
     #region CollisionHandling
     void OnCollisionEnter2D(Collision2D col)
@@ -424,7 +460,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				curSpell += spells.Count;
 			}
 
-			UIManager.Instance.UpdateSpellInfo();
+			//UIManager.Instance.UpdateSpellInfo();
 		}
 	}
 
