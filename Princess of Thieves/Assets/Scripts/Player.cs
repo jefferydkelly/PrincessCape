@@ -184,23 +184,27 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
     float GetLocalLightLevel(float maxDistance = 20f)
     {
         float lowestDist = maxDistance; //assume that the furthest light is optDist awawy
-        //this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
-        Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, maxDistance, 1 << LayerMask.NameToLayer("Light"));
-        //each collider that was hit, we should mask
-        //mask'd
-        
-        foreach (Collider2D col in cols)
-        {
-            //Debug.Log("Col is : " + col);
-            //Better than two v2Distance calls
-            float tempD = (Vector2.Distance(this.transform.position, col.transform.position));
-            if (tempD < lowestDist)
-            {
-                lowestDist = tempD;
-            }
 
+        if (!hidden)
+        {
+            //this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
+            Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, maxDistance, 1 << LayerMask.NameToLayer("Light"));
+            //each collider that was hit, we should mask
+            //mask'd
+
+            foreach (Collider2D col in cols)
+            {
+                //Debug.Log("Col is : " + col);
+                //Better than two v2Distance calls
+                float tempD = (Vector2.Distance(this.transform.position, col.transform.position));
+                if (tempD < lowestDist)
+                {
+                    lowestDist = tempD;
+                }
+
+            }
+            // Debug.Log("Light level is : " + lowestDist/10);
         }
-       // Debug.Log("Light level is : " + lowestDist/10);
         return 1 - lowestDist/maxDistance;
     }
     
