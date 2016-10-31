@@ -217,14 +217,14 @@ public class Enemy : MonoBehaviour {
     }
     void FixedUpdate()
     {
-        LookForward(fwdX);
+        LookForward();
     }
 
-    void LookForward(int fwd)
+    void LookForward()
     {
         Color color = Color.red;
 
-        for (double x = 0;  x < 1; x += 0.1 * fwd)
+        for (double x = 0;  x < 1; x += 0.1 * fwdX)
         {
             Debug.Log("Draw ray look: " + x);
             RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 15.0f, (1 << LayerMask.NameToLayer("Player")));
