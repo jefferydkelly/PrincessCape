@@ -196,10 +196,13 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
             {
                 //Debug.Log("Col is : " + col);
                 //Better than two v2Distance calls
-                float tempD = (Vector2.Distance(this.transform.position, col.transform.position));
+                Vector3 dif = col.transform.position - transform.position;
+                float tempD = dif.magnitude;
                 if (tempD < lowestDist)
                 {
-                    lowestDist = tempD;
+                    if (!Physics2D.Raycast(transform.position, dif.normalized, tempD, 1 << LayerMask.NameToLayer("Platforms"))) {
+                        lowestDist = tempD;
+                    }
                 }
 
             }
