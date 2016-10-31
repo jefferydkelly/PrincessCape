@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour {
     //AI Things
     public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
     EnemyState curState = EnemyState.Stationary;
+    float sightRange = 15.0f;
+    float sightAngle = 45.0f;
     private bool playerInSight = false;
     private GameObject playerObj;
     GameObject tempGameObj; //bad move but unavoidable
@@ -41,6 +43,7 @@ public class Enemy : MonoBehaviour {
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
         Flip();
+        playerObj = GameManager.Instance.Player.GameObject;
     }
 	
     /// <summary>
@@ -210,6 +213,26 @@ public class Enemy : MonoBehaviour {
     {
         Color color = Color.red;
 
+        Player p = GameManager.Instance.Player;
+        if (!p.Hidden)
+        {
+            Vector3 dif = p.transform.position - transform.position;
+            if (dif.sqrMagnitude <= sightRange * sightRange)
+            {
+                if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad))
+                {
+                    if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
+                    {
+                        playerInSight = true;
+                        lastTimeSeenPlayer = Time.time;
+                        return;
+                    }
+                }
+            }
+        }
+        playerInSight = false;
+    
+        /*
         for (double x = 0;  x < 1; x += 0.1 * fwd)
         {
             RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 15.0f, (1 << LayerMask.NameToLayer("Player")));
@@ -221,7 +244,7 @@ public class Enemy : MonoBehaviour {
                 color = Color.red;
                 RaycastHit2D hitRecast2 = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x),
                     Vector2.Distance(this.transform.position,playerObj.transform.position), (1 << LayerMask.NameToLayer("Platforms")));
-                if(hitRecast2.collider == null /*&& hitRecast2.collider.gameObject.tag != "Platforms"*/)
+                if(hitRecast2.collider == null && hitRecast2.collider.gameObject.tag != "Platforms")
                 {
                     color = Color.green;
                     Debug.Log("Draw ray because I can see the player because there are no platforms in the way");
@@ -231,12 +254,7 @@ public class Enemy : MonoBehaviour {
                 }
                 playerInSight = false;
             }
-        }
-        if (playerInSight)
-        {
-            lastTimeSeenPlayer = Time.time;
-        }
-        playerInSight = false;  
+        }*/ 
 
     }
 
