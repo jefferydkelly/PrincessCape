@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour {
     //AI Things
     public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
     EnemyState curState = EnemyState.Stationary;
+    float sightRange = 15.0f;
+    float sightAngle = 45.0f;
     private bool playerInSight = false;
     private GameObject playerObj;
     GameObject tempGameObj; //bad move but unavoidable
@@ -40,7 +42,8 @@ public class Enemy : MonoBehaviour {
     void Start () {
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
-        //Flip();
+        Flip();
+        playerObj = GameManager.Instance.Player.GameObject;
     }
 	
     /// <summary>
@@ -91,12 +94,7 @@ public class Enemy : MonoBehaviour {
     }
     GameObject Chargeshot()
     {
-        
         GameObject shot = (GameObject)Instantiate(chargeProjectile, transform);
-        if (fwdX < 0)
-        {
-            shot.GetComponent<ChargeShotScript>().SwitchFace();
-        }
         shot.transform.position = this.transform.position;
         Destroy(shot, 5.5f);    
         //Add Force at a vector that points to the player object at the time of shooting.
@@ -118,33 +116,18 @@ public class Enemy : MonoBehaviour {
             tempLoR = 1;
         }
         Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
-        if(returnVal.x < transform.position.x)
-        {
-            if(fwdX > 0)
-            {
-                Flip();
-            }
-        }
-        else if (returnVal.x > transform.position.x)
-        {
-            if (fwdX < 0)
-            {
-                Flip();
-            }
-        }
+
         return returnVal;
     }
-    //Update is called once per frame
-    void Update()
-    {
-        Debug.Log("FowrardX is : " + fwdX);
+    // Update is called once per frame
+    void Update () {
         curState = CheckState();
-        // Debug.Log("patrol Dest is: " + patrolDest);
+       // Debug.Log("patrol Dest is: " + patrolDest);
         //Debug.Log("Chase is: " + curState);
         switch (curState)
         {
             case EnemyState.Charge:
-
+               
                 ChargeAttack();
                 curState = EnemyState.ActualShoot;
                 break;
@@ -152,7 +135,7 @@ public class Enemy : MonoBehaviour {
                 ChargeAttack();
                 break;
             case EnemyState.Patrol:
-
+                
                 break;
             case EnemyState.Chase:
 
@@ -162,7 +145,7 @@ public class Enemy : MonoBehaviour {
         {
             if (atChaseDest)
             {
-                // Debug.Log("Am I at the player? " + atChaseDest);
+               // Debug.Log("Am I at the player? " + atChaseDest);
                 playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
                 atChaseDest = false;
             }
@@ -179,20 +162,20 @@ public class Enemy : MonoBehaviour {
         {
             if (atPatrolDest)
             {
-                //  Debug.Log("Am I here? " + atPatrolDest);
-                patrolDest = GetPatrolLocation();
+              //  Debug.Log("Am I here? " + atPatrolDest);
+                patrolDest = GetPatrolLocation();      
                 atPatrolDest = false;
             }
             else
-            {
+            { 
                 transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
                 if (transform.position == patrolDest)
                 {
                     atPatrolDest = true;
                 }
             }
-        }
-    }
+        }   
+	}
     EnemyState CheckState()
     {
        // Debug.Log("Player? : " + playerInSight);
@@ -223,16 +206,35 @@ public class Enemy : MonoBehaviour {
     }
     void FixedUpdate()
     {
-        LookForward();
+        LookForward(fwdX);
     }
 
-    void LookForward()
+    void LookForward(int fwd)
     {
         Color color = Color.red;
 
-        for (double x = 0;  x < 1; x += 0.1 * fwdX)
+        Player p = GameManager.Instance.Player;
+        if (!p.Hidden)
         {
-            //Debug.Log("Draw ray look: " + x);
+            Vector3 dif = p.transform.position - transform.position;
+            if (dif.sqrMagnitude <= sightRange * sightRange)
+            {
+                if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad))
+                {
+                    if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
+                    {
+                        playerInSight = true;
+                        lastTimeSeenPlayer = Time.time;
+                        return;
+                    }
+                }
+            }
+        }
+        playerInSight = false;
+    
+        /*
+        for (double x = 0;  x < 1; x += 0.1 * fwd)
+        {
             RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 15.0f, (1 << LayerMask.NameToLayer("Player")));
             color = Color.red;
             if ((hitRecast.collider != null && hitRecast.collider.gameObject.name == "Player") )
@@ -242,7 +244,7 @@ public class Enemy : MonoBehaviour {
                 color = Color.red;
                 RaycastHit2D hitRecast2 = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x),
                     Vector2.Distance(this.transform.position,playerObj.transform.position), (1 << LayerMask.NameToLayer("Platforms")));
-                if(hitRecast2.collider == null /*&& hitRecast2.collider.gameObject.tag != "Platforms"*/)
+                if(hitRecast2.collider == null && hitRecast2.collider.gameObject.tag != "Platforms")
                 {
                     color = Color.green;
                     Debug.Log("Draw ray because I can see the player because there are no platforms in the way");
@@ -252,12 +254,7 @@ public class Enemy : MonoBehaviour {
                 }
                 playerInSight = false;
             }
-        }
-        if (playerInSight)
-        {
-            lastTimeSeenPlayer = Time.time;
-        }
-        playerInSight = false;  
+        }*/ 
 
     }
 
