@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
+using System.Linq;
 /*
  * Singleton manager for the User Interface
  */
@@ -16,14 +17,15 @@ public class UIManager : MonoBehaviour
 	//The text box that shows messages at the top of the screen
 	ImageTextCombo messageBox, dialogBox, nameBox, spellBox;
 
+    //The Stealth Meter that displays how much light is currently shining on the player
+    StealthMeter stealthMeter;
 	//The HP and MP bars
 	//public PlayerBarController hpBar, mpBar;
 	HPBar hpBar;
 	MPBar mpBar;
 
 	//public Image itemLeft, itemCenter, itemRight;
-
-	public Text areaNameBox;
+    Text areaNameBox;
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
 	 */
@@ -76,6 +78,8 @@ public class UIManager : MonoBehaviour
 
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
+
+            stealthMeter = new StealthMeter();
 		}
 	}
 
@@ -181,6 +185,7 @@ public class UIManager : MonoBehaviour
 			ShowSpell = val;
 			hpBar.enabled = val;
 			mpBar.enabled = val;
+            stealthMeter.Enabled = val;
 		}
 	}
 	//Shows/Hides the equipment box 
@@ -217,6 +222,19 @@ public class UIManager : MonoBehaviour
 			Invoke("StartFadeOut", fadeOutDelay);
 		}
 	}
+
+    public float LightLevel
+    {
+        get
+        {
+            return stealthMeter.LightLevel;
+        }
+
+        set
+        {
+            stealthMeter.LightLevel = value;
+        }
+    }
 
 	void StartFadeOut()
 	{
