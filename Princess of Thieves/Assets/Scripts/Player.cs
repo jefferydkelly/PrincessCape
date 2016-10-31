@@ -206,7 +206,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
         }
        // Debug.Log("Light level is : " + lowestDist/10);
-        return lowestDist/optionalFloat;
+        return 1-lowestDist/optionalFloat;
     }
     
 

@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour {
     void Start () {
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
-        Flip();
+        //Flip();
     }
 	
     /// <summary>
@@ -113,18 +113,32 @@ public class Enemy : MonoBehaviour {
             tempLoR = 1;
         }
         Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
-
+        if(returnVal.x < transform.position.x)
+        {
+            if(fwdX > 0)
+            {
+                Flip();
+            }
+        }
+        else if (returnVal.x > transform.position.x)
+        {
+            if (fwdX < 0)
+            {
+                Flip();
+            }
+        }
         return returnVal;
     }
-    // Update is called once per frame
-    void Update () {
+    //Update is called once per frame
+    void Update()
+    {
         curState = CheckState();
-       // Debug.Log("patrol Dest is: " + patrolDest);
+        // Debug.Log("patrol Dest is: " + patrolDest);
         //Debug.Log("Chase is: " + curState);
         switch (curState)
         {
             case EnemyState.Charge:
-               
+
                 ChargeAttack();
                 curState = EnemyState.ActualShoot;
                 break;
@@ -132,7 +146,7 @@ public class Enemy : MonoBehaviour {
                 ChargeAttack();
                 break;
             case EnemyState.Patrol:
-                
+
                 break;
             case EnemyState.Chase:
 
@@ -142,7 +156,7 @@ public class Enemy : MonoBehaviour {
         {
             if (atChaseDest)
             {
-               // Debug.Log("Am I at the player? " + atChaseDest);
+                // Debug.Log("Am I at the player? " + atChaseDest);
                 playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
                 atChaseDest = false;
             }
@@ -159,20 +173,20 @@ public class Enemy : MonoBehaviour {
         {
             if (atPatrolDest)
             {
-              //  Debug.Log("Am I here? " + atPatrolDest);
-                patrolDest = GetPatrolLocation();      
+                //  Debug.Log("Am I here? " + atPatrolDest);
+                patrolDest = GetPatrolLocation();
                 atPatrolDest = false;
             }
             else
-            { 
+            {
                 transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
                 if (transform.position == patrolDest)
                 {
                     atPatrolDest = true;
                 }
             }
-        }   
-	}
+        }
+    }
     EnemyState CheckState()
     {
        // Debug.Log("Player? : " + playerInSight);
@@ -212,6 +226,7 @@ public class Enemy : MonoBehaviour {
 
         for (double x = 0;  x < 1; x += 0.1 * fwd)
         {
+            Debug.Log("Draw ray look: " + x);
             RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 15.0f, (1 << LayerMask.NameToLayer("Player")));
             color = Color.red;
             if ((hitRecast.collider != null && hitRecast.collider.gameObject.name == "Player") )
