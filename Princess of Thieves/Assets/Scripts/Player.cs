@@ -26,14 +26,9 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	int curSpell = 0;
 	bool onCooldown = false;
 	private int numRopesTouching = 0;
-    /// <summary>
-    /// This will be a access point for the UI element that shows how hidden the player is.
-    /// </summary>
-    [SerializeField]
-    private Image stealthMeter;
     bool hidden = false;
 	bool canUseMagic = true;
-    private float lightFactor;
+ 
 	// Use this for initialization
 	void Start () {
 		controller = new Controller();
@@ -42,8 +37,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		curHP = maxHP;
 		curMP = maxMP; 
 		spells.Add(new FireSpell());
-		//UIManager.Instance.ShowSpell = true;
-        lightFactor = 0f;
+		UIManager.Instance.ShowSpell = true;
+        UIManager.Instance.LightLevel = 0;
 	}
 
 
@@ -113,6 +108,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 				sp.allegiance = Allegiance.Player;
 				curMP -= CurSpell.Cost;
 			}
+
+            UIManager.Instance.LightLevel = GetLocalLightLevel();
 		}
 		else if (!GameManager.Instance.IsPaused && Hidden) {
 
@@ -122,8 +119,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			}
 
 			CurrentSpell += controller.SpellChange;
-		}
-
+            UIManager.Instance.LightLevel = GetLocalLightLevel();
+        }
 	}
 
     public void HandleSpellAxisCooldownForController(float t)
@@ -164,8 +161,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	void FixedUpdate()
 	{
-        lightFactor = GetLocalLight();
-        stealthMeter.fillAmount = lightFactor;
 		lastYVel = myRigidBody.velocity.y;
     }
 
@@ -184,13 +179,13 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	}
     
     /// <summary>
-    /// gets the closest light value within 10 float units or whatevder unit is provided. Optional
+    /// Gets the closest light value within maxDistance.
     /// </summary>
-    float GetLocalLight(float optionalFloat = 20f)
+    float GetLocalLightLevel(float maxDistance = 20f)
     {
-        float lowestDist = optionalFloat; //assume that the furthest light is optDist awawy
+        float lowestDist = maxDistance; //assume that the furthest light is optDist awawy
         //this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
-        Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, optionalFloat, 1 << LayerMask.NameToLayer("Light"));
+        Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, maxDistance, 1 << LayerMask.NameToLayer("Light"));
         //each collider that was hit, we should mask
         //mask'd
         
@@ -206,7 +201,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
         }
        // Debug.Log("Light level is : " + lowestDist/10);
-        return 1-lowestDist/optionalFloat;
+        return 1 - lowestDist/maxDistance;
     }
     
 
