@@ -91,7 +91,12 @@ public class Enemy : MonoBehaviour {
     }
     GameObject Chargeshot()
     {
+        
         GameObject shot = (GameObject)Instantiate(chargeProjectile, transform);
+        if (fwdX < 0)
+        {
+            shot.GetComponent<ChargeShotScript>().SwitchFace();
+        }
         shot.transform.position = this.transform.position;
         Destroy(shot, 5.5f);    
         //Add Force at a vector that points to the player object at the time of shooting.
@@ -132,6 +137,7 @@ public class Enemy : MonoBehaviour {
     //Update is called once per frame
     void Update()
     {
+        Debug.Log("FowrardX is : " + fwdX);
         curState = CheckState();
         // Debug.Log("patrol Dest is: " + patrolDest);
         //Debug.Log("Chase is: " + curState);
@@ -226,7 +232,7 @@ public class Enemy : MonoBehaviour {
 
         for (double x = 0;  x < 1; x += 0.1 * fwdX)
         {
-            Debug.Log("Draw ray look: " + x);
+            //Debug.Log("Draw ray look: " + x);
             RaycastHit2D hitRecast = Physics2D.Raycast(transform.position, new Vector2(Forward.x, (float)x), 15.0f, (1 << LayerMask.NameToLayer("Player")));
             color = Color.red;
             if ((hitRecast.collider != null && hitRecast.collider.gameObject.name == "Player") )

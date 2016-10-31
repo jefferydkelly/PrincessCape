@@ -13,15 +13,17 @@ public class ChargeShotScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         spriteControl = GetComponent<SpriteRenderer>();
+        
 	}
 	
     public void SwitchFace()
     {
+        Flip();
         faceLeft = false; // faces right
         fwdX = 1; //still right
     }
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
         //needs to move each object down a little
         for (int i = 0; i < 3; i++)
@@ -35,20 +37,35 @@ public class ChargeShotScript : MonoBehaviour {
                     lightningEnds[2].gameObject.transform.position.y);
             if (faceLeft) //faces left, obv
             {
-
+                newXY.x += 0.001f;
+                newXY2.x += 0.001f;
+                newXY3.x += 0.001f;
+                //newXY.y += 0.001f;
+                newXY2.y += 0.001f;
+                newXY3.y -= 0.001f;
             }
             else
             {
-
+                newXY.x -= 0.001f;
+                newXY2.x -= 0.001f;
+                newXY3.x -= 0.001f;
+                //newXY.y += 0.001f;
+                newXY2.y += 0.001f;
+                newXY3.y -= 0.001f;
             }
+            lightningEnds[0].gameObject.transform.position = newXY;
+            lightningEnds[1].gameObject.transform.position = newXY2;
+            lightningEnds[2].gameObject.transform.position = newXY3;
         }
 	}
 
     private void Flip()
     {
-        if (fwdX > 1)
+        transform.localScale = transform.localScale * fwdX;
+        if (fwdX > 0)
         {
             fwdX = ~fwdX;
+            
         }
         else
         {
