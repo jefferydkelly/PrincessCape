@@ -138,14 +138,14 @@ public class GameManager {
 		SceneManager.MoveGameObjectToScene(player.gameObject, scene);
 	}
 
-	public void UnloadScene(string sceneName)
+	public IEnumerator UnloadScene(string sceneName)
 	{
 		if (loadedAreas.Contains(sceneName))
 		{
-			UIManager.Instance.StartCoroutine("UnloadScene", sceneName);
+			yield return new WaitForEndOfFrame();
+			SceneManager.UnloadScene(sceneName);
 		}
 	}
-
 	void OnSceneUnloaded(Scene scene)
 	{
 		loadedAreas.Remove(scene.name);

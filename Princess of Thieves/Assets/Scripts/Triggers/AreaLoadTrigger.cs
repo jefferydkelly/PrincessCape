@@ -18,7 +18,7 @@ public class AreaLoadTrigger : TriggerBase{
 	{
 		if (GameManager.Instance.Player.Forward.x / loadFwd < 0)
 		{
-			GameManager.Instance.UnloadScene(areaToLoad);
+			StartCoroutine(GameManager.Instance.UnloadScene(areaToLoad));
 		}
 	}
 }

@@ -245,12 +245,6 @@ public class UIManager : MonoBehaviour
 		ac.a = 1;
 		areaNameBox.color = ac;
 	}
-
-	IEnumerator UnloadScene(string sceneName)
-	{
-		yield return new WaitForEndOfFrame();
-		SceneManager.UnloadScene(sceneName);
-	}
 }
 
 /*
