@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement;
 /*
  * Singleton manager for the User Interface
  */
@@ -35,14 +36,10 @@ public class UIManager : MonoBehaviour
 		{
 			DontDestroyOnLoad(gameObject);
 			instance = this;
+			Reload();
 		}
 		else {
 			Destroy(gameObject);
-		}
-
-		if (GameManager.Instance != null)
-		{
-			Reload();
 		}
 	}
 
@@ -129,7 +126,7 @@ public class UIManager : MonoBehaviour
 		int lettersRevealed = 0;
 		while (lettersRevealed < msg.Length)
 		{
-			yield return new WaitForSeconds(0.1f);
+			yield return new WaitForSeconds(0.05f);
 			lettersRevealed++;
 			dialogBox.Text = msg.Substring(0, lettersRevealed);
 		}
@@ -247,6 +244,12 @@ public class UIManager : MonoBehaviour
 		Color ac = areaNameBox.color;
 		ac.a = 1;
 		areaNameBox.color = ac;
+	}
+
+	IEnumerator UnloadScene(string sceneName)
+	{
+		yield return new WaitForEndOfFrame();
+		SceneManager.UnloadScene(sceneName);
 	}
 }
 

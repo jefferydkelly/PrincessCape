@@ -2,17 +2,26 @@
 using System.Collections;
 
 public class CameraManager : MonoBehaviour {
+	static CameraManager instance = null;
     public float dampTime = 0.15f;
     private Vector3 velocity = Vector3.zero;
     public GameObject target;
     private Camera cam;
     // Use this for initialization
     void Start () {
-        target = GameObject.FindGameObjectWithTag("Player");
-        Vector3 camPos = target.transform.position;
-        camPos.z = -10;
-        transform.position = camPos;
-        cam = Camera.main;
+		if (instance == null)
+		{
+			instance = this;
+			DontDestroyOnLoad(gameObject);
+			target = GameObject.FindGameObjectWithTag("Player");
+			Vector3 camPos = target.transform.position;
+			camPos.z = -10;
+			transform.position = camPos;
+			cam = Camera.main;
+		}
+		else {
+			Destroy(gameObject);
+		}
 	}
 	
 	// Update is called once per frame
