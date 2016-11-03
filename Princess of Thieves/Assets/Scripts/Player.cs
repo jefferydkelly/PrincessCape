@@ -153,7 +153,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
 		{
 			PlatformObject po = hit.collider.GetComponent<PlatformObject>();
-			if (po.passThrough)
+			if (po != null && po.passThrough)
 			{
 				po.AllowPassThrough();
 			}
@@ -272,7 +272,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		get
 		{
 			Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-			return Physics2D.Raycast(transform.position, down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
+			return Physics2D.Raycast(transform.position, down, 1.0f, (1 << LayerMask.NameToLayer("Platforms")));
 		}
 	}
 
