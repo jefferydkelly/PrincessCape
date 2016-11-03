@@ -11,6 +11,7 @@ public class AreaLoadTrigger : TriggerBase{
 		{
 			//LoadArea
 			GameManager.Instance.LoadScene(areaToLoad);
+			StartCoroutine(GameManager.Instance.SetActiveScene(areaToLoad));
 		}
 	}
 

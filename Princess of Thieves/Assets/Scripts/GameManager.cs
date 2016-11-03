@@ -134,8 +134,17 @@ public class GameManager {
 	void OnSceneLoaded(Scene scene, LoadSceneMode ls)
 	{
 		loadedAreas.Add(scene.name);
-		SceneManager.SetActiveScene(scene);
-		SceneManager.MoveGameObjectToScene(player.gameObject, scene);
+	}
+
+	public IEnumerator SetActiveScene(string sceneName)
+	{
+		while(!loadedAreas.Contains(sceneName))
+		{
+			yield return new WaitForEndOfFrame();
+
+		}
+
+		SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
 	}
 
 	public IEnumerator UnloadScene(string sceneName)
@@ -143,6 +152,7 @@ public class GameManager {
 		if (loadedAreas.Contains(sceneName))
 		{
 			yield return new WaitForEndOfFrame();
+			SceneManager.MoveGameObjectToScene(player.gameObject, SceneManager.GetActiveScene());
 			SceneManager.UnloadScene(sceneName);
 		}
 	}
