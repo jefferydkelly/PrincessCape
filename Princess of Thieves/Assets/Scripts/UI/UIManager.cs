@@ -47,14 +47,14 @@ public class UIManager : MonoBehaviour
 	}
 
 	void Update() {
-		if (revealing && done && Input.GetMouseButtonDown(0))
+		if (revealing && done && GameManager.Instance.Player.Controller.Jump)
 		{
 			if (!GameManager.Instance.IsInCutscene)
 			{
-				HideDialog();
+				StartCoroutine(HideDialog());
 			}
 			else {
-				NextElement();
+				StartCoroutine(NextElement());
 			}
 		}
 	}
@@ -127,8 +127,9 @@ public class UIManager : MonoBehaviour
 	}
 
 	//Hides the dialog box
-	public void HideDialog()
+	public IEnumerator HideDialog()
 	{
+		yield return new WaitForEndOfFrame();
 		dialogBox.Enabled = false;
 		nameBox.Enabled = false;
 		revealing = false;
@@ -152,11 +153,13 @@ public class UIManager : MonoBehaviour
 		done = true;
 	}
 
-	void NextElement()
+	IEnumerator NextElement()
 	{
+		yield return new WaitForEndOfFrame();
 		revealing = false;
 		GameManager.Instance.Cutscene.NextElement();
 	}
+
 	/*
 	 * Shows the given string as a message in the upper box
 	 * 

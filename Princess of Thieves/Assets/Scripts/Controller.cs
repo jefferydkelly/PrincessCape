@@ -80,7 +80,7 @@ public class Controller
 
 		}
 	}
-	public virtual int Horizontal
+	public  int Horizontal
 	{
 		get
 		{
@@ -94,7 +94,7 @@ public class Controller
 		}
 	}
 
-	public virtual int Vertical
+	public  int Vertical
 	{
 		get
 		{
@@ -156,7 +156,7 @@ public class Controller
 			return Input.GetKey(sneakKey);
 		}
 	}
-	public virtual int ItemChange
+	public  int ItemChange
 	{
 		get
 		{
@@ -164,7 +164,7 @@ public class Controller
 		}
 	}
 
-	public virtual int SpellChange
+	public  int SpellChange
 	{
 		get
 		{
@@ -191,7 +191,7 @@ public class Controller
         spellAxisFrozen = false;
     }
 
-	public virtual string LeftKey
+	public string LeftKey
 	{
 		get
 		{
@@ -199,7 +199,7 @@ public class Controller
 		}
 	}
 
-	public virtual string RightKey
+	public string RightKey
 	{
 		get
 		{
@@ -207,7 +207,7 @@ public class Controller
 		}
 	}
 
-	public virtual string UpKey
+	public string UpKey
 	{
 		get
 		{
@@ -215,7 +215,7 @@ public class Controller
 		}
 	}
 
-	public virtual string DownKey
+	public string DownKey
 	{
 		get
 		{
@@ -223,7 +223,7 @@ public class Controller
 		}
 	}
 
-	public virtual string JumpKey
+	public string JumpKey
 	{
 		get
 		{
@@ -231,7 +231,7 @@ public class Controller
 		}
 	}
 
-	public virtual string InteractKey
+	public string InteractKey
 	{
 		get
 		{
@@ -239,7 +239,7 @@ public class Controller
 		}
 	}
 
-	public virtual string AttackKey
+	public string AttackKey
 	{
 		get
 		{
@@ -247,7 +247,7 @@ public class Controller
 		}
 	}
 
-	public virtual string UseItemKey
+	public string UseItemKey
 	{
 		get
 		{
@@ -255,7 +255,7 @@ public class Controller
 		}
 	}
 
-	public virtual string NextItemKey
+	public string NextItemKey
 	{
 		get
 		{
@@ -263,7 +263,7 @@ public class Controller
 		}
 	}
 
-	public virtual string PrevItemKey
+	public string PrevItemKey
 	{
 		get
 		{
@@ -271,7 +271,7 @@ public class Controller
 		}
 	}
 
-	public virtual string NextSpellKey
+	public string NextSpellKey
 	{
 		get
 		{
@@ -279,7 +279,7 @@ public class Controller
 		}
 	}
 
-	public virtual string PrevSpellKey
+	public string PrevSpellKey
 	{
 		get
 		{

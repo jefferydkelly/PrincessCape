@@ -456,6 +456,22 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets the controller.
+	/// </summary>
+	/// <value>The controller.</value>
+	public Controller Controller
+	{
+		get
+		{
+			return controller;
+		}
+	}
+
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> on cooldown.
+	/// </summary>
+	/// <value><c>true</c> if on cooldown; otherwise, <c>false</c>.</value>
 	public bool OnCooldown
 	{
 		get
@@ -475,6 +491,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> in no magic area.
+	/// </summary>
+	/// <value><c>true</c> if in no magic area; otherwise, <c>false</c>.</value>
 	public bool InNoMagicArea
 	{
 		get
@@ -494,6 +514,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> can use magic.
+	/// </summary>
+	/// <value><c>true</c> if can use magic; otherwise, <c>false</c>.</value>
 	public bool CanUseMagic
 	{
 		get
@@ -502,6 +526,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets or sets the current spell.
+	/// </summary>
+	/// <value>The current spell.</value>
 	public int CurrentSpell
 	{
 		get
@@ -522,6 +550,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets the current spell.
+	/// </summary>
+	/// <value>The current spell.</value>
 	public Spell CurSpell
 	{
 		get
