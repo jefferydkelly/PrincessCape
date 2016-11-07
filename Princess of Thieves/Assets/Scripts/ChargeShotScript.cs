@@ -20,7 +20,7 @@ public class ChargeShotScript : MonoBehaviour {
     {
         Flip();
         faceLeft = false; // faces right
-        fwdX = 1; //still right
+        //fwdX = 1; //still right
     }
 	// Update is called once per frame
 	void FixedUpdate () {

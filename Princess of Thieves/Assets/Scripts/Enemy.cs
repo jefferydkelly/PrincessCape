@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour {
     private Vector3 playerChaseDest = Vector3.zero;
     private bool atChaseDest = true;
     private Vector3 patrolDest = Vector3.zero;
+    private Vector3 patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
     private bool atPatrolDest = true;
     //Enemy Ability Things
     /// <summary>
@@ -42,7 +43,7 @@ public class Enemy : MonoBehaviour {
     void Start () {
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
-        Flip();
+        
         playerObj = GameManager.Instance.Player.GameObject;
     }
 	
@@ -71,13 +72,28 @@ public class Enemy : MonoBehaviour {
             abilityTimeStart = 0f;
         }
     }
-
+    /// <summary>
+    /// Returns true while there is still ground. False it sees no ground.
+    /// </summary>
+    /// <returns></returns>
+    bool CheckGround()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(Forward.x, -1),
+            1.5f, (1 << LayerMask.NameToLayer("Platforms")));
+        if (hit.collider != null)
+        {
+            Debug.DrawRay(transform.position, new Vector2(Forward.x, -1) * 1.5f, Color.red, 1f);
+            return false;
+        }
+        
+        return true;
+    }
+    
     private IEnumerator ChargeAnim(float waitTime)
     {
         while (true)
         {
-            yield return new WaitForSeconds(waitTime);
-            
+            yield return new WaitForSeconds(waitTime);   
         }
     }
     void ShootChargedShot()
@@ -95,7 +111,14 @@ public class Enemy : MonoBehaviour {
     GameObject Chargeshot()
     {
         GameObject shot = (GameObject)Instantiate(chargeProjectile, transform);
-        shot.transform.position = this.transform.position;
+        shot.transform.position = transform.position;
+        if (fwdX > 0)
+        {
+            shot.GetComponent<ChargeShotScript>().SwitchFace();
+        }else
+        {
+
+        }
         Destroy(shot, 5.5f);    
         //Add Force at a vector that points to the player object at the time of shooting.
         //uses lastKnownLocation if the player disappeared
@@ -115,15 +138,25 @@ public class Enemy : MonoBehaviour {
         {
             tempLoR = 1;
         }
+        
         Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
-
+        if(returnVal.x > transform.position.x)
+        {
+            fwdX = 1;
+            gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        }else
+        {
+            fwdX = -1;
+            gameObject.GetComponent<SpriteRenderer>().flipX = false;
+        }
         return returnVal;
     }
     // Update is called once per frame
     void Update () {
+        //CheckGround();
         curState = CheckState();
        // Debug.Log("patrol Dest is: " + patrolDest);
-        //Debug.Log("Chase is: " + curState);
+        Debug.Log("State is: " + curState);
         switch (curState)
         {
             case EnemyState.Charge:
@@ -167,10 +200,18 @@ public class Enemy : MonoBehaviour {
                 atPatrolDest = false;
             }
             else
-            { 
-                transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
-                if (transform.position == patrolDest)
+            {
+                if (!CheckGround())
                 {
+                    transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
+                    if (Vector3.Distance(this.transform.position, patrolDest) < 1)
+                    {
+                        atPatrolDest = true;
+                    }
+                }
+                else
+                {
+                    Debug.Log("No floor");
                     atPatrolDest = true;
                 }
             }
@@ -212,14 +253,14 @@ public class Enemy : MonoBehaviour {
     void LookForward(int fwd)
     {
         Color color = Color.red;
-
+        //is it more efficient to 'get player' once in Start? 
         Player p = GameManager.Instance.Player;
         if (!p.Hidden)
         {
             Vector3 dif = p.transform.position - transform.position;
             if (dif.sqrMagnitude <= sightRange * sightRange)
             {
-                if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad))
+                if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad)) //yeah this is much better
                 {
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {
@@ -263,11 +304,14 @@ public class Enemy : MonoBehaviour {
         if(fwdX > 1)
         {
             fwdX = ~fwdX;
+            gameObject.GetComponent<SpriteRenderer>().flipX = false;
         }
         else
         {
             fwdX = ~fwdX;
+            gameObject.GetComponent<SpriteRenderer>().flipX = true;
         }
+        
     }
     public Vector3 Forward
     {
