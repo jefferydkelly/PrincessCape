@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour, DamageableObject, CasterObject {
+public class Player : MonoBehaviour, DamageableObject, CasterObject
+{
 
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
@@ -11,130 +12,138 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
-    public float sneakSpeed = 0.5f;
-    public float jumpImpulse = 10;
+	public float sneakSpeed = 0.5f;
+	public float jumpImpulse = 10;
 	private float lastYVel = 0;
-    private bool onRope = false;
+	private bool onRope = false;
 
 	private int curHP = 0;
 	public int maxHP = 100;
 
-	private int curMP = 0;
-	public int maxMP = 100;
+	private float curMP = 0;
+	public float maxMP = 100;
 
 	List<Spell> spells = new List<Spell>();
 	int curSpell = 0;
-	bool onCooldown = false;
+
 	private int numRopesTouching = 0;
-    bool hidden = false;
-	bool canUseMagic = true;
- 
+	PlayerState state = PlayerState.Normal;
+
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
-		curMP = maxMP; 
+		curMP = maxMP;
 		spells.Add(new FireSpell());
-		UIManager.Instance.ShowSpell = true;
-        UIManager.Instance.LightLevel = 0;
+        spells.Add(new WaterSpell());
+        spells.Add(new WindSpell());
+        UIManager.Instance.ShowSpell = true;
+		UIManager.Instance.LightLevel = 0;
 	}
 
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (!GameManager.Instance.IsPaused && !Hidden)
-		{
+        if (!GameManager.Instance.IsPaused)
+        {
+            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
+            if (!Hidden)
+            {
 
-			CurrentSpell += controller.SpellChange;
+                CurrentSpell += controller.SpellChange;
 
-			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
-			myRigidBody.AddForce(xForce, ForceMode2D.Force);
+                Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
+                myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
-			if (controller.Sneak)
-				myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
-			else
-				myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+                if (controller.Sneak)
+                    myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+                else
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
-			if (IsOnRope)
-			{
-				Vector2 vel = myRigidBody.velocity;
-				vel.x = 0;
-				myRigidBody.velocity = vel;
-				myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-				myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+                if (IsOnRope)
+                {
+                    Vector2 vel = myRigidBody.velocity;
+                    vel.x = 0;
+                    myRigidBody.velocity = vel;
+                    myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
 
-				if (controller.Jump)
-				{
-					Jump();
-				}
-			}
-			else if (IsOnGround)
-			{
-				if (controller.Jump)
-				{
-					Jump();
-				}
-				else {
-					if (controller.Interact)
-					{
-						RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                }
+                else if (IsOnGround)
+                {
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                    else
+                    {
+                        if (controller.Interact)
+                        {
+                            RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
 
-						if (hit.collider != null)
-						{
-							InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+                            if (hit.collider != null)
+                            {
+                                InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
 
-							if (io != null)
-							{
-								io.Interact();
-							}
-						}
-					}
-				}
-			}
+                                if (io != null)
+                                {
+                                    io.Interact();
+                                }
+                            }
+                        }
+                    }
+                }
 
-			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
-			{
-				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
-				myRenderer.flipX = (fwdX == -1);
-			}
-			if (!onCooldown && controller.UseSpell && curMP >= CurSpell.Cost)
-			{
-				SpellProjectile sp = CurSpell.Cast(this);
-				onCooldown = true;
-				Invoke("SpellCooldown", 1.0f);
-				sp.allegiance = Allegiance.Player;
-				curMP -= CurSpell.Cost;
-			}
+                if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+                {
+                    fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+                    myRenderer.flipX = (fwdX == -1);
+                }
+                if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
+                {
+                    SpellProjectile sp = CurSpell.Cast(this);
+                    OnCooldown = true;
+                    Invoke("SpellCooldown", 1.0f);
+                    sp.allegiance = Allegiance.Player;
+                    curMP -= CurSpell.Cost;
+                }
 
-            UIManager.Instance.LightLevel = GetLocalLightLevel();
-		}
-		else if (!GameManager.Instance.IsPaused && Hidden) {
+                UIManager.Instance.LightLevel = GetLocalLightLevel();
+            }
+            else if (Hidden)
+            {
 
-			if (controller.Interact)
-			{
-				Hidden = false;
-			}
+                if (controller.Interact)
+                {
+                    Hidden = false;
+                }
 
-			CurrentSpell += controller.SpellChange;
-            UIManager.Instance.LightLevel = GetLocalLightLevel();
+                CurrentSpell += controller.SpellChange;
+                UIManager.Instance.LightLevel = GetLocalLightLevel();
+            }
         }
 	}
 
-    public void HandleSpellAxisCooldownForController(float t)
-    {
-        Invoke("SpellAxisCooldown", t);
-    }
+	public void HandleSpellAxisCooldownForController(float t)
+	{
+		Invoke("SpellAxisCooldown", t);
+	}
 
-    void SpellAxisCooldown()
-    {
-        controller.UnfreezeSpellAxis();
-    }
+	void SpellAxisCooldown()
+	{
+		controller.UnfreezeSpellAxis();
+	}
 	void SpellCooldown()
 	{
-		onCooldown = false;
+		OnCooldown = false;
 	}
 
 	public void AddSpell(Spell s)
@@ -151,7 +160,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
 		{
 			PlatformObject po = hit.collider.GetComponent<PlatformObject>();
-			if (po.passThrough)
+			if (po != null && po.passThrough)
 			{
 				po.AllowPassThrough();
 			}
@@ -162,7 +171,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	void FixedUpdate()
 	{
 		lastYVel = myRigidBody.velocity.y;
-    }
+	}
 
 	/// <summary>
 	/// Handles the Player taking damage.
@@ -177,56 +186,57 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 		return curHP <= 0;
 	}
-    
-    /// <summary>
-    /// Gets the closest light value within maxDistance.
-    /// </summary>
-    float GetLocalLightLevel(float maxDistance = 20f)
-    {
-        float lowestDist = maxDistance; //assume that the furthest light is optDist awawy
 
-        if (!hidden)
-        {
-            //this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
-            Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, maxDistance, 1 << LayerMask.NameToLayer("Light"));
-            //each collider that was hit, we should mask
-            //mask'd
+	/// <summary>
+	/// Gets the closest light value within maxDistance.
+	/// </summary>
+	float GetLocalLightLevel(float maxDistance = 20f)
+	{
+		float lowestDist = maxDistance; //assume that the furthest light is optDist awawy
 
-            foreach (Collider2D col in cols)
-            {
-                //Debug.Log("Col is : " + col);
-                //Better than two v2Distance calls
-                Vector3 dif = col.transform.position - transform.position;
-                float tempD = dif.magnitude;
-                if (tempD < lowestDist)
-                {
-                    if (!Physics2D.Raycast(transform.position, dif.normalized, tempD, 1 << LayerMask.NameToLayer("Platforms"))) {
-                        lowestDist = tempD;
-                    }
-                }
+		if (!Hidden)
+		{
+			//this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
+			Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, maxDistance, 1 << LayerMask.NameToLayer("Light"));
+			//each collider that was hit, we should mask
+			//mask'd
 
-            }
-            // Debug.Log("Light level is : " + lowestDist/10);
-        }
-        return 1 - lowestDist/maxDistance;
-    }
-    
+			foreach (Collider2D col in cols)
+			{
+				//Debug.Log("Col is : " + col);
+				//Better than two v2Distance calls
+				Vector3 dif = col.transform.position - transform.position;
+				float tempD = dif.magnitude;
+				if (tempD < lowestDist)
+				{
+					if (!Physics2D.Raycast(transform.position, dif.normalized, tempD, 1 << LayerMask.NameToLayer("Platforms")))
+					{
+						lowestDist = tempD;
+					}
+				}
 
-    #region CollisionHandling
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.collider.CompareTag("Platform"))
-        {
+			}
+			// Debug.Log("Light level is : " + lowestDist/10);
+		}
+		return 1 - lowestDist / maxDistance;
+	}
 
-            if (lastYVel < -10)
-            {
-                TakeDamage(new DamageSource(DamageType.Physical, 10));
-            }
-        }
-    }
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
+	#region CollisionHandling
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		if (col.collider.CompareTag("Platform"))
+		{
+
+			if (lastYVel < -10)
+			{
+				TakeDamage(new DamageSource(DamageType.Physical, 10));
+			}
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
 		if (col.CompareTag("Rope"))
 		{
 			numRopesTouching++;
@@ -238,41 +248,42 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		}
 		else if (col.CompareTag("NoMagicArea"))
 		{
-			canUseMagic = false;
+			InNoMagicArea = false;
 		}
-    }
+	}
 
-    void OnTriggerExit2D(Collider2D col)
-    {
-        if (col.CompareTag("Rope"))
-        {
-            numRopesTouching--;
-
-            if (numRopesTouching == 0)
-            {
-                myRigidBody.gravityScale = 1.5f;
-            }
-        } else if (col.CompareTag("NoMagicArea"))
+	void OnTriggerExit2D(Collider2D col)
+	{
+		if (col.CompareTag("Rope"))
 		{
-			canUseMagic = true;
+			numRopesTouching--;
+
+			if (numRopesTouching == 0)
+			{
+				myRigidBody.gravityScale = 1.5f;
+			}
 		}
-    }
-    #endregion
-    #region Gets
+		else if (col.CompareTag("NoMagicArea"))
+		{
+			InNoMagicArea = true;
+		}
+	}
+	#endregion
+	#region Gets
 	/// <summary>
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on ground.
 	/// </summary>
 	/// <value><c>true</c> if is on ground; otherwise, <c>false</c>.</value>
-    bool IsOnGround
+	bool IsOnGround
 	{
 		get
 		{
 			Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-			return Physics2D.Raycast(transform.position, down, 1.0f, ~(1 << LayerMask.NameToLayer("Player")));
+			return Physics2D.Raycast(transform.position, down, 1.0f, (1 << LayerMask.NameToLayer("Platforms")));
 		}
 	}
 
-	
+
 	/// <summary>
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on rope.
 	/// </summary>
@@ -349,7 +360,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	/// Gets the mp the player has.
 	/// </summary>
 	/// <value>The mp the player has.</value>
-	public int MP
+	public float MP
 	{
 		get
 		{
@@ -365,7 +376,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	{
 		get
 		{
-			return (float)curMP / (float)maxMP;
+			return curMP / maxMP;
 		}
 	}
 
@@ -437,15 +448,95 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 	{
 		get
 		{
-			return hidden;
+			return (state & PlayerState.InCover) > 0;
 		}
 
 		set
 		{
-			hidden = value;
+			if (value)
+			{
+				state |= PlayerState.InCover;
+			}
+			else {
+				state &= ~PlayerState.InCover;
+			}
 		}
 	}
 
+	/// <summary>
+	/// Gets the controller.
+	/// </summary>
+	/// <value>The controller.</value>
+	public Controller Controller
+	{
+		get
+		{
+			return controller;
+		}
+	}
+
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> on cooldown.
+	/// </summary>
+	/// <value><c>true</c> if on cooldown; otherwise, <c>false</c>.</value>
+	public bool OnCooldown
+	{
+		get
+		{
+			return (state & PlayerState.MagicCooldown) > 0;
+		}
+
+		private set
+		{
+			if (value)
+			{
+				state |= PlayerState.MagicCooldown;
+			}
+			else {
+				state &= ~PlayerState.MagicCooldown;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> in no magic area.
+	/// </summary>
+	/// <value><c>true</c> if in no magic area; otherwise, <c>false</c>.</value>
+	public bool InNoMagicArea
+	{
+		get
+		{
+			return (state & PlayerState.InNoMagicArea) > 0;
+		}
+
+		private set
+		{
+			if (value)
+			{
+				state |= PlayerState.InNoMagicArea;
+			}
+			else {
+				state &= ~PlayerState.InNoMagicArea;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Gets a value indicating whether this <see cref="T:Player"/> can use magic.
+	/// </summary>
+	/// <value><c>true</c> if can use magic; otherwise, <c>false</c>.</value>
+	public bool CanUseMagic
+	{
+		get
+		{
+			return !(OnCooldown || InNoMagicArea);
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets the current spell.
+	/// </summary>
+	/// <value>The current spell.</value>
 	public int CurrentSpell
 	{
 		get
@@ -456,16 +547,20 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 		set
 		{
 			curSpell = value % spells.Count;
-	
+
 			while (curSpell < 0)
 			{
 				curSpell += spells.Count;
 			}
 
-			//UIManager.Instance.UpdateSpellInfo();
+			UIManager.Instance.UpdateSpellInfo();
 		}
 	}
 
+	/// <summary>
+	/// Gets the current spell.
+	/// </summary>
+	/// <value>The current spell.</value>
 	public Spell CurSpell
 	{
 		get
@@ -473,6 +568,16 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject {
 			return spells[CurrentSpell];
 		}
 	}
-    #endregion gets
+	#endregion gets
 
+}
+
+[System.Flags]
+public enum PlayerState
+{
+	Normal = 0,
+	InCover = 1,
+	MagicCooldown = 2,
+	InNoMagicArea = 4,
+	Frozen = 8
 }

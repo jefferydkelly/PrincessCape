@@ -5,11 +5,11 @@ public class FireballProjectile : SpellProjectile {
 
 	bool enhanced = false;
 	bool flipped = false;
-	void Start () {
+	void Awake () {
 		name = "Fireball";
-		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-		sr.sprite = Resources.Load<Sprite>("Sprites/fireprojectile");
-		BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
+        myRenderer = gameObject.AddComponent<SpriteRenderer>();
+        myRenderer.sprite = Resources.Load<Sprite>("Sprites/fireprojectile");
+        BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
 		col.size = new Vector2(1.3f, 0.5f);
 		col.offset = new Vector2(0.1f, -0.05f);
 		col.isTrigger = true;
@@ -72,8 +72,15 @@ public class FireballProjectile : SpellProjectile {
 		}
 		set
 		{
-			fwd = value;
-			transform.localRotation = Quaternion.AngleAxis(90 + (90 * fwd.x), Vector3.up);
-		}
-	}
+            fwd = value;
+            if (fwd.y == 0)
+            {
+                myRenderer.flipX = (fwd.x == 1);
+            }
+            else
+            {
+                transform.Rotate(Vector3.forward, 90 * -fwd.y);
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement;
 /*
  * Singleton manager for the User Interface
  */
@@ -26,6 +27,9 @@ public class UIManager : MonoBehaviour
 
 	//public Image itemLeft, itemCenter, itemRight;
     Text areaNameBox;
+
+	bool revealing = false;
+	bool done = false;
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
 	 */
@@ -35,17 +39,19 @@ public class UIManager : MonoBehaviour
 		{
 			DontDestroyOnLoad(gameObject);
 			instance = this;
+			Reload();
 		}
 		else {
 			Destroy(gameObject);
 		}
-
-		if (GameManager.Instance != null)
-		{
-			Reload();
-		}
 	}
 
+	void Update() {
+		if (revealing && done && GameManager.Instance.Player.Controller.Jump)
+		{
+			StartCoroutine(NextElement());
+		}
+	}
 	//Resets the objects when the scene changes
 	public void Reload()
 	{
@@ -99,6 +105,7 @@ public class UIManager : MonoBehaviour
 	 */
 	public void RevealDialog(string msg)
 	{
+		revealing = true;
 		dialogBox.Enabled = true;
 		StartCoroutine(RevealLetters(msg));
 
@@ -106,6 +113,7 @@ public class UIManager : MonoBehaviour
 
 	public void RevealDialog(string msg, string spker)
 	{
+		revealing = true;
 		nameBox.Enabled = true;
 		nameBox.Text = spker;
 		dialogBox.Enabled = true;
@@ -113,10 +121,12 @@ public class UIManager : MonoBehaviour
 	}
 
 	//Hides the dialog box
-	public void HideDialog()
+	public IEnumerator HideDialog()
 	{
+		yield return new WaitForEndOfFrame();
 		dialogBox.Enabled = false;
 		nameBox.Enabled = false;
+		revealing = false;
 	}
 
 	/*
@@ -126,27 +136,24 @@ public class UIManager : MonoBehaviour
 	 */
 	private IEnumerator RevealLetters(string msg)
 	{
+		done = false;
 		int lettersRevealed = 0;
 		while (lettersRevealed < msg.Length)
 		{
-			yield return new WaitForSeconds(0.1f);
+			yield return new WaitForSeconds(0.05f);
 			lettersRevealed++;
 			dialogBox.Text = msg.Substring(0, lettersRevealed);
 		}
-
-		if (!GameManager.Instance.IsInCutscene)
-		{
-			Invoke("HideDialog", 1.0f);
-		}
-		else {
-			Invoke("NextElement", 1.0f);
-		}
+		done = true;
 	}
 
-	void NextElement()
+	IEnumerator NextElement()
 	{
+		yield return new WaitForEndOfFrame();
+		revealing = false;
 		GameManager.Instance.Cutscene.NextElement();
 	}
+
 	/*
 	 * Shows the given string as a message in the upper box
 	 * 

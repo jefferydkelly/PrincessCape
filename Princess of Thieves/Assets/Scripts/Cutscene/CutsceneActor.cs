@@ -112,7 +112,6 @@ public class CutsceneActor : MonoBehaviour
 	}
 	public IEnumerator Rotate(float ang, float time)
 	{
-		float startRot = transform.rotation.z;
 		float curRotation = 0;
 		if (time > 0)
 		{

@@ -1,0 +1,47 @@
+Initialize engine version: 5.4.1f1 (649f48bbbf0f)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GT 650M (ID=0xfd5)
+    Vendor:   NVIDIA
+    VRAM:     2288 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+- Completed reload, in  0.054 seconds
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\JD\Desktop\Princess of Thieves\Princess of Thieves\PrincessOfThieves_Data\Managed\System.dll (this message is harmless)
+desktop: 1440x900 60Hz; virtual: 1440x900 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.892454 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 1754 -> priority: 1 
+  Thread -> id: 1e88 -> priority: 1 
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 5.384179 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 370.
+Total: 0.289155 ms (FindLiveObjects: 0.023203 ms CreateObjectMapping: 0.021418 ms MarkObjects: 0.239624 ms  DeleteObjects: 0.004016 ms)
+
+Elwynn: That was unexpected.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Elwynn: I guess Mordil has more secrets than I expected.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Elwynn: The only way to go now is forward.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
