@@ -5,13 +5,15 @@ public class WindProjectile : SpellProjectile {
 	public float pushForce = 10;
 	// Use this for initialization
 	bool swapped = false;
+   
 	void Awake () {
 		name = "Cyclone";
-		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-		sr.sprite = Resources.Load<Sprite>("Sprites/Wind");
+		myRenderer = gameObject.AddComponent<SpriteRenderer>();
+		myRenderer.sprite = Resources.Load<Sprite>("Sprites/Wind");
 		BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
 		col.size = new Vector2(2.2f, 1.0f);
 		col.isTrigger = true;
+        //transform.rotation = Quaternion.AngleAxis(Mathf.Atan2(fwd.y, fwd.x), Vector3.forward);
 	}
 	
 	// Update is called once per frame
@@ -27,7 +29,7 @@ public class WindProjectile : SpellProjectile {
 		{
 			if (!swapped)
 			{
-				rb.AddForce(fwd * pushForce, ForceMode2D.Impulse);
+                rb.AddForce(fwd * pushForce, ForceMode2D.Impulse);
 			}
 			else {
 				rb.AddForce(-fwd * pushForce, ForceMode2D.Impulse);

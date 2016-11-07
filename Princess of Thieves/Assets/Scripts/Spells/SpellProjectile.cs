@@ -6,22 +6,30 @@ public abstract class SpellProjectile : MonoBehaviour {
 	public float moveSpeed = 10;
 	public Allegiance allegiance = Allegiance.None;
 	public int damage = 10;
+    protected SpriteRenderer myRenderer;
 
-	public virtual Vector3 FWD
-	{
-		get
-		{
-			return fwd;
-		}
+    public virtual Vector3 FWD
+    {
+        get
+        {
+            return fwd;
+        }
 
-		set
-		{
-			fwd = value;
-			transform.localRotation = Quaternion.AngleAxis(90 - (90 * fwd.x), Vector3.up);
-		}
-	}
+        set
+        {
+            fwd = value;
+            if (fwd.y == 0)
+            {
+                myRenderer.flipX = (fwd.x == -1);
+            }
+            else
+            {
+                transform.Rotate(Vector3.forward, 90 * fwd.y);
+            }
+        }
+    }
 
-	public abstract void Enhance();
+    public abstract void Enhance();
 
 	public abstract void Diminish();
 }

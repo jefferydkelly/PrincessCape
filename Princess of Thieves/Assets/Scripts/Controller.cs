@@ -109,6 +109,14 @@ public class Controller
 		}
 	}
 
+    public Vector2 InputDirection
+    {
+        get
+        {
+            return new Vector2(Horizontal, Vertical);
+        }
+    }
+
 	public bool Attack
 	{
 		get

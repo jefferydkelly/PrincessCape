@@ -9,8 +9,8 @@ public class DarkProjectile : SpellProjectile {
 	// Use this for initialization
 	void Awake () {
 		name = "Dark Bomb";
-		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-		sr.sprite = Resources.Load<Sprite>("Sprites/DarkBomb");
+        myRenderer = gameObject.AddComponent<SpriteRenderer>();
+        myRenderer.sprite = Resources.Load<Sprite>("Sprites/DarkBomb");
 		gameObject.AddComponent<BoxCollider2D>().isTrigger = true;
 		myRigidbody = gameObject.AddComponent<Rigidbody2D>();
 		myRigidbody.gravityScale = 0.0f;

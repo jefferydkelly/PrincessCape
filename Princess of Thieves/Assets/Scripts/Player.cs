@@ -20,8 +20,8 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 	private int curHP = 0;
 	public int maxHP = 100;
 
-	private int curMP = 0;
-	public int maxMP = 100;
+	private float curMP = 0;
+	public float maxMP = 100;
 
 	List<Spell> spells = new List<Spell>();
 	int curSpell = 0;
@@ -38,7 +38,9 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		curHP = maxHP;
 		curMP = maxMP;
 		spells.Add(new FireSpell());
-		UIManager.Instance.ShowSpell = true;
+        spells.Add(new WaterSpell());
+        spells.Add(new WindSpell());
+        UIManager.Instance.ShowSpell = true;
 		UIManager.Instance.LightLevel = 0;
 	}
 
@@ -46,83 +48,88 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 	// Update is called once per frame
 	void Update()
 	{
-		if (!GameManager.Instance.IsPaused && !Hidden)
-		{
+        if (!GameManager.Instance.IsPaused)
+        {
+            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
+            if (!Hidden)
+            {
 
-			CurrentSpell += controller.SpellChange;
+                CurrentSpell += controller.SpellChange;
 
-			Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
-			myRigidBody.AddForce(xForce, ForceMode2D.Force);
+                Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
+                myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
-			if (controller.Sneak)
-				myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
-			else
-				myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+                if (controller.Sneak)
+                    myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+                else
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
-			if (IsOnRope)
-			{
-				Vector2 vel = myRigidBody.velocity;
-				vel.x = 0;
-				myRigidBody.velocity = vel;
-				myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-				myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+                if (IsOnRope)
+                {
+                    Vector2 vel = myRigidBody.velocity;
+                    vel.x = 0;
+                    myRigidBody.velocity = vel;
+                    myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
 
-				if (controller.Jump)
-				{
-					Jump();
-				}
-			}
-			else if (IsOnGround)
-			{
-				if (controller.Jump)
-				{
-					Jump();
-				}
-				else {
-					if (controller.Interact)
-					{
-						RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                }
+                else if (IsOnGround)
+                {
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                    else
+                    {
+                        if (controller.Interact)
+                        {
+                            RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
 
-						if (hit.collider != null)
-						{
-							InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+                            if (hit.collider != null)
+                            {
+                                InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
 
-							if (io != null)
-							{
-								io.Interact();
-							}
-						}
-					}
-				}
-			}
+                                if (io != null)
+                                {
+                                    io.Interact();
+                                }
+                            }
+                        }
+                    }
+                }
 
-			if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
-			{
-				fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
-				myRenderer.flipX = (fwdX == -1);
-			}
-			if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
-			{
-				SpellProjectile sp = CurSpell.Cast(this);
-				OnCooldown = true;
-				Invoke("SpellCooldown", 1.0f);
-				sp.allegiance = Allegiance.Player;
-				curMP -= CurSpell.Cost;
-			}
+                if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+                {
+                    fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+                    myRenderer.flipX = (fwdX == -1);
+                }
+                if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
+                {
+                    SpellProjectile sp = CurSpell.Cast(this);
+                    OnCooldown = true;
+                    Invoke("SpellCooldown", 1.0f);
+                    sp.allegiance = Allegiance.Player;
+                    curMP -= CurSpell.Cost;
+                }
 
-			UIManager.Instance.LightLevel = GetLocalLightLevel();
-		}
-		else if (!GameManager.Instance.IsPaused && Hidden)
-		{
+                UIManager.Instance.LightLevel = GetLocalLightLevel();
+            }
+            else if (Hidden)
+            {
 
-			if (controller.Interact)
-			{
-				Hidden = false;
-			}
+                if (controller.Interact)
+                {
+                    Hidden = false;
+                }
 
-			CurrentSpell += controller.SpellChange;
-			UIManager.Instance.LightLevel = GetLocalLightLevel();
-		}
+                CurrentSpell += controller.SpellChange;
+                UIManager.Instance.LightLevel = GetLocalLightLevel();
+            }
+        }
 	}
 
 	public void HandleSpellAxisCooldownForController(float t)
@@ -353,7 +360,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 	/// Gets the mp the player has.
 	/// </summary>
 	/// <value>The mp the player has.</value>
-	public int MP
+	public float MP
 	{
 		get
 		{
@@ -369,7 +376,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 	{
 		get
 		{
-			return (float)curMP / (float)maxMP;
+			return curMP / maxMP;
 		}
 	}
 
@@ -546,7 +553,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 				curSpell += spells.Count;
 			}
 
-			//UIManager.Instance.UpdateSpellInfo();
+			UIManager.Instance.UpdateSpellInfo();
 		}
 	}
 

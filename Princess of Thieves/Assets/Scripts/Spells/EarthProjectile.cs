@@ -15,8 +15,8 @@ public class EarthProjectile : SpellProjectile {
 	Rigidbody2D myRigidbody;
 	void Start () {
 		name = "Stone Pillar";
-		SpriteRenderer sr = gameObject.AddComponent<SpriteRenderer>();
-		sr.sprite = Resources.Load<Sprite>("Sprites/StoneWall");
+        myRenderer = gameObject.AddComponent<SpriteRenderer>();
+        myRenderer.sprite = Resources.Load<Sprite>("Sprites/StoneWall");
 		gameObject.AddComponent<BoxCollider2D>();
 		myRigidbody = gameObject.AddComponent<Rigidbody2D>();
 		myRigidbody.gravityScale = 0;

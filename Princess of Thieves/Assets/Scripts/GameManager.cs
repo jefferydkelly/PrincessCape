@@ -31,11 +31,22 @@ public class GameManager {
 		cutscene.StartCutscene();
 	}
 
-	/// <summary>
-	/// Gets the instance.
+    /// <summary>
+	/// Starts the cutscene.
 	/// </summary>
-	/// <value>The instance.</value>
-	public static GameManager Instance
+	/// <param name="cutsceneName">Cutscene name.</param>
+	public void StartCutscene(TextAsset cutsceneFile)
+    {
+        IsInCutscene = true;
+        cutscene = new Cutscene(cutsceneFile);
+        cutscene.StartCutscene();
+    }
+
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
+    /// <value>The instance.</value>
+    public static GameManager Instance
 	{
 		get
 		{

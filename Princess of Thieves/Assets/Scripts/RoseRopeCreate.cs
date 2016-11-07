@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
@@ -202,3 +203,4 @@ public class RoseRopeCreate : MonoBehaviour {
 	
 	}
 }
+#endif

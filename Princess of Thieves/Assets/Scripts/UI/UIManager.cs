@@ -49,13 +49,7 @@ public class UIManager : MonoBehaviour
 	void Update() {
 		if (revealing && done && GameManager.Instance.Player.Controller.Jump)
 		{
-			if (!GameManager.Instance.IsInCutscene)
-			{
-				StartCoroutine(HideDialog());
-			}
-			else {
-				StartCoroutine(NextElement());
-			}
+			StartCoroutine(NextElement());
 		}
 	}
 	//Resets the objects when the scene changes
