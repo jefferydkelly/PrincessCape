@@ -20,28 +20,32 @@ public class SpellStatue : MonoBehaviour, InteractiveObject {
 		if (!activated)
 		{
 			activated = true;
-			Player p = GameManager.Instance.Player;
+
+            Spell s = new WaterSpell() ;
 			switch (spellType)
 			{
 				case SpellType.Earth:
-					p.AddSpell(new EarthSpell());
+					s = new EarthSpell();
 					break;
 				case SpellType.Fire:
-					p.AddSpell(new FireSpell());
+                    s = new FireSpell();
 					break;
 				case SpellType.Wind:
-					p.AddSpell(new WindSpell());
+                    s = new WindSpell();
 					break;
 				case SpellType.Water:
-					p.AddSpell(new WaterSpell());
+                    s = new WaterSpell();
 					break;		
 				case SpellType.Light:
-					p.AddSpell(new LightSpell());
+                    s = new LightSpell();
 					break;
 				case SpellType.Dark:
-					p.AddSpell(new DarkSpell());
+                    s = new DarkSpell();
 					break;
 			}
+
+            UIManager.Instance.ShowMessage("You learned " + s.SpellName, 3);
+            GameManager.Instance.Player.AddSpell(s);
 
 		}
 	}

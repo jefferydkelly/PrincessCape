@@ -187,7 +187,6 @@ public class Cutscene
         elements = new List<CutsceneElement>();
         foreach (string line in text.text.Split('\n'))
         {
-            Debug.Log(line);
             string[] parts = line.Split(' ');
             CutsceneElement c = null;
             string p = parts[0].ToLower();
