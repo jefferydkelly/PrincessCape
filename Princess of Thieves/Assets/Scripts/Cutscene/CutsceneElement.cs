@@ -13,6 +13,17 @@ public class CutsceneDialog : CutsceneElement
 	public string dialog = "Hi, I'm a character";
 }
 
+public class CameraPan : CutsceneElement
+{
+	public Vector2 panDistance = Vector2.zero;
+	public float time;
+}
+
+public class CutsceneWait : CutsceneElement
+{
+	public float time;
+}
+
 public enum MoveTypes
 {
 	XY, Rotate

@@ -10,7 +10,7 @@ public class CoverController : MonoBehaviour, InteractiveObject {
 	{
 		Player player = GameManager.Instance.Player;
 		player.Hidden = true;
-		player.transform.position = transform.position;
+		player.transform.position = transform.position - new Vector3(0, gameObject.HalfHeight() - player.HalfHeight, 0);
 
 	}
 }

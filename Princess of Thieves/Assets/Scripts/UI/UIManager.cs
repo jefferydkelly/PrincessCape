@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
 			spellBox.Enabled = false;
 
 
-			//itemLeft = GameObject.Find("ItemLeft").GetComponent<Image>();
+			//itemeft = GameObject.Find("ItemLeft").GetComponent<Image>();
 			//itemLeft.enabled = false;
 			//itemCenter = GameObject.Find("ItemCenter").GetComponent<Image>();
 			//itemCenter.enabled = false;
@@ -154,6 +154,15 @@ public class UIManager : MonoBehaviour
 		GameManager.Instance.Cutscene.NextElement();
 	}
 
+	void Proceed()
+	{
+		GameManager.Instance.Cutscene.NextElement();
+	}
+	public void WaitFor(float time)
+	{
+		Invoke("Proceed", time);
+	}
+
 	/*
 	 * Shows the given string as a message in the upper box
 	 * 
@@ -161,6 +170,9 @@ public class UIManager : MonoBehaviour
 	 */
 	public void ShowMessage(string msg)
 	{
+        hpBar.enabled = false;
+        mpBar.enabled = false;
+        stealthMeter.Enabled = false;
 		messageBox.Enabled = true;
 		messageBox.Text = msg;
 	}
@@ -173,7 +185,10 @@ public class UIManager : MonoBehaviour
 	 */
 	public void ShowMessage(string msg, float time)
 	{
-		messageBox.Enabled = true;
+        hpBar.enabled = false;
+        mpBar.enabled = false;
+        stealthMeter.Enabled = false;
+        messageBox.Enabled = true;
 		messageBox.Text = msg;
 		Invoke("HideMessage", time);
 	}
@@ -181,7 +196,10 @@ public class UIManager : MonoBehaviour
 	//Hides the message in the message box
 	public void HideMessage()
 	{
-		messageBox.Enabled = false;
+        hpBar.enabled = true;
+        mpBar.enabled = true;
+        stealthMeter.Enabled = true;
+        messageBox.Enabled = false;
 	}
 
 	public bool InCutscene
