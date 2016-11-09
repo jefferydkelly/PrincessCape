@@ -514,13 +514,11 @@ public class Cutscene
 		else if (currentNode is CameraPan)
 		{ 
 			CameraPan cp = currentNode as CameraPan;
-			Debug.Log("Panning: " + cp.panDistance.x);
 			CameraManager.Instance.Pan(cp.panDistance, cp.time);
 		}
 		else if (currentNode is CutsceneWait)
 		{
 			CutsceneWait cw = (currentNode as CutsceneWait);
-			Debug.Log("Waiting for: " + cw.time);
 			UIManager.Instance.WaitFor(cw.time);
 		}
 	}
