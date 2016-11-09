@@ -1,7 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/CastleEntrance.unity
+- path: Assets/Scenes/RoseTestCastleEntrance.unity
   isLoaded: 1
   isActive: 1
-- path: Assets/Scenes/LordsTower.unity
-  isLoaded: 0
-  isActive: 0
