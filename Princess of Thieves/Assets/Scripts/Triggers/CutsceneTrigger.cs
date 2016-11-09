@@ -2,13 +2,13 @@
 using System.Collections;
 
 public class CutsceneTrigger : TriggerBase {
-	public string cutsceneName = "testCutscene";
+	public TextAsset cutscene;
 	protected override void Trigger()
 	{
 		if (!triggered)
 		{
 			triggered = true;
-			GameManager.Instance.StartCutscene(cutsceneName);
+			GameManager.Instance.StartCutscene(cutscene);
 		}
 	}
 }

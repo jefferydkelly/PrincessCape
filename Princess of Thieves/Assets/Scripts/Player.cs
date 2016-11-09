@@ -120,6 +120,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
             }
             else if (Hidden)
             {
+				myRigidBody.velocity = Vector2.zero;
 
                 if (controller.Interact)
                 {

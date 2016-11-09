@@ -190,147 +190,160 @@ public class Cutscene
             string[] parts = line.Split(' ');
             CutsceneElement c = null;
             string p = parts[0].ToLower();
-            if (p == "show")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.Show;
-                ce.affected = parts[1];
-                if (parts.Length > 2)
-                {
-                    ce.x = float.Parse(parts[2]);
-                    ce.y = float.Parse(parts[3]);
-                }
-                c = ce;
-            }
-            else if (p == "hide")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.Hide;
-                ce.affected = parts[1];
-                c = ce;
-            }
-            else if (p == "fade-in")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.FadeIn;
-                ce.affected = parts[1];
-                ce.time = float.Parse(parts[2]);
-                if (parts.Length == 5)
-                {
+			if (p == "show")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.Show;
+				ce.affected = parts[1];
+				if (parts.Length > 2)
+				{
+					ce.x = float.Parse(parts[2]);
+					ce.y = float.Parse(parts[3]);
+				}
+				c = ce;
+			}
+			else if (p == "hide")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.Hide;
+				ce.affected = parts[1];
+				c = ce;
+			}
+			else if (p == "fade-in")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.FadeIn;
+				ce.affected = parts[1];
+				ce.time = float.Parse(parts[2]);
+				if (parts.Length == 5)
+				{
 
-                    ce.x = float.Parse(parts[3]);
-                    ce.y = float.Parse(parts[4]);
+					ce.x = float.Parse(parts[3]);
+					ce.y = float.Parse(parts[4]);
 
-                }
+				}
 
-                c = ce;
-            }
-            else if (p == "fade-out")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.FadeOut;
-                ce.affected = parts[1];
-                ce.time = float.Parse(parts[2]);
+				c = ce;
+			}
+			else if (p == "fade-out")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.FadeOut;
+				ce.affected = parts[1];
+				ce.time = float.Parse(parts[2]);
 
-                c = ce;
-            }
-            else if (p == "flip-x")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.FlipHorizontal;
-                ce.affected = parts[1];
-                c = ce;
-            }
-            else if (p == "flip-y")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.FlipVertical;
-                ce.affected = parts[1];
-                c = ce;
-            }
-            else if (p == "scale")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.Scale;
-                ce.affected = parts[1];
-                ce.x = float.Parse(parts[2]);
-                ce.time = float.Parse(parts[3]);
-                c = ce;
-            }
-            else if (p == "scalex")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.ScaleX;
-                ce.affected = parts[1];
-                ce.x = float.Parse(parts[2]);
-                ce.time = float.Parse(parts[3]);
-                c = ce;
-            }
-            else if (p == "scaley")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.ScaleY;
-                ce.affected = parts[1];
-                ce.y = float.Parse(parts[2]);
-                ce.time = float.Parse(parts[3]);
-                c = ce;
-            }
-            else if (p == "scalexy")
-            {
-                CutsceneEffect ce = new CutsceneEffect();
-                ce.type = EffectType.ScaleXYInd;
-                ce.affected = parts[1];
-                ce.x = float.Parse(parts[2]);
-                ce.y = float.Parse(parts[3]);
-                ce.time = float.Parse(parts[4]);
-                c = ce;
-            }
-            else if (p == "rotate")
-            {
-                CutsceneMovement cm = new CutsceneMovement();
-                cm.moveType = MoveTypes.Rotate;
-                cm.mover = parts[1];
-                cm.ang = float.Parse(parts[2]);
-                cm.time = parts.Length == 4 ? float.Parse(parts[3]) : 0;
-                c = cm;
-            }
-            else if (p == "move")
-            {
-                CutsceneMovement cm = new CutsceneMovement();
-                cm.moveType = MoveTypes.XY;
-                cm.mover = parts[1];
-                cm.x = float.Parse(parts[2]);
-                cm.y = float.Parse(parts[3]);
-                cm.time = parts.Length == 5 ? float.Parse(parts[4]) : 0;
-                c = cm;
-            }
-            else if (p == "character")
-            {
-                if (parts.Length == 2)
-                {
-                    CreateCharacter(parts[1]);
-                }
-                else
-                {
-                    CreateCharacter(parts[1], parts[2]);
-                }
-                continue;
-            }
-            else if (p == "swap-sprite")
-            {
-                CutsceneSpriteChange csc = new CutsceneSpriteChange();
-                csc.affected = parts[1];
-                csc.newSprite = parts[2];
-                c = csc;
-            }
-            else
-            {
-                CutsceneDialog cd = new CutsceneDialog();
-                parts = line.Split(':');
-                cd.speaker = parts[0];
-                cd.dialog = parts[1];
-                c = cd;
-            }
+				c = ce;
+			}
+			else if (p == "flip-x")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.FlipHorizontal;
+				ce.affected = parts[1];
+				c = ce;
+			}
+			else if (p == "flip-y")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.FlipVertical;
+				ce.affected = parts[1];
+				c = ce;
+			}
+			else if (p == "scale")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.Scale;
+				ce.affected = parts[1];
+				ce.x = float.Parse(parts[2]);
+				ce.time = float.Parse(parts[3]);
+				c = ce;
+			}
+			else if (p == "scalex")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.ScaleX;
+				ce.affected = parts[1];
+				ce.x = float.Parse(parts[2]);
+				ce.time = float.Parse(parts[3]);
+				c = ce;
+			}
+			else if (p == "scaley")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.ScaleY;
+				ce.affected = parts[1];
+				ce.y = float.Parse(parts[2]);
+				ce.time = float.Parse(parts[3]);
+				c = ce;
+			}
+			else if (p == "scalexy")
+			{
+				CutsceneEffect ce = new CutsceneEffect();
+				ce.type = EffectType.ScaleXYInd;
+				ce.affected = parts[1];
+				ce.x = float.Parse(parts[2]);
+				ce.y = float.Parse(parts[3]);
+				ce.time = float.Parse(parts[4]);
+				c = ce;
+			}
+			else if (p == "rotate")
+			{
+				CutsceneMovement cm = new CutsceneMovement();
+				cm.moveType = MoveTypes.Rotate;
+				cm.mover = parts[1];
+				cm.ang = float.Parse(parts[2]);
+				cm.time = parts.Length == 4 ? float.Parse(parts[3]) : 0;
+				c = cm;
+			}
+			else if (p == "move")
+			{
+				CutsceneMovement cm = new CutsceneMovement();
+				cm.moveType = MoveTypes.XY;
+				cm.mover = parts[1];
+				cm.x = float.Parse(parts[2]);
+				cm.y = float.Parse(parts[3]);
+				cm.time = parts.Length == 5 ? float.Parse(parts[4]) : 0;
+				c = cm;
+			}
+			else if (p == "character")
+			{
+				if (parts.Length == 2)
+				{
+					CreateCharacter(parts[1]);
+				}
+				else
+				{
+					CreateCharacter(parts[1], parts[2]);
+				}
+				continue;
+			}
+			else if (p == "swap-sprite")
+			{
+				CutsceneSpriteChange csc = new CutsceneSpriteChange();
+				csc.affected = parts[1];
+				csc.newSprite = parts[2];
+				c = csc;
+			}
+			else if (p == "pan")
+			{
+				CameraPan cp = new CameraPan();
+				cp.panDistance = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
+				cp.time = float.Parse(parts[3]);
+				c = cp;
+			}
+			else if (p == "wait")
+			{
+				CutsceneWait cw = new CutsceneWait();
+				cw.time = float.Parse(parts[1]);
+				c = cw;
+			}
+			else
+			{
+				CutsceneDialog cd = new CutsceneDialog();
+				parts = line.Split(':');
+				cd.speaker = parts[0];
+				cd.dialog = parts[1];
+				c = cd;
+			}
 
             if (elements.Count == 0)
             {
@@ -497,6 +510,18 @@ public class Cutscene
 			}
 			NextElement();
 
+		}
+		else if (currentNode is CameraPan)
+		{ 
+			CameraPan cp = currentNode as CameraPan;
+			Debug.Log("Panning: " + cp.panDistance.x);
+			CameraManager.Instance.Pan(cp.panDistance, cp.time);
+		}
+		else if (currentNode is CutsceneWait)
+		{
+			CutsceneWait cw = (currentNode as CutsceneWait);
+			Debug.Log("Waiting for: " + cw.time);
+			UIManager.Instance.WaitFor(cw.time);
 		}
 	}
 
