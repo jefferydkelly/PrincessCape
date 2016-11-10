@@ -11,14 +11,19 @@ public class MenuController : MonoBehaviour {
 	float waitTime = 0.2f;
 	float timeWaited = 0.0f;
 	void Start () {
-		elements = FindObjectsOfType<UIElement>().ToList();
-		elements.Reverse();
-		if (elements.Count > 0)
-		{
-			Selected = elements[0];
-		}
+        GetElements();
 	}
 	
+    protected void GetElements()
+    {
+        elements = FindObjectsOfType<UIElement>().ToList();
+        elements.Reverse();
+		if (elements.Count > 0)
+
+        {
+            Selected = elements[0];
+        }
+    }
 	// Update is called once per frame
 	void Update () {
 		timeWaited += Time.deltaTime;
