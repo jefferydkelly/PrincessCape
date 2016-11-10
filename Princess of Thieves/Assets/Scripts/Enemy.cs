@@ -154,7 +154,7 @@ public class Enemy : MonoBehaviour {
 			//except one 
 			if (!playerInSight)
 			{
-				CancelInvoke("Fire");
+				StopCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
 				return EnemyState.Chase;
 			}
 			return EnemyState.Charge;
@@ -165,7 +165,7 @@ public class Enemy : MonoBehaviour {
 			{
 				if (pDist < 15)
 				{
-					Invoke("Fire", timeToChargeAttack);
+					StartCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
 					return EnemyState.Charge;
 				}
 
@@ -181,7 +181,7 @@ public class Enemy : MonoBehaviour {
 				{
 					if (pDist < 15)
 					{
-						Invoke("Fire", timeToChargeAttack);
+						StartCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
 						return EnemyState.Charge;
 					}
 
