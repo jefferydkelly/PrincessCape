@@ -48,6 +48,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 	// Update is called once per frame
 	void Update()
 	{
+		if (Controller.Pause)
+		{
+			GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused;
+		}
         if (!GameManager.Instance.IsPaused)
         {
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
