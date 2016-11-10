@@ -58,6 +58,15 @@ public class ChargeShotScript : MonoBehaviour {
         }
 	}
 
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.CompareTag("Player"))
+		{
+			GameManager.Instance.Player.TakeDamage(new DamageSource(DamageType.Fire, 10, Allegiance.Enemy));
+			Destroy(gameObject);
+		}
+	}
+
     private void Flip()
     {
         transform.localScale = transform.localScale * fwdX;

@@ -65,7 +65,6 @@ public class Enemy : MonoBehaviour {
     
     void Fire()
     {
-		Debug.Log("Ready.  Aim. Fire.");
 		Vector2 target = (playerObj.transform.position - transform.position).normalized;
 		GameObject go = Instantiate(chargeProjectile);
 		go.transform.position = transform.position;
@@ -182,7 +181,6 @@ public class Enemy : MonoBehaviour {
 				{
 					if (pDist < 15)
 					{
-						Debug.Log("Fire");
 						Invoke("Fire", timeToChargeAttack);
 						return EnemyState.Charge;
 					}
