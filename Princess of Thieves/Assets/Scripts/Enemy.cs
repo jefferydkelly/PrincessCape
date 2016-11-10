@@ -170,53 +170,45 @@ public class Enemy : MonoBehaviour {
 					ChargeAttack();
 					break;
 				case EnemyState.Patrol:
-
-					break;
+                    if (atPatrolDest)
+                    {
+                        //  Debug.Log("Am I here? " + atPatrolDest);
+                        patrolDest = GetPatrolLocation();
+                        atPatrolDest = false;
+                    }
+                    else
+                    {
+                        if (!CheckGround())
+                        {
+                            transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
+                            if (Vector3.Distance(this.transform.position, patrolDest) < 1)
+                            {
+                                atPatrolDest = true;
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("No floor");
+                            atPatrolDest = true;
+                        }
+                    }
+                    break;
 				case EnemyState.Chase:
-
-					break;
-			}
-			if (curState == EnemyState.Chase)
-			{
-				if (atChaseDest)
-				{
-					// Debug.Log("Am I at the player? " + atChaseDest);
-					playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
-					atChaseDest = false;
-				}
-				else
-				{
-					transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
-					if (transform.position == playerChaseDest)
-					{
-						atChaseDest = true;
-					}
-				}
-			}
-			if (curState == EnemyState.Patrol)
-			{
-				if (atPatrolDest)
-				{
-					//  Debug.Log("Am I here? " + atPatrolDest);
-					patrolDest = GetPatrolLocation();
-					atPatrolDest = false;
-				}
-				else
-				{
-					if (!CheckGround())
-					{
-						transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
-						if (Vector3.Distance(this.transform.position, patrolDest) < 1)
-						{
-							atPatrolDest = true;
-						}
-					}
-					else
-					{
-						Debug.Log("No floor");
-						atPatrolDest = true;
-					}
-				}
+                    if (atChaseDest)
+                    {
+                        // Debug.Log("Am I at the player? " + atChaseDest);
+                        playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
+                        atChaseDest = false;
+                    }
+                    else
+                    {
+                        transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
+                        if (transform.position == playerChaseDest)
+                        {
+                            atChaseDest = true;
+                        }
+                    }
+                    break;
 			}
 		}
 	}

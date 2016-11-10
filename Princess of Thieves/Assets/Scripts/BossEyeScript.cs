@@ -13,7 +13,7 @@ public class BossEyeScript : MonoBehaviour {
     private bool atPatrolDest;
     private Vector3 patrolDest;
     private float newLocLockout;
-    private bool playerInSight = false;
+    public bool playerInSight = false;
     private float lastTimeSeenPlayer;
     private int sightRange = 10;
     private Vector3 lastKnownPlayerPosition;
@@ -38,7 +38,7 @@ public class BossEyeScript : MonoBehaviour {
     {
         LookForward();
         if (Time.time - newLocLockout >=1f)
-            CheckPlatforms();
+           // CheckPlatforms();
         if (atPatrolDest)
         {
             //  Debug.Log("Am I here? " + atPatrolDest);
@@ -49,11 +49,15 @@ public class BossEyeScript : MonoBehaviour {
         {
             if (!playerInSight)
             {
+                    playerInSight = false;
+                //MordilManager.Instance.PlayerInSight = false;
                 transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
             }
             else
             {
+                    playerInSight = true;
                 Debug.Log("I see you...");
+               // MordilManager.Instance.PlayerInSight = true;
                 transform.position = Vector2.MoveTowards(gameObject.transform.position, lastKnownPlayerPosition, 0.5f * Time.deltaTime);
             }
             if (Vector3.Distance(this.transform.position, patrolDest) < 1)

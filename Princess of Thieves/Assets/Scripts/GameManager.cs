@@ -17,8 +17,8 @@ public class GameManager {
 		loadedAreas.Add(SceneManager.GetActiveScene().name);
 		SceneManager.sceneLoaded += OnSceneLoaded;
 		SceneManager.sceneUnloaded += OnSceneUnloaded;
-
-	}
+       // MordilManager Minstance = new MordilManager();
+    }
 
 	/// <summary>
 	/// Starts the cutscene.
