@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour {
     //AI Things
     public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
     EnemyState curState = EnemyState.Stationary;
-    float sightRange = 15.0f;
+    float sightRange = 10.0f;
     float sightAngle = 45.0f;
     private bool playerInSight = false;
     private GameObject playerObj;
@@ -140,15 +140,7 @@ public class Enemy : MonoBehaviour {
         }
         
         Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
-        if(returnVal.x > transform.position.x)
-        {
-            fwdX = 1;
-            gameObject.GetComponent<SpriteRenderer>().flipX = true;
-        }else
-        {
-            fwdX = -1;
-            gameObject.GetComponent<SpriteRenderer>().flipX = false;
-        }
+		Flip();
         return returnVal;
     }
     // Update is called once per frame
@@ -170,45 +162,45 @@ public class Enemy : MonoBehaviour {
 					ChargeAttack();
 					break;
 				case EnemyState.Patrol:
-                    if (atPatrolDest)
-                    {
-                        //  Debug.Log("Am I here? " + atPatrolDest);
-                        patrolDest = GetPatrolLocation();
-                        atPatrolDest = false;
-                    }
-                    else
-                    {
-                        if (!CheckGround())
-                        {
-                            transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
-                            if (Vector3.Distance(this.transform.position, patrolDest) < 1)
-                            {
-                                atPatrolDest = true;
-                            }
-                        }
-                        else
-                        {
-                            Debug.Log("No floor");
-                            atPatrolDest = true;
-                        }
-                    }
-                    break;
+					if (atPatrolDest)
+					{
+						//  Debug.Log("Am I here? " + atPatrolDest);
+						patrolDest = GetPatrolLocation();
+						atPatrolDest = false;
+					}
+					else
+					{
+						if (!CheckGround())
+						{
+							transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
+							if (Vector3.Distance(this.transform.position, patrolDest) < 0.1f)
+							{
+								atPatrolDest = true;
+							}
+						}
+						else
+						{
+							Debug.Log("No floor");
+							atPatrolDest = true;
+						}
+					}
+					break;
 				case EnemyState.Chase:
-                    if (atChaseDest)
-                    {
-                        // Debug.Log("Am I at the player? " + atChaseDest);
-                        playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
-                        atChaseDest = false;
-                    }
-                    else
-                    {
-                        transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
-                        if (transform.position == playerChaseDest)
-                        {
-                            atChaseDest = true;
-                        }
-                    }
-                    break;
+					if (atChaseDest)
+					{
+						// Debug.Log("Am I at the player? " + atChaseDest);
+						playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
+						atChaseDest = false;
+					}
+					else
+					{
+						transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
+						if (transform.position == playerChaseDest)
+						{
+							atChaseDest = true;
+						}
+					}
+					break;
 			}
 		}
 	}
@@ -296,17 +288,8 @@ public class Enemy : MonoBehaviour {
 
     private void Flip()
     {
-        if(fwdX > 1)
-        {
-            fwdX = ~fwdX;
-            gameObject.GetComponent<SpriteRenderer>().flipX = false;
-        }
-        else
-        {
-            fwdX = ~fwdX;
-            gameObject.GetComponent<SpriteRenderer>().flipX = true;
-        }
-        
+		fwdX *= -1;
+		myRenderer.flipX = !myRenderer.flipX;
     }
     public Vector3 Forward
     {
