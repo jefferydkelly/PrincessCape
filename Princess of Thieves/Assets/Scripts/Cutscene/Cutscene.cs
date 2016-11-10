@@ -325,10 +325,14 @@ public class Cutscene
 			}
 			else if (p == "pan")
 			{
-				CameraPan cp = new CameraPan();
-				cp.panDistance = new Vector2(float.Parse(parts[1]), float.Parse(parts[2]));
-				cp.time = float.Parse(parts[3]);
-				c = cp;
+				if (parts[1] == "to")
+				{
+					GameObject go = GameObject.Find(parts[2]);
+					c = new CameraPan(go.transform.position, float.Parse(parts[3]));
+				}
+				else {
+					c = new CameraPan(new Vector2(float.Parse(parts[1]), float.Parse(parts[2])), float.Parse(parts[3]));
+				}
 			}
 			else if (p == "wait")
 			{
@@ -514,6 +518,7 @@ public class Cutscene
 		else if (currentNode is CameraPan)
 		{ 
 			CameraPan cp = currentNode as CameraPan;
+			cp.Start();
 			CameraManager.Instance.Pan(cp.panDistance, cp.time);
 		}
 		else if (currentNode is CutsceneWait)

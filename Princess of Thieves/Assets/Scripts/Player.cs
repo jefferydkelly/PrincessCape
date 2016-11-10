@@ -42,6 +42,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
         spells.Add(new WindSpell());
         UIManager.Instance.ShowSpell = true;
 		UIManager.Instance.LightLevel = 0;
+		DontDestroyOnLoad(gameObject);
 	}
 
 

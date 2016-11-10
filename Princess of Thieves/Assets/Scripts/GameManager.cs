@@ -154,8 +154,9 @@ public class GameManager {
 			yield return new WaitForEndOfFrame();
 
 		}
-
-		SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+		Scene s = SceneManager.GetSceneByName(sceneName);
+		SceneManager.MoveGameObjectToScene(player.gameObject, s);
+		SceneManager.SetActiveScene(s);
 	}
 
 	public IEnumerator UnloadScene(string sceneName)
@@ -163,7 +164,7 @@ public class GameManager {
 		if (loadedAreas.Contains(sceneName))
 		{
 			yield return new WaitForEndOfFrame();
-			SceneManager.MoveGameObjectToScene(player.gameObject, SceneManager.GetActiveScene());
+
 			SceneManager.UnloadScene(sceneName);
 		}
 	}

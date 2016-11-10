@@ -95,6 +95,7 @@ public class Enemy : MonoBehaviour {
 		if (!GameManager.Instance.IsPaused)
 		{
 			//CheckGround();
+			LookForward();
 			curState = CheckState();
 			// Debug.Log("patrol Dest is: " + patrolDest);
 			//Debug.Log("State is: " + curState);
@@ -114,10 +115,7 @@ public class Enemy : MonoBehaviour {
 						if (!CheckGround())
 						{
 							transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
-							if (Vector3.Distance(this.transform.position, patrolDest) < 0.1f)
-							{
-								atPatrolDest = true;
-							}
+							atPatrolDest = Vector3.Distance(transform.position, patrolDest) < 0.1f;
 						}
 						else
 						{
@@ -152,8 +150,9 @@ public class Enemy : MonoBehaviour {
 		if (curState == EnemyState.Charge) //override all else
 		{
 			//except one 
-			if (!playerInSight)
+			if (!playerInSight || pDist >= 15)
 			{
+				Debug.Log("Out of sight.  Out of mind");
 				StopCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
 				return EnemyState.Chase;
 			}
@@ -195,7 +194,7 @@ public class Enemy : MonoBehaviour {
     }
     void FixedUpdate()
     {
-        LookForward();
+        //LookForward();
     }
 
     void LookForward()
@@ -208,7 +207,7 @@ public class Enemy : MonoBehaviour {
             Vector3 dif = p.transform.position - transform.position;
             if (dif.sqrMagnitude <= sightRange * sightRange)
             {
-				if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad)) //yeah this is much better
+				if (InSightCone(p.gameObject, sightAngle)) //yeah this is much better
                 {
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {
@@ -247,6 +246,10 @@ public class Enemy : MonoBehaviour {
 
     }
 
+	protected bool InSightCone(GameObject go, float ang)
+	{
+		return Vector2.Dot((go.transform.position - transform.position.normalized).normalized, Forward) >= Mathf.Cos(ang * Mathf.Deg2Rad);
+	}
     private void Flip()
     {
 		fwdX *= -1;
