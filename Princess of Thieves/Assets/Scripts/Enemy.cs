@@ -52,25 +52,18 @@ public class Enemy : MonoBehaviour {
     /// <returns></returns>
     bool CheckGround()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(Forward.x, -1),
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(fwdX, -1),
             1.5f, (1 << LayerMask.NameToLayer("Platforms")));
         if (hit.collider != null)
         {
-            Debug.DrawRay(transform.position, new Vector2(Forward.x, -1) * 1.5f, Color.red, 1f);
+			Debug.DrawRay(transform.position, new Vector2(fwdX, -1) * 1.5f, Color.red, 1f);
             return false;
         }
         
         return true;
     }
     
-    private IEnumerator ChargeAnim(float waitTime)
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(waitTime);   
-        }
-    }
-    void ShootChargedShot()
+    void Fire()
     {
 		Debug.Log("Ready.  Aim. Fire.");
 		Vector2 target = (playerObj.transform.position - transform.position).normalized;
@@ -93,9 +86,9 @@ public class Enemy : MonoBehaviour {
         {
             tempLoR = 1;
         }
-        
-        Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
-		Flip();
+        Flip();
+		Vector3 returnVal = new Vector3(transform.position.x + fwdX * 5, transform.position.y, transform.position.z);
+
         return returnVal;
     }
     // Update is called once per frame
@@ -162,7 +155,7 @@ public class Enemy : MonoBehaviour {
 			//except one 
 			if (!playerInSight)
 			{
-				CancelInvoke("ShootChargedShot");
+				CancelInvoke("Fire");
 				return EnemyState.Chase;
 			}
 			return EnemyState.Charge;
@@ -173,8 +166,7 @@ public class Enemy : MonoBehaviour {
 			{
 				if (pDist < 15)
 				{
-					Debug.Log("Fire");
-					Invoke("ShootChargedShot", timeToChargeAttack);
+					Invoke("Fire", timeToChargeAttack);
 					return EnemyState.Charge;
 				}
 
@@ -191,7 +183,7 @@ public class Enemy : MonoBehaviour {
 					if (pDist < 15)
 					{
 						Debug.Log("Fire");
-						Invoke("ShootChargedShot", timeToChargeAttack);
+						Invoke("Fire", timeToChargeAttack);
 						return EnemyState.Charge;
 					}
 
@@ -202,19 +194,13 @@ public class Enemy : MonoBehaviour {
 		}
        
         return EnemyState.Patrol;
-        
-
-
-
-        //if nothing else is happening
-       // return EnemyState.Stationary;
     }
     void FixedUpdate()
     {
-        LookForward(fwdX);
+        LookForward();
     }
 
-    void LookForward(int fwd)
+    void LookForward()
     {
         Color color = Color.red;
         //is it more efficient to 'get player' once in Start? 
@@ -224,7 +210,7 @@ public class Enemy : MonoBehaviour {
             Vector3 dif = p.transform.position - transform.position;
             if (dif.sqrMagnitude <= sightRange * sightRange)
             {
-                if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad)) //yeah this is much better
+				if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad)) //yeah this is much better
                 {
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {
