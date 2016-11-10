@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Enemy : MonoBehaviour {
-    private Rigidbody2D myRigidBody;
-    private SpriteRenderer myRenderer;
-    private int fwdX = 1;
+    Rigidbody2D myRigidBody;
+    SpriteRenderer myRenderer;
+    int fwdX = 1;
     public float maxSpeed = 1;
 
 
@@ -14,18 +14,17 @@ public class Enemy : MonoBehaviour {
     EnemyState curState = EnemyState.Stationary;
     float sightRange = 10.0f;
     float sightAngle = 45.0f;
-    private bool playerInSight = false;
-    private GameObject playerObj;
-    GameObject tempGameObj; //bad move but unavoidable
+    bool playerInSight = false;
+    GameObject playerObj;
     /// <summary>
     /// Float time value that represent the last time the enemy saw the player. Used to Chasing
     /// </summary>
-    private float lastTimeSeenPlayer = 0f;
-    private Vector3 playerChaseDest = Vector3.zero;
-    private bool atChaseDest = true;
-    private Vector3 patrolDest = Vector3.zero;
-    private Vector3 patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
-    private bool atPatrolDest = true;
+    float lastTimeSeenPlayer = 0f;
+   	Vector3 playerChaseDest = Vector3.zero;
+    bool atChaseDest = true;
+    Vector3 patrolDest = Vector3.zero;
+    Vector3 patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
+    bool atPatrolDest = true;
     //Enemy Ability Things
     /// <summary>
     /// This float keeps track of the time the enemy started it's ability.
@@ -33,10 +32,10 @@ public class Enemy : MonoBehaviour {
     private float abilityTimeStart = 0f;
     #region cooldownTimes
     [SerializeField]
-    float timeToChargeAttack = 2.5f;
+    float timeToChargeAttack = 1f;
     [SerializeField]
-    GameObject chargeProjectile;
-    private IEnumerator chargingAnimation;
+    public GameObject chargeProjectile;
+   	IEnumerator chargingAnimation;
 
     #endregion cooldownTimes
     // Use this for initialization
@@ -46,32 +45,7 @@ public class Enemy : MonoBehaviour {
         
         playerObj = GameManager.Instance.Player.GameObject;
     }
-	
-    /// <summary>
-    /// Will set the time to charge, and defer anything until the charge is complete. Then it will fire a shot
-    /// </summary>
-    void ChargeAttack()
-    {
-        
-        if (abilityTimeStart == 0f)
-        {
-            
-            abilityTimeStart = Time.time;
-            //I think this will just call it in 2.5 seconds
-            //IEnumerator coroutine = ChargeAnim(2.5f);
-            //StartCoroutine(coroutine);
-            tempGameObj = Chargeshot();
-        }
-       // Debug.Log("Time: " + (Time.time - abilityTimeStart));
-        //Should do nothing when between these two states
-        if(Time.time - abilityTimeStart >= timeToChargeAttack)
-        {
-            //has to shoot!  
-          
-            ShootChargedShot();
-            abilityTimeStart = 0f;
-        }
-    }
+
     /// <summary>
     /// Returns true while there is still ground. False it sees no ground.
     /// </summary>
@@ -98,31 +72,12 @@ public class Enemy : MonoBehaviour {
     }
     void ShootChargedShot()
     {
-        if (tempGameObj)
-        {
-            //Vector2 temp = Vector2.D(this.gameObject.transform.position, playerObj.transform.position);
-            float x = playerObj.transform.position.x - this.gameObject.transform.position.x;
-            float y = playerObj.transform.position.y - this.gameObject.transform.position.y;
-            Vector2 target = new Vector2(x, y);
-            tempGameObj.GetComponent<Rigidbody2D>().AddForce(target * 100);
-        }
-
-    }
-    GameObject Chargeshot()
-    {
-        GameObject shot = (GameObject)Instantiate(chargeProjectile, transform);
-        shot.transform.position = transform.position;
-        if (fwdX > 0)
-        {
-            shot.GetComponent<ChargeShotScript>().SwitchFace();
-        }else
-        {
-
-        }
-        Destroy(shot, 5.5f);    
-        //Add Force at a vector that points to the player object at the time of shooting.
-        //uses lastKnownLocation if the player disappeared
-        return shot;
+		Debug.Log("Ready.  Aim. Fire.");
+		Vector2 target = (playerObj.transform.position - transform.position).normalized;
+		GameObject go = Instantiate(chargeProjectile);
+		go.transform.position = transform.position;
+		go.GetComponent<Rigidbody2D>().AddForce(1000 * target);
+		curState = EnemyState.Chase;
     }
 
     /// <summary>
@@ -150,16 +105,10 @@ public class Enemy : MonoBehaviour {
 			//CheckGround();
 			curState = CheckState();
 			// Debug.Log("patrol Dest is: " + patrolDest);
-			Debug.Log("State is: " + curState);
+			//Debug.Log("State is: " + curState);
 			switch (curState)
 			{
 				case EnemyState.Charge:
-
-					ChargeAttack();
-					curState = EnemyState.ActualShoot;
-					break;
-				case EnemyState.ActualShoot:
-					ChargeAttack();
 					break;
 				case EnemyState.Patrol:
 					if (atPatrolDest)
@@ -206,27 +155,55 @@ public class Enemy : MonoBehaviour {
 	}
     EnemyState CheckState()
     {
-       // Debug.Log("Player? : " + playerInSight);
-        if(curState == EnemyState.ActualShoot) //override all else
-        {
-            //except one 
-            if (playerInSight)
-                return EnemyState.ActualShoot;
-            else
-                return EnemyState.Chase;
-        }
-        if (playerInSight && Vector3.Distance(this.transform.position,playerObj.transform.position) < 15)
-        {
-            return EnemyState.Charge;
-        }
-        else if (playerInSight && Vector3.Distance(this.transform.position, playerObj.transform.position) >= 15)
-        {
-            return EnemyState.Chase;
-        }
-        else
-        {
-            return EnemyState.Patrol;
-        }
+		// Debug.Log("Player? : " + playerInSight);
+		float pDist = Vector3.Distance(transform.position, playerObj.transform.position);
+		if (curState == EnemyState.Charge) //override all else
+		{
+			//except one 
+			if (!playerInSight)
+			{
+				CancelInvoke("ShootChargedShot");
+				return EnemyState.Chase;
+			}
+			return EnemyState.Charge;
+		}
+		else if (curState == EnemyState.Patrol)
+		{
+			if (playerInSight)
+			{
+				if (pDist < 15)
+				{
+					Debug.Log("Fire");
+					Invoke("ShootChargedShot", timeToChargeAttack);
+					return EnemyState.Charge;
+				}
+
+				return EnemyState.Chase;
+
+			}
+		}
+		else if (curState == EnemyState.Chase)
+		{
+			if (playerInSight)
+			{
+				if (pDist < 15)
+				{
+					if (pDist < 15)
+					{
+						Debug.Log("Fire");
+						Invoke("ShootChargedShot", timeToChargeAttack);
+						return EnemyState.Charge;
+					}
+
+					return Enemy.EnemyState.Chase;
+				}
+
+			}
+		}
+       
+        return EnemyState.Patrol;
+        
+
 
 
         //if nothing else is happening

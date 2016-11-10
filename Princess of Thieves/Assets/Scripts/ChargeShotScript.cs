@@ -13,7 +13,6 @@ public class ChargeShotScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         spriteControl = GetComponent<SpriteRenderer>();
-        
 	}
 	
     public void SwitchFace()
