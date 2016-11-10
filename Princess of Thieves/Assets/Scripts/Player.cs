@@ -120,6 +120,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
             }
             else if (Hidden)
             {
+				myRigidBody.velocity = Vector2.zero;
 
                 if (controller.Interact)
                 {
@@ -460,6 +461,9 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			else {
 				state &= ~PlayerState.InCover;
 			}
+
+			GetComponent<Collider2D>().isTrigger = value;
+			myRigidBody.gravityScale = value ? 0 : 1;
 		}
 	}
 

@@ -153,69 +153,72 @@ public class Enemy : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-        //CheckGround();
-        curState = CheckState();
-       // Debug.Log("patrol Dest is: " + patrolDest);
-        Debug.Log("State is: " + curState);
-        switch (curState)
-        {
-            case EnemyState.Charge:
-               
-                ChargeAttack();
-                curState = EnemyState.ActualShoot;
-                break;
-            case EnemyState.ActualShoot:
-                ChargeAttack();
-                break;
-            case EnemyState.Patrol:
-                
-                break;
-            case EnemyState.Chase:
+		if (!GameManager.Instance.IsPaused)
+		{
+			//CheckGround();
+			curState = CheckState();
+			// Debug.Log("patrol Dest is: " + patrolDest);
+			Debug.Log("State is: " + curState);
+			switch (curState)
+			{
+				case EnemyState.Charge:
 
-                break;
-        }
-        if (curState == EnemyState.Chase)
-        {
-            if (atChaseDest)
-            {
-               // Debug.Log("Am I at the player? " + atChaseDest);
-                playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
-                atChaseDest = false;
-            }
-            else
-            {
-                transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
-                if (transform.position == playerChaseDest)
-                {
-                    atChaseDest = true;
-                }
-            }
-        }
-        if (curState == EnemyState.Patrol)
-        {
-            if (atPatrolDest)
-            {
-              //  Debug.Log("Am I here? " + atPatrolDest);
-                patrolDest = GetPatrolLocation();      
-                atPatrolDest = false;
-            }
-            else
-            {
-                if (!CheckGround())
-                {
-                    transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
-                    if (Vector3.Distance(this.transform.position, patrolDest) < 1)
-                    {
-                        atPatrolDest = true;
-                    }
-                }
-                else
-                {
-                    Debug.Log("No floor");
-                    atPatrolDest = true;
-                }
-            }
-        }   
+					ChargeAttack();
+					curState = EnemyState.ActualShoot;
+					break;
+				case EnemyState.ActualShoot:
+					ChargeAttack();
+					break;
+				case EnemyState.Patrol:
+
+					break;
+				case EnemyState.Chase:
+
+					break;
+			}
+			if (curState == EnemyState.Chase)
+			{
+				if (atChaseDest)
+				{
+					// Debug.Log("Am I at the player? " + atChaseDest);
+					playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
+					atChaseDest = false;
+				}
+				else
+				{
+					transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
+					if (transform.position == playerChaseDest)
+					{
+						atChaseDest = true;
+					}
+				}
+			}
+			if (curState == EnemyState.Patrol)
+			{
+				if (atPatrolDest)
+				{
+					//  Debug.Log("Am I here? " + atPatrolDest);
+					patrolDest = GetPatrolLocation();
+					atPatrolDest = false;
+				}
+				else
+				{
+					if (!CheckGround())
+					{
+						transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
+						if (Vector3.Distance(this.transform.position, patrolDest) < 1)
+						{
+							atPatrolDest = true;
+						}
+					}
+					else
+					{
+						Debug.Log("No floor");
+						atPatrolDest = true;
+					}
+				}
+			}
+		}
 	}
     EnemyState CheckState()
     {

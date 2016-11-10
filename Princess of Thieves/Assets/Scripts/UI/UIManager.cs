@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
 			spellBox.Enabled = false;
 
 
-			//itemLeft = GameObject.Find("ItemLeft").GetComponent<Image>();
+			//itemeft = GameObject.Find("ItemLeft").GetComponent<Image>();
 			//itemLeft.enabled = false;
 			//itemCenter = GameObject.Find("ItemCenter").GetComponent<Image>();
 			//itemCenter.enabled = false;
@@ -152,6 +152,15 @@ public class UIManager : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 		revealing = false;
 		GameManager.Instance.Cutscene.NextElement();
+	}
+
+	void Proceed()
+	{
+		GameManager.Instance.Cutscene.NextElement();
+	}
+	public void WaitFor(float time)
+	{
+		Invoke("Proceed", time);
 	}
 
 	/*
