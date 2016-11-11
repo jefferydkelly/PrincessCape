@@ -45,7 +45,76 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		DontDestroyOnLoad(gameObject);
 	}
 
+	void FixedUpdate()
+	{
+		if (!GameManager.Instance.IsPaused)
+		{
+			curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
+			lastYVel = myRigidBody.velocity.y;
+			if (!Hidden)
+			{
+				Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
+				myRigidBody.AddForce(xForce, ForceMode2D.Force);
 
+				if (controller.Sneak)
+					myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+				else
+					myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+
+				if (IsOnRope)
+				{
+					Vector2 vel = myRigidBody.velocity;
+					vel.x = 0;
+					myRigidBody.velocity = vel;
+					myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+					myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+
+					if (controller.Jump)
+					{
+						Jump();
+					}
+				}
+				else if (IsOnGround)
+				{
+					if (controller.Jump)
+					{
+						Jump();
+					}
+					else
+					{
+						if (controller.Interact)
+						{
+							RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
+
+							if (hit.collider != null)
+							{
+								InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+
+								if (io != null)
+								{
+									io.Interact();
+								}
+							}
+						}
+					}
+				}
+
+				if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+				{
+					fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+					myRenderer.flipX = (fwdX == -1);
+				}
+
+
+				UIManager.Instance.LightLevel = GetLocalLightLevel();
+
+			}
+			else
+			{
+				myRigidBody.velocity = Vector2.zero;
+			}
+		}
+	}
 	// Update is called once per frame
 	void Update()
 	{
@@ -53,89 +122,34 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		{
 			GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused;
 		}
-        if (!GameManager.Instance.IsPaused)
-        {
-            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
-            if (!Hidden)
-            {
 
-                CurrentSpell += controller.SpellChange;
+		if (!GameManager.Instance.IsPaused)
+		{
+			CurrentSpell += controller.SpellChange;
+			if (Hidden)
+			{
+				if (controller.Interact)
+				{
+					Hidden = false;
+				}
 
-                Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
-                myRigidBody.AddForce(xForce, ForceMode2D.Force);
+				UIManager.Instance.LightLevel = 0;
 
-                if (controller.Sneak)
-                    myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
-                else
-                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
-
-                if (IsOnRope)
-                {
-                    Vector2 vel = myRigidBody.velocity;
-                    vel.x = 0;
-                    myRigidBody.velocity = vel;
-                    myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
-
-                    if (controller.Jump)
-                    {
-                        Jump();
-                    }
-                }
-                else if (IsOnGround)
-                {
-                    if (controller.Jump)
-                    {
-                        Jump();
-                    }
-                    else
-                    {
-                        if (controller.Interact)
-                        {
-                            RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, ~(1 << LayerMask.NameToLayer("Player")));
-
-                            if (hit.collider != null)
-                            {
-                                InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
-
-                                if (io != null)
-                                {
-                                    io.Interact();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
-                {
-                    fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
-                    myRenderer.flipX = (fwdX == -1);
-                }
-                if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
-                {
-                    SpellProjectile sp = CurSpell.Cast(this);
-                    OnCooldown = true;
-                    Invoke("SpellCooldown", 1.0f);
-                    sp.allegiance = Allegiance.Player;
-                    curMP -= CurSpell.Cost;
-                }
-
-                UIManager.Instance.LightLevel = GetLocalLightLevel();
-            }
-            else if (Hidden)
-            {
-				myRigidBody.velocity = Vector2.zero;
-
-                if (controller.Interact)
-                {
-                    Hidden = false;
-                }
-
-                CurrentSpell += controller.SpellChange;
-                UIManager.Instance.LightLevel = GetLocalLightLevel();
-            }
-        }
+			}
+			else {
+				CurrentSpell += controller.SpellChange;
+				if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
+				{
+					SpellProjectile sp = CurSpell.Cast(this);
+					OnCooldown = true;
+					Invoke("SpellCooldown", 1.0f);
+					sp.allegiance = Allegiance.Player;
+					curMP -= CurSpell.Cost;
+				}
+				UIManager.Instance.LightLevel = GetLocalLightLevel();
+			}
+		}
+        
 	}
 
 	public void HandleSpellAxisCooldownForController(float t)
@@ -172,11 +186,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			}
 		}
 		myRigidBody.AddForce(new Vector2(0, jumpImpulse * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
-	}
-
-	void FixedUpdate()
-	{
-		lastYVel = myRigidBody.velocity.y;
 	}
 
 	/// <summary>

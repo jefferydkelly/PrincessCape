@@ -85,4 +85,14 @@ public class CameraManager : MonoBehaviour {
 
 		GameManager.Instance.Cutscene.NextElement();
 	}
+
+	public void Zoom(float zoomLevel, float time)
+	{
+		StartCoroutine(IZoom(zoomLevel, time));
+	}
+
+	IEnumerator IZoom(float zoomLevel, float time)
+	{
+		yield return null;
+	}
 }
