@@ -223,8 +223,11 @@ public class UIManager : MonoBehaviour
 
 		set
 		{
-			spellBox.Enabled = value;
-			UpdateSpellInfo();
+			if (GameManager.Instance.Player.SpellsKnown > 0)
+			{
+				spellBox.Enabled = value;
+				UpdateSpellInfo();
+			}
 		}
 	}
 

@@ -37,10 +37,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
-		spells.Add(new FireSpell());
-        spells.Add(new WaterSpell());
-        spells.Add(new WindSpell());
-        UIManager.Instance.ShowSpell = true;
+		//spells.Add(new FireSpell());
+        //spells.Add(new WaterSpell());
+        //spells.Add(new WindSpell());
+        //UIManager.Instance.ShowSpell = true;
 		UIManager.Instance.LightLevel = 0;
 		DontDestroyOnLoad(gameObject);
 	}
@@ -113,8 +113,14 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			else
 			{
 				myRigidBody.velocity = Vector2.zero;
+				if (controller.Interact)
+				{
+					Hidden = false;
+				}
+
+				UIManager.Instance.LightLevel = 0;
 			}
-			CameraManager.Instance.Velocity = myRigidBody.velocity;
+			//CameraManager.Instance.Velocity = myRigidBody.velocity;
 		}
 	}
 	// Update is called once per frame
@@ -127,19 +133,16 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{
-			CurrentSpell += controller.SpellChange;
-			if (Hidden)
+			if (spells.Count > 0)
 			{
-				if (controller.Interact)
-				{
-					Hidden = false;
-				}
-
-				UIManager.Instance.LightLevel = 0;
-
-			}
-			else {
 				CurrentSpell += controller.SpellChange;
+			}
+			if (!Hidden)
+			{
+				if (spells.Count > 0)
+				{
+					CurrentSpell += controller.SpellChange;
+				}
 				if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
 				{
 					SpellProjectile sp = CurSpell.Cast(this);
@@ -175,6 +178,15 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			spells.Add(s);
 
 			CurrentSpell = spells.Count - 1;
+			UIManager.Instance.ShowSpell = true;
+		}
+	}
+
+	public int SpellsKnown
+	{
+		get
+		{
+			return spells.Count;
 		}
 	}
 	void Jump()

@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour {
     //AI Things
     public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
     EnemyState curState = EnemyState.Stationary;
-    float sightRange = 10.0f;
+    float sightRange = 5.0f;
     float sightAngle = 45.0f;
     bool playerInSight = false;
     GameObject playerObj;
@@ -114,7 +114,7 @@ public class Enemy : MonoBehaviour {
 					{
 						if (!CheckGround())
 						{
-							transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
+							transform.position += Forward * 2 * Time.deltaTime;
 							atPatrolDest = Vector3.Distance(transform.position, patrolDest) < 0.1f;
 						}
 						else
@@ -152,7 +152,6 @@ public class Enemy : MonoBehaviour {
 			//except one 
 			if (!playerInSight || pDist >= 15)
 			{
-				Debug.Log("Out of sight.  Out of mind");
 				StopCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
 				return EnemyState.Chase;
 			}

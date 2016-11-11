@@ -161,7 +161,7 @@ public class GameManager {
 
 	public IEnumerator UnloadScene(string sceneName)
 	{
-		if (loadedAreas.Contains(sceneName))
+		if (loadedAreas.Count > 1 && loadedAreas.Contains(sceneName))
 		{
 			yield return new WaitForEndOfFrame();
 
