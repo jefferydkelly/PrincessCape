@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour {
     public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
     EnemyState curState = EnemyState.Stationary;
     float sightRange = 5.0f;
-    float sightAngle = 45.0f;
+    float sightAngle = 60.0f;
     bool playerInSight = false;
     GameObject playerObj;
     /// <summary>
@@ -77,18 +77,10 @@ public class Enemy : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     Vector3 GetPatrolLocation()
-    {
-        //Get a random X value for the player to move to
-        int tempLoR = Random.Range(-1, 1); //should force it to -1 or 1
-        int tempX = Random.Range(1, 5);
-        if(tempLoR == 0)
-        {
-            tempLoR = 1;
-        }
+	{
         Flip();
-		Vector3 returnVal = new Vector3(transform.position.x + fwdX * 5, transform.position.y, transform.position.z);
 
-        return returnVal;
+        return new Vector3(transform.position.x + fwdX * 5, transform.position.y, transform.position.z);
     }
     // Update is called once per frame
     void Update () {
@@ -175,18 +167,16 @@ public class Enemy : MonoBehaviour {
 		{
 			if (playerInSight)
 			{
-				if (pDist < 15)
+				if (pDist < 5)
 				{
-					if (pDist < 15)
-					{
-						StartCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
-						return EnemyState.Charge;
-					}
-
-					return Enemy.EnemyState.Chase;
+					StartCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
+					return EnemyState.Charge;
 				}
 
+				return EnemyState.Chase;
 			}
+
+
 		}
        
         return EnemyState.Patrol;
@@ -211,12 +201,14 @@ public class Enemy : MonoBehaviour {
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {
                         playerInSight = true;
+
                         lastTimeSeenPlayer = Time.time;
                         return;
                     }
                 }
             }
         }
+	
         playerInSight = false;
     
         /*
@@ -247,12 +239,14 @@ public class Enemy : MonoBehaviour {
 
 	protected bool InSightCone(GameObject go, float ang)
 	{
-		return Vector2.Dot((go.transform.position - transform.position.normalized).normalized, Forward) >= Mathf.Cos(ang * Mathf.Deg2Rad);
+		Vector2 dif = go.transform.position - transform.position;
+		float dot = Vector2.Dot(dif.normalized, Forward);
+		return dot >= Mathf.Cos(ang * Mathf.Deg2Rad);
 	}
     private void Flip()
     {
 		fwdX *= -1;
-		myRenderer.flipX = !myRenderer.flipX;
+		myRenderer.flipX = (fwdX == -1);
     }
     public Vector3 Forward
     {
