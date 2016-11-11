@@ -53,21 +53,22 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			lastYVel = myRigidBody.velocity.y;
 			if (!Hidden)
 			{
-				Vector2 xForce = new Vector2(controller.Horizontal, 0) * 35;
-				myRigidBody.AddForce(xForce, ForceMode2D.Force);
+				myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
+				
 
 				if (controller.Sneak)
 					myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
 				else
 					myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
-
+				
 				if (IsOnRope)
 				{
 					Vector2 vel = myRigidBody.velocity;
 					vel.x = 0;
+					vel.y = controller.Vertical * maxSpeed;
 					myRigidBody.velocity = vel;
-					myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-					myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+					//myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+					//myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
 
 					if (controller.Jump)
 					{
@@ -113,6 +114,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			{
 				myRigidBody.velocity = Vector2.zero;
 			}
+			CameraManager.Instance.Velocity = myRigidBody.velocity;
 		}
 	}
 	// Update is called once per frame
