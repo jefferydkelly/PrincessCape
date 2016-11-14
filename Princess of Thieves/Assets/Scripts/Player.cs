@@ -64,7 +64,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 				if (IsOnRope)
 				{
 					Vector2 vel = myRigidBody.velocity;
-					vel.x = 0;
+					//vel.x = 0;
 					vel.y = controller.Vertical * maxSpeed;
 					myRigidBody.velocity = vel;
 					//myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
@@ -139,10 +139,6 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 			}
 			if (!Hidden)
 			{
-				if (spells.Count > 0)
-				{
-					CurrentSpell += controller.SpellChange;
-				}
 				if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
 				{
 					SpellProjectile sp = CurSpell.Cast(this);

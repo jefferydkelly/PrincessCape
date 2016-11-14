@@ -15,7 +15,7 @@ public class RopeController : MonoBehaviour, BurnableObject {
 			{
 				suspendedBody.gravityScale = 0;
 			}
-			suspendedObject.transform.position = transform.position - new Vector3(0, gameObject.HalfHeight() + suspendedObject.HalfHeight());
+			suspendedObject.transform.position = transform.position - new Vector3(0, gameObject.HalfHeight());// + suspendedObject.HalfHeight());
 		}
 	}
 
