@@ -151,6 +151,16 @@ public static class ExtensionMethods{
 		}
 		w();
 	}
+
+	public static bool BetweenEx(this float f, float min, float max)
+	{
+		return f > min && f < max;
+	}
+
+	public static bool Between(this float f, float min, float max)
+	{
+		return f >= min && f <= max;
+	}
 }
 
 public enum VelocityType
