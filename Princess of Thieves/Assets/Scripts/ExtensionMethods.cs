@@ -161,6 +161,16 @@ public static class ExtensionMethods{
 	{
 		return f >= min && f <= max;
 	}
+
+	public static string ToXString(this Vector2 v)
+	{
+		return v.x + "x" + v.y;
+	}
+
+	public static string ToXString(this Vector3 v)
+	{
+		return v.x + "x" + v.y + "x" + v.z;
+	}
 }
 
 public enum VelocityType

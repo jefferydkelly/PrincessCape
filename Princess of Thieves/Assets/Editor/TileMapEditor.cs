@@ -29,6 +29,7 @@ public class TileMapEditor : Editor
 		UpdateBrush(map.CurrentTileBrush);
 		Texture2D oldTexture = map.texture2d;
 		map.texture2d = EditorGUILayout.ObjectField("Texture2D", map.texture2d, typeof(Texture2D), false) as Texture2D;
+	
 		if (oldTexture != map.texture2d)
 		{
 			UpdateCalculations();
@@ -155,7 +156,7 @@ public class TileMapEditor : Editor
 
 	void UpdateHitPosition()
 	{
-		Plane p = new Plane(map.transform.TransformDirection(Vector3.fwd), Vector3.zero);
+		Plane p = new Plane(map.transform.TransformDirection(Vector3.forward), Vector3.zero);
 		Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 		Vector3 hit = Vector3.zero;
 		float dist = 0f;
@@ -217,7 +218,6 @@ public class TileMapEditor : Editor
 
 		if (tile != null)
 		{
-			Debug.Log("removing");
 			DestroyImmediate(tile);
 		}
 	}
