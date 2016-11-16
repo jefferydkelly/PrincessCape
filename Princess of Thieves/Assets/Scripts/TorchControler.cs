@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TorchControler : MonoBehaviour, BurnableObject {
+public class TorchControler : JDMappableObject, BurnableObject {
 	Light yagami;
 	public Sprite onSprite;
 	public Sprite offSprite;

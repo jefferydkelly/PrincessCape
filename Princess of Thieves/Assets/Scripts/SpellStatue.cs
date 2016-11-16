@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpellStatue : MonoBehaviour, InteractiveObject {
+public class SpellStatue : JDMappableObject, InteractiveObject {
 
 	protected bool activated = false;
 	public SpellType spellType;

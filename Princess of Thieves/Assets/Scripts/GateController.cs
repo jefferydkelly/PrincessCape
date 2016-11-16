@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GateController : MonoBehaviour, ActivateableObject {
+public class GateController : JDMappableObject, ActivateableObject {
 
 	public int openFrames = 60;
 	private bool isActive = false;
