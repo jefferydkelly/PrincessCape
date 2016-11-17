@@ -6,6 +6,7 @@ public class LevelMap : MonoBehaviour {
 	public Vector2 mapSize = new Vector2(20, 10);
 	public Vector2 tileSize = new Vector2(64, 64);
 	public GameObject[,] wall;
+	public GameObject[,] field;
 	public GameObject[,] background;
 	public GameObject[,] foreGround;
 	public Vector2 gridSize = new Vector2();
@@ -94,39 +95,13 @@ public class LevelMap : MonoBehaviour {
 		}
 
 		//Debug.Log("Is The Array Null? " + (arr == null));
-		Debug.Log("POS: " + v.ToXString());
-		Debug.Log("DIMS: " + arr.Length.ToString() + "x" + arr.GetLength(0).ToString());
+
 		if (v.x.Between(0, arr.Length - 1) && v.y.Between(0, arr.GetLength((int)v.x) - 1))
 		{
 			return true;
 		}
 		return arr[(int)v.x, (int)v.y] != null;
 	}
-	/*
-	public void Add(GameObject go, Vector2 v)
-	{
-		MapLayer ml = MapLayer.Wall;
-		JDMappableObject mo = go.GetComponent<JDMappableObject>();
-		if (mo != null)
-		{
-			ml = mo.mapLayer;
-		}
-		GameObject[,] arr;
-		switch (ml)
-		{
-			case MapLayer.Foreground:
-				arr = foreGround;
-				break;
-			case MapLayer.Background:
-				arr = background;
-				break;
-			default:
-				arr = wall;
-				break;
-		}
-
-		arr[(int)v.x, (int)v.y] = go;
-	}*/
 
 	public void Add(GameObject go, Vector2 startPos, Vector2 dims, Vector3 pos)
 	{
@@ -158,6 +133,9 @@ public class LevelMap : MonoBehaviour {
 				break;
 			case MapLayer.Background:
 				arr = background;
+				break;
+			case MapLayer.Field:
+				arr = field;
 				break;
 			default:
 				arr = wall;

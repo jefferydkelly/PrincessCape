@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NoMagicArea : MonoBehaviour {
+public class NoMagicArea : JDMappableObject {
 
 	void OnTriggerEnter2D(Collider2D col)
 	{

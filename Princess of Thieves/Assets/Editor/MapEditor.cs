@@ -94,6 +94,7 @@ public class MapEditor : Editor {
 			map.level.transform.position = Vector3.zero;
 			map.foreGround = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
 			map.background = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
+			map.field = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
 			map.wall = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
 		}
 		map.gridSize = new Vector2(map.tileSize.x * map.mapSize.x, map.tileSize.y * map.mapSize.y) / map.pixelsToUnits;
@@ -187,6 +188,7 @@ public class MapEditor : Editor {
 		ClearMap();
 		map.foreGround = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
 		map.background = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
+		map.field = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
 		map.wall = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
 		map.gridSize = new Vector2(map.tileSize.x * map.mapSize.x, map.tileSize.y * map.mapSize.y) / map.pixelsToUnits;
 	}

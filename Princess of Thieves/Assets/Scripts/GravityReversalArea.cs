@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GravityReversalArea : MonoBehaviour, ActivateableObject {
+public class GravityReversalArea : JDMappableObject, ActivateableObject {
 
 	bool active = true;
 	List<Rigidbody2D> touching = new List<Rigidbody2D>();

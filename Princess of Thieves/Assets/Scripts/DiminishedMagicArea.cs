@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DiminishedMagicArea : MonoBehaviour {
+public class DiminishedMagicArea : JDMappableObject {
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
