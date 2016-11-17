@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+
+
 using System.Collections;
 
 public class HandOfMordil : MonoBehaviour {
@@ -31,10 +33,20 @@ public class HandOfMordil : MonoBehaviour {
     /// <summary>
     /// because move to seems to not work with one call, we need to capture that location and move towards it in FixedU
     /// </summary>
-    private bool moveToPlayerLoc; 
+    private bool moveToPlayerLoc;
 
+    #region holding player
+    private Transform startingLocation;
+    /// <summary>
+    /// Self explanatory title. Used to move the player based on time within mordil's hand
+    /// </summary>
+    private float grabbedThePlayerWhen = 0f;
+    private bool holdingThePlayer = false;
+
+    #endregion
     // Use this for initialization
     void Start () {
+        startingLocation = transform;
         upLoc = new Vector2(transform.position.x, transform.position.y + plusY);
         downLoc = new Vector2(transform.position.x, transform.position.y - minusY);
     }
@@ -42,7 +54,29 @@ public class HandOfMordil : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("Position is : " + transform.position);
+       // Debug.Log("fullstop: " + fullStop);
+        //is holding the player, a simple bool calculation
+        if (holdingThePlayer)
+        {
+            if (Time.time - grabbedThePlayerWhen < 1)
+            {
+                //needs to move to Mordil's face
+                transform.position = MordilManager.Instance.gameObject.transform.position;
+            }
+            else if (Time.time - grabbedThePlayerWhen >= 1 && Time.time - grabbedThePlayerWhen < 3)
+            {
+                transform.position = Vector3.MoveTowards(transform.position,
+                    new Vector3(transform.position.x, transform.position.y+5f), 0.5f * Time.deltaTime);
+            }else
+            {
+                //the slam && the jam
+                GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+                transform.position = Vector3.MoveTowards(transform.position,
+                    new Vector3(transform.position.x, transform.position.y - 5f), 5f * Time.deltaTime);
+            }
+
+
+        }
         if (!fullStop)
         {
             if (!busy)
@@ -78,6 +112,7 @@ public class HandOfMordil : MonoBehaviour {
                 }
                 if (!movingToAttack)
                 {
+                    slamming = true;
                     transform.position = Vector3.MoveTowards(transform.position,
                         GameManager.Instance.Player.transform.position, 2f * Time.deltaTime);
                 }
@@ -91,6 +126,49 @@ public class HandOfMordil : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D col)
     {
         //fullStop = true;
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.name == "Player")
+        {
+            fullStop = true;
+            col.gameObject.transform.parent = transform;
+            grabbedThePlayerWhen = Time.time;
+            holdingThePlayer = true;
+            col.gameObject.GetComponent<Player>().IsFrozen = true;
+            col.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            col.gameObject.transform.position = transform.position;
+        }
+        if (col.gameObject.name == "Platform")
+        {
+            //needs to reset everything -w-
+            ResetHand();
+        }
+
+    }
+
+    void ResetHand()
+    {
+
+        fullStop = false;
+        //col.gameObject.transform.parent = transform;
+        grabbedThePlayerWhen = 0f;
+        holdingThePlayer = false;
+        foreach(Transform child in transform)
+        {
+            if(child.gameObject.name == "Player")
+            {
+                child.gameObject.GetComponent<Player>().IsFrozen = false;
+                child.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+                child.parent = null;
+            }
+        }
+        //col.gameObject.GetComponent<Player>().IsFrozen = true;
+        //col.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        //GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        //col.gameObject.transform.position = transform.position;
     }
     /// <summary>
     /// Stops a hand being busy. Didn't put it in a get;set; on choice. 
@@ -115,12 +193,6 @@ public class HandOfMordil : MonoBehaviour {
         busy = true;
     }
 
-    public void SlamRight(GameObject player)
-    {
-        //Vector3.MoveTowards(transform.position,
-        //    new Vector3(transform.position.x, player.transform.position.y), 1.5f * Time.deltaTime);
-        //Vector3.MoveTowards(transform.position, player.transform.position, 2f * Time.deltaTime);
-        busy = true;
-    }
 
+    
 }

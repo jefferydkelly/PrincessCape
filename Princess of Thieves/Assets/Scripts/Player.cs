@@ -585,6 +585,30 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 
+    public bool IsFrozen
+    {
+        get
+        {
+            if (state ==  PlayerState.Frozen)
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        }
+        set
+        {
+            if (value)
+            {
+                state = PlayerState.Frozen;
+            }else
+            {
+                state &= ~PlayerState.Frozen;
+            }
+        }
+    }
+
 	/// <summary>
 	/// Gets the current spell.
 	/// </summary>
