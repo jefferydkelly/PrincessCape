@@ -26,7 +26,8 @@ public class MordilManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	 if(Time.time - handSlamCD > 5)
+        VisionPolling();
+	    if(Time.time - handSlamCD > 5)
         {
             CallHandSlam();
             handSlamCD = Time.time;
@@ -42,13 +43,14 @@ public class MordilManager : MonoBehaviour {
         //get whether the player is to the left or right of the head
         if(transform.position.x > player.transform.position.x) //easier than what it was, don't ask lmao
         {
-            Debug.Log("I'm bradberry");
+            
             //left hand slam
             mordHands[0].SlamLeft(player.gameObject);
         }
         else
         {
-
+            //left hand slam
+            mordHands[1].SlamLeft(player.gameObject);
         }
 
     }
@@ -61,14 +63,20 @@ public class MordilManager : MonoBehaviour {
     {
         foreach(BossEyeScript eye in mordEyes)
         {
+         //   Debug.Log("eye " + eye.name + " is able to see: " + eye.playerInSight);
             if (eye.playerInSight)
             {
                 playerInSight = true;
-                break;
+                return;
 
             }
 
         }
+        foreach (HandOfMordil item in mordHands)
+        {
+            item.StopBeingBusy();
+        }
+        
         playerInSight = false;
 
     }

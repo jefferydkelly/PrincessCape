@@ -55,8 +55,8 @@ public class BossEyeScript : MonoBehaviour {
             }
             else
             {
-                    playerInSight = true;
-                Debug.Log("I see you...");
+                playerInSight = true;
+                //Debug.Log("I see you...");
                // MordilManager.Instance.PlayerInSight = true;
                 transform.position = Vector2.MoveTowards(gameObject.transform.position, lastKnownPlayerPosition, 0.5f * Time.deltaTime);
             }
@@ -94,7 +94,7 @@ public class BossEyeScript : MonoBehaviour {
             //what AI should it use? Move up down left right until it can't?
             newPatrolDest = new Vector3(transform.position.x - tempX * tempLoR,
                 transform.position.y - tempY * tempUoD, transform.position.z);
-            Debug.Log("Going to: " + newPatrolDest);
+            //Debug.Log("Going to: " + newPatrolDest);
            
         }
         else
