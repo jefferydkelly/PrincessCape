@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CoverController : MonoBehaviour, InteractiveObject {
+public class CoverController : JDMappableObject, InteractiveObject {
 
 	/// <summary>
 	/// Hides the player behind the cover of the object or causes the Player to leave cover.

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HyperMagicArea : MonoBehaviour {
+public class HyperMagicArea : JDMappableObject {
 	void OnTriggerEnter2D(Collider2D col) {
 		SpellProjectile sp = col.GetComponent<SpellProjectile>();
 

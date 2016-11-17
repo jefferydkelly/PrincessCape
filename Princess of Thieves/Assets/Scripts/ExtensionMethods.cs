@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public delegate void WaitDelegate();
 public static class ExtensionMethods{
+	
 	public static bool TagContains(this Collider2D col, string tag)
 	{
 		
@@ -133,6 +135,41 @@ public static class ExtensionMethods{
 	public static void ReverseGravity(this Rigidbody2D rb)
 	{
 		rb.gravityScale *= -1;
+	}
+
+	public static IEnumerator RunAfter(this GameObject go, WaitDelegate w, float time)
+	{
+		float dt = 0;
+		while (dt < time)
+		{
+			if (!GameManager.Instance.IsPaused)
+			{
+				dt += Time.deltaTime;
+			}
+			yield return null;
+
+		}
+		w();
+	}
+
+	public static bool BetweenEx(this float f, float min, float max)
+	{
+		return f > min && f < max;
+	}
+
+	public static bool Between(this float f, float min, float max)
+	{
+		return f >= min && f <= max;
+	}
+
+	public static string ToXString(this Vector2 v)
+	{
+		return v.x + "x" + v.y;
+	}
+
+	public static string ToXString(this Vector3 v)
+	{
+		return v.x + "x" + v.y + "x" + v.z;
 	}
 }
 

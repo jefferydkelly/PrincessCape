@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Enemy : MonoBehaviour {
-    private Rigidbody2D myRigidBody;
-    private SpriteRenderer myRenderer;
-    private int fwdX = 1;
+    Rigidbody2D myRigidBody;
+    SpriteRenderer myRenderer;
+    int fwdX = 1;
     public float maxSpeed = 1;
 
 
@@ -12,20 +12,19 @@ public class Enemy : MonoBehaviour {
     //AI Things
     public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
     EnemyState curState = EnemyState.Stationary;
-    float sightRange = 10.0f;
-    float sightAngle = 45.0f;
-    private bool playerInSight = false;
-    private GameObject playerObj;
-    GameObject tempGameObj; //bad move but unavoidable
+    float sightRange = 5.0f;
+    float sightAngle = 60.0f;
+    bool playerInSight = false;
+    GameObject playerObj;
     /// <summary>
     /// Float time value that represent the last time the enemy saw the player. Used to Chasing
     /// </summary>
-    private float lastTimeSeenPlayer = 0f;
-    private Vector3 playerChaseDest = Vector3.zero;
-    private bool atChaseDest = true;
-    private Vector3 patrolDest = Vector3.zero;
-    private Vector3 patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
-    private bool atPatrolDest = true;
+    float lastTimeSeenPlayer = 0f;
+   	Vector3 playerChaseDest = Vector3.zero;
+    bool atChaseDest = true;
+    Vector3 patrolDest = Vector3.zero;
+    Vector3 patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
+    bool atPatrolDest = true;
     //Enemy Ability Things
     /// <summary>
     /// This float keeps track of the time the enemy started it's ability.
@@ -33,10 +32,10 @@ public class Enemy : MonoBehaviour {
     private float abilityTimeStart = 0f;
     #region cooldownTimes
     [SerializeField]
-    float timeToChargeAttack = 2.5f;
+    float timeToChargeAttack = 1f;
     [SerializeField]
-    GameObject chargeProjectile;
-    private IEnumerator chargingAnimation;
+    public GameObject chargeProjectile;
+   	IEnumerator chargingAnimation;
 
     #endregion cooldownTimes
     // Use this for initialization
@@ -46,83 +45,31 @@ public class Enemy : MonoBehaviour {
         
         playerObj = GameManager.Instance.Player.GameObject;
     }
-	
-    /// <summary>
-    /// Will set the time to charge, and defer anything until the charge is complete. Then it will fire a shot
-    /// </summary>
-    void ChargeAttack()
-    {
-        
-        if (abilityTimeStart == 0f)
-        {
-            
-            abilityTimeStart = Time.time;
-            //I think this will just call it in 2.5 seconds
-            //IEnumerator coroutine = ChargeAnim(2.5f);
-            //StartCoroutine(coroutine);
-            tempGameObj = Chargeshot();
-        }
-       // Debug.Log("Time: " + (Time.time - abilityTimeStart));
-        //Should do nothing when between these two states
-        if(Time.time - abilityTimeStart >= timeToChargeAttack)
-        {
-            //has to shoot!  
-          
-            ShootChargedShot();
-            abilityTimeStart = 0f;
-        }
-    }
+
     /// <summary>
     /// Returns true while there is still ground. False it sees no ground.
     /// </summary>
     /// <returns></returns>
     bool CheckGround()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(Forward.x, -1),
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(fwdX, -1),
             1.5f, (1 << LayerMask.NameToLayer("Platforms")));
         if (hit.collider != null)
         {
-            Debug.DrawRay(transform.position, new Vector2(Forward.x, -1) * 1.5f, Color.red, 1f);
+			Debug.DrawRay(transform.position, new Vector2(fwdX, -1) * 1.5f, Color.red, 1f);
             return false;
         }
         
         return true;
     }
     
-    private IEnumerator ChargeAnim(float waitTime)
+    void Fire()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(waitTime);   
-        }
-    }
-    void ShootChargedShot()
-    {
-        if (tempGameObj)
-        {
-            //Vector2 temp = Vector2.D(this.gameObject.transform.position, playerObj.transform.position);
-            float x = playerObj.transform.position.x - this.gameObject.transform.position.x;
-            float y = playerObj.transform.position.y - this.gameObject.transform.position.y;
-            Vector2 target = new Vector2(x, y);
-            tempGameObj.GetComponent<Rigidbody2D>().AddForce(target * 100);
-        }
-
-    }
-    GameObject Chargeshot()
-    {
-        GameObject shot = (GameObject)Instantiate(chargeProjectile, transform);
-        shot.transform.position = transform.position;
-        if (fwdX > 0)
-        {
-            shot.GetComponent<ChargeShotScript>().SwitchFace();
-        }else
-        {
-
-        }
-        Destroy(shot, 5.5f);    
-        //Add Force at a vector that points to the player object at the time of shooting.
-        //uses lastKnownLocation if the player disappeared
-        return shot;
+		Vector2 target = (playerObj.transform.position - transform.position).normalized;
+		GameObject go = Instantiate(chargeProjectile);
+		go.transform.position = transform.position;
+		go.GetComponent<Rigidbody2D>().AddForce(1000 * target);
+		curState = EnemyState.Chase;
     }
 
     /// <summary>
@@ -130,36 +77,23 @@ public class Enemy : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     Vector3 GetPatrolLocation()
-    {
-        //Get a random X value for the player to move to
-        int tempLoR = Random.Range(-1, 1); //should force it to -1 or 1
-        int tempX = Random.Range(1, 5);
-        if(tempLoR == 0)
-        {
-            tempLoR = 1;
-        }
-        
-        Vector3 returnVal = new Vector3(transform.position.x-tempX * tempLoR, transform.position.y, transform.position.z);
-		Flip();
-        return returnVal;
+	{
+        Flip();
+
+        return new Vector3(transform.position.x + fwdX * 5, transform.position.y, transform.position.z);
     }
     // Update is called once per frame
     void Update () {
 		if (!GameManager.Instance.IsPaused)
 		{
 			//CheckGround();
+			LookForward();
 			curState = CheckState();
 			// Debug.Log("patrol Dest is: " + patrolDest);
-			Debug.Log("State is: " + curState);
+			//Debug.Log("State is: " + curState);
 			switch (curState)
 			{
 				case EnemyState.Charge:
-
-					ChargeAttack();
-					curState = EnemyState.ActualShoot;
-					break;
-				case EnemyState.ActualShoot:
-					ChargeAttack();
 					break;
 				case EnemyState.Patrol:
 					if (atPatrolDest)
@@ -172,11 +106,8 @@ public class Enemy : MonoBehaviour {
 					{
 						if (!CheckGround())
 						{
-							transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
-							if (Vector3.Distance(this.transform.position, patrolDest) < 0.1f)
-							{
-								atPatrolDest = true;
-							}
+							transform.position += Forward * 2 * Time.deltaTime;
+							atPatrolDest = Vector3.Distance(transform.position, patrolDest) < 0.1f;
 						}
 						else
 						{
@@ -206,38 +137,56 @@ public class Enemy : MonoBehaviour {
 	}
     EnemyState CheckState()
     {
-       // Debug.Log("Player? : " + playerInSight);
-        if(curState == EnemyState.ActualShoot) //override all else
-        {
-            //except one 
-            if (playerInSight)
-                return EnemyState.ActualShoot;
-            else
-                return EnemyState.Chase;
-        }
-        if (playerInSight && Vector3.Distance(this.transform.position,playerObj.transform.position) < 15)
-        {
-            return EnemyState.Charge;
-        }
-        else if (playerInSight && Vector3.Distance(this.transform.position, playerObj.transform.position) >= 15)
-        {
-            return EnemyState.Chase;
-        }
-        else
-        {
-            return EnemyState.Patrol;
-        }
+		// Debug.Log("Player? : " + playerInSight);
+		float pDist = Vector3.Distance(transform.position, playerObj.transform.position);
+		if (curState == EnemyState.Charge) //override all else
+		{
+			//except one 
+			if (!playerInSight || pDist >= 15)
+			{
+				StopCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
+				return EnemyState.Chase;
+			}
+			return EnemyState.Charge;
+		}
+		else if (curState == EnemyState.Patrol)
+		{
+			if (playerInSight)
+			{
+				if (pDist < 15)
+				{
+					StartCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
+					return EnemyState.Charge;
+				}
+
+				return EnemyState.Chase;
+
+			}
+		}
+		else if (curState == EnemyState.Chase)
+		{
+			if (playerInSight)
+			{
+				if (pDist < 5)
+				{
+					StartCoroutine(gameObject.RunAfter(Fire, timeToChargeAttack));
+					return EnemyState.Charge;
+				}
+
+				return EnemyState.Chase;
+			}
 
 
-        //if nothing else is happening
-       // return EnemyState.Stationary;
+		}
+       
+        return EnemyState.Patrol;
     }
     void FixedUpdate()
     {
-        LookForward(fwdX);
+        //LookForward();
     }
 
-    void LookForward(int fwd)
+    void LookForward()
     {
         Color color = Color.red;
         //is it more efficient to 'get player' once in Start? 
@@ -247,17 +196,19 @@ public class Enemy : MonoBehaviour {
             Vector3 dif = p.transform.position - transform.position;
             if (dif.sqrMagnitude <= sightRange * sightRange)
             {
-                if (Vector2.Dot(dif.normalized, Forward) >= Mathf.Cos(sightAngle * Mathf.Deg2Rad)) //yeah this is much better
+				if (InSightCone(p.gameObject, sightAngle)) //yeah this is much better
                 {
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {
                         playerInSight = true;
+
                         lastTimeSeenPlayer = Time.time;
                         return;
                     }
                 }
             }
         }
+	
         playerInSight = false;
     
         /*
@@ -286,10 +237,16 @@ public class Enemy : MonoBehaviour {
 
     }
 
+	protected bool InSightCone(GameObject go, float ang)
+	{
+		Vector2 dif = go.transform.position - transform.position;
+		float dot = Vector2.Dot(dif.normalized, Forward);
+		return dot >= Mathf.Cos(ang * Mathf.Deg2Rad);
+	}
     private void Flip()
     {
 		fwdX *= -1;
-		myRenderer.flipX = !myRenderer.flipX;
+		myRenderer.flipX = (fwdX == -1);
     }
     public Vector3 Forward
     {

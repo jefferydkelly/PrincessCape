@@ -17,6 +17,29 @@ public class CameraPan : CutsceneElement
 {
 	public Vector2 panDistance = Vector2.zero;
 	public float time;
+	private Vector3 panEnding;
+	private bool panTo;
+
+	public CameraPan(Vector2 pd, float t)
+	{
+		panDistance = pd;
+		time = t;
+		panTo = false;
+	}
+
+	public CameraPan(Vector3 pd, float t)
+	{
+		panEnding = pd;
+		time = t;
+		panTo = true;
+	}
+	public void Start()
+	{
+		if (panTo)
+		{
+			panDistance = panEnding - Camera.main.transform.position;
+		}
+	}
 }
 
 public class CutsceneWait : CutsceneElement

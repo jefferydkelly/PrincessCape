@@ -4,24 +4,27 @@ using System.Collections;
 
 public class Controller
 {
-    private ControllerType controllerType;
+    ControllerType controllerType;
     //The basic movement keys 
-    private string leftKey;
-    private string rightKey;
-    private string upKey;
-    private string downKey;
-    private string jumpKey;
+   	string leftKey;
+    string rightKey;
+    string upKey;
+    string downKey;
+    string jumpKey;
 
     //The action keys
-    private string attackKey;
-    private string spellKey;
-    private string interactKey;
-    private string sneakKey;
-    private string nextItemKey;
-    private string prevItemKey;
-    private string useItemKey;
-    private string nextSpellKey;
-    private string prevSpellKey;
+    string attackKey;
+    string spellKey;
+    string interactKey;
+    string sneakKey;
+    string nextItemKey;
+    string prevItemKey;
+    string useItemKey;
+    string nextSpellKey;
+    string prevSpellKey;
+
+	//Menu Keys
+	string pauseKey;
 
     //Axis Check Bools
     float resetTime = 0.5f;
@@ -66,6 +69,7 @@ public class Controller
             nextSpellKey = "v";
             prevSpellKey = "d";
             sneakKey = "left shift";
+			pauseKey = "p";
 
 
         }
@@ -299,6 +303,13 @@ public class Controller
         }
     }
 
+	public bool Pause
+	{
+		get
+		{
+			return Input.GetKeyDown(pauseKey);
+		}
+	}
     bool IsKeyboard
     {
         get

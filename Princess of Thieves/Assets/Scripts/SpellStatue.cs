@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpellStatue : MonoBehaviour, InteractiveObject {
+public class SpellStatue : JDMappableObject, InteractiveObject {
 
-	bool activated = false;
+	protected bool activated = false;
 	public SpellType spellType;
 	// Use this for initialization
 	void Start () {
@@ -15,7 +15,7 @@ public class SpellStatue : MonoBehaviour, InteractiveObject {
 	
 	}
 
-	public void Interact()
+	public virtual void Interact()
 	{
 		if (!activated)
 		{

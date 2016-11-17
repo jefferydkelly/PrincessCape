@@ -15,11 +15,12 @@ public class AreaLoadTrigger : TriggerBase{
 		}
 	}
 
-	void OnTriggerExit2D()
+	/*
+	void OnTriggerExit2D(Collider2D col)
 	{
-		if (GameManager.Instance.Player.Forward.x / loadFwd < 0)
+		if (col.CompareTag("Player") && GameManager.Instance.Player.Forward.x / loadFwd < 0)
 		{
 			StartCoroutine(GameManager.Instance.UnloadScene(areaToLoad));
 		}
-	}
+	}*/
 }

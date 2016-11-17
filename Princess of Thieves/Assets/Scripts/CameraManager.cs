@@ -39,15 +39,18 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (!GameManager.Instance.IsPaused)
 		{
 			if (target)
 			{
+				//transform.position += velocity * Time.deltaTime;
+
 				Vector3 point = cam.WorldToViewportPoint(target.transform.position);
 				Vector3 delta = target.transform.position - cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));
 				Vector3 destination = transform.position + delta;
 				transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+
 			}
 		}
     }
@@ -84,5 +87,28 @@ public class CameraManager : MonoBehaviour {
 		}
 
 		GameManager.Instance.Cutscene.NextElement();
+	}
+
+	public void Zoom(float zoomLevel, float time)
+	{
+		StartCoroutine(IZoom(zoomLevel, time));
+	}
+
+	IEnumerator IZoom(float zoomLevel, float time)
+	{
+		yield return null;
+	}
+
+	public Vector3 Velocity
+	{
+		get
+		{
+			return velocity;
+		}
+
+		set
+		{
+			velocity = value;
+		}
 	}
 }

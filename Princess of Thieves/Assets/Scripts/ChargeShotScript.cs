@@ -13,7 +13,6 @@ public class ChargeShotScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         spriteControl = GetComponent<SpriteRenderer>();
-        
 	}
 	
     public void SwitchFace()
@@ -57,6 +56,15 @@ public class ChargeShotScript : MonoBehaviour {
             lightningEnds[1].gameObject.transform.position = newXY2;
             lightningEnds[2].gameObject.transform.position = newXY3;
         }
+	}
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.CompareTag("Player"))
+		{
+			GameManager.Instance.Player.TakeDamage(new DamageSource(DamageType.Fire, 10, Allegiance.Enemy));
+			Destroy(gameObject);
+		}
 	}
 
     private void Flip()

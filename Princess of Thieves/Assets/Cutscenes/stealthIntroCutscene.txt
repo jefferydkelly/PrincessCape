@@ -1,5 +1,5 @@
-pan 15 0 2
+pan to Enemy 2
 wait 2
-pan -15 0 2
+pan to Player 2
 Elwynn: Looks like I'm not alone.
 Elwynn: Good thing there's plenty of places for me to hide.

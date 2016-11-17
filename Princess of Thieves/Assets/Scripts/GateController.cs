@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GateController : MonoBehaviour, ActivateableObject {
+public class GateController : JDMappableObject, ActivateableObject {
 
 	public int openFrames = 60;
 	private bool isActive = false;
@@ -36,7 +36,10 @@ public class GateController : MonoBehaviour, ActivateableObject {
 
 		while (transform.position.y < endPosition.y)
 		{
-			transform.position += dif;
+			if (!GameManager.Instance.IsPaused)
+			{
+				transform.position += dif;
+			}
 			yield return null;
 		}
 		transform.position = endPosition;
@@ -64,7 +67,10 @@ public class GateController : MonoBehaviour, ActivateableObject {
 		Vector3 dif = (startPosition - endPosition) / openFrames;
 		while (transform.position.y > startPosition.y)
 		{
-			transform.position += dif;
+			if (!GameManager.Instance.IsPaused)
+			{
+				transform.position += dif;
+			}
 			yield return null;
 		}
 		transform.position = startPosition;
