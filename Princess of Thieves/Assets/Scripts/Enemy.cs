@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.UI;
 public class Enemy : MonoBehaviour {
     Rigidbody2D myRigidBody;
     SpriteRenderer myRenderer;
     int fwdX = 1;
     public float maxSpeed = 1;
 
+    [SerializeField]
+    Sprite[] spriteStates;
 
 
     //AI Things
@@ -137,6 +139,10 @@ public class Enemy : MonoBehaviour {
                         }
                         break;
                 }
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = spriteStates[1];
             }
         }
 	}
