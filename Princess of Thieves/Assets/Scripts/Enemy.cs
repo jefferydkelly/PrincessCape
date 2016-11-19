@@ -115,7 +115,6 @@ public class Enemy : MonoBehaviour {
                             }
                             else
                             {
-                                Debug.Log("No floor");
                                 atPatrolDest = true;
                             }
                         }

@@ -32,7 +32,7 @@ public class WindSpell : Spell {
             w.FWD = c.Forward;
         }
 
-		go.transform.position = c.Position + new Vector3(w.FWD.x * (c.GameObject.HalfWidth() + go.HalfWidth() + 0.1f), w.FWD.y * (c.GameObject.HalfHeight() + go.HalfHeight() + 0.1f));
+		go.transform.position = c.Position;
 		c.RigidBody.AddForce(-w.FWD * w.pushForce, ForceMode2D.Impulse);
 		return w;
 	}
