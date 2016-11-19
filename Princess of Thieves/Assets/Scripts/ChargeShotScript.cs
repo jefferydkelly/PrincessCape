@@ -63,8 +63,10 @@ public class ChargeShotScript : MonoBehaviour {
 		if (col.CompareTag("Player"))
 		{
 			GameManager.Instance.Player.TakeDamage(new DamageSource(DamageType.Fire, 10, Allegiance.Enemy));
-			Destroy(gameObject);
+
 		}
+
+		Destroy(gameObject);
 	}
 
     private void Flip()
