@@ -30,6 +30,8 @@ public class Enemy : MonoBehaviour {
     /// This float keeps track of the time the enemy started it's ability.
     /// </summary>
     private float abilityTimeStart = 0f;
+
+    private bool isFrozen = false;
     #region cooldownTimes
     [SerializeField]
     float timeToChargeAttack = 1f;
@@ -84,56 +86,59 @@ public class Enemy : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-		if (!GameManager.Instance.IsPaused)
-		{
-			//CheckGround();
-			LookForward();
-			curState = CheckState();
-			// Debug.Log("patrol Dest is: " + patrolDest);
-			//Debug.Log("State is: " + curState);
-			switch (curState)
-			{
-				case EnemyState.Charge:
-					break;
-				case EnemyState.Patrol:
-					if (atPatrolDest)
-					{
-						//  Debug.Log("Am I here? " + atPatrolDest);
-						patrolDest = GetPatrolLocation();
-						atPatrolDest = false;
-					}
-					else
-					{
-						if (!CheckGround())
-						{
-							transform.position += Forward * 2 * Time.deltaTime;
-							atPatrolDest = Vector3.Distance(transform.position, patrolDest) < 0.1f;
-						}
-						else
-						{
-							Debug.Log("No floor");
-							atPatrolDest = true;
-						}
-					}
-					break;
-				case EnemyState.Chase:
-					if (atChaseDest)
-					{
-						// Debug.Log("Am I at the player? " + atChaseDest);
-						playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
-						atChaseDest = false;
-					}
-					else
-					{
-						transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
-						if (transform.position == playerChaseDest)
-						{
-							atChaseDest = true;
-						}
-					}
-					break;
-			}
-		}
+        if (!GameManager.Instance.IsPaused)
+        {
+            if (!isFrozen)
+            {
+                //CheckGround();
+                LookForward();
+                curState = CheckState();
+                // Debug.Log("patrol Dest is: " + patrolDest);
+                //Debug.Log("State is: " + curState);
+                switch (curState)
+                {
+                    case EnemyState.Charge:
+                        break;
+                    case EnemyState.Patrol:
+                        if (atPatrolDest)
+                        {
+                            //  Debug.Log("Am I here? " + atPatrolDest);
+                            patrolDest = GetPatrolLocation();
+                            atPatrolDest = false;
+                        }
+                        else
+                        {
+                            if (!CheckGround())
+                            {
+                                transform.position += Forward * 2 * Time.deltaTime;
+                                atPatrolDest = Vector3.Distance(transform.position, patrolDest) < 0.1f;
+                            }
+                            else
+                            {
+                                Debug.Log("No floor");
+                                atPatrolDest = true;
+                            }
+                        }
+                        break;
+                    case EnemyState.Chase:
+                        if (atChaseDest)
+                        {
+                            // Debug.Log("Am I at the player? " + atChaseDest);
+                            playerChaseDest = playerObj.transform.position;//GetPatrolLocation();
+                            atChaseDest = false;
+                        }
+                        else
+                        {
+                            transform.position = Vector2.MoveTowards(gameObject.transform.position, playerChaseDest, 0.25f * Time.deltaTime);
+                            if (transform.position == playerChaseDest)
+                            {
+                                atChaseDest = true;
+                            }
+                        }
+                        break;
+                }
+            }
+        }
 	}
     EnemyState CheckState()
     {
@@ -200,10 +205,18 @@ public class Enemy : MonoBehaviour {
                 {
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {
-                        playerInSight = true;
 
-                        lastTimeSeenPlayer = Time.time;
-                        return;
+                        //Get some fricken light level into this. Randomized chance
+                        float eyes = Random.Range(0, 1);
+                        Debug.Log("I see " + (eyes) + " and play has this much light " + ( GameManager.Instance.Player.lightOnPlayer));
+                        if (eyes < GameManager.Instance.Player.lightOnPlayer)
+                        {
+                            
+                            playerInSight = true;
+
+                            lastTimeSeenPlayer = Time.time;
+                            return;
+                        }
                     }
                 }
             }
@@ -237,6 +250,13 @@ public class Enemy : MonoBehaviour {
 
     }
 
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if(col.gameObject.name == "Tsunami")
+        {
+            isFrozen = true;
+        }
+    }
 	protected bool InSightCone(GameObject go, float ang)
 	{
 		Vector2 dif = go.transform.position - transform.position;

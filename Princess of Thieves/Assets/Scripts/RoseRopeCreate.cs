@@ -28,7 +28,7 @@ public class RoseRopeCreate : MonoBehaviour {
 
     void GetEndPoint()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 20.0f, (1 << LayerMask.NameToLayer("Platforms")));
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 200.0f, (1 << LayerMask.NameToLayer("Platforms")));
         if (hit.collider)
         {
             endPoint = hit.collider.gameObject;

@@ -3,7 +3,12 @@ using System.Collections;
 
 public class LightSpell : Spell {
 
-	public override SpellProjectile Cast(CasterObject c)
+    public LightSpell()
+    {
+        spellName = "Empower Magic";
+        cost = 10;
+    }
+    public override SpellProjectile Cast(CasterObject c)
 	{
 		GameObject go = new GameObject();
 		LightProjectile l = go.AddComponent<LightProjectile>();

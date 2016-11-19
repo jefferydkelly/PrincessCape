@@ -158,7 +158,10 @@ public class GameManager {
 		SceneManager.MoveGameObjectToScene(player.gameObject, s);
 		SceneManager.SetActiveScene(s);
 	}
-
+    public void ReloadScene()
+    {
+        Player.ResetBecauseINeed();
+    }
 	public IEnumerator UnloadScene(string sceneName)
 	{
 		if (loadedAreas.Count > 1 && loadedAreas.Contains(sceneName))

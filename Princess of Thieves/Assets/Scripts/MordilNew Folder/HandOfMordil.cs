@@ -69,21 +69,28 @@ public class HandOfMordil : MonoBehaviour {
                     new Vector3(transform.position.x, transform.position.y+5f), 0.5f * Time.deltaTime);
             }else
             {
+                Debug.Log("Slamming");
                 //the slam && the jam
                 GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-                transform.position = Vector3.MoveTowards(transform.position,
-                    new Vector3(transform.position.x, transform.position.y - 5f), 5f * Time.deltaTime);
+                Vector3 pos2 = Vector3.MoveTowards(transform.position,
+                    new Vector3(transform.position.x, transform.position.y - 5f), 5f * Time.deltaTime);//next spot on the curve
+                                                                                                       // NOTE: p2-pos is direction to next spot from old spot
+                                                                                                       //      normalized*speed is standard way to turn direction into constant speed
+                Vector3 spd = (pos2 - transform.position).normalized * 5f;
+                GetComponent<Rigidbody2D>().velocity = spd;
+                //transform.position = Vector3.MoveTowards(transform.position,
+                //    new Vector3(transform.position.x, transform.position.y - 5f), 5f * Time.deltaTime);
             }
 
 
         }
-        if (!fullStop)
+        else if (!fullStop)
         {
             if (!busy)
             {
                 if (moveUp)
                 {
-                    Debug.Log("moving");
+                    //Debug.Log("moving");
                     transform.position = Vector3.MoveTowards(transform.position, upLoc, 1f * Time.deltaTime);
                     if (Vector3.Distance(this.transform.position, upLoc) < 1)
                     {
@@ -141,17 +148,30 @@ public class HandOfMordil : MonoBehaviour {
             GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             col.gameObject.transform.position = transform.position;
         }
-        if (col.gameObject.name == "Platform")
+   
+
+    }
+    void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Platform" && Time.time - grabbedThePlayerWhen >= 4)
         {
             //needs to reset everything -w-
             ResetHand();
+            Debug.Log("Resetting");
         }
-
     }
 
+    public void VisionReset()
+    {
+        transform.position = startingLocation.position;
+        slammable = false;
+        slamming = false;
+        movingToAttack = false;
+        moveToPlayerLoc = false;
+    }
     void ResetHand()
     {
-
+        //Debug.Log("Reset");
         fullStop = false;
         //col.gameObject.transform.parent = transform;
         grabbedThePlayerWhen = 0f;

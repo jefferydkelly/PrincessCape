@@ -14,6 +14,8 @@ public class MordilManager : MonoBehaviour {
     float handSlamCD;
 
     SpriteRenderer sRender;
+
+    float lastTimeSeenPlayer = 0f;
     //Player Related Variables
     Player player;
     bool playerInSight = false;
@@ -43,7 +45,7 @@ public class MordilManager : MonoBehaviour {
         //get whether the player is to the left or right of the head
         if(transform.position.x > player.transform.position.x) //easier than what it was, don't ask lmao
         {
-            
+
             //left hand slam
             mordHands[0].SlamLeft(player.gameObject);
         }
@@ -67,6 +69,7 @@ public class MordilManager : MonoBehaviour {
             if (eye.playerInSight)
             {
                 playerInSight = true;
+                lastTimeSeenPlayer = Time.time;
                 return;
 
             }
@@ -74,9 +77,9 @@ public class MordilManager : MonoBehaviour {
         }
         foreach (HandOfMordil item in mordHands)
         {
-            item.StopBeingBusy();
+           // item.StopBeingBusy();
         }
-        
+       
         playerInSight = false;
 
     }
@@ -88,6 +91,15 @@ public class MordilManager : MonoBehaviour {
         }
         else
         {
+            Debug.Log(lastTimeSeenPlayer + " was the last time");
+            if(Time.time - lastTimeSeenPlayer >= 3f)
+            {
+                foreach (HandOfMordil item in mordHands)
+                {
+                    lastTimeSeenPlayer = Time.time;
+                    item.VisionReset();
+                }
+            }
             sRender.sprite = facesOfMordil[0];
         }
 

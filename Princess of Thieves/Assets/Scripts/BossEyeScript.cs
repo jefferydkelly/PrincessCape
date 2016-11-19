@@ -49,7 +49,7 @@ public class BossEyeScript : MonoBehaviour {
         {
             if (!playerInSight)
             {
-                    playerInSight = false;
+                playerInSight = false;
                 //MordilManager.Instance.PlayerInSight = false;
                 transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
             }

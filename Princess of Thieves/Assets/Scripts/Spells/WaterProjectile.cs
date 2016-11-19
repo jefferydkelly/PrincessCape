@@ -6,7 +6,7 @@ public class WaterProjectile : SpellProjectile {
 	float startForce = 10;
 	float lifeTime = 5;
 	float oldXVel = 0;
-	int numberOfThingsToPassThrough = 5;
+	int numberOfThingsToPassThrough = 1;
 	int passedThrough = 0;
 	Rigidbody2D myRigidbody;
 	// Use this for initialization
