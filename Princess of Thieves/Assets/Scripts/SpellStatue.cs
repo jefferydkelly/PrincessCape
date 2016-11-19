@@ -19,6 +19,8 @@ public class SpellStatue : JDMappableObject, InteractiveObject {
 	{
 		if (!activated)
 		{
+
+            Debug.Log("Gave Spell" + spellType);
 			activated = true;
 
             Spell s = new WaterSpell() ;

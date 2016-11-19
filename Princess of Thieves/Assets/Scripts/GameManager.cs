@@ -17,8 +17,8 @@ public class GameManager {
 		loadedAreas.Add(SceneManager.GetActiveScene().name);
 		SceneManager.sceneLoaded += OnSceneLoaded;
 		SceneManager.sceneUnloaded += OnSceneUnloaded;
-
-	}
+       // MordilManager Minstance = new MordilManager();
+    }
 
 	/// <summary>
 	/// Starts the cutscene.
@@ -158,7 +158,10 @@ public class GameManager {
 		SceneManager.MoveGameObjectToScene(player.gameObject, s);
 		SceneManager.SetActiveScene(s);
 	}
-
+    public void ReloadScene()
+    {
+        Player.ResetBecauseINeed();
+    }
 	public IEnumerator UnloadScene(string sceneName)
 	{
 		if (loadedAreas.Count > 1 && loadedAreas.Contains(sceneName))

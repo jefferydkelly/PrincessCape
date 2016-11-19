@@ -52,6 +52,10 @@ public class CameraManager : MonoBehaviour {
 				transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
 
 			}
+            else
+            {
+                target = GameObject.FindGameObjectWithTag("Player");
+            }
 		}
     }
 

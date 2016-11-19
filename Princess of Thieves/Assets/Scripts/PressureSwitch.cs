@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class PressureSwitch : ActivatorObject {
 
 	private int numberOfThingsWeighingThisDown = 0;
+
+    public bool triggered = false;
 	// Use this for initialization
 	void Start () {
 		activators = new List<ActivateableObject>();
@@ -46,10 +48,12 @@ public class PressureSwitch : ActivatorObject {
 			if (value > 0 && numberOfThingsWeighingThisDown == 0)
 			{
 				Activate();
+                triggered = true;
 			}
 			else if (value == 0 && numberOfThingsWeighingThisDown > 0)
 			{
 				Deactivate();
+                triggered = false;
 			}
 			numberOfThingsWeighingThisDown = value;
 		}
