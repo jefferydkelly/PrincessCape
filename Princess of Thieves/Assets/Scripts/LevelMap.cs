@@ -74,6 +74,22 @@ public class LevelMap : MonoBehaviour {
 		}
 	}
 
+	public GameObject GetOccupant(Vector2 v) {
+		if (v.x.Between (0, gridSize.x) && v.y.Between (0, gridSize.y)) {
+			int ix = (int)v.x;
+			int iy = (int)v.y;
+			if (foreGround [ix, iy] != null) {
+				return foreGround [ix, iy];
+			} else if (background [ix, iy] != null) {
+				return background [ix, iy];
+			} else if (field [ix, iy] != null) {
+				return field [ix, iy];
+			} else if (wall [ix, iy] != null) {
+				return wall [ix, iy];
+			}
+		}
+		return null;
+	}
 	public bool IsOccupied(Vector2 v, MapLayer ml = MapLayer.Foreground)
 	{
 		
@@ -121,6 +137,8 @@ public class LevelMap : MonoBehaviour {
 		}
 		GameObject inst = Instantiate(go);
 		inst.transform.SetParent(level.transform);
+		Debug.Log ((float)ml);
+		pos.z = (float)ml;
 		inst.transform.position = pos;
 		inst.name.Replace("(Clone)", "");
 

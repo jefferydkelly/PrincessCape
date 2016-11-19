@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour, DamageableObject, CasterObject
+public class Player : JDMappableObject, DamageableObject, CasterObject
 {
     private Transform startPos;
 	private Controller controller;
@@ -33,9 +33,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
     public float lightOnPlayer;
     void Awake()
     {
-
         startPos = transform;
-        Debug.Log("Start Pos is " + startPos.position);
     }
 	// Use this for initialization
 	void Start()
@@ -68,67 +66,54 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
             lastYVel = myRigidBody.velocity.y;
 
             {
-                if (!Hidden)
-                {
-                    myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
+				if (!(Hidden || IsFrozen)) {
+					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
 
 
-                    if (controller.Sneak)
-                        myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
-                    else
-                        myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+					if (controller.Sneak)
+						myRigidBody.ClampVelocity (sneakSpeed, VelocityType.X);
+					else
+						myRigidBody.ClampVelocity (maxSpeed, VelocityType.X);
 
-                    if (IsOnRope)
-                    {
-                        Vector2 vel = myRigidBody.velocity;
-                        //vel.x = 0;
-                        vel.y = controller.Vertical * maxSpeed;
-                        myRigidBody.velocity = vel;
-                        //myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-                        //myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+					if (IsOnRope) {
+						Vector2 vel = myRigidBody.velocity;
+						//vel.x = 0;
+						vel.y = controller.Vertical * maxSpeed;
+						myRigidBody.velocity = vel;
+						//myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+						//myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
 
-                        if (controller.Jump)
-                        {
-                            Jump();
-                        }
-                    }
-                    else if (IsOnGround)
-                    {
-                        if (controller.Jump)
-                        {
-                            Jump();
-                        }
-                        else
-                        {
-                            if (controller.Interact)
-                            {
-                                RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("SpellStatue")));
+						if (controller.Jump) {
+							Jump ();
+						}
+					} else if (IsOnGround) {
+						if (controller.Jump) {
+							Jump ();
+						} else {
+							if (controller.Interact) {
+								RaycastHit2D hit = Physics2D.Raycast (transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer ("SpellStatue")));
                                
-                                if (hit.collider != null)
-                                {
-                                   // Debug.Log("Found" + hit.collider.gameObject.name);
-                                    InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+								if (hit.collider != null) {
+									// Debug.Log("Found" + hit.collider.gameObject.name);
+									InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
 
-                                    if (io != null)
-                                    {
-                                        io.Interact();
-                                    }
-                                }
-                            }
-                        }
-                    }
+									if (io != null) {
+										io.Interact ();
+									}
+								}
+							}
+						}
+					}
 
-                    if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
-                    {
-                        fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
-                        myRenderer.flipX = (fwdX == -1);
-                    }
+					if (Mathf.Abs (myRigidBody.velocity.x) > float.Epsilon) {
+						fwdX = (int)Mathf.Sign (myRigidBody.velocity.x);
+						myRenderer.flipX = (fwdX == -1);
+					}
 
 
-                    UIManager.Instance.LightLevel = GetLocalLightLevel();
+					UIManager.Instance.LightLevel = GetLocalLightLevel ();
 
-                }
-                else
+				} else if (Hidden && !IsFrozen)
                 {
                     myRigidBody.velocity = Vector2.zero;
                     if (controller.Interact)
@@ -270,13 +255,18 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
 	{
-		if (col.collider.CompareTag("Platform"))
-		{
+		if (col.collider.CompareTag ("Platform")) {
 
-			if (lastYVel < -10)
-			{
-				TakeDamage(new DamageSource(DamageType.Physical, 10));
+			if (lastYVel < -10) {
+				TakeDamage (new DamageSource (DamageType.Physical, 10));
 			}
+		} else if (col.collider.CompareTag ("Enemy")) {
+			TakeDamage (new DamageSource(DamageType.Physical, 10));
+			Vector3 dif = (transform.position - col.transform.position);
+			dif.z = 0;
+			IsFrozen = true;
+			myRigidBody.AddForce (dif * 10, ForceMode2D.Impulse);
+			StartCoroutine (gameObject.RunAfter (Unfreeze, 0.5f));
 		}
 	}
 
@@ -324,7 +314,15 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		get
 		{
 			Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-			return Physics2D.Raycast(transform.position, down, 1.0f, (1 << LayerMask.NameToLayer("Platforms")));
+			if (!Physics2D.Raycast (transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer ("Platforms")))) {
+				if (!Physics2D.Raycast (transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer ("Platforms")))) {
+					if (!Physics2D.Raycast (transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer ("Platforms")))) {
+						return false;
+					}
+				}
+			}
+
+			return true;
 		}
 	}
 
@@ -641,6 +639,10 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		}
 	}
 	#endregion gets
+
+	void Unfreeze() {
+		IsFrozen = false;
+	}
 
 }
 

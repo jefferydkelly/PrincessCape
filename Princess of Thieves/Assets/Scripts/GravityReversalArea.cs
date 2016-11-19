@@ -9,16 +9,7 @@ public class GravityReversalArea : JDMappableObject, ActivateableObject {
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Z))
-		{
-			if (active)
-			{
-				Deactivate();
-			}
-			else {
-				Activate();
-			}
-		}
+		
 	}
 	void OnTriggerEnter2D(Collider2D col)
 	{

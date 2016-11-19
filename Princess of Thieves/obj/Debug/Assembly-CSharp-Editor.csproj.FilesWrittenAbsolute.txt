@@ -14,6 +14,8 @@
 /Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/UnityEditor.TreeEditor.dll
 /Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/UnityEngine.Analytics.dll
 /Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/UnityEditor.Graphs.dll
+/Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/UnityEditor.WebGL.Extensions.dll
+/Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/UnityEditor.WindowsStandalone.Extensions.dll
 /Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/UnityEditor.OSXStandalone.Extensions.dll
 /Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/Assembly-CSharp.dll
 /Users/JD/Desktop/PrincessOfThieves/Princess of Thieves/Temp/bin/Debug/Assembly-CSharp.dll.mdb
