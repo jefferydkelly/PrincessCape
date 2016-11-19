@@ -8,8 +8,8 @@ public class JDMappableObject : MonoBehaviour {
 
 public enum MapLayer
 {
-	Wall,
-	Field,
+	Foreground,
 	Background,
-	Foreground
+	Field,
+	Wall
 }

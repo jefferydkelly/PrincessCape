@@ -46,8 +46,8 @@ public class MapEditor : Editor {
 				if (sr != null)
 				{
 					spriteUnitDims = map.SelectedSprite.textureRect.size / map.pixelsToUnits;
-					spriteUnitDims.x = Mathf.Max(Mathf.Ceil(spriteUnitDims.x), 1);
-					spriteUnitDims.y = Mathf.Max(Mathf.Ceil(spriteUnitDims.y), 1);
+					spriteUnitDims.x = Mathf.Max(Mathf.Floor(spriteUnitDims.x), 0);
+					spriteUnitDims.y = Mathf.Max(Mathf.Floor(spriteUnitDims.y), 0);
 					UpdateBrush(map.SelectedSprite);
 				}
 				else {
@@ -119,22 +119,29 @@ public class MapEditor : Editor {
 			UpdateHitPosition();
 
 			MoveBrush();
+			Event cEvent = Event.current;
+			if (MouseOnMap) {
+				if (cEvent.type == EventType.MouseDown) {
+					float tileSize = map.tileSize.x / map.pixelsToUnits;
+					Vector2 tilePos = mouseHitPos / tileSize;
+					tilePos.x = Mathf.Floor (tilePos.x);
+					tilePos.y = Mathf.Floor (tilePos.y);
+					GameObject go = map.GetOccupant (tilePos);
 
-			if (map.selected != null && MouseOnMap)
-			{
-				Event cEvent = Event.current;
-
-				if (cEvent.type == EventType.KeyUp)
-				{
-					if (cEvent.keyCode == KeyCode.Space)
-					{
-						Draw();
-						cEvent.Use();
+					if (go != null) {
+						map.selected = go;
 					}
-				}
-				else if (cEvent.alt)
-				{
-					RemoveTile();
+				} else if (map.selected != null) {
+					
+
+					if (cEvent.type == EventType.KeyUp) {
+						if (cEvent.keyCode == KeyCode.Space) {
+							Draw ();
+							cEvent.Use ();
+						}
+					} else if (cEvent.alt) {
+						RemoveTile ();
+					}
 				}
 			}
 		}
@@ -267,7 +274,7 @@ public class MapEditor : Editor {
 		int row = Mathf.FloorToInt(x / tileSize);
 
 		int column = Mathf.Abs(Mathf.FloorToInt(y / tileSize)) - 1;
-		Vector2 startPos = new Vector2(row, column) - (spriteUnitDims / 2);
+		Vector2 startPos = new Vector2(row, column) - ((spriteUnitDims - new Vector2(1, 1)) / 2);
 	
 		map.Add(map.selected, startPos, spriteUnitDims, brush.transform.position);
 

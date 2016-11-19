@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour, DamageableObject, CasterObject
+public class Player : JDMappableObject, DamageableObject, CasterObject
 {
 
 	private Controller controller;
@@ -304,7 +304,7 @@ public class Player : MonoBehaviour, DamageableObject, CasterObject
 		get
 		{
 			Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-			return Physics2D.Raycast(transform.position, down, 1.0f, (1 << LayerMask.NameToLayer("Platforms")));
+			return Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms")));
 		}
 	}
 
