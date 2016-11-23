@@ -16,6 +16,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
 	private bool onRope = false;
+    private int jumpsInAir;
 
 	private int curHP = 0;
 	public int maxHP = 100;
@@ -59,6 +60,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     }
 	void FixedUpdate()
 	{
+        Debug.Log(IsOnGround);
         if (!GameManager.Instance.IsPaused)
         {
             lightOnPlayer = GetLocalLightLevel();
@@ -313,17 +315,37 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	{
 		get
 		{
-			Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-			if (!Physics2D.Raycast (transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer ("Platforms")))) {
-				if (!Physics2D.Raycast (transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer ("Platforms")))) {
-					if (!Physics2D.Raycast (transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer ("Platforms")))) {
-						return false;
-					}
-				}
-			}
+            Debug.DrawRay(transform.position, new Vector2(0.4f,0), Color.red, 0.1f);
+            Debug.DrawRay(transform.position, new Vector2(-0.4f, 0), Color.blue, 0.1f);
+            if (Physics2D.Raycast(transform.position, Vector2.right, HalfWidth + 0.4f, (1 << LayerMask.NameToLayer("Default")))) //Right
+            {
+                return true;
+            }
+            if (Physics2D.Raycast(transform.position, -Vector2.right, HalfWidth - 0.4f, (1 << LayerMask.NameToLayer("Default")))) //Right
+            {
+                return true;
 
-			return true;
-		}
+            }
+            
+            Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
+            if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            { //Straight down
+                return true;
+            }
+            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            { //backwards
+                return true;
+            }
+            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            {//forwards
+                return true;
+            }
+						
+			
+       
+
+        return false;
+		} // end Get
 	}
 
 

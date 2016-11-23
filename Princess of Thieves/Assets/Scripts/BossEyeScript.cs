@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using UnityEngine.UI;
 public class BossEyeScript : MonoBehaviour {
 
 
     Player player;
 
+    [SerializeField]
+    Sprite[] sprites;
+
+    bool isFrozen = false;
+    float frozenTime;
     /// <summary>
     /// Bools for whether or not the object is 'near' up, right, down, left
     /// </summary>
@@ -30,12 +35,43 @@ public class BossEyeScript : MonoBehaviour {
         player = GameManager.Instance.Player;
     }
 	
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.GetComponent<WaterProjectile>())
+        {
+            isFrozen = true;
+            frozenTime = Time.time;
+        }
+    }
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        if (playerInSight)
+        {
+            var dir = GameManager.Instance.Player.Position - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle - 180, Vector3.forward);
+        }
+        else
+        {
+            var dir = Vector3.forward - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle - 180, Vector3.forward);
+        }
+    }
     void FixedUpdate()
     {
+        if (isFrozen)
+        {
+            if(Time.time - frozenTime >= 5)
+            {
+                isFrozen = false;
+            }
+            GetComponent<SpriteRenderer>().sprite = sprites[1];
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().sprite = sprites[0];
+        }
         LookForward();
         if (Time.time - newLocLockout >=1f)
            // CheckPlatforms();
@@ -51,15 +87,21 @@ public class BossEyeScript : MonoBehaviour {
             {
                 playerInSight = false;
                 //MordilManager.Instance.PlayerInSight = false;
-                transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
-            }
+                if(!isFrozen)
+                    transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.5f * Time.deltaTime);
+                else
+                    transform.position = Vector2.MoveTowards(gameObject.transform.position, patrolDest, 0.25f * Time.deltaTime);
+                }
             else
             {
                 playerInSight = true;
                 //Debug.Log("I see you...");
                // MordilManager.Instance.PlayerInSight = true;
-                transform.position = Vector2.MoveTowards(gameObject.transform.position, lastKnownPlayerPosition, 0.5f * Time.deltaTime);
-            }
+               if(!isFrozen)
+                    transform.position = Vector2.MoveTowards(gameObject.transform.position, lastKnownPlayerPosition, 0.5f * Time.deltaTime);
+               else
+                    transform.position = Vector2.MoveTowards(gameObject.transform.position, lastKnownPlayerPosition, 0.25f * Time.deltaTime);
+                }
             if (Vector3.Distance(this.transform.position, patrolDest) < 1)
             {
                 atPatrolDest = true;
