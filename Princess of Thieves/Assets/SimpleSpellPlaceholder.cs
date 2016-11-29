@@ -9,28 +9,29 @@ public class SimpleSpellPlaceholder : MonoBehaviour {
     float oldXVel = 0;
     // Use this for initialization
     void Start () {
-	
+	    
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        oldXVel = GetComponent<Rigidbody2D>().velocity.x;
+        //oldXVel = GetComponent<Rigidbody2D>().velocity.x;
 
-        if (Mathf.Abs(oldXVel) < Mathf.Epsilon)
-        {
-            Destroy(gameObject);
-        }
+        //if (Mathf.Abs(oldXVel) < Mathf.Epsilon)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
     public void Cast(GameObject playerInfo)
     {
         transform.position = playerInfo.transform.position;
-        FWD = GameManager.Instance.Player.Forward;
+        FWD = GameManager.Instance.Player.Aiming;
         Init();
     }
 
     public void Init()
     {
         GetComponent<Rigidbody2D>().AddForce(FWD * 5f, ForceMode2D.Impulse);
+        Destroy(gameObject, 3f);
     }
 
     public  Vector3 FWD

@@ -665,6 +665,24 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		}
 	}
 
+    public Vector2 Aiming
+    {
+        get
+        {
+            if (controller.Vertical > 0)
+            {
+                return new Vector2(Forward.x, 1);
+            }
+            else if(controller.Vertical < 0)
+            {
+                return new Vector2(Forward.x, -1);
+            }
+            else
+            {
+                return new Vector2(Forward.x, 0);
+            }
+        }
+    }
     public bool IsFrozen
     {
         get
