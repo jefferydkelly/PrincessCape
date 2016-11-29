@@ -13,7 +13,7 @@ public class WaterProjectile : SpellProjectile {
 	void Awake () {
 		name = "Tsunami";
         myRenderer = gameObject.AddComponent<SpriteRenderer>();
-        myRenderer.sprite = Resources.Load<Sprite>("Sprites/Water");
+        myRenderer.sprite = Resources.Load<Sprite>("Sprites/water");
         BoxCollider2D col = gameObject.AddComponent<BoxCollider2D>();
 		col.size = new Vector2(2, 1);
 		col.offset = new Vector2(0.07f, 0);

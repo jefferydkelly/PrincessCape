@@ -307,7 +307,7 @@ public class Controller
 	{
 		get
 		{
-			return Input.GetKeyDown(pauseKey);
+            return false;// Input.GetKeyDown(pauseKey);
 		}
 	}
     bool IsKeyboard
