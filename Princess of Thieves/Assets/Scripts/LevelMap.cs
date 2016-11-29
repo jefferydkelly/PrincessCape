@@ -98,19 +98,14 @@ public class LevelMap : MonoBehaviour {
 		{
 			case MapLayer.Foreground:
 				arr = foreGround;
-				Debug.Log("Is Foregound Null?" + (foreGround == null));
 				break;
 			case MapLayer.Background:
 				arr = background;
-				Debug.Log("Is Backgound Null?" + (background == null));
 				break;
 			default:
 				arr = wall;
-				Debug.Log("Is Wall Null?" + (wall == null));
 				break;
 		}
-
-		//Debug.Log("Is The Array Null? " + (arr == null));
 
 		if (v.x.Between(0, arr.Length - 1) && v.y.Between(0, arr.GetLength((int)v.x) - 1))
 		{
@@ -137,7 +132,7 @@ public class LevelMap : MonoBehaviour {
 		}
 		GameObject inst = Instantiate(go);
 		inst.transform.SetParent(level.transform);
-		Debug.Log ((float)ml);
+		
 		pos.z = (float)ml;
 		inst.transform.position = pos;
 		inst.name.Replace("(Clone)", "");
@@ -174,7 +169,64 @@ public class LevelMap : MonoBehaviour {
 		}
 	}
 
-	public GameObject[] GetCollisions(Vector2 startPos, Vector2 dims, MapLayer ml)
+    public GameObject AddAndReplace(GameObject go, Vector2 startPos, Vector2 dims, Vector3 pos)
+    {
+
+        MapLayer ml = MapLayer.Wall;
+        JDMappableObject mo = go.GetComponent<JDMappableObject>();
+        if (mo != null)
+        {
+            ml = mo.mapLayer;
+        }
+
+        GameObject[] collisions = GetCollisions(startPos, dims, ml);
+
+        if (collisions.Length >= 2)
+        {
+            return go;
+        }
+        GameObject inst = Instantiate(go);
+        inst.transform.SetParent(level.transform);
+     
+        pos.z = (float)ml;
+        inst.transform.position = pos;
+        inst.name.Replace("(Clone)", "");
+
+        Vector2 endPos = startPos + dims;
+        GameObject[,] arr;
+        switch (ml)
+        {
+            case MapLayer.Foreground:
+                arr = foreGround;
+                break;
+            case MapLayer.Background:
+                arr = background;
+                break;
+            case MapLayer.Field:
+                arr = field;
+                break;
+            default:
+                arr = wall;
+                break;
+        }
+
+        for (int i = (int)startPos.x; i < endPos.x; i++)
+        {
+            for (int j = (int)startPos.y; j < endPos.y; j++)
+            {
+                arr[i, j] = inst;
+            }
+        }
+
+        if (collisions.Length == 1)
+        {
+            return collisions[0];
+        }
+
+        return go;
+    }
+
+    public GameObject[] GetCollisions(Vector2 startPos, Vector2 dims, MapLayer ml)
 	{
 		Vector2 endPos = startPos + dims;
 		GameObject[,] arr = foreGround;
@@ -187,10 +239,12 @@ public class LevelMap : MonoBehaviour {
 		{
 			arr = wall;
 		}
-		for (int i = (int)startPos.x; i < endPos.x; i++)
+
+        for (int i = (int)startPos.x; i < endPos.x; i++)
 		{
 			for (int j = (int)startPos.y; j < endPos.y; j++)
 			{
+               
 				GameObject go = arr[i, j];
 				if (go != null)
 				{
