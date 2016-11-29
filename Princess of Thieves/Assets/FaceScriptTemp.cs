@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class DumbFace : MonoBehaviour {
+public class FaceScriptTemp : MonoBehaviour {
 
     public Sprite face1, face2;
 	// Use this for initialization

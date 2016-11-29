@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-
+using System;
 public class Player : JDMappableObject, DamageableObject, CasterObject
 {
     private Transform startPos;
@@ -10,6 +10,8 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
 
+    private MagicState mState = MagicState.Stun;
+    private ArmorState aState = ArmorState.Base;
 	private int fwdX = 1;
 	public float maxSpeed = 1;
 	public float sneakSpeed = 0.5f;
@@ -32,6 +34,14 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	PlayerState state = PlayerState.Normal;
 
     public float lightOnPlayer;
+
+    //Rose Makes Dust-------------------------------***
+    [SerializeField]
+    GameObject dustParticle;
+    private float lastDustPart;
+    //***-------------------------------------------***
+    [SerializeField]
+    GameObject wandDischarge;
     void Awake()
     {
         startPos = transform;
@@ -145,20 +155,27 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 			}
 			if (!Hidden)
 			{
-				if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
-				{
-					SpellProjectile sp = CurSpell.Cast(this);
-					OnCooldown = true;
-					Invoke("SpellCooldown", 1.0f);
-					sp.allegiance = Allegiance.Player;
-					curMP -= CurSpell.Cost;
-				}
+                if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
+                {
+                    
+                        GameObject temp = (GameObject)Instantiate(wandDischarge, transform.position, transform.rotation);
+                        temp.GetComponent<SimpleSpellPlaceholder>().Cast(gameObject);
+                        //SpellProjectile sp = CurSpell.Cast(this);
+                        //OnCooldown = true;
+                        //Invoke("SpellCooldown", 1.0f);
+                        //sp.allegiance = Allegiance.Player;
+                        //curMP -= CurSpell.Cost;
+                    
+                }
 				UIManager.Instance.LightLevel = GetLocalLightLevel();
 			}
 		}
         
 	}
+    void ShootWandCharge()
+    {
 
+    }
 	public void HandleSpellAxisCooldownForController(float t)
 	{
 		Invoke("SpellAxisCooldown", t);
@@ -306,6 +323,17 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		}
 	}
 	#endregion
+   
+
+    void CreateDustParticle(Vector2 posOfParticle)
+    {
+        lastDustPart = Time.time;
+        //Transform tempT = new GameObject().transform; //this doesn't feel right;
+        //tempT.position = posOfParticle;
+        GameObject newPart = (GameObject)Instantiate(dustParticle, transform);
+        newPart.transform.position = posOfParticle;
+        newPart.transform.parent = null;
+    }
 	#region Gets
 	/// <summary>
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on ground.
@@ -315,18 +343,6 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	{
 		get
 		{
-            Debug.DrawRay(transform.position, new Vector2(0.4f,0), Color.red, 0.1f);
-            Debug.DrawRay(transform.position, new Vector2(-0.4f, 0), Color.blue, 0.1f);
-            if (Physics2D.Raycast(transform.position, Vector2.right, HalfWidth + 0.4f, (1 << LayerMask.NameToLayer("Default")))) //Right
-            {
-                return true;
-            }
-            if (Physics2D.Raycast(transform.position, -Vector2.right, HalfWidth - 0.4f, (1 << LayerMask.NameToLayer("Default")))) //Right
-            {
-                return true;
-
-            }
-            
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
             if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
             { //Straight down
@@ -339,6 +355,30 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
             {//forwards
                 return true;
+            }
+
+
+            bool exists = Enum.IsDefined(typeof(MagicState), 2);      // exists = true
+            if (HasFlag(mState,MagicState.WallJump))
+            {
+                Debug.Log("I've done it!");
+
+                Debug.DrawRay(transform.position, new Vector2(0.4f, 0), Color.red, 0.1f);
+                Debug.DrawRay(transform.position, new Vector2(-0.4f, 0), Color.blue, 0.1f);
+                if (Physics2D.Raycast(transform.position, Vector2.right, HalfWidth + 0.4f, (1 << LayerMask.NameToLayer("Wall")))) //Right
+                {
+                    if (Time.time - lastDustPart >= 0.2f)
+                        CreateDustParticle(new Vector2(transform.position.x + 0.4f, transform.position.y));
+                    return true;
+                }
+                if (Physics2D.Raycast(transform.position, -Vector2.right, HalfWidth - 0.4f, (1 << LayerMask.NameToLayer("Wall")))) //Right
+                {
+                    if (Time.time - lastDustPart >= 0.2f)
+                        CreateDustParticle(new Vector2(transform.position.x - 0.4f, transform.position.y));
+                    return true;
+
+                }
+
             }
 						
 			
@@ -597,7 +637,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	{
 		get
 		{
-			return !(OnCooldown || InNoMagicArea);
+            return HasFlag(mState, MagicState.Range);
 		}
 	}
 
@@ -665,8 +705,77 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	void Unfreeze() {
 		IsFrozen = false;
 	}
+    #region UpgradeRegion
+    public void UnlockMagicWand()
+    {
+        mState = UnsetFlag(mState, MagicState.NoMagic);
+        mState = SetFlag(mState, MagicState.Range);
+        
+    }
+    public void ArmorUp()
+    {
+        Debug.Log("I upgraded my armor");
+        
+    }
 
+    public void UnlockDoubleJump()
+    {
+        //Unlocks Double Jump
+        mState = SetFlag(mState, MagicState.DJump);
+    }
+    public void UnlockWallJump()
+    {
+        mState = SetFlag(mState, MagicState.WallJump);
+        Debug.Log("Play WJump? " + HasFlag(mState, MagicState.WallJump));
+    }
+    #endregion
+    #region flags
+    public static MagicState SetFlag(MagicState a, MagicState b)
+    {
+        //a |= b;
+        return a |= b;
+    }
+
+    public static MagicState UnsetFlag(MagicState a, MagicState b)
+    {
+        return a & (~b);
+    }
+
+    // Works with "None" as well
+    public static bool HasFlag(MagicState a, MagicState b)
+    {
+        return (a & b) == b;
+    }
+
+    public static MagicState ToggleFlag(MagicState a, MagicState b)
+    {
+        return a ^ b;
+    }
+
+    public static ArmorState ASetFlag(ArmorState a, ArmorState b)
+    {
+        //a |= b;
+        return a | b;
+    }
+
+    public static ArmorState AUnsetFlag(ArmorState a, ArmorState b)
+    {
+        return a & (~b);
+    }
+
+    // Works with "None" as well
+    public static bool AHasFlag(ArmorState a, ArmorState b)
+    {
+        return (a & b) == b;
+    }
+
+    public static ArmorState AToggleFlag(ArmorState a, ArmorState b)
+    {
+        return a ^ b;
+    }
+    #endregion flags
 }
+
 
 [System.Flags]
 public enum PlayerState
@@ -676,4 +785,22 @@ public enum PlayerState
 	MagicCooldown = 2,
 	InNoMagicArea = 4,
 	Frozen = 8
+}
+
+[System.Flags]
+public enum ArmorState
+{
+    //How many hits it can take I suppose
+    Base = 0,
+    One = 1,
+    Two = 2   
+}
+[System.Flags]
+public enum MagicState
+{
+    NoMagic = 0,
+    Range = 1,
+    WallJump = 2,
+    DJump = 4,
+    Stun = 8
 }
