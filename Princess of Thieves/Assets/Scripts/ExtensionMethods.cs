@@ -68,12 +68,23 @@ public static class ExtensionMethods{
 		return go.transform.localScale.y / 2;
 	}
 
-	public static bool IsAbove(this GameObject g, GameObject go)
+    public static bool IsLeftOf(this GameObject g, GameObject go)
+    {
+        Vector3 dif = (go.transform.position - g.transform.position).normalized;
+        float dot = Vector3.Dot(Vector3.left, dif);
+        return dot >  1.0f / Mathf.Sqrt(2);
+    }
+
+    public static bool IsRightOf(this GameObject g, GameObject go)
+    {
+        return go.IsLeftOf(g);
+    }
+    public static bool IsAbove(this GameObject g, GameObject go)
 	{
 		Vector3 dif = (go.transform.position - g.transform.position).normalized;
 		float dot = Vector3.Dot(Vector3.down, dif);
-		return dot > 0;
-	}
+        return dot > 1.0f / Mathf.Sqrt(2);
+    }
 
 	public static bool IsBelow(this GameObject g, GameObject go)
 	{
