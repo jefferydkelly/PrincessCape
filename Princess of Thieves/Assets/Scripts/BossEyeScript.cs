@@ -37,11 +37,7 @@ public class BossEyeScript : MonoBehaviour {
 	
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.GetComponent<WaterProjectile>())
-        {
-            isFrozen = true;
-            frozenTime = Time.time;
-        }
+      
     }
 	// Update is called once per frame
 	void Update () {

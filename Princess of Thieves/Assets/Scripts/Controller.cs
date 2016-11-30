@@ -17,11 +17,6 @@ public class Controller
     string spellKey;
     string interactKey;
     string sneakKey;
-    string nextItemKey;
-    string prevItemKey;
-    string useItemKey;
-    string nextSpellKey;
-    string prevSpellKey;
 
 	//Menu Keys
 	string pauseKey;
@@ -65,9 +60,6 @@ public class Controller
             interactKey = "f";
             attackKey = "c";
             spellKey = "x";
-            useItemKey = "z";
-            nextSpellKey = "v";
-            prevSpellKey = "d";
             sneakKey = "left shift";
 			pauseKey = "p";
 
@@ -82,8 +74,6 @@ public class Controller
             spellKey = c.spellKey;
             sneakKey = c.sneakKey;
             jumpKey = c.jumpKey;
-            prevSpellKey = c.prevSpellKey;
-            nextSpellKey = c.nextSpellKey;
 
         }
     }
@@ -156,55 +146,12 @@ public class Controller
         }
     }
 
-    public bool UseItem
-    {
-        get
-        {
-            return Input.GetKeyDown(useItemKey);
-        }
-    }
-
     public bool Sneak
     {
         get
         {
             return Input.GetKey(sneakKey);
         }
-    }
-    public int ItemChange
-    {
-        get
-        {
-            return ((Input.GetKeyDown(nextItemKey)) ? 1 : 0) - ((Input.GetKeyDown(prevItemKey)) ? 1 : 0);
-        }
-    }
-
-    public int SpellChange
-    {
-        get
-        {
-            if (controllerType == ControllerType.GamepadWindows)
-            {
-                float val = Input.GetAxis(nextSpellKey);
-                if (Mathf.Abs(val) > 0.5 && !spellAxisFrozen)
-                {
-                    spellAxisFrozen = true;
-                    GameManager.Instance.Player.HandleSpellAxisCooldownForController(resetTime);
-                    return (int)Mathf.Sign(val);
-                }
-                return 0;
-
-            }
-            else
-            {
-                return ((Input.GetKeyDown(nextSpellKey)) ? 1 : 0) - ((Input.GetKeyDown(prevSpellKey)) ? 1 : 0);
-            }
-        }
-    }
-
-    public void UnfreezeSpellAxis()
-    {
-        spellAxisFrozen = false;
     }
 
     public string LeftKey
@@ -263,46 +210,6 @@ public class Controller
         }
     }
 
-    public string UseItemKey
-    {
-        get
-        {
-            return useItemKey;
-        }
-    }
-
-    public string NextItemKey
-    {
-        get
-        {
-            return nextItemKey;
-        }
-    }
-
-    public string PrevItemKey
-    {
-        get
-        {
-            return prevItemKey;
-        }
-    }
-
-    public string NextSpellKey
-    {
-        get
-        {
-            return nextSpellKey;
-        }
-    }
-
-    public string PrevSpellKey
-    {
-        get
-        {
-            return prevSpellKey;
-        }
-    }
-
 	public bool Pause
 	{
 		get
@@ -346,8 +253,6 @@ public class Controller
                 controls += "Proceed: " + jumpKey + "\n";
                 controls += "Interact: " + interactKey + "\n";
                 controls += "Cast Spell: " + spellKey + "\n";
-                controls += "Next Spell: " + nextSpellKey + "\n";
-                controls += "Prev Spell: " + prevSpellKey + "\n";
             }
             return controls;
         }

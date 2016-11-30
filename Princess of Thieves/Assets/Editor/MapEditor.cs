@@ -45,9 +45,9 @@ public class MapEditor : Editor {
 				SpriteRenderer sr = map.selected.GetComponent<SpriteRenderer>();
 				if (sr != null)
 				{
-					spriteUnitDims = map.SelectedSprite.textureRect.size / map.pixelsToUnits;
-					spriteUnitDims.x = Mathf.Max(Mathf.Floor(spriteUnitDims.x), 0);
-					spriteUnitDims.y = Mathf.Max(Mathf.Floor(spriteUnitDims.y), 0);
+                    spriteUnitDims = map.SelectedSprite.textureRect.size / map.SelectedSprite.pixelsPerUnit;
+					spriteUnitDims.x = Mathf.Max(Mathf.Floor(spriteUnitDims.x), 1);
+					spriteUnitDims.y = Mathf.Max(Mathf.Floor(spriteUnitDims.y), 1);
 					UpdateBrush(map.SelectedSprite);
 				}
 				else {
@@ -86,17 +86,16 @@ public class MapEditor : Editor {
 	{
 		map = target as LevelMap;
 		Tools.current = Tool.View;
-		if (map.level == null)
-		{
-			
-			map.level = new GameObject("Level");
-			map.level.transform.SetParent(map.transform);
-			map.level.transform.position = Vector3.zero;
-			map.foreGround = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
-			map.background = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
-			map.field = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
-			map.wall = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
-		}
+        if (map.level == null)
+        {
+            map.level = new GameObject("Level");
+            map.level.transform.SetParent(map.transform);
+            map.level.transform.position = Vector3.zero;
+            map.foreGround = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
+            map.background = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
+            map.field = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y];
+            map.wall = new GameObject[(int)map.mapSize.x, (int)map.mapSize.y]; 
+        }
 		map.gridSize = new Vector2(map.tileSize.x * map.mapSize.x, map.tileSize.y * map.mapSize.y) / map.pixelsToUnits;
 		if (map.selected != null)
 		{
@@ -114,6 +113,10 @@ public class MapEditor : Editor {
 
 	void OnSceneGUI()
 	{
+        if (map.background == null)
+        {
+            UpdateCalculations();
+        }
 		if (brush != null)
 		{
 			UpdateHitPosition();
@@ -275,9 +278,14 @@ public class MapEditor : Editor {
 
 		int column = Mathf.Abs(Mathf.FloorToInt(y / tileSize)) - 1;
 		Vector2 startPos = new Vector2(row, column) - ((spriteUnitDims - new Vector2(1, 1)) / 2);
-	
-		map.Add(map.selected, startPos, spriteUnitDims, brush.transform.position);
 
+        //map.Add(map.selected, startPos, spriteUnitDims, brush.transform.position);
+        GameObject go = map.AddAndReplace(map.selected, startPos, spriteUnitDims, brush.transform.position);
+        map.selected = PrefabUtility.FindPrefabRoot(go);
+        if (AssetDatabase.GetAssetPath(go) == "")
+        {
+            DestroyImmediate(go);
+        }
 		/*
 		string id = brush.tileID.ToString();
 
