@@ -6,7 +6,7 @@ public class ShockShooter : UsableItem {
     [SerializeField]
     GameObject shockObj;
 
-    public override void Use()
+    public override void Activate()
     {
         if (!onCooldown)
         {
@@ -16,5 +16,10 @@ public class ShockShooter : UsableItem {
             WaitDelegate w = () => { onCooldown = false; };
             StartCoroutine(gameObject.RunAfter(w, cooldownTime));
         }
+    }
+
+    public override void Deactivate()
+    {
+        
     }
 }

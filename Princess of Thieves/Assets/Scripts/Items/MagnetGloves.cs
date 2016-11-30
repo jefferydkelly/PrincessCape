@@ -14,7 +14,7 @@ public class MagnetGloves : UsableItem {
 	
 	}
 
-    public override void Use()
+    public override void Activate()
     {
         //Shoot a ray fowards
         RaycastHit2D hit;
@@ -41,6 +41,11 @@ public class MagnetGloves : UsableItem {
             }
         }
 
+    }
+
+    public override void Deactivate()
+    {
+        
     }
 
 }

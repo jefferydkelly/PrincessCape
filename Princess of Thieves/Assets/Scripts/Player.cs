@@ -134,21 +134,22 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
                     UIManager.Instance.LightLevel = GetLocalLightLevel();
 
                 }
-                else if (Hidden && !IsFrozen)
-                {
-                    myRigidBody.velocity = Vector2.zero;
-                    if (controller.Interact)
-                    {
-                        Hidden = false;
-                    }
-
-                    UIManager.Instance.LightLevel = 0;
-                }
-                else if (IsDashing && IsOnGround && controller.Jump)
-                {
-                    Jump();
-                }
                 //CameraManager.Instance.Velocity = myRigidBody.velocity;
+            }
+            else if (Hidden && !IsFrozen)
+            {
+                myRigidBody.velocity = Vector2.zero;
+                if (controller.Interact)
+                {
+                    Hidden = false;
+                }
+
+                UIManager.Instance.LightLevel = 0;
+            }
+            else if (IsDashing && IsOnGround && controller.Jump)
+            {
+                Debug.Log("Jumo");
+                Jump();
             }
         }
         
@@ -166,9 +167,12 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 			if (!Hidden)
 			{
 				UIManager.Instance.LightLevel = GetLocalLightLevel();
-                if (Input.GetKeyDown(KeyCode.F))
+                if (controller.ActivateItem)
                 {
-                    curItem.Use();
+                    curItem.Activate();
+                } else if (controller.DeactivateItem)
+                {
+                    curItem.Deactivate();
                 }
 			}
 		}
@@ -567,7 +571,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             }
             else
             {
-                (curItem as DashBoots).StartCooldown();
+                curItem.Deactivate();
                 state &= ~PlayerState.Dashing;
                 state &= ~PlayerState.Frozen;
             }

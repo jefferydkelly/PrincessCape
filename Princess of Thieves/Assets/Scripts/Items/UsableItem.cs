@@ -7,5 +7,6 @@ public abstract class UsableItem : MonoBehaviour {
     public string itemName;
     protected bool onCooldown = false;
     public float cooldownTime = 0.0f;
-    public abstract void Use();
+    public abstract void Activate();
+    public abstract void Deactivate();
 }
