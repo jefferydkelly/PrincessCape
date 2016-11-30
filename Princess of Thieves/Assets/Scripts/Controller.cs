@@ -14,7 +14,7 @@ public class Controller
 
     //The action keys
     string attackKey;
-    string spellKey;
+    string itemKeyOne;
     string interactKey;
     string sneakKey;
 
@@ -59,7 +59,7 @@ public class Controller
             jumpKey = "space";
             interactKey = "f";
             attackKey = "c";
-            spellKey = "x";
+            itemKeyOne = "x";
             sneakKey = "left shift";
 			pauseKey = "p";
 
@@ -71,7 +71,6 @@ public class Controller
             leftKey = c.horizontalAxis;
             upKey = c.verticalAxis;
             interactKey = c.interactKey;
-            spellKey = c.spellKey;
             sneakKey = c.sneakKey;
             jumpKey = c.jumpKey;
 
@@ -122,11 +121,19 @@ public class Controller
         }
     }
 
-    public bool UseSpell
+    public bool ActivateItem
     {
         get
         {
-            return Input.GetKeyDown(spellKey);
+            return Input.GetKeyDown(itemKeyOne);
+        }
+    }
+
+    public bool DeactivateItem
+    {
+        get
+        {
+            return Input.GetKeyUp(itemKeyOne);
         }
     }
 
@@ -252,7 +259,7 @@ public class Controller
             {
                 controls += "Proceed: " + jumpKey + "\n";
                 controls += "Interact: " + interactKey + "\n";
-                controls += "Cast Spell: " + spellKey + "\n";
+                controls += "use Item: " + itemKeyOne + "\n";
             }
             return controls;
         }

@@ -4,7 +4,7 @@ using System.Collections;
 public class SeedShooter : UsableItem {
     public GameObject seedObj;
     bool aiming = false;
-    public override void Use()
+    public override void Activate()
     {
         if (!onCooldown)
         {
@@ -15,7 +15,7 @@ public class SeedShooter : UsableItem {
         }
     }
 
-    private void Update()
+    public override void Deactivate()
     {
         if (aiming && Input.GetKeyUp(KeyCode.F))
         {

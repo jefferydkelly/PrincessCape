@@ -4,8 +4,6 @@ using System;
 
 public class MagnetGloves : UsableItem {
 
-    bool push = false;
-
     // Use this for initialization
     void Start () {
 	
@@ -16,20 +14,7 @@ public class MagnetGloves : UsableItem {
 	
 	}
 
-    void Activate()
-    {
-        if(push)
-        {
-            push = false;
-            return;
-        }
-        else
-        {
-            push = true;
-            return;
-        }
-    }
-    public override void Use()
+    public override void Activate()
     {
         //Shoot a ray fowards
         RaycastHit2D hit;
@@ -38,45 +23,29 @@ public class MagnetGloves : UsableItem {
        // Debug.Log("Hit is what: " + hit.collider.name);
         if (hit.collider.gameObject.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
-            ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>();
-            if (thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
+            ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>(); 
+            if(thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
             {
-                if (push)
-                {
-                    //Heavier object, so the player gets moved
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (2500),
-                        ForceMode2D.Force);
-                }//end push
-                else
-                {
-                    //Heavier object, so the player gets moved
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (2500),
-                        ForceMode2D.Force);
-                }
+                //Heavier object, so the player gets moved
+                float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized  * (2500),
+                    ForceMode2D.Force);
             }
             else
             {
-                if (push)
-                {
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
-                        ForceMode2D.Force);
-                }
-                else
-                {
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
-                        ForceMode2D.Force);
-                }
+                float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                    new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                    ForceMode2D.Force);
             }
         }
 
+    }
+
+    public override void Deactivate()
+    {
+        
     }
 
 }

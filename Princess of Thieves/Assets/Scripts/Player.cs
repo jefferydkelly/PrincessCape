@@ -75,67 +75,84 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
 
+            if (!(Hidden || IsFrozen))
             {
-				if (!(Hidden || IsFrozen)) {
-					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
+                myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
 
 
-					if (controller.Sneak)
-						myRigidBody.ClampVelocity (sneakSpeed, VelocityType.X);
-					else
-						myRigidBody.ClampVelocity (maxSpeed, VelocityType.X);
+                if (controller.Sneak)
+                    myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+                else
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
-					if (IsOnRope) {
-						Vector2 vel = myRigidBody.velocity;
-						//vel.x = 0;
-						vel.y = controller.Vertical * maxSpeed;
-						myRigidBody.velocity = vel;
-						//myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-						//myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
-
-						if (controller.Jump) {
-							Jump ();
-						}
-					} else if (IsOnGround) {
-						if (controller.Jump) {
-							Jump ();
-						} else {
-							//if (controller.Interact) {
-							//	RaycastHit2D hit = Physics2D.Raycast (transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer ("SpellStatue")));
-                               
-							//	if (hit.collider != null) {
-							//		// Debug.Log("Found" + hit.collider.gameObject.name);
-							//		InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
-
-							//		if (io != null) {
-							//			io.Interact ();
-							//		}
-							//	}
-							//}
-						}
-					}
-
-					if (Mathf.Abs (myRigidBody.velocity.x) > float.Epsilon) {
-						fwdX = (int)Mathf.Sign (myRigidBody.velocity.x);
-						myRenderer.flipX = (fwdX == -1);
-					}
-
-
-					UIManager.Instance.LightLevel = GetLocalLightLevel ();
-
-				} else if (Hidden && !IsFrozen)
+                if (IsOnRope)
                 {
-                    myRigidBody.velocity = Vector2.zero;
-                    if (controller.Interact)
+                    Vector2 vel = myRigidBody.velocity;
+                    //vel.x = 0;
+                    vel.y = controller.Vertical * maxSpeed;
+                    myRigidBody.velocity = vel;
+                    //myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+                    //myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+
+                    if (controller.Jump)
                     {
-                        Hidden = false;
+                        Jump();
+                    }
+                }
+                else if (IsOnGround)
+                {
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                    else
+                    {
+                        if (controller.Interact)
+                        {
+                            RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("SpellStatue")));
+
+                            if (hit.collider != null)
+                            {
+                                // Debug.Log("Found" + hit.collider.gameObject.name);
+                                InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+
+                                if (io != null)
+                                {
+                                    io.Interact();
+                                }
+                            }
+                        }
                     }
 
-                    UIManager.Instance.LightLevel = 0;
+                    if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+                    {
+                        fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+                        myRenderer.flipX = (fwdX == -1);
+                    }
+
+
+                    UIManager.Instance.LightLevel = GetLocalLightLevel();
+
                 }
                 //CameraManager.Instance.Velocity = myRigidBody.velocity;
             }
+            else if (Hidden && !IsFrozen)
+            {
+                myRigidBody.velocity = Vector2.zero;
+                if (controller.Interact)
+                {
+                    Hidden = false;
+                }
+
+                UIManager.Instance.LightLevel = 0;
+            }
+            else if (IsDashing && IsOnGround && controller.Jump)
+            {
+                Debug.Log("Jumo");
+                Jump();
+            }
         }
+        
 	}
 	// Update is called once per frame
 	void Update()
@@ -150,9 +167,12 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 			if (!Hidden)
 			{
 				UIManager.Instance.LightLevel = GetLocalLightLevel();
-                if (Input.GetKeyDown(KeyCode.F))
+                if (controller.ActivateItem)
                 {
-                    curItem.Use();
+                    curItem.Activate();
+                } else if (controller.DeactivateItem)
+                {
+                    curItem.Deactivate();
                 }
 			}
 		}
@@ -169,7 +189,8 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 				po.AllowPassThrough();
 			}
 		}
-		myRigidBody.AddForce(new Vector2(0, jumpImpulse * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
+        float ji = IsDashing ? jumpImpulse * 1.5f : jumpImpulse;
+		myRigidBody.AddForce(new Vector2(0, ji * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
 	}
 
 	/// <summary>
@@ -224,6 +245,10 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
 	{
+        if (!col.collider.CompareTag("Platform") && IsDashing)
+        {
+            IsDashing = false;
+        }
 		if (col.collider.CompareTag ("Platform")) {
 
 			if (lastYVel < -10) {
@@ -538,13 +563,17 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
         }
         set
         {
-            if (value && !IsDashing)
+            if (value && !IsDashing && !IsFrozen)
             {
                 state |= PlayerState.Dashing;
+                state |= PlayerState.Frozen;
+                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10, 0), ForceMode2D.Impulse);
             }
             else
             {
+                curItem.Deactivate();
                 state &= ~PlayerState.Dashing;
+                state &= ~PlayerState.Frozen;
             }
         }
     }
