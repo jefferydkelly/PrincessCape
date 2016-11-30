@@ -27,18 +27,16 @@ public class MagnetGloves : UsableItem {
             if(thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
             {
                 //Heavier object, so the player gets moved
-                //myRigidBody.AddForce(new Vector2(0, jumpImpulse * Mathf.Sign(myRigidBody.gravityScale)),
-                //ForceMode2D.Impulse);
                 float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
                 GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized  * (1500),
+                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized  * (2500),
                     ForceMode2D.Force);
             }
             else
             {
                 float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
                 thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                    new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
                     ForceMode2D.Force);
             }
         }
