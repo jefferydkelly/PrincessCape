@@ -10,7 +10,7 @@ public class BounceSeed : MonoBehaviour
     {
         if (!collision.CompareTag("Player"))
         {
-            if (!bounced)
+            if (!bounced && collision.OnLayer("Platforms"))
             {
                 bounced = true;
                 Rigidbody2D rb = GetComponent<Rigidbody2D>();
@@ -23,10 +23,15 @@ public class BounceSeed : MonoBehaviour
                 {
                     rb.velocity = new Vector2(rb.velocity.x, -rb.velocity.y);
                     return;
-                }
+                } 
             }
 
-            Destroy(gameObject);
+            if (!collision.OnLayer("Background"))
+            {
+
+                Destroy(gameObject);
+            }
+
         }
     }
 }

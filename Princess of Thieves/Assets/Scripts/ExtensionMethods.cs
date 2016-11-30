@@ -11,6 +11,11 @@ public static class ExtensionMethods{
 		return col.tag.Contains(tag);
 	}
 
+    public static bool OnLayer(this Collider2D col, string layer)
+    {
+        return col.gameObject.layer == LayerMask.NameToLayer(layer);
+    }
+
 	public static float HalfWidth(this SpriteRenderer sr) {
 		return sr.bounds.extents.x;
 	}
