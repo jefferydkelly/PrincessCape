@@ -637,7 +637,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	{
 		get
 		{
-            return HasFlag(mState, MagicState.Range);
+            return HasFlag(mState, MagicState.Useable);
 		}
 	}
 
@@ -669,19 +669,10 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     {
         get
         {
-            if (controller.Vertical > 0)
-            {
-                return new Vector2(Forward.x, 1);
-            }
-            else if(controller.Vertical < 0)
-            {
-                return new Vector2(Forward.x, -1);
-            }
-            else
-            {
-                return new Vector2(Forward.x, 0);
-            }
+            return new Vector2(Forward.x,controller.Vertical);
         }
+           
+        
     }
     public bool IsFrozen
     {
@@ -727,7 +718,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     public void UnlockMagicWand()
     {
         mState = UnsetFlag(mState, MagicState.NoMagic);
-        mState = SetFlag(mState, MagicState.Range);
+        mState = SetFlag(mState, MagicState.Useable);
         
     }
     public void ArmorUp()
@@ -745,6 +736,11 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     {
         mState = SetFlag(mState, MagicState.WallJump);
         Debug.Log("Play WJump? " + HasFlag(mState, MagicState.WallJump));
+    }
+
+    public void UnlockBlink()
+    {
+        mState = SetFlag(mState, MagicState.Blink);
     }
     #endregion
     #region flags
@@ -817,8 +813,10 @@ public enum ArmorState
 public enum MagicState
 {
     NoMagic = 0,
-    Range = 1,
+    Useable = 1,
     WallJump = 2,
     DJump = 4,
-    Stun = 8
+    Stun = 8,
+    Blink = 16,
+    MagneticGloves = 32
 }
