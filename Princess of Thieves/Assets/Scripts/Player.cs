@@ -100,18 +100,18 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 						if (controller.Jump) {
 							Jump ();
 						} else {
-							if (controller.Interact) {
-								RaycastHit2D hit = Physics2D.Raycast (transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer ("SpellStatue")));
+							//if (controller.Interact) {
+							//	RaycastHit2D hit = Physics2D.Raycast (transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer ("SpellStatue")));
                                
-								if (hit.collider != null) {
-									// Debug.Log("Found" + hit.collider.gameObject.name);
-									InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
+							//	if (hit.collider != null) {
+							//		// Debug.Log("Found" + hit.collider.gameObject.name);
+							//		InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
 
-									if (io != null) {
-										io.Interact ();
-									}
-								}
-							}
+							//		if (io != null) {
+							//			io.Interact ();
+							//		}
+							//	}
+							//}
 						}
 					}
 
@@ -298,15 +298,11 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             {//forwards
                 return true;
             }
-
-
             bool exists = Enum.IsDefined(typeof(MagicState), 2);      // exists = true
             if (HasFlag(mState,MagicState.WallJump))
             {
                 Debug.Log("I've done it!");
 
-                Debug.DrawRay(transform.position, new Vector2(0.4f, 0), Color.red, 0.1f);
-                Debug.DrawRay(transform.position, new Vector2(-0.4f, 0), Color.blue, 0.1f);
                 if (Physics2D.Raycast(transform.position, Vector2.right, HalfWidth + 0.4f, (1 << LayerMask.NameToLayer("Wall")))) //Right
                 {
                     if (Time.time - lastDustPart >= 0.2f)
@@ -321,11 +317,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 
                 }
 
-            }
-						
-			
-       
-
+            }		
         return false;
 		} // end Get
 	}
@@ -658,5 +650,6 @@ public enum MagicState
     Range = 1,
     WallJump = 2,
     DJump = 4,
-    Stun = 8
+    Stun = 8,
+    Magnet = 16
 }
