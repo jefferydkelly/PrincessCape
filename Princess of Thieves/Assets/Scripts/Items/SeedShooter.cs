@@ -6,7 +6,6 @@ public class SeedShooter : UsableItem {
     bool aiming = false;
     public override void Use()
     {
-        Debug.Log("Can I be used?: " + !onCooldown);
         if (!onCooldown)
         {
             aiming = true;
