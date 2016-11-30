@@ -17,22 +17,20 @@ public class HeavyArmor : UsableItem {
 	void Update () {
 	
 	}
-
-
-    public override void Use()
+    public override void Deactivate()
     {
-        if (activated)
-        {
-            activated = false;
-            myRigidBody.gravityScale = 1.5f;
-            return;
-        }
-        else
-        {
+
+        activated = false;
+        myRigidBody.gravityScale = 1.5f;
+        return;
+    }
+
+    public override void Activate()
+    {
             activated = true;
             myRigidBody.gravityScale = 5f;
             return;
-        }
+        
        
     }
 }
