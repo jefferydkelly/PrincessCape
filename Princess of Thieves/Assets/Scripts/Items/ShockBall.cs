@@ -19,13 +19,9 @@ public class ShockBall : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TagContains("Enemy"))
+       if (!(collision.OnLayer("Background") || collision.CompareTag("Player") || collision.TagContains("Enemy")))
         {
-            //Get the enemy and shock them
-            Debug.Log("Hit an enemy");
-            Destroy(gameObject);
-        } else if (!collision.OnLayer("Background") && !collision.CompareTag("Player"))
-        {
+            Debug.Log(collision.gameObject.name);
             Destroy(gameObject);
         }
     }

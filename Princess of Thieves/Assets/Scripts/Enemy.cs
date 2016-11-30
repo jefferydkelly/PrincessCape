@@ -141,7 +141,8 @@ public class Enemy : MonoBehaviour {
             }
             else
             {
-                GetComponent<SpriteRenderer>().sprite = spriteStates[1];
+                myRigidBody.velocity = Vector2.zero;
+               //GetComponent<SpriteRenderer>().sprite = spriteStates[1];
             }
         }
 	}
@@ -213,7 +214,7 @@ public class Enemy : MonoBehaviour {
 
                         //Get some fricken light level into this. Randomized chance
                         float eyes = Random.Range(0, 1);
-                        Debug.Log("I see " + (eyes) + " and play has this much light " + ( GameManager.Instance.Player.lightOnPlayer));
+        
                         if (eyes < GameManager.Instance.Player.lightOnPlayer)
                         {
                             
@@ -255,14 +256,22 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(col.gameObject.name == "Tsunami")
+        if (collision.gameObject.name.Contains("ShockBall"))
         {
-            isFrozen = true;
+            
+            if (!isFrozen)
+            {
+                isFrozen = true;
+                WaitDelegate w = () => {isFrozen = false; };
+                StartCoroutine(gameObject.RunAfter(w, 2f));
+            }
+
+            Destroy(collision.gameObject);
         }
     }
-	protected bool InSightCone(GameObject go, float ang)
+    protected bool InSightCone(GameObject go, float ang)
 	{
 		Vector2 dif = go.transform.position - transform.position;
 		float dot = Vector2.Dot(dif.normalized, Forward);
