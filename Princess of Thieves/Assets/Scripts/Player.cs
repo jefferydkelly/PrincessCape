@@ -55,7 +55,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
-        UIManager.Instance.LightLevel = 0;
+        //UIManager.Instance.LightLevel = 0;
 		DontDestroyOnLoad(gameObject);
         GameObject item = Instantiate(startItemObject);
         item.transform.SetParent(transform);
@@ -71,7 +71,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	{
         if (!GameManager.Instance.IsPaused)
         {
-            lightOnPlayer = GetLocalLightLevel();
+            //lightOnPlayer = GetLocalLightLevel();
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
 
@@ -131,7 +131,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
                     }
 
 
-                    UIManager.Instance.LightLevel = GetLocalLightLevel();
+                   //UIManager.Instance.LightLevel = GetLocalLightLevel();
 
                 }
                 //CameraManager.Instance.Velocity = myRigidBody.velocity;
@@ -144,11 +144,10 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
                     Hidden = false;
                 }
 
-                UIManager.Instance.LightLevel = 0;
+                //UIManager.Instance.LightLevel = 0;
             }
             else if (IsDashing && IsOnGround && controller.Jump)
             {
-                Debug.Log("Jumo");
                 Jump();
             }
         }
@@ -166,7 +165,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		{
 			if (!Hidden)
 			{
-				UIManager.Instance.LightLevel = GetLocalLightLevel();
+				//UIManager.Instance.LightLevel = GetLocalLightLevel();
                 if (controller.ActivateItem)
                 {
                     curItem.Activate();

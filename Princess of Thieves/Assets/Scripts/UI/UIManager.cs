@@ -77,7 +77,7 @@ public class UIManager : MonoBehaviour
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
 
-            stealthMeter = new StealthMeter();
+            //stealthMeter = new StealthMeter();
 		}
 	}
 
@@ -164,7 +164,7 @@ public class UIManager : MonoBehaviour
 	{
         hpBar.enabled = false;
         mpBar.enabled = false;
-        stealthMeter.Enabled = false;
+        //stealthMeter.Enabled = false;
 		messageBox.Enabled = true;
 		messageBox.Text = msg;
 	}
@@ -179,7 +179,7 @@ public class UIManager : MonoBehaviour
 	{
         hpBar.enabled = false;
         mpBar.enabled = false;
-        stealthMeter.Enabled = false;
+        //stealthMeter.Enabled = false;
         messageBox.Enabled = true;
 		messageBox.Text = msg;
 		Invoke("HideMessage", time);
@@ -190,7 +190,7 @@ public class UIManager : MonoBehaviour
 	{
         hpBar.enabled = true;
         mpBar.enabled = true;
-        stealthMeter.Enabled = true;
+        //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
 	}
 
@@ -201,7 +201,7 @@ public class UIManager : MonoBehaviour
 			bool val = !value;
 			hpBar.enabled = val;
 			mpBar.enabled = val;
-            stealthMeter.Enabled = val;
+            //stealthMeter.Enabled = val;
 		}
 	}
 
@@ -219,7 +219,7 @@ public class UIManager : MonoBehaviour
 			Invoke("StartFadeOut", fadeOutDelay);
 		}
 	}
-
+    /*
     public float LightLevel
     {
         get
@@ -231,7 +231,7 @@ public class UIManager : MonoBehaviour
         {
             stealthMeter.LightLevel = value;
         }
-    }
+    }*/
 
 	void StartFadeOut()
 	{
