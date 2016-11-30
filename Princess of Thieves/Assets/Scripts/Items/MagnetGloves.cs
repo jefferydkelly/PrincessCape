@@ -4,6 +4,7 @@ using System;
 
 public class MagnetGloves : UsableItem {
 
+    bool toggled = false;
     // Use this for initialization
     void Start () {
 	
@@ -23,21 +24,43 @@ public class MagnetGloves : UsableItem {
        // Debug.Log("Hit is what: " + hit.collider.name);
         if (hit.collider.gameObject.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
-            ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>(); 
-            if(thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
+            if (toggled)
             {
-                //Heavier object, so the player gets moved
-                float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized  * (2500),
-                    ForceMode2D.Force);
+                ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>();
+                if (thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
+                {
+                    //Heavier object, so the player gets moved
+                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                    GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                        new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (2500),
+                        ForceMode2D.Force);
+                }
+                else
+                {
+                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                    thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                        new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                        ForceMode2D.Force);
+                }
             }
             else
             {
-                float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                    new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
-                    ForceMode2D.Force);
+                ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>();
+                if (thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
+                {
+                    //Heavier object, so the player gets moved
+                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                    GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                        new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (2500),
+                        ForceMode2D.Force);
+                }
+                else
+                {
+                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                    thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                        new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                        ForceMode2D.Force);
+                }
             }
         }
 
@@ -45,7 +68,16 @@ public class MagnetGloves : UsableItem {
 
     public override void Deactivate()
     {
-        
+        toggled = !toggled;
+        //if (toggled)
+        //{
+        //    toggled = false;
+
+        //}
+        //else
+        //{
+        //    toggled = true;
+        //}
     }
 
 }
