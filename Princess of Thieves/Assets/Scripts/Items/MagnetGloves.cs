@@ -18,24 +18,28 @@ public class MagnetGloves : UsableItem {
     {
         //Shoot a ray fowards
         RaycastHit2D hit;
-        hit = (Physics2D.Raycast(transform.position, GameManager.Instance.Player.Forward, 10f));
+        hit = (Physics2D.Raycast(GameManager.Instance.Player.gameObject.transform.position, GameManager.Instance.Player.Forward,
+            100f, ~1<<LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("SpellStatue")));
+       // Debug.Log("Hit is what: " + hit.collider.name);
         if (hit.collider.gameObject.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
-            Debug.Log("Maaaagnet");
             ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>(); 
             if(thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
             {
                 //Heavier object, so the player gets moved
                 //myRigidBody.AddForce(new Vector2(0, jumpImpulse * Mathf.Sign(myRigidBody.gravityScale)),
                 //ForceMode2D.Impulse);
+                float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
                 GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                    new Vector2(Vector3.Distance(transform.position, GameManager.Instance.Player.gameObject.transform.position), 0) * 100f,
-                    ForceMode2D.Impulse);
-
+                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized  * (1500),
+                    ForceMode2D.Force);
             }
             else
             {
-
+                float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
+                thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
+                    new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                    ForceMode2D.Force);
             }
         }
 
