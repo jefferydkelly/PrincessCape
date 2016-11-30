@@ -74,14 +74,6 @@ public class UIManager : MonoBehaviour
 			spellBox = new ImageTextCombo("SpellNameBox");
 			spellBox.Enabled = false;
 
-
-			//itemeft = GameObject.Find("ItemLeft").GetComponent<Image>();
-			//itemLeft.enabled = false;
-			//itemCenter = GameObject.Find("ItemCenter").GetComponent<Image>();
-			//itemCenter.enabled = false;
-			//itemRight = GameObject.Find("ItemRight").GetComponent<Image>();
-			//itemRight.enabled = false;
-
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
 
@@ -207,33 +199,10 @@ public class UIManager : MonoBehaviour
 		set
 		{
 			bool val = !value;
-			ShowSpell = val;
 			hpBar.enabled = val;
 			mpBar.enabled = val;
             stealthMeter.Enabled = val;
 		}
-	}
-	//Shows/Hides the equipment box 
-	public bool ShowSpell
-	{
-		get
-		{
-			return spellBox.Enabled;
-		}
-
-		set
-		{
-			if (GameManager.Instance.Player.SpellsKnown > 0)
-			{
-				spellBox.Enabled = value;
-				UpdateSpellInfo();
-			}
-		}
-	}
-
-	public void UpdateSpellInfo()
-	{
-		spellBox.Text = GameManager.Instance.Player.SpellName;
 	}
 
 	public void UpdateSpellName(string spellName)

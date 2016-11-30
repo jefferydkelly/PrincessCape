@@ -27,8 +27,6 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	public float maxMP = 100;
    
 	int curSpell = 0;
-    [SerializeField]
-    public List<Spell> spells = new List<Spell>();
 
     private int numRopesTouching = 0;
 	PlayerState state = PlayerState.Normal;
@@ -41,7 +39,9 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     private float lastDustPart;
     //***-------------------------------------------***
     [SerializeField]
-    GameObject wandDischarge;
+    GameObject startItemObject;
+    UsableItem curItem;
+    
     void Awake()
     {
         startPos = transform;
@@ -55,12 +55,11 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		myRenderer = GetComponent<SpriteRenderer>();
 		curHP = maxHP;
 		curMP = maxMP;
-        spells.Add(new FireSpell());
-        spells.Add(new WaterSpell());
-        spells.Add(new WindSpell());
-        UIManager.Instance.ShowSpell = true;
         UIManager.Instance.LightLevel = 0;
 		DontDestroyOnLoad(gameObject);
+        GameObject item = Instantiate(startItemObject);
+        item.transform.SetParent(transform);
+        curItem = item.GetComponent<UsableItem>();
 	}
 
     public void ResetBecauseINeed()
@@ -70,7 +69,6 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     }
 	void FixedUpdate()
 	{
-        Debug.Log(IsOnGround);
         if (!GameManager.Instance.IsPaused)
         {
             lightOnPlayer = GetLocalLightLevel();
@@ -149,66 +147,18 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{
-			if (spells.Count > 0)
-			{
-				CurrentSpell += controller.SpellChange;
-			}
 			if (!Hidden)
 			{
-                if (CanUseMagic && controller.UseSpell && curMP >= CurSpell.Cost)
-                {
-                    
-                        GameObject temp = (GameObject)Instantiate(wandDischarge, transform.position, transform.rotation);
-                        temp.GetComponent<SimpleSpellPlaceholder>().Cast(gameObject);
-                        //SpellProjectile sp = CurSpell.Cast(this);
-                        //OnCooldown = true;
-                        //Invoke("SpellCooldown", 1.0f);
-                        //sp.allegiance = Allegiance.Player;
-                        //curMP -= CurSpell.Cost;
-                    
-                }
 				UIManager.Instance.LightLevel = GetLocalLightLevel();
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    curItem.Use();
+                }
 			}
 		}
         
 	}
-    void ShootWandCharge()
-    {
 
-    }
-	public void HandleSpellAxisCooldownForController(float t)
-	{
-		Invoke("SpellAxisCooldown", t);
-	}
-
-	void SpellAxisCooldown()
-	{
-		controller.UnfreezeSpellAxis();
-	}
-	void SpellCooldown()
-	{
-		OnCooldown = false;
-	}
-
-	public void AddSpell(Spell s)
-	{
-		if (!spells.Contains(s))
-		{
-            Debug.Log("Spell: " + s);
-			spells.Add(s);
-
-			CurrentSpell = spells.Count - 1;
-			UIManager.Instance.ShowSpell = true;
-		}
-	}
-
-	public int SpellsKnown
-	{
-		get
-		{
-			return spells.Count;
-		}
-	}
 	void Jump()
 	{
 		foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
@@ -300,10 +250,6 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 				myRigidBody.gravityScale = 0;
 			}
 		}
-		else if (col.CompareTag("NoMagicArea"))
-		{
-			InNoMagicArea = false;
-		}
 	}
 
 	void OnTriggerExit2D(Collider2D col)
@@ -316,10 +262,6 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 			{
 				myRigidBody.gravityScale = 1.5f;
 			}
-		}
-		else if (col.CompareTag("NoMagicArea"))
-		{
-			InNoMagicArea = true;
 		}
 	}
 	#endregion
@@ -534,18 +476,6 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 	}
 
 	/// <summary>
-	/// Gets the name of the currently equipped spell.
-	/// </summary>
-	/// <value>The name of the equipped spell.</value>
-	public string SpellName
-	{
-		get
-		{
-			return CurSpell.SpellName;
-		}
-	}
-
-	/// <summary>
 	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is hidden.
 	/// </summary>
 	/// <value><c>true</c> if hidden; otherwise, <c>false</c>.</value>
@@ -583,123 +513,24 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		}
 	}
 
-	/// <summary>
-	/// Gets a value indicating whether this <see cref="T:Player"/> on cooldown.
-	/// </summary>
-	/// <value><c>true</c> if on cooldown; otherwise, <c>false</c>.</value>
-	public bool OnCooldown
-	{
-		get
-		{
-			return (state & PlayerState.MagicCooldown) > 0;
-		}
-
-		private set
-		{
-			if (value)
-			{
-				state |= PlayerState.MagicCooldown;
-			}
-			else {
-				state &= ~PlayerState.MagicCooldown;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Gets a value indicating whether this <see cref="T:Player"/> in no magic area.
-	/// </summary>
-	/// <value><c>true</c> if in no magic area; otherwise, <c>false</c>.</value>
-	public bool InNoMagicArea
-	{
-		get
-		{
-			return (state & PlayerState.InNoMagicArea) > 0;
-		}
-
-		private set
-		{
-			if (value)
-			{
-				state |= PlayerState.InNoMagicArea;
-			}
-			else {
-				state &= ~PlayerState.InNoMagicArea;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Gets a value indicating whether this <see cref="T:Player"/> can use magic.
-	/// </summary>
-	/// <value><c>true</c> if can use magic; otherwise, <c>false</c>.</value>
-	public bool CanUseMagic
-	{
-		get
-		{
-            return HasFlag(mState, MagicState.Range);
-		}
-	}
-
-	/// <summary>
-	/// Gets or sets the current spell.
-	/// </summary>
-	/// <value>The current spell.</value>
-	public int CurrentSpell
-	{
-		get
-		{
-			return curSpell;
-		}
-
-		set
-		{
-			curSpell = value % spells.Count;
-
-			while (curSpell < 0)
-			{
-				curSpell += spells.Count;
-			}
-
-			UIManager.Instance.UpdateSpellInfo();
-		}
-	}
-
     public Vector2 Aiming
     {
         get
         {
-            if (controller.Vertical > 0)
-            {
-                return new Vector2(Forward.x, 1);
-            }
-            else if(controller.Vertical < 0)
-            {
-                return new Vector2(Forward.x, -1);
-            }
-            else
-            {
-                return new Vector2(Forward.x, 0);
-            }
+            return new Vector2(controller.Horizontal, controller.Vertical).normalized;
         }
     }
     public bool IsFrozen
     {
         get
         {
-            if (state ==  PlayerState.Frozen)
-            {
-                return true;
-            }else
-            {
-                return false;
-            }
+            return (state & PlayerState.Frozen) > 0;
         }
         set
         {
             if (value)
             {
-                state = PlayerState.Frozen;
+                state |= PlayerState.Frozen;
             }else
             {
                 state &= ~PlayerState.Frozen;
@@ -707,17 +538,25 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
         }
     }
 
-	/// <summary>
-	/// Gets the current spell.
-	/// </summary>
-	/// <value>The current spell.</value>
-	public Spell CurSpell
-	{
-		get
-		{
-			return spells[CurrentSpell];
-		}
-	}
+    public bool IsDashing
+    {
+        get
+        {
+            return (state & PlayerState.Dashing) > 0;
+        }
+        set
+        {
+            if (value && !IsDashing)
+            {
+                state |= PlayerState.Dashing;
+            }
+            else
+            {
+                state &= ~PlayerState.Dashing;
+            }
+        }
+    }
+
 	#endregion gets
 
 	void Unfreeze() {
@@ -800,9 +639,8 @@ public enum PlayerState
 {
 	Normal = 0,
 	InCover = 1,
-	MagicCooldown = 2,
-	InNoMagicArea = 4,
-	Frozen = 8
+	Dashing = 2,
+	Frozen = 4
 }
 
 [System.Flags]
