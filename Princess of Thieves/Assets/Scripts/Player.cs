@@ -74,66 +74,82 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             lightOnPlayer = GetLocalLightLevel();
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
-            
-			if (!(Hidden || IsFrozen)) {
-				myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
 
-
-				if (controller.Sneak)
-					myRigidBody.ClampVelocity (sneakSpeed, VelocityType.X);
-				else
-					myRigidBody.ClampVelocity (maxSpeed, VelocityType.X);
-
-				if (IsOnRope) {
-					Vector2 vel = myRigidBody.velocity;
-					//vel.x = 0;
-					vel.y = controller.Vertical * maxSpeed;
-					myRigidBody.velocity = vel;
-					//myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-					//myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
-
-					if (controller.Jump) {
-						Jump ();
-					}
-				} else if (IsOnGround) {
-					if (controller.Jump) {
-						Jump ();
-					} else {
-						if (controller.Interact) {
-							RaycastHit2D hit = Physics2D.Raycast (transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer ("SpellStatue")));
-                               
-							if (hit.collider != null) {
-								// Debug.Log("Found" + hit.collider.gameObject.name);
-								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
-
-								if (io != null) {
-									io.Interact ();
-								}
-							}
-					}
-				}
-
-				if (Mathf.Abs (myRigidBody.velocity.x) > float.Epsilon) {
-					fwdX = (int)Mathf.Sign (myRigidBody.velocity.x);
-					myRenderer.flipX = (fwdX == -1);
-				}
-
-
-				UIManager.Instance.LightLevel = GetLocalLightLevel ();
-
-			} else if (Hidden && !IsFrozen)
+            if (!(Hidden || IsFrozen))
             {
-                myRigidBody.velocity = Vector2.zero;
-                if (controller.Interact)
-                {
-                    Hidden = false;
-                }
+                myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
 
-                UIManager.Instance.LightLevel = 0;
-            } else if (IsDashing && IsOnGround && controller.Jump) {
-                Jump();
+
+                if (controller.Sneak)
+                    myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
+                else
+                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+
+                if (IsOnRope)
+                {
+                    Vector2 vel = myRigidBody.velocity;
+                    //vel.x = 0;
+                    vel.y = controller.Vertical * maxSpeed;
+                    myRigidBody.velocity = vel;
+                    //myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
+                    //myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
+
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                }
+                else if (IsOnGround)
+                {
+                    if (controller.Jump)
+                    {
+                        Jump();
+                    }
+                    else
+                    {
+                        if (controller.Interact)
+                        {
+                            RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("SpellStatue")));
+
+                            if (hit.collider != null)
+                            {
+                                // Debug.Log("Found" + hit.collider.gameObject.name);
+                                InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+
+                                if (io != null)
+                                {
+                                    io.Interact();
+                                }
+                            }
+                        }
+                    }
+
+                    if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+                    {
+                        fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+                        myRenderer.flipX = (fwdX == -1);
+                    }
+
+
+                    UIManager.Instance.LightLevel = GetLocalLightLevel();
+
+                }
+                else if (Hidden && !IsFrozen)
+                {
+                    myRigidBody.velocity = Vector2.zero;
+                    if (controller.Interact)
+                    {
+                        Hidden = false;
+                    }
+
+                    UIManager.Instance.LightLevel = 0;
+                }
+                else if (IsDashing && IsOnGround && controller.Jump)
+                {
+                    Jump();
+                }
+                //CameraManager.Instance.Velocity = myRigidBody.velocity;
             }
-            //CameraManager.Instance.Velocity = myRigidBody.velocity;
         }
         
 	}
