@@ -24,6 +24,10 @@ public class MagnetGloves : UsableItem {
        // Debug.Log("Hit is what: " + hit.collider.name);
         if (hit.collider.gameObject.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
+            if(hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezePosition)
+            {
+                hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = ~RigidbodyConstraints2D.FreezePositionX;
+            }
             if (toggled)
             {
                 ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>();
@@ -63,21 +67,20 @@ public class MagnetGloves : UsableItem {
                 }
             }
         }
-
+       StartCoroutine(toggleLater(hit,1f));
+      
     }
 
+    IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        //if (hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == ~RigidbodyConstraints2D.FreezePosition)
+            hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+        Debug.Log("I'm here");
+    }
     public override void Deactivate()
     {
         toggled = !toggled;
-        //if (toggled)
-        //{
-        //    toggled = false;
-
-        //}
-        //else
-        //{
-        //    toggled = true;
-        //}
     }
 
 }
