@@ -24,7 +24,7 @@ public class MagnetGloves : UsableItem {
        // Debug.Log("Hit is what: " + hit.collider.name);
         if (hit.collider.gameObject.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
-            if(hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezePosition)
+            if(hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezeAll)
             {
                 hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = ~RigidbodyConstraints2D.FreezePositionX;
             }
@@ -66,8 +66,9 @@ public class MagnetGloves : UsableItem {
                         ForceMode2D.Force);
                 }
             }
+            StartCoroutine(toggleLater(hit, 1f));
         }
-       StartCoroutine(toggleLater(hit,1f));
+      
       
     }
 
@@ -75,7 +76,7 @@ public class MagnetGloves : UsableItem {
     {
         yield return new WaitForSeconds(delayTime);
         //if (hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == ~RigidbodyConstraints2D.FreezePosition)
-            hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+            hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
         Debug.Log("I'm here");
     }
     public override void Deactivate()

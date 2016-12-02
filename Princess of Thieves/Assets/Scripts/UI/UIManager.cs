@@ -25,6 +25,8 @@ public class UIManager : MonoBehaviour
 	HPBar hpBar;
 	MPBar mpBar;
 
+    GameObject itemManager;
+
 	//public Image itemLeft, itemCenter, itemRight;
     Text areaNameBox;
 
