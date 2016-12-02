@@ -11,6 +11,7 @@ public class InventoryMenu : MonoBehaviour {
     Image[] childImages;
 
     bool leftItemDown = false;
+    bool rightItemDown = false;
     private void OnEnable()
     {
         if (controller == null)
@@ -21,6 +22,9 @@ public class InventoryMenu : MonoBehaviour {
         childImages = GetComponentsInChildren<Image>();
         UpdateUI();
         InvokeRepeating("HandleInput", waitTime, waitTime);
+
+        leftItemDown = false;
+        rightItemDown = false;
     }
 
     private void OnDisable()
@@ -30,12 +34,22 @@ public class InventoryMenu : MonoBehaviour {
 
     private void Update()
     {
-        if (controller.ActivateItem)
+        if (controller.ActivateLeftItem)
         {
             leftItemDown = true;
-        } else if (controller.DeactivateItem)
+            rightItemDown = false;
+        } else if (controller.DeactivateLeftItem)
         {
             leftItemDown = false;
+        }
+
+        if (controller.ActivateRightItem)
+        {
+            rightItemDown = true;
+            leftItemDown = false;
+        } else if (controller.DeactivateRightItem)
+        {
+            rightItemDown = false;
         }
     }
     private void HandleInput()
@@ -53,6 +67,10 @@ public class InventoryMenu : MonoBehaviour {
         {
             GameManager.Instance.Player.EquipItem(curSelected, true);
             leftItemDown = false;
+        } else if (rightItemDown)
+        {
+            GameManager.Instance.Player.EquipItem(curSelected, false);
+            rightItemDown = false;
         }
 
 
@@ -60,10 +78,16 @@ public class InventoryMenu : MonoBehaviour {
 
     public void UpdateUI()
     {
-        List<UsableItem> items = GameManager.Instance.Player.Inventory;
-        for(int i = 0; i < items.Count; i++)
+        if (GameManager.Instance.IsPaused)
         {
-            childImages[i + 1].sprite = items[i].uiSprite;
+            List<UsableItem> items = GameManager.Instance.Player.Inventory;
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                UsableItem curItem = items[i];
+                childImages[i + 1].sprite = curItem ? curItem.uiSprite : null;
+                
+            }
         }
     }
 }

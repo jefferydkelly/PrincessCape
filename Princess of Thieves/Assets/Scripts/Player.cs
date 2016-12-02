@@ -170,14 +170,23 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 			if (!Hidden)
 			{
 				//UIManager.Instance.LightLevel = GetLocalLightLevel();
-                if (controller.ActivateItem)
+                if (controller.ActivateLeftItem)
                 {
                     leftItem.Activate();
-                } else if (controller.DeactivateItem)
+                } else if (controller.DeactivateLeftItem)
                 {
                     leftItem.Deactivate();
                 }
-			}
+
+                if (controller.ActivateRightItem)
+                {
+                    rightItem.Activate();
+                }
+                else if (controller.DeactivateRightItem)
+                {
+                    rightItem.Deactivate();
+                }
+            }
 		}
         
 	}
@@ -706,6 +715,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             }
 
             inventory[itemNum] = oldItem;
+            
             UIManager.Instance.UpdateUI();
         }
     }
