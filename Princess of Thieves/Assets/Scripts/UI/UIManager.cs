@@ -30,6 +30,9 @@ public class UIManager : MonoBehaviour
 
 	bool revealing = false;
 	bool done = false;
+
+    ItemBox rightBox;
+    ItemBox leftBox;
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
 	 */
@@ -77,6 +80,9 @@ public class UIManager : MonoBehaviour
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
 
+            rightBox = new ItemBox("RightBox");
+            Sprite sp = Resources.Load<Sprite>("Sprites/AmuletIcon");
+            rightBox.ItemSprite = sp;
             //stealthMeter = new StealthMeter();
 		}
 	}
@@ -299,4 +305,42 @@ public struct ImageTextCombo
 			return txt.text;
 		}
 	}
+}
+
+public struct ItemBox
+{
+    GameObject background;
+    Image itemRenderer;
+
+    public ItemBox(string s)
+    {
+        background = GameObject.Find(s);
+        itemRenderer = background.GetComponentsInChildren<Image>()[1];
+    }
+
+    public Sprite ItemSprite
+    {
+        get
+        {
+            return itemRenderer.sprite;
+        }
+
+        set
+        {
+            itemRenderer.sprite = value;
+        }
+    }
+
+    public bool Enabled
+    {
+        get
+        {
+            return background.activeSelf;
+        }
+
+        set
+        {
+            background.SetActive(value);
+        }
+    }
 }
