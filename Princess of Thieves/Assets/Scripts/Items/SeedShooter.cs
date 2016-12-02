@@ -17,7 +17,7 @@ public class SeedShooter : UsableItem {
 
     public override void Deactivate()
     {
-        if (aiming && Input.GetKeyUp(KeyCode.F))
+        if (aiming)
         {
             aiming = false;
             Player p = GameManager.Instance.Player;
