@@ -79,6 +79,8 @@ public class GameManager {
 			else {
 				state &= ~GameState.Paused;
 			}
+
+            UIManager.Instance.Pause();
 		}
 	}
 

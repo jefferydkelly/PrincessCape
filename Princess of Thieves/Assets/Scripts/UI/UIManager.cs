@@ -32,6 +32,11 @@ public class UIManager : MonoBehaviour
 
 	bool revealing = false;
 	bool done = false;
+
+    ItemBox rightBox;
+    ItemBox leftBox;
+
+    GameObject inventoryMenu;
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
 	 */
@@ -79,6 +84,11 @@ public class UIManager : MonoBehaviour
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
 
+            leftBox = new ItemBox("LeftBox");
+            rightBox = new ItemBox("RightBox");
+
+            inventoryMenu = GameObject.Find("InventoryMenu");
+            inventoryMenu.SetActive(false);
             //stealthMeter = new StealthMeter();
 		}
 	}
@@ -157,6 +167,15 @@ public class UIManager : MonoBehaviour
 		Invoke("Proceed", time);
 	}
 
+    public void Pause()
+    {
+        GameManager gm = GameManager.Instance;
+        if (!gm.IsInCutscene)
+        {
+            //Set the inventory's visibility to the game's pause state
+            inventoryMenu.SetActive(gm.IsPaused);
+        }
+    }
 	/*
 	 * Shows the given string as a message in the upper box
 	 * 
@@ -247,6 +266,14 @@ public class UIManager : MonoBehaviour
 		ac.a = 1;
 		areaNameBox.color = ac;
 	}
+
+    public void UpdateUI()
+    {
+        Player p = GameManager.Instance.Player;
+        leftBox.ItemSprite = p.LeftItem;
+        rightBox.ItemSprite = p.RightItem;
+        inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
+    }
 }
 
 /*
@@ -301,4 +328,42 @@ public struct ImageTextCombo
 			return txt.text;
 		}
 	}
+}
+
+public struct ItemBox
+{
+    GameObject background;
+    Image itemRenderer;
+
+    public ItemBox(string s)
+    {
+        background = GameObject.Find(s);
+        itemRenderer = background.GetComponentsInChildren<Image>()[1];
+    }
+
+    public Sprite ItemSprite
+    {
+        get
+        {
+            return itemRenderer.sprite;
+        }
+
+        set
+        {
+            itemRenderer.sprite = value;
+        }
+    }
+
+    public bool Enabled
+    {
+        get
+        {
+            return background.activeSelf;
+        }
+
+        set
+        {
+            background.SetActive(value);
+        }
+    }
 }

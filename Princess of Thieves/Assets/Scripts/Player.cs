@@ -40,7 +40,10 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     //***-------------------------------------------***
     [SerializeField]
     GameObject startItemObject;
-    UsableItem curItem;
+    UsableItem leftItem;
+    UsableItem rightItem;
+    [SerializeField]
+    List<UsableItem> inventory;
     
     void Awake()
     {
@@ -59,7 +62,8 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		DontDestroyOnLoad(gameObject);
         GameObject item = Instantiate(startItemObject);
         item.transform.SetParent(transform);
-        curItem = item.GetComponent<UsableItem>();
+        leftItem = item.GetComponent<UsableItem>();
+        UIManager.Instance.UpdateUI();
 	}
 
     public void ResetBecauseINeed()
@@ -166,14 +170,23 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 			if (!Hidden)
 			{
 				//UIManager.Instance.LightLevel = GetLocalLightLevel();
-                if (controller.ActivateItem)
+                if (controller.ActivateLeftItem)
                 {
-                    curItem.Activate();
-                } else if (controller.DeactivateItem)
+                    leftItem.Activate();
+                } else if (controller.DeactivateLeftItem)
                 {
-                    curItem.Deactivate();
+                    leftItem.Deactivate();
                 }
-			}
+
+                if (controller.ActivateRightItem)
+                {
+                    rightItem.Activate();
+                }
+                else if (controller.DeactivateRightItem)
+                {
+                    rightItem.Deactivate();
+                }
+            }
 		}
         
 	}
@@ -529,13 +542,43 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		}
 	}
 
+    public List<UsableItem> Inventory
+    {
+        get
+        {
+            return inventory;
+        }
+    }
+
+    public Sprite LeftItem
+    {
+        get
+        {
+            return leftItem ? leftItem.uiSprite : null;
+        }
+    }
+
+    public Sprite RightItem
+    {
+        get
+        {
+            return rightItem ? rightItem.uiSprite : null;
+        }
+    }
+
+    /// <summary>
+    /// Returns the direction the Player is aiming
+    /// </summary>
     public Vector2 Aiming
     {
         get
         {
-            return new Vector2(controller.Horizontal, controller.Vertical).normalized;
+            return new Vector2(fwdX, controller.Vertical).normalized;
         }
     }
+    /// <summary>
+    /// Getter and setter for whether or not the Player is able to move
+    /// </summary>
     public bool IsFrozen
     {
         get
@@ -554,6 +597,9 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
         }
     }
 
+    /// <summary>
+    /// Getter and setter for if the player is using the Dash Boots
+    /// </summary>
     public bool IsDashing
     {
         get
@@ -570,6 +616,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             }
             else
             {
+                UsableItem curItem = leftItem is DashBoots ? leftItem : rightItem;
                 curItem.Deactivate();
                 state &= ~PlayerState.Dashing;
                 state &= ~PlayerState.Frozen;
@@ -651,6 +698,27 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
         return a ^ b;
     }
     #endregion flags
+
+    public void EquipItem(int itemNum, bool left)
+    {
+        if (itemNum < inventory.Count)
+        {
+            UsableItem oldItem;
+            if (left)
+            {
+                oldItem = leftItem;
+                leftItem = inventory[itemNum];
+            } else
+            {
+                oldItem = rightItem;
+                rightItem = inventory[itemNum];
+            }
+
+            inventory[itemNum] = oldItem;
+            
+            UIManager.Instance.UpdateUI();
+        }
+    }
 }
 
 
