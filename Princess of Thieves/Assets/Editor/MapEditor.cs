@@ -84,7 +84,8 @@ public class MapEditor : Editor {
 
 	void OnEnable()
 	{
-		map = target as LevelMap;
+        map = target as LevelMap;
+        brush = map.brush;
 		Tools.current = Tool.View;
         if (map.level == null)
         {
@@ -113,10 +114,11 @@ public class MapEditor : Editor {
 
 	void OnSceneGUI()
 	{
+        /*
         if (map.background == null)
         {
             UpdateCalculations();
-        }
+        }*/
 		if (brush != null)
 		{
 			UpdateHitPosition();
@@ -152,16 +154,27 @@ public class MapEditor : Editor {
 
 	void CreateBrush()
 	{
-		if (map.SelectedSprite != null)
-		{
-			GameObject go = new GameObject("Brush");
-			go.transform.SetParent(map.transform);
+        if (map.SelectedSprite != null)
+        {
+            if (map.brush == null)
+            {
+                GameObject go = new GameObject("Brush");
+                go.transform.SetParent(map.transform);
 
-			brush = go.AddComponent<TileBrush>();
-			brush.renderer2D = go.AddComponent<SpriteRenderer>();
-			brush.renderer2D.sortingOrder = 1000;
-			brush.size = map.SelectedSprite.textureRect.size / map.pixelsToUnits;
-			brush.UpdateBrush(map.SelectedSprite);
+                brush = go.AddComponent<TileBrush>();
+                brush.renderer2D = go.AddComponent<SpriteRenderer>();
+                brush.renderer2D.sortingOrder = 1000;
+                brush.size = map.SelectedSprite.textureRect.size / map.pixelsToUnits;
+                brush.UpdateBrush(map.SelectedSprite);
+                map.brush = brush;
+            } else
+            {
+                brush = map.brush;
+                brush.renderer2D.sortingOrder = 1000;
+                brush.size = map.SelectedSprite.textureRect.size / map.pixelsToUnits;
+                brush.UpdateBrush(map.SelectedSprite);
+                DontDestroyOnLoad(brush);
+            }
 		}
 
 	}
@@ -281,11 +294,13 @@ public class MapEditor : Editor {
 
         //map.Add(map.selected, startPos, spriteUnitDims, brush.transform.position);
         GameObject go = map.AddAndReplace(map.selected, startPos, spriteUnitDims, brush.transform.position);
+
         map.selected = PrefabUtility.FindPrefabRoot(go);
         if (AssetDatabase.GetAssetPath(go) == "")
         {
             DestroyImmediate(go);
         }
+        
 		/*
 		string id = brush.tileID.ToString();
 

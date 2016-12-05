@@ -13,6 +13,7 @@ public class LevelMap : MonoBehaviour {
 	public int pixelsToUnits = 64;
 	public GameObject level = null;
 	public GameObject selected;
+    public TileBrush brush;
 	// Use this for initialization
 	void Start () {
 		
@@ -130,7 +131,7 @@ public class LevelMap : MonoBehaviour {
 		{
 			return;
 		}
-		GameObject inst = Instantiate(go);
+        GameObject inst = Instantiate(go);
 		inst.transform.SetParent(level.transform);
 		
 		pos.z = (float)ml;
@@ -222,7 +223,7 @@ public class LevelMap : MonoBehaviour {
         {
             return collisions[0];
         }
-
+       
         return go;
     }
 
@@ -244,7 +245,6 @@ public class LevelMap : MonoBehaviour {
 		{
 			for (int j = (int)startPos.y; j < endPos.y; j++)
 			{
-               
 				GameObject go = arr[i, j];
 				if (go != null)
 				{
