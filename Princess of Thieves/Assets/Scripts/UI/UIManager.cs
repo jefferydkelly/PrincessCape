@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
 
             leftBox = new ItemBox("LeftBox");
             rightBox = new ItemBox("RightBox");
-
+          
             inventoryMenu = GameObject.Find("InventoryMenu");
             inventoryMenu.SetActive(false);
             //stealthMeter = new StealthMeter();
@@ -272,6 +272,16 @@ public class UIManager : MonoBehaviour
         rightBox.ItemSprite = p.RightItem;
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
     }
+
+    public void UpdateUI(Controller c)
+    {
+        Player p = GameManager.Instance.Player;
+        leftBox.ItemSprite = p.LeftItem;
+        leftBox.Key = c.LeftItemKey.ToUpper();
+        rightBox.ItemSprite = p.RightItem;
+        rightBox.Key = c.RightItemKey.ToUpper();
+        inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
+    }
 }
 
 /*
@@ -332,11 +342,13 @@ public struct ItemBox
 {
     GameObject background;
     Image itemRenderer;
+    Text keyText;
 
     public ItemBox(string s)
     {
         background = GameObject.Find(s);
         itemRenderer = background.GetComponentsInChildren<Image>()[1];
+        keyText = background.GetComponentInChildren<Text>();
     }
 
     public Sprite ItemSprite
@@ -362,6 +374,19 @@ public struct ItemBox
         set
         {
             background.SetActive(value);
+        }
+    }
+
+    public string Key
+    {
+        get
+        {
+            return keyText.text;
+        }
+
+        set
+        {
+            keyText.text = value;
         }
     }
 }

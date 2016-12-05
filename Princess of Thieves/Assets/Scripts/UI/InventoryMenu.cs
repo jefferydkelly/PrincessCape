@@ -34,45 +34,53 @@ public class InventoryMenu : MonoBehaviour {
 
     private void Update()
     {
-        if (controller.ActivateLeftItem)
+        if (GameManager.Instance.IsPaused)
         {
-            leftItemDown = true;
-            rightItemDown = false;
-        } else if (controller.DeactivateLeftItem)
-        {
-            leftItemDown = false;
-        }
+            if (controller.ActivateLeftItem)
+            {
+                leftItemDown = true;
+                rightItemDown = false;
+            }
+            else if (controller.DeactivateLeftItem)
+            {
+                leftItemDown = false;
+            }
 
-        if (controller.ActivateRightItem)
-        {
-            rightItemDown = true;
-            leftItemDown = false;
-        } else if (controller.DeactivateRightItem)
-        {
-            rightItemDown = false;
+            if (controller.ActivateRightItem)
+            {
+                rightItemDown = true;
+                leftItemDown = false;
+            }
+            else if (controller.DeactivateRightItem)
+            {
+                rightItemDown = false;
+            }
         }
     }
     private void HandleInput()
     {
-        Image curImg = GetComponentsInChildren<Image>()[curSelected + 1];
-        curImg.color = Color.white;
-        curSelected += controller.Horizontal + controller.Vertical * 2;
-        curSelected += 4;
-        curSelected %= 4;
-
-        curImg = childImages[curSelected + 1];
-        curImg.color = Color.blue;
-
-        if (leftItemDown)
+        if (GameManager.Instance.IsPaused)
         {
-            GameManager.Instance.Player.EquipItem(curSelected, true);
-            leftItemDown = false;
-        } else if (rightItemDown)
-        {
-            GameManager.Instance.Player.EquipItem(curSelected, false);
-            rightItemDown = false;
+            Image curImg = GetComponentsInChildren<Image>()[curSelected + 1];
+            curImg.color = Color.white;
+            curSelected += controller.Horizontal + controller.Vertical * 2;
+            curSelected += 4;
+            curSelected %= 4;
+
+            curImg = childImages[curSelected + 1];
+            curImg.color = Color.blue;
+
+            if (leftItemDown)
+            {
+                GameManager.Instance.Player.EquipItem(curSelected, true);
+                leftItemDown = false;
+            }
+            else if (rightItemDown)
+            {
+                GameManager.Instance.Player.EquipItem(curSelected, false);
+                rightItemDown = false;
+            }
         }
-
 
     }
 

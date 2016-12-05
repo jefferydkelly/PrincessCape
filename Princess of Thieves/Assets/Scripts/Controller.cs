@@ -234,6 +234,21 @@ public class Controller
         }
     }
 
+    public string LeftItemKey
+    {
+        get
+        {
+            return leftItemKey;
+        }
+    }
+
+    public string RightItemKey
+    {
+        get
+        {
+            return rightItemKey;
+        }
+    }
 	public bool Pause
 	{
 		get
