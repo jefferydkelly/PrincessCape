@@ -19,12 +19,12 @@ public class MagnetGloves : UsableItem {
     {
         //Shoot a ray fowards
         RaycastHit2D hit;
-        hit = (Physics2D.Raycast(GameManager.Instance.Player.gameObject.transform.position, GameManager.Instance.Player.Forward,
+        hit = (Physics2D.Raycast(GameManager.Instance.Player.gameObject.transform.position, GameManager.Instance.Player.Aiming,
             100f, ~1<<LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("SpellStatue")));
        // Debug.Log("Hit is what: " + hit.collider.name);
         if (hit.collider.gameObject.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
-            if(hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezePosition)
+            if(hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezeAll)
             {
                 hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = ~RigidbodyConstraints2D.FreezePositionX;
             }
@@ -66,8 +66,9 @@ public class MagnetGloves : UsableItem {
                         ForceMode2D.Force);
                 }
             }
+            StartCoroutine(toggleLater(hit, 1f));
         }
-       StartCoroutine(toggleLater(hit,1f));
+      
       
     }
 
@@ -75,7 +76,7 @@ public class MagnetGloves : UsableItem {
     {
         yield return new WaitForSeconds(delayTime);
         //if (hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == ~RigidbodyConstraints2D.FreezePosition)
-            hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+            hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
         Debug.Log("I'm here");
     }
     public override void Deactivate()
