@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Collider2D))]
-public class PlatformObject: MonoBehaviour {
+public class PlatformObject: JDMappableObject {
 	public bool passThrough = false;
 
     public bool atFinalLoc = false;
