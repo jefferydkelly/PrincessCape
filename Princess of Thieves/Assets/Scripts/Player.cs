@@ -43,8 +43,9 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
     UsableItem leftItem;
     UsableItem rightItem;
     [SerializeField]
+    List<GameObject> startInventory;
     List<UsableItem> inventory;
-    
+
     void Awake()
     {
         startPos = transform;
@@ -63,7 +64,12 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
         GameObject item = Instantiate(startItemObject);
         item.transform.SetParent(transform);
         leftItem = item.GetComponent<UsableItem>();
-        UIManager.Instance.UpdateUI();
+        UIManager.Instance.UpdateUI(controller);
+        inventory = new List<UsableItem>();
+        foreach (GameObject go in startInventory)
+        {
+            AddItem(go);
+        }
 	}
 
     public void ResetBecauseINeed()
@@ -169,22 +175,29 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		{
 			if (!Hidden)
 			{
-				//UIManager.Instance.LightLevel = GetLocalLightLevel();
-                if (controller.ActivateLeftItem)
+                //UIManager.Instance.LightLevel = GetLocalLightLevel();
+                if (leftItem != null)
                 {
-                    leftItem.Activate();
-                } else if (controller.DeactivateLeftItem)
-                {
-                    leftItem.Deactivate();
+                    if (controller.ActivateLeftItem)
+                    {
+                        leftItem.Activate();
+                    }
+                    else if (controller.DeactivateLeftItem)
+                    {
+                        leftItem.Deactivate();
+                    }
                 }
 
-                if (controller.ActivateRightItem)
+                if (rightItem != null)
                 {
-                    rightItem.Activate();
-                }
-                else if (controller.DeactivateRightItem)
-                {
-                    rightItem.Deactivate();
+                    if (controller.ActivateRightItem)
+                    {
+                        rightItem.Activate();
+                    }
+                    else if (controller.DeactivateRightItem)
+                    {
+                        rightItem.Deactivate();
+                    }
                 }
             }
 		}
@@ -563,6 +576,16 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
         get
         {
             return rightItem ? rightItem.uiSprite : null;
+        }
+    }
+
+    public void AddItem(GameObject go)
+    {
+        if (go.GetComponent<UsableItem>() != null)
+        {
+            GameObject g = Instantiate(go);
+            g.transform.SetParent(transform);
+            inventory.Add(g.GetComponent<UsableItem>());
         }
     }
 
