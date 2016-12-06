@@ -5,15 +5,10 @@ using System;
 public class MagnetGloves : UsableItem {
 
     bool toggled = false;
+    public Sprite pushSprite;
+    public Sprite pullSprite;
     // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 
     public override void Activate()
     {
@@ -81,7 +76,22 @@ public class MagnetGloves : UsableItem {
     }
     public override void Deactivate()
     {
-        toggled = !toggled;
+        Toggled = !Toggled;
+    }
+
+    private bool Toggled
+    {
+        get
+        {
+            return toggled;
+        }
+
+        set
+        {
+            toggled = value;
+            uiSprite = toggled ? pullSprite : pushSprite;
+            UIManager.Instance.UpdateUI();
+        }
     }
 
 }
