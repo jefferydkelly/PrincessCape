@@ -7,8 +7,9 @@ public class PlatformObject: JDMappableObject {
 
     public bool atFinalLoc = false;
     public bool movingPlatform = false;
-    public bool MoveLeft = false;
-    public bool MoveRight = true;
+    public bool moveLeft = false;
+    public bool moveRight = true;
+    public bool moveUp = false;
     public float moveDist = 0f;
     Vector3 startingloc, endingLoc;
 
@@ -18,9 +19,13 @@ public class PlatformObject: JDMappableObject {
 	{
 		myCollider = GetComponent<Collider2D>();
         startingloc = transform.position;
-        if (MoveLeft)
+        if (moveLeft)
         {
             endingLoc = new Vector3(transform.position.x - moveDist, transform.position.y, 0);
+        }
+        else if (moveUp)
+        {
+            endingLoc = new Vector3(transform.position.x, transform.position.y + moveDist, 0);
         }
         else
         {

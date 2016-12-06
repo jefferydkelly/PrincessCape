@@ -54,6 +54,7 @@ public class PressureSwitch : ActivatorObject {
 		{
 			if (value > 0 && numberOfThingsWeighingThisDown == 0)
 			{
+                Debug.Log("Triggered");
 				Activate();
                 triggered = true;
                 GetComponent<SpriteRenderer>().sprite = switchSprites[1];
