@@ -177,6 +177,14 @@ public class GameManager {
 	{
 		loadedAreas.Remove(scene.name);
 	}
+
+    public void Reset()
+    {
+        foreach(ResettableObject ro in GameObject.FindObjectsOfType<ResettableObject>())
+        {
+            ro.Reset();
+        }
+    }
 }
 
 [System.Flags]

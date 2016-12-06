@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public class Player : JDMappableObject, DamageableObject, CasterObject
+public class Player : ResettableObject, DamageableObject, CasterObject
 {
     private Transform startPos;
 	private Controller controller;
@@ -229,6 +229,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 		{
 			curHP -= ds.damage;
 		}
+
 		return curHP <= 0;
 	}
 
@@ -280,12 +281,7 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
 				TakeDamage (new DamageSource (DamageType.Physical, 10));
 			}
 		} else if (col.collider.CompareTag ("Enemy")) {
-			TakeDamage (new DamageSource(DamageType.Physical, 10));
-			Vector3 dif = (transform.position - col.transform.position);
-			dif.z = 0;
-			IsFrozen = true;
-			myRigidBody.AddForce (dif * 10, ForceMode2D.Impulse);
-			StartCoroutine (gameObject.RunAfter (Unfreeze, 0.5f));
+            GameManager.Instance.Reset();
 		}
 	}
 
@@ -741,6 +737,13 @@ public class Player : JDMappableObject, DamageableObject, CasterObject
             
             UIManager.Instance.UpdateUI();
         }
+    }
+
+    public override void Reset()
+    {
+        transform.position = Checkpoint.ActiveCheckpointPosition;
+        curHP = maxHP;
+        curMP = maxMP;
     }
 }
 
