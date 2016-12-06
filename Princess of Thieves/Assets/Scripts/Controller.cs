@@ -130,6 +130,13 @@ public class Controller
         }
     }
 
+    public bool LeftItemDown
+    {
+        get
+        {
+            return Input.GetKey(leftItemKey);
+        }
+    }
     public bool DeactivateLeftItem
     {
         get
@@ -143,6 +150,14 @@ public class Controller
         get
         {
             return Input.GetKeyDown(rightItemKey);
+        }
+    }
+
+    public bool RightItemDown
+    {
+        get
+        {
+            return Input.GetKey(rightItemKey);
         }
     }
 

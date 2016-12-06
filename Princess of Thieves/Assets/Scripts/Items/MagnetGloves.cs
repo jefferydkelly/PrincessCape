@@ -7,76 +7,92 @@ public class MagnetGloves : UsableItem {
     bool toggled = false;
     public Sprite pushSprite;
     public Sprite pullSprite;
+    public float force = 100;
     // Use this for initialization
+    ObjectWeight target;
+    Player player;
+    ObjectWeight playerWeight;
+
+    private void Start()
+    {
+        player = GameManager.Instance.Player;
+        playerWeight = player.GetComponent<ObjectWeight>();
+    }
 
 
     public override void Activate()
     {
         //Shoot a ray fowards
         RaycastHit2D hit;
-        hit = (Physics2D.Raycast(GameManager.Instance.Player.gameObject.transform.position, GameManager.Instance.Player.Aiming,
-            100f, ~1<<LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("SpellStatue") ));
-        Debug.Log("Hit is what: " + hit.collider.name);
-        if (hit.collider.gameObject.GetComponent<ObjectWeight>())
+        hit = (Physics2D.Raycast(player.transform.position, player.Aiming,
+            100f, 1<<LayerMask.NameToLayer("Metal") ));
+
+        if (hit && hit.collider.GetComponent<ObjectWeight>())
         {//first hit object has an ObjectWeight
-            if(hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezeAll)
-            {
-                hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = ~RigidbodyConstraints2D.FreezePositionX;
-            }
+
+            target = hit.collider.GetComponent<ObjectWeight>();
+            player.IsPushing = true;
+        }
+            
+      
+    }
+
+    public void Use()
+    {
+        Vector3 distance = player.transform.position - target.transform.position;
+        if (distance.sqrMagnitude <= 10000)
+        {
             if (toggled)
             {
-                ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>();
-                if (thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
+                
+                if (target.objectWeight > playerWeight.objectWeight)
                 {
                     //Heavier object, so the player gets moved
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (2500),
+
+                    //float dist = Vector3.Distance(thatWeight.transform.position, player.transform.position);
+                    player.GetComponent<Rigidbody2D>().AddForce(
+                        distance.normalized * -force,
                         ForceMode2D.Force);
                 }
                 else
                 {
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                    target.GetComponent<Rigidbody2D>().AddForce(
+                        distance.normalized * force,
                         ForceMode2D.Force);
                 }
             }
             else
             {
-                ObjectWeight thatWeight = hit.collider.gameObject.GetComponent<ObjectWeight>();
-                if (thatWeight.objectWeight > GameManager.Instance.Player.gameObject.GetComponent<ObjectWeight>().objectWeight)
+                if (target.objectWeight > playerWeight.objectWeight)
                 {
                     //Heavier object, so the player gets moved
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * -GameManager.Instance.Player.Forward.x, 0).normalized * (2500),
+
+                    player.GetComponent<Rigidbody2D>().AddForce(
+                        distance.normalized * force,
                         ForceMode2D.Force);
                 }
                 else
                 {
-                    float dist = Vector3.Distance(thatWeight.gameObject.transform.position, GameManager.Instance.Player.gameObject.transform.position);
-                    thatWeight.gameObject.GetComponent<Rigidbody2D>().AddForce(
-                        new Vector2(dist * GameManager.Instance.Player.Forward.x, 0).normalized * (1000),
+                    target.GetComponent<Rigidbody2D>().AddForce(
+                        distance.normalized * -force,
                         ForceMode2D.Force);
                 }
             }
-            StartCoroutine(toggleLater(hit, 1f));
         }
-      
-      
     }
 
-    IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
+IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         //if (hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == ~RigidbodyConstraints2D.FreezePosition)
-            hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            hit.collider.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
         Debug.Log("I'm here");
     }
     public override void Deactivate()
     {
         Toggled = !Toggled;
+        player.IsPushing = false;
+        target = null;
     }
 
     private bool Toggled
