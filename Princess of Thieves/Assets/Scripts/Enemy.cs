@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-public class Enemy : MonoBehaviour {
+public class Enemy : ResettableObject {
     Rigidbody2D myRigidBody;
     SpriteRenderer myRenderer;
     int fwdX = 1;
@@ -40,13 +40,13 @@ public class Enemy : MonoBehaviour {
     [SerializeField]
     public GameObject chargeProjectile;
    	IEnumerator chargingAnimation;
-
+ 
     #endregion cooldownTimes
     // Use this for initialization
     void Start () {
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
-        
+        startPosition = transform.position;
         playerObj = GameManager.Instance.Player.GameObject;
     }
 
@@ -312,5 +312,18 @@ public class Enemy : MonoBehaviour {
         {
             return transform.position;
         }
+    }
+
+    public override void Reset()
+    {
+        transform.position = startPosition;
+        isFrozen = false;
+        curState = EnemyState.Stationary;
+        lastTimeSeenPlayer = 0f;
+        playerChaseDest = Vector3.zero;
+        atChaseDest = true;
+        patrolDest = Vector3.zero;
+        patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
+        atPatrolDest = true;
     }
 }

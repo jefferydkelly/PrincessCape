@@ -6,13 +6,11 @@ public class GuardController : EnemyController, AlertableObject {
 	public float patrolDistance = 3.0f;
 	private Vector3 fwd = new Vector3(1, 0, 0);
 	private Rigidbody2D myRigidBody;
-	private VisionCone myCone;
 	void Start()
 	{
 		state = EnemyState.Patrol;
 		startPosition = transform.position;
 		myRigidBody = GetComponent<Rigidbody2D>();
-		myCone = GetComponentInChildren<VisionCone>();
 	}
 
 	void Update()
@@ -40,8 +38,6 @@ public class GuardController : EnemyController, AlertableObject {
 		protected set
 		{
 			fwd = value;
-			myCone.transform.position = transform.position + new Vector3(gameObject.HalfWidth() + myCone.gameObject.HalfWidth(), 0) * fwd.x;
-			myCone.Rotation = 90 - (90 * fwd.x);
 		}
 	}
 
