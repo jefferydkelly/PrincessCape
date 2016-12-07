@@ -46,6 +46,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     List<GameObject> startInventory;
     List<UsableItem> inventory;
 
+    InteractiveObject highlighted;
     void Awake()
     {
         startPos = transform;
@@ -117,21 +118,34 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     }
                     else
                     {
-                        if (controller.Interact)
+                        
+                        RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+
+                        if (hit.collider != null)
                         {
-                            RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("SpellStatue")));
+                            // Debug.Log("Found" + hit.collider.gameObject.name);
+                            InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
 
-                            if (hit.collider != null)
+                            if (controller.Interact)
                             {
-                                // Debug.Log("Found" + hit.collider.gameObject.name);
-                                InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
-
-                                if (io != null)
+                                io.Interact();
+                            } else if (io != highlighted)
+                            {
+                                if (highlighted != null)
                                 {
-                                    io.Interact();
+                                    highlighted.Dehighlight();
                                 }
+
+                                highlighted = io;
+                                highlighted.Highlight();
                             }
+                            
+                        } else if (highlighted != null)
+                        {
+                            highlighted.Dehighlight();
+                            highlighted = null;
                         }
+                        
                     }
 
                     if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
@@ -604,7 +618,21 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             GameObject g = Instantiate(go);
             g.transform.SetParent(transform);
-            inventory.Add(g.GetComponent<UsableItem>());
+            UsableItem ui = g.GetComponent<UsableItem>();
+            if (leftItem == null)
+            {
+                leftItem = ui;
+                UIManager.Instance.UpdateUI();
+            } else if (rightItem == null)
+            {
+                rightItem = ui;
+                UIManager.Instance.UpdateUI();
+            } else
+            {
+                inventory.Add(ui);
+            }
+            UIManager.Instance.ShowMessage(ui.description, 5.0f, true);
+            
         }
     }
 
@@ -793,6 +821,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     public override void Reset()
     {
+        myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
         curHP = maxHP;
         curMP = maxMP;

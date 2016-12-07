@@ -13,4 +13,14 @@ public class CoverController : JDMappableObject, InteractiveObject {
 		player.transform.position = transform.position - new Vector3(0, gameObject.HalfHeight() - player.HalfHeight, 0);
 
 	}
+
+    public void Highlight()
+    {
+        
+    }
+
+    public void Dehighlight()
+    {
+
+    }
 }

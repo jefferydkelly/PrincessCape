@@ -58,7 +58,7 @@ public class Controller
             upKey = "up";
             downKey = "down";
             jumpKey = "space";
-            interactKey = "f";
+            interactKey = "z";
             rightItemKey = "c";
             leftItemKey = "x";
             sneakKey = "left shift";
