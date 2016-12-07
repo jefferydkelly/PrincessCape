@@ -159,6 +159,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             else if (IsDashing && IsOnGround && controller.Jump)
             {
                 Jump();
+            } else if (IsPushing)
+            {
+                UsableItem magGloves = leftItem is MagnetGloves ? leftItem : rightItem;
+                if (leftItem == magGloves ? controller.LeftItemDown : controller.RightItemDown)
+                {
+                    (magGloves as MagnetGloves).Use();
+                }
             }
         }
         
@@ -278,11 +285,21 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (col.collider.CompareTag ("Platform")) {
 
 			if (lastYVel < -10) {
-				TakeDamage (new DamageSource (DamageType.Physical, 10));
-			}
+                GameManager.Instance.Reset();
+			} else if (lastYVel < 0 && IsPushing)
+            {
+                myRigidBody.velocity = Vector2.zero;
+            }
 		} else if (col.collider.CompareTag ("Enemy")) {
             GameManager.Instance.Reset();
-		}
+		} else if (col.collider.OnLayer("Metal") && IsPushing)
+        {
+            if (lastYVel < 0)
+            {
+                (leftItem is MagnetGloves ? leftItem : rightItem).Deactivate();
+                myRigidBody.velocity = Vector2.zero;
+            }
+        }
 	}
 
 	void OnTriggerEnter2D(Collider2D col)
@@ -592,7 +609,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     {
         get
         {
-            return new Vector2(fwdX, controller.Vertical).normalized;
+            int vert = controller.Vertical;
+
+            if (vert == 0)
+            {
+                return new Vector2(fwdX, 0);
+            }
+         
+            return new Vector2(controller.Horizontal, vert);
         }
     }
     /// <summary>
@@ -638,6 +662,28 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 UsableItem curItem = leftItem is DashBoots ? leftItem : rightItem;
                 curItem.Deactivate();
                 state &= ~PlayerState.Dashing;
+                state &= ~PlayerState.Frozen;
+            }
+        }
+    }
+
+    public bool IsPushing
+    {
+        get
+        {
+            return (state & PlayerState.Pushing) > 0;
+        }
+
+        set
+        {
+            if (value && !IsPushing && !IsFrozen)
+            {
+                state |= PlayerState.Pushing;
+                state |= PlayerState.Frozen;
+            }
+            else
+            {
+                state &= ~PlayerState.Pushing;
                 state &= ~PlayerState.Frozen;
             }
         }
@@ -754,7 +800,8 @@ public enum PlayerState
 	Normal = 0,
 	InCover = 1,
 	Dashing = 2,
-	Frozen = 4
+	Frozen = 4,
+    Pushing = 8
 }
 
 [System.Flags]
