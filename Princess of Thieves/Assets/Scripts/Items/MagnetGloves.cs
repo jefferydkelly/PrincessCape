@@ -31,6 +31,7 @@ public class MagnetGloves : UsableItem {
         {//first hit object has an ObjectWeight
 
             target = hit.collider.gameObject;
+            target.GetComponent<SpriteRenderer>().color = Color.blue;
             player.IsPushing = true;
         }
             
@@ -99,6 +100,7 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
         {
             Toggled = !Toggled;
             player.IsPushing = false;
+            target.GetComponent<SpriteRenderer>().color = Color.white;
             target = null;
         }
     }
