@@ -196,13 +196,21 @@ public class UIManager : MonoBehaviour
 	 * msg - The message to be displayed
 	 * time - The amount of time the message will be displayed
 	 */
-	public void ShowMessage(string msg, float time)
+	public void ShowMessage(string msg, float time, bool isDialog = false)
 	{
         hpBar.enabled = false;
         mpBar.enabled = false;
         //stealthMeter.Enabled = false;
-        messageBox.Enabled = true;
-		messageBox.Text = msg;
+        if (isDialog)
+        {
+            dialogBox.Enabled = true;
+            dialogBox.Text = msg;
+        }
+        else
+        {
+            messageBox.Enabled = true;
+            messageBox.Text = msg;
+        }
 		Invoke("HideMessage", time);
 	}
 
@@ -213,6 +221,7 @@ public class UIManager : MonoBehaviour
         mpBar.enabled = true;
         //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
+        dialogBox.Enabled = false;
 	}
 
 	public bool InCutscene

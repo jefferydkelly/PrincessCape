@@ -625,6 +625,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 inventory.Add(ui);
             }
+            UIManager.Instance.ShowMessage(ui.description, 5.0f, true);
             
         }
     }
