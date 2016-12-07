@@ -11,7 +11,7 @@ public class BlinkAmulet : UsableItem {
         temp.AddComponent<Rigidbody2D>();
         temp.AddComponent<BoxCollider2D>();
         temp.GetComponent<BoxCollider2D>().isTrigger = true;
-        Debug.Log(GameManager.Instance.Player.Forward);
+       // Debug.Log(GameManager.Instance.Player.Forward);
         temp.transform.position = new Vector2(transform.position.x + 5 * GameManager.Instance.Player.Forward.x, transform.position.y+0.5f);
         Collider2D[] cols = Physics2D.OverlapCircleAll(temp.transform.position, 1f);
         foreach (Collider2D col in cols)
@@ -36,10 +36,11 @@ public class BlinkAmulet : UsableItem {
     // Use this for initialization
     void Start () {
 	
-	}
+	}   
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        transform.position = GameManager.Instance.Player.transform.position;
+
+    }
 }

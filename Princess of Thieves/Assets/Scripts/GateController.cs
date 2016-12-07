@@ -8,6 +8,8 @@ public class GateController : JDMappableObject, ActivateableObject {
 	protected Vector3 startPosition;
 	protected Vector3 endPosition;
     public bool startOpen = false;
+    SpriteRenderer myRenderer;
+    BoxCollider2D myCollider;
 
     [SerializeField]
     Sprite[] sprites;
@@ -15,6 +17,8 @@ public class GateController : JDMappableObject, ActivateableObject {
 	void Start () {
 		
 		startPosition = transform.position;
+        myRenderer = GetComponent<SpriteRenderer>();
+        myCollider = GetComponent<BoxCollider2D>();
 		//endPosition = startPosition + new Vector3(0, GetComponent<SpriteRenderer>().bounds.extents.y * 2);
         if (startOpen)
         {
@@ -30,7 +34,8 @@ public class GateController : JDMappableObject, ActivateableObject {
 		{
 			StopAllCoroutines();
 			isActive = true;
-			StartCoroutine(Open());
+            OnOpen();
+			//StartCoroutine(Open());
 		}
 	}
 
@@ -47,14 +52,14 @@ public class GateController : JDMappableObject, ActivateableObject {
 		//	yield return null;
 		//}
 		//transform.position = endPosition;
-        OnOpen();
+        //OnOpen();
 		yield return null;
 	}
 
     protected virtual void OnOpen()
     {
-        GetComponent<SpriteRenderer>().sprite = sprites[1];
-        Destroy(GetComponent<BoxCollider2D>());
+        myRenderer.sprite = sprites[1];
+        myCollider.isTrigger = true;
     }
 
 	public void Deactivate()
@@ -63,7 +68,8 @@ public class GateController : JDMappableObject, ActivateableObject {
 		{
 			isActive = false;
 			StopAllCoroutines();
-			StartCoroutine(Close());
+            //StartCoroutine(Close());
+            OnClose();
 		}
 	}
 
@@ -79,14 +85,14 @@ public class GateController : JDMappableObject, ActivateableObject {
 		//	yield return null;
 		//}
 		//transform.position = startPosition;
-        OnClose();
+       
 		yield return null;
 	}
 
     protected virtual void OnClose()
     {
-        GetComponent<SpriteRenderer>().sprite = sprites[0];
-        gameObject.AddComponent<BoxCollider2D>();
+        myRenderer.sprite = sprites[0];
+        myCollider.isTrigger = false;
     }
 
 	public bool IsActive
