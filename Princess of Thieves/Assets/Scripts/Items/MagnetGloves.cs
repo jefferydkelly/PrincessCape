@@ -42,6 +42,7 @@ public class MagnetGloves : UsableItem {
         Vector3 distance = player.transform.position - target.transform.position;
         if (distance.sqrMagnitude <= 10000)
         {
+            Debug.Log("Player Weight: " + playerWeight.objectWeight + " object weight " + target.objectWeight);
             if (toggled)
             {
                 
@@ -56,6 +57,7 @@ public class MagnetGloves : UsableItem {
                 }
                 else
                 {
+                    Debug.Log("lessed");
                     target.GetComponent<Rigidbody2D>().AddForce(
                         distance.normalized * force,
                         ForceMode2D.Force);
@@ -73,6 +75,7 @@ public class MagnetGloves : UsableItem {
                 }
                 else
                 {
+                    Debug.Log("lessed");
                     target.GetComponent<Rigidbody2D>().AddForce(
                         distance.normalized * -force,
                         ForceMode2D.Force);

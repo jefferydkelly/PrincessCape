@@ -348,16 +348,22 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		get
 		{
+            LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
+            LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
+            int finalMask = mask | mask2;
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-            if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f,
+               finalMask))
             { //Straight down
                 return true;
             }
-            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f,
+                finalMask))
             { //backwards
                 return true;
             }
-            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f,
+                finalMask))
             {//forwards
                 return true;
             }
