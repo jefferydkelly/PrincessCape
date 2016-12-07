@@ -9,7 +9,7 @@ public class MagnetGloves : UsableItem {
     public Sprite pullSprite;
     public float force = 100;
     // Use this for initialization
-    ObjectWeight target;
+    GameObject target;
     Player player;
     ObjectWeight playerWeight;
 
@@ -27,10 +27,10 @@ public class MagnetGloves : UsableItem {
         hit = (Physics2D.Raycast(player.transform.position, player.Aiming,
             100f, 1<<LayerMask.NameToLayer("Metal") ));
 
-        if (hit && hit.collider.GetComponent<ObjectWeight>())
+        if (hit)
         {//first hit object has an ObjectWeight
 
-            target = hit.collider.GetComponent<ObjectWeight>();
+            target = hit.collider.gameObject;
             player.IsPushing = true;
         }
             
@@ -39,43 +39,48 @@ public class MagnetGloves : UsableItem {
 
     public void Use()
     {
-        Vector3 distance = player.transform.position - target.transform.position;
-        if (distance.sqrMagnitude <= 10000)
+        if (target != null)
         {
-            if (toggled)
+            Vector3 distance = player.transform.position - target.transform.position;
+            Rigidbody2D playerBody = player.GetComponent<Rigidbody2D>();
+            Rigidbody2D targetBody = target.GetComponent<Rigidbody2D>();
+            if (distance.sqrMagnitude <= 10000)
             {
-                
-                if (target.objectWeight > playerWeight.objectWeight)
+                if (toggled)
                 {
-                    //Heavier object, so the player gets moved
 
-                    //float dist = Vector3.Distance(thatWeight.transform.position, player.transform.position);
-                    player.GetComponent<Rigidbody2D>().AddForce(
-                        distance.normalized * -force,
-                        ForceMode2D.Force);
+                    if (targetBody == null || targetBody.mass > playerBody.mass)
+                    {
+                        //Heavier object, so the player gets moved
+
+                        //float dist = Vector3.Distance(thatWeight.transform.position, player.transform.position);
+                        player.GetComponent<Rigidbody2D>().AddForce(
+                            distance.normalized * -force,
+                            ForceMode2D.Force);
+                    }
+                    else
+                    {
+                        target.GetComponent<Rigidbody2D>().AddForce(
+                            distance.normalized * force,
+                            ForceMode2D.Force);
+                    }
                 }
                 else
                 {
-                    target.GetComponent<Rigidbody2D>().AddForce(
-                        distance.normalized * force,
-                        ForceMode2D.Force);
-                }
-            }
-            else
-            {
-                if (target.objectWeight > playerWeight.objectWeight)
-                {
-                    //Heavier object, so the player gets moved
+                    if (targetBody == null || targetBody.mass > playerBody.mass)
+                    {
+                        //Heavier object, so the player gets moved
 
-                    player.GetComponent<Rigidbody2D>().AddForce(
-                        distance.normalized * force,
-                        ForceMode2D.Force);
-                }
-                else
-                {
-                    target.GetComponent<Rigidbody2D>().AddForce(
-                        distance.normalized * -force,
-                        ForceMode2D.Force);
+                        player.GetComponent<Rigidbody2D>().AddForce(
+                            distance.normalized * force,
+                            ForceMode2D.Force);
+                    }
+                    else
+                    {
+                        target.GetComponent<Rigidbody2D>().AddForce(
+                            distance.normalized * -force,
+                            ForceMode2D.Force);
+                    }
                 }
             }
         }
@@ -90,9 +95,12 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
     }
     public override void Deactivate()
     {
-        Toggled = !Toggled;
-        player.IsPushing = false;
-        target = null;
+        if (player.IsPushing)
+        {
+            Toggled = !Toggled;
+            player.IsPushing = false;
+            target = null;
+        }
     }
 
     private bool Toggled
