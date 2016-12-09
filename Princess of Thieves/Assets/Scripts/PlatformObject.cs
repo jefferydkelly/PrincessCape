@@ -1,26 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(Collider2D))]
-public class PlatformObject: JDMappableObject {
+public class PlatformObject: JDMappableObject, ActivateableObject{
 	public bool passThrough = false;
 
+    public bool active = true;
     public bool atFinalLoc = false;
     public bool movingPlatform = false;
-    public bool MoveLeft = false;
-    public bool MoveRight = true;
+    public bool moveLeft = false;
+    public bool moveRight = true;
+    public bool moveUp = false;
     public float moveDist = 0f;
     Vector3 startingloc, endingLoc;
 
     Collider2D myCollider = null;
 
-	void Awake()
+    public bool IsActive
+    {
+        get
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    void Awake()
 	{
 		myCollider = GetComponent<Collider2D>();
         startingloc = transform.position;
-        if (MoveLeft)
+        if (moveLeft)
         {
             endingLoc = new Vector3(transform.position.x - moveDist, transform.position.y, 0);
+        }
+        else if (moveUp)
+        {
+            endingLoc = new Vector3(transform.position.x, transform.position.y + moveDist, 0);
         }
         else
         {
@@ -43,7 +58,7 @@ public class PlatformObject: JDMappableObject {
 
     void Update()
     {
-        if (movingPlatform)
+        if (movingPlatform && active)
         {
             MovePlatform();
         }
@@ -78,5 +93,15 @@ public class PlatformObject: JDMappableObject {
             Vector3 spd = (pos2 - transform.position).normalized * 2f;
             GetComponent<Rigidbody2D>().velocity = spd;
         }
+    }
+
+    public void Activate()
+    {
+        active = true;
+    }
+
+    public void Deactivate()
+    {
+        active = false;
     }
 }

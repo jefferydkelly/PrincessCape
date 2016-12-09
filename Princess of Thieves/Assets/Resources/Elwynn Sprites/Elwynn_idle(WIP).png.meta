@@ -1,0 +1,1939 @@
+fileFormatVersion: 2
+guid: 1689fa7cf48ca2e4fa5aa16e81b17c1c
+timeCreated: 1481212914
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Elwynn_idle(WIP)_0
+    21300002: Elwynn_idle(WIP)_1
+    21300004: Elwynn_idle(WIP)_2
+    21300006: Elwynn_idle(WIP)_3
+    21300008: Elwynn_idle(WIP)_4
+    21300010: Elwynn_idle(WIP)_5
+    21300012: Elwynn_idle(WIP)_6
+    21300014: Elwynn_idle(WIP)_7
+    21300016: Elwynn_idle(WIP)_8
+    21300018: Elwynn_idle(WIP)_9
+    21300020: Elwynn_idle(WIP)_10
+    21300022: Elwynn_idle(WIP)_11
+    21300024: Elwynn_idle(WIP)_12
+    21300026: Elwynn_idle(WIP)_13
+    21300028: Elwynn_idle(WIP)_14
+    21300030: Elwynn_idle(WIP)_15
+    21300032: Elwynn_idle(WIP)_16
+    21300034: Elwynn_idle(WIP)_17
+    21300036: Elwynn_idle(WIP)_18
+    21300038: Elwynn_idle(WIP)_19
+    21300040: Elwynn_idle(WIP)_20
+    21300042: Elwynn_idle(WIP)_21
+    21300044: Elwynn_idle(WIP)_22
+    21300046: Elwynn_idle(WIP)_23
+    21300048: Elwynn_idle(WIP)_24
+    21300050: Elwynn_idle(WIP)_25
+    21300052: Elwynn_idle(WIP)_26
+    21300054: Elwynn_idle(WIP)_27
+    21300056: Elwynn_idle(WIP)_28
+    21300058: Elwynn_idle(WIP)_29
+    21300060: Elwynn_idle(WIP)_30
+    21300062: Elwynn_idle(WIP)_31
+    21300064: Elwynn_idle(WIP)_32
+    21300066: Elwynn_idle(WIP)_33
+    21300068: Elwynn_idle(WIP)_34
+    21300070: Elwynn_idle(WIP)_35
+    21300072: Elwynn_idle(WIP)_36
+    21300074: Elwynn_idle(WIP)_37
+    21300076: Elwynn_idle(WIP)_38
+    21300078: Elwynn_idle(WIP)_39
+    21300080: Elwynn_idle(WIP)_40
+    21300082: Elwynn_idle(WIP)_41
+    21300084: Elwynn_idle(WIP)_42
+    21300086: Elwynn_idle(WIP)_43
+    21300088: Elwynn_idle(WIP)_44
+    21300090: Elwynn_idle(WIP)_45
+    21300092: Elwynn_idle(WIP)_46
+    21300094: Elwynn_idle(WIP)_47
+    21300096: Elwynn_idle(WIP)_48
+    21300098: Elwynn_idle(WIP)_49
+    21300100: Elwynn_idle(WIP)_50
+    21300102: Elwynn_idle(WIP)_51
+    21300104: Elwynn_idle(WIP)_52
+    21300106: Elwynn_idle(WIP)_53
+    21300108: Elwynn_idle(WIP)_54
+    21300110: Elwynn_idle(WIP)_55
+    21300112: Elwynn_idle(WIP)_56
+    21300114: Elwynn_idle(WIP)_57
+    21300116: Elwynn_idle(WIP)_58
+    21300118: Elwynn_idle(WIP)_59
+    21300120: Elwynn_idle(WIP)_60
+    21300122: Elwynn_idle(WIP)_61
+    21300124: Elwynn_idle(WIP)_62
+    21300126: Elwynn_idle(WIP)_63
+    21300128: Elwynn_idle(WIP)_64
+    21300130: Elwynn_idle(WIP)_65
+    21300132: Elwynn_idle(WIP)_66
+    21300134: Elwynn_idle(WIP)_67
+    21300136: Elwynn_idle(WIP)_68
+    21300138: Elwynn_idle(WIP)_69
+    21300140: Elwynn_idle(WIP)_70
+    21300142: Elwynn_idle(WIP)_71
+    21300144: Elwynn_idle(WIP)_72
+    21300146: Elwynn_idle(WIP)_73
+    21300148: Elwynn_idle(WIP)_74
+    21300150: Elwynn_idle(WIP)_75
+    21300152: Elwynn_idle(WIP)_76
+    21300154: Elwynn_idle(WIP)_77
+    21300156: Elwynn_idle(WIP)_78
+    21300158: Elwynn_idle(WIP)_79
+    21300160: Elwynn_idle(WIP)_80
+    21300162: Elwynn_idle(WIP)_81
+    21300164: Elwynn_idle(WIP)_82
+    21300166: Elwynn_idle(WIP)_83
+    21300168: Elwynn_idle(WIP)_84
+    21300170: Elwynn_idle(WIP)_85
+    21300172: Elwynn_idle(WIP)_86
+    21300174: Elwynn_idle(WIP)_87
+    21300176: Elwynn_idle(WIP)_88
+    21300178: Elwynn_idle(WIP)_89
+    21300180: Elwynn_idle(WIP)_90
+    21300182: Elwynn_idle(WIP)_91
+    21300184: Elwynn_idle(WIP)_92
+    21300186: Elwynn_idle(WIP)_93
+    21300188: Elwynn_idle(WIP)_94
+    21300190: Elwynn_idle(WIP)_95
+    21300192: Elwynn_idle(WIP)_96
+    21300194: Elwynn_idle(WIP)_97
+    21300196: Elwynn_idle(WIP)_98
+    21300198: Elwynn_idle(WIP)_99
+    21300200: Elwynn_idle(WIP)_100
+    21300202: Elwynn_idle(WIP)_101
+    21300204: Elwynn_idle(WIP)_102
+    21300206: Elwynn_idle(WIP)_103
+    21300208: Elwynn_idle(WIP)_104
+    21300210: Elwynn_idle(WIP)_105
+    21300212: Elwynn_idle(WIP)_106
+    21300214: Elwynn_idle(WIP)_107
+    21300216: Elwynn_idle(WIP)_108
+    21300218: Elwynn_idle(WIP)_109
+    21300220: Elwynn_idle(WIP)_110
+    21300222: Elwynn_idle(WIP)_111
+    21300224: Elwynn_idle(WIP)_112
+    21300226: Elwynn_idle(WIP)_113
+    21300228: Elwynn_idle(WIP)_114
+    21300230: Elwynn_idle(WIP)_115
+    21300232: Elwynn_idle(WIP)_116
+    21300234: Elwynn_idle(WIP)_117
+    21300236: Elwynn_idle(WIP)_118
+    21300238: Elwynn_idle(WIP)_119
+    21300240: Elwynn_idle(WIP)_120
+    21300242: Elwynn_idle(WIP)_121
+    21300244: Elwynn_idle(WIP)_122
+    21300246: Elwynn_idle(WIP)_123
+    21300248: Elwynn_idle(WIP)_124
+    21300250: Elwynn_idle(WIP)_125
+    21300252: Elwynn_idle(WIP)_126
+    21300254: Elwynn_idle(WIP)_127
+    21300256: Elwynn_idle(WIP)_128
+    21300258: Elwynn_idle(WIP)_129
+    21300260: Elwynn_idle(WIP)_130
+    21300262: Elwynn_idle(WIP)_131
+    21300264: Elwynn_idle(WIP)_132
+    21300266: Elwynn_idle(WIP)_133
+    21300268: Elwynn_idle(WIP)_134
+    21300270: Elwynn_idle(WIP)_135
+    21300272: Elwynn_idle(WIP)_136
+    21300274: Elwynn_idle(WIP)_137
+    21300276: Elwynn_idle(WIP)_138
+    21300278: Elwynn_idle(WIP)_139
+    21300280: Elwynn_idle(WIP)_140
+    21300282: Elwynn_idle(WIP)_141
+    21300284: Elwynn_idle(WIP)_142
+    21300286: Elwynn_idle(WIP)_143
+    21300288: Elwynn_idle(WIP)_144
+    21300290: Elwynn_idle(WIP)_145
+    21300292: Elwynn_idle(WIP)_146
+    21300294: Elwynn_idle(WIP)_147
+    21300296: Elwynn_idle(WIP)_148
+    21300298: Elwynn_idle(WIP)_149
+    21300300: Elwynn_idle(WIP)_150
+    21300302: Elwynn_idle(WIP)_151
+    21300304: Elwynn_idle(WIP)_152
+    21300306: Elwynn_idle(WIP)_153
+    21300308: Elwynn_idle(WIP)_154
+    21300310: Elwynn_idle(WIP)_155
+    21300312: Elwynn_idle(WIP)_156
+    21300314: Elwynn_idle(WIP)_157
+    21300316: Elwynn_idle(WIP)_158
+    21300318: Elwynn_idle(WIP)_159
+    21300320: Elwynn_idle(WIP)_160
+    21300322: Elwynn_idle(WIP)_161
+    21300324: Elwynn_idle(WIP)_162
+    21300326: Elwynn_idle(WIP)_163
+    21300328: Elwynn_idle(WIP)_164
+    21300330: Elwynn_idle(WIP)_165
+    21300332: Elwynn_idle(WIP)_166
+    21300334: Elwynn_idle(WIP)_167
+    21300336: Elwynn_idle(WIP)_168
+    21300338: Elwynn_idle(WIP)_169
+    21300340: Elwynn_idle(WIP)_170
+    21300342: Elwynn_idle(WIP)_171
+    21300344: Elwynn_idle(WIP)_172
+    21300346: Elwynn_idle(WIP)_173
+    21300348: Elwynn_idle(WIP)_174
+    21300350: Elwynn_idle(WIP)_175
+    21300352: Elwynn_idle(WIP)_176
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_0
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 6416
+        width: 657
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_1
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 7927
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_2
+      rect:
+        serializedVersion: 2
+        x: 2737
+        y: 6416
+        width: 657
+        height: 1522
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_4
+      rect:
+        serializedVersion: 2
+        x: 4798
+        y: 6416
+        width: 677
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_5
+      rect:
+        serializedVersion: 2
+        x: 5027
+        y: 7927
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_6
+      rect:
+        serializedVersion: 2
+        x: 6846
+        y: 6416
+        width: 677
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_7
+      rect:
+        serializedVersion: 2
+        x: 7075
+        y: 7927
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_8
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 7632
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_9
+      rect:
+        serializedVersion: 2
+        x: 2733
+        y: 7632
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_10
+      rect:
+        serializedVersion: 2
+        x: 4792
+        y: 7633
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_11
+      rect:
+        serializedVersion: 2
+        x: 6840
+        y: 7633
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_12
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 7392
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_13
+      rect:
+        serializedVersion: 2
+        x: 2713
+        y: 7392
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_14
+      rect:
+        serializedVersion: 2
+        x: 4771
+        y: 7395
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_15
+      rect:
+        serializedVersion: 2
+        x: 6819
+        y: 7395
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_18
+      rect:
+        serializedVersion: 2
+        x: 4771
+        y: 7171
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_19
+      rect:
+        serializedVersion: 2
+        x: 6819
+        y: 7171
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_20
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 7143
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_21
+      rect:
+        serializedVersion: 2
+        x: 2579
+        y: 7143
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_22
+      rect:
+        serializedVersion: 2
+        x: 4631
+        y: 7147
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_23
+      rect:
+        serializedVersion: 2
+        x: 6679
+        y: 7147
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_26
+      rect:
+        serializedVersion: 2
+        x: 4610
+        y: 7091
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_27
+      rect:
+        serializedVersion: 2
+        x: 6658
+        y: 7091
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_29
+      rect:
+        serializedVersion: 2
+        x: 1379
+        y: 6987
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_31
+      rect:
+        serializedVersion: 2
+        x: 3427
+        y: 6987
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_32
+      rect:
+        serializedVersion: 2
+        x: 5447
+        y: 6973
+        width: 31
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_33
+      rect:
+        serializedVersion: 2
+        x: 5479
+        y: 6979
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_34
+      rect:
+        serializedVersion: 2
+        x: 7495
+        y: 6973
+        width: 31
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_35
+      rect:
+        serializedVersion: 2
+        x: 7527
+        y: 6979
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_36
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 6590
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_37
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 6586
+        width: 26
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_42
+      rect:
+        serializedVersion: 2
+        x: 6611
+        y: 6594
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_43
+      rect:
+        serializedVersion: 2
+        x: 6834
+        y: 6587
+        width: 27
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_44
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 6408
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_45
+      rect:
+        serializedVersion: 2
+        x: 2869
+        y: 6408
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_46
+      rect:
+        serializedVersion: 2
+        x: 4917
+        y: 6408
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_47
+      rect:
+        serializedVersion: 2
+        x: 6965
+        y: 6408
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_48
+      rect:
+        serializedVersion: 2
+        x: 695
+        y: 6295
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_49
+      rect:
+        serializedVersion: 2
+        x: 2743
+        y: 6295
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_51
+      rect:
+        serializedVersion: 2
+        x: 6838
+        y: 6306
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_52
+      rect:
+        serializedVersion: 2
+        x: 4799
+        y: 6299
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_53
+      rect:
+        serializedVersion: 2
+        x: 6847
+        y: 6299
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_54
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 4368
+        width: 637
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_55
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 5879
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_56
+      rect:
+        serializedVersion: 2
+        x: 2762
+        y: 4368
+        width: 637
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_57
+      rect:
+        serializedVersion: 2
+        x: 2995
+        y: 5879
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_58
+      rect:
+        serializedVersion: 2
+        x: 4816
+        y: 4368
+        width: 675
+        height: 1520
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_59
+      rect:
+        serializedVersion: 2
+        x: 5059
+        y: 5879
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_60
+      rect:
+        serializedVersion: 2
+        x: 6864
+        y: 4368
+        width: 675
+        height: 1520
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_61
+      rect:
+        serializedVersion: 2
+        x: 7107
+        y: 5879
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_62
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 5596
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_63
+      rect:
+        serializedVersion: 2
+        x: 2761
+        y: 5596
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_64
+      rect:
+        serializedVersion: 2
+        x: 709
+        y: 5588
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_65
+      rect:
+        serializedVersion: 2
+        x: 2757
+        y: 5588
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_66
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 5347
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_67
+      rect:
+        serializedVersion: 2
+        x: 2735
+        y: 5347
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_69
+      rect:
+        serializedVersion: 2
+        x: 6839
+        y: 5351
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_74
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 5101
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_80
+      rect:
+        serializedVersion: 2
+        x: 4629
+        y: 5072
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_81
+      rect:
+        serializedVersion: 2
+        x: 6677
+        y: 5072
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_85
+      rect:
+        serializedVersion: 2
+        x: 3395
+        y: 4919
+        width: 54
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_88
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 4550
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_89
+      rect:
+        serializedVersion: 2
+        x: 2518
+        y: 4550
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_90
+      rect:
+        serializedVersion: 2
+        x: 4567
+        y: 4555
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_91
+      rect:
+        serializedVersion: 2
+        x: 4791
+        y: 4543
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_92
+      rect:
+        serializedVersion: 2
+        x: 6615
+        y: 4555
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_93
+      rect:
+        serializedVersion: 2
+        x: 6839
+        y: 4543
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_95
+      rect:
+        serializedVersion: 2
+        x: 2739
+        y: 4542
+        width: 29
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_96
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 4360
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_97
+      rect:
+        serializedVersion: 2
+        x: 2869
+        y: 4360
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_98
+      rect:
+        serializedVersion: 2
+        x: 4917
+        y: 4360
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_99
+      rect:
+        serializedVersion: 2
+        x: 6965
+        y: 4360
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_100
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 4262
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_101
+      rect:
+        serializedVersion: 2
+        x: 2742
+        y: 4262
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_102
+      rect:
+        serializedVersion: 2
+        x: 4787
+        y: 4263
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_103
+      rect:
+        serializedVersion: 2
+        x: 6835
+        y: 4263
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_104
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 4251
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_105
+      rect:
+        serializedVersion: 2
+        x: 2751
+        y: 4251
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_106
+      rect:
+        serializedVersion: 2
+        x: 4795
+        y: 4255
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_107
+      rect:
+        serializedVersion: 2
+        x: 6843
+        y: 4255
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_108
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 2320
+        width: 675
+        height: 1520
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_109
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 3831
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_110
+      rect:
+        serializedVersion: 2
+        x: 2762
+        y: 2320
+        width: 637
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_112
+      rect:
+        serializedVersion: 2
+        x: 4810
+        y: 2320
+        width: 637
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_113
+      rect:
+        serializedVersion: 2
+        x: 5043
+        y: 3831
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_114
+      rect:
+        serializedVersion: 2
+        x: 6846
+        y: 2320
+        width: 677
+        height: 1522
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_115
+      rect:
+        serializedVersion: 2
+        x: 7075
+        y: 3831
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_116
+      rect:
+        serializedVersion: 2
+        x: 2761
+        y: 3548
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_117
+      rect:
+        serializedVersion: 2
+        x: 4809
+        y: 3548
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_118
+      rect:
+        serializedVersion: 2
+        x: 6840
+        y: 3537
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_119
+      rect:
+        serializedVersion: 2
+        x: 2757
+        y: 3540
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_120
+      rect:
+        serializedVersion: 2
+        x: 4805
+        y: 3540
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_121
+      rect:
+        serializedVersion: 2
+        x: 695
+        y: 3303
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_122
+      rect:
+        serializedVersion: 2
+        x: 2735
+        y: 3299
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_123
+      rect:
+        serializedVersion: 2
+        x: 4783
+        y: 3299
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_124
+      rect:
+        serializedVersion: 2
+        x: 6819
+        y: 3299
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_129
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 3059
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_130
+      rect:
+        serializedVersion: 2
+        x: 2591
+        y: 3053
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_131
+      rect:
+        serializedVersion: 2
+        x: 4639
+        y: 3053
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_132
+      rect:
+        serializedVersion: 2
+        x: 6679
+        y: 3051
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_133
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 3024
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_139
+      rect:
+        serializedVersion: 2
+        x: 3395
+        y: 2871
+        width: 54
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_142
+      rect:
+        serializedVersion: 2
+        x: 7527
+        y: 2883
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_143
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 2507
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_145
+      rect:
+        serializedVersion: 2
+        x: 2518
+        y: 2502
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_146
+      rect:
+        serializedVersion: 2
+        x: 4566
+        y: 2502
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_147
+      rect:
+        serializedVersion: 2
+        x: 6611
+        y: 2498
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_148
+      rect:
+        serializedVersion: 2
+        x: 2739
+        y: 2494
+        width: 29
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_151
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 2312
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_152
+      rect:
+        serializedVersion: 2
+        x: 2869
+        y: 2312
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_153
+      rect:
+        serializedVersion: 2
+        x: 4917
+        y: 2312
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_154
+      rect:
+        serializedVersion: 2
+        x: 6965
+        y: 2312
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_155
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 2215
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_156
+      rect:
+        serializedVersion: 2
+        x: 2742
+        y: 2214
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_157
+      rect:
+        serializedVersion: 2
+        x: 4790
+        y: 2214
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_158
+      rect:
+        serializedVersion: 2
+        x: 6838
+        y: 2210
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_159
+      rect:
+        serializedVersion: 2
+        x: 699
+        y: 2207
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_160
+      rect:
+        serializedVersion: 2
+        x: 2751
+        y: 2203
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_161
+      rect:
+        serializedVersion: 2
+        x: 4799
+        y: 2203
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_162
+      rect:
+        serializedVersion: 2
+        x: 6847
+        y: 2203
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_163
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 272
+        width: 677
+        height: 1522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_164
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 1783
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_165
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 1489
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_166
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 1251
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_168
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 1003
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_171
+      rect:
+        serializedVersion: 2
+        x: 1383
+        y: 835
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_172
+      rect:
+        serializedVersion: 2
+        x: 467
+        y: 450
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_173
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 443
+        width: 27
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_174
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 264
+        width: 14
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_175
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 162
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elwynn_idle(WIP)_176
+      rect:
+        serializedVersion: 2
+        x: 703
+        y: 155
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

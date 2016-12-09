@@ -9,7 +9,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-
+    private Animator myAnimator;
     private MagicState mState = MagicState.Stun;
     private ArmorState aState = ArmorState.Base;
 	private int fwdX = 1;
@@ -54,10 +54,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	// Use this for initialization
 	void Start()
 	{
+
         startPos = transform;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
+        myAnimator = GetComponent<Animator>();
 		curHP = maxHP;
 		curMP = maxMP;
         //UIManager.Instance.LightLevel = 0;
@@ -77,6 +79,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         if (!GameManager.Instance.IsPaused)
         {
+
             //lightOnPlayer = GetLocalLightLevel();
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
@@ -197,7 +200,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{
-			if (!Hidden)
+            if (controller.Horizontal != 0)
+                myAnimator.SetBool("FWD", true);
+            else
+                myAnimator.SetBool("FWD", false);
+            if (!Hidden)
 			{
                 //UIManager.Instance.LightLevel = GetLocalLightLevel();
                 if (leftItem != null)
@@ -365,16 +372,22 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		get
 		{
+            LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
+            LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
+            int finalMask = mask | mask2;
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-            if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f,
+               finalMask))
             { //Straight down
                 return true;
             }
-            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f,
+                finalMask))
             { //backwards
                 return true;
             }
-            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f, (1 << LayerMask.NameToLayer("Platforms"))))
+            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f,
+                finalMask))
             {//forwards
                 return true;
             }

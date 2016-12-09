@@ -9,6 +9,8 @@ public class PressureSwitch : ActivatorObject {
     [SerializeField]
     Sprite[] switchSprites;
     public bool triggered = false;
+
+    public bool needsHeavy = false;
 	// Use this for initialization
 	void Start () {
 		activators = new List<ActivateableObject>();
@@ -32,20 +34,33 @@ public class PressureSwitch : ActivatorObject {
 	{
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
 
-		if (rb && rb.mass >= 1)
-		{
-			NumberOfThingsWeighingThisDown++;
-		}
+        if (!needsHeavy)
+        {
+            if (rb && rb.mass >= 1)
+            {
+                NumberOfThingsWeighingThisDown++;
+            }
+        }
+        else
+        {
+            if(rb && rb.gravityScale >= 4)
+            {
+                Debug.Log(" Heavy Triggered");
+                NumberOfThingsWeighingThisDown++;
+            }
+        }
 	}
 
 	void OnTriggerExit2D(Collider2D col)
 	{
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
-
-		if (rb && rb.mass >= 1)
-		{
-			NumberOfThingsWeighingThisDown--;
-		}
+        if (!needsHeavy)
+        {
+            if (rb && rb.mass >= 1 && !needsHeavy)
+            {
+                NumberOfThingsWeighingThisDown--;
+            }
+        }
 	}
 
 	private int NumberOfThingsWeighingThisDown
@@ -54,6 +69,7 @@ public class PressureSwitch : ActivatorObject {
 		{
 			if (value > 0 && numberOfThingsWeighingThisDown == 0)
 			{
+                //
 				Activate();
                 triggered = true;
                 GetComponent<SpriteRenderer>().sprite = switchSprites[1];
