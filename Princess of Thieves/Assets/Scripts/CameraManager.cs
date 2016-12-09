@@ -19,12 +19,17 @@ public class CameraManager : MonoBehaviour {
 		{
 			instance = this;
 			DontDestroyOnLoad(gameObject);
-			target = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+
+            cam = GetComponent<Camera>();
+            canvas.gameObject.SetActive(true);
+            
+
+            target = GameManager.Instance.Player;
 			Vector3 camPos = target.transform.position;
 			camPos.z = -10;
 			transform.position = camPos;
-			cam = Camera.main;
-			canvas.gameObject.SetActive(true);
+			
+           
             screenSize = new Vector2(Screen.width, Screen.height);
             Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
             cam.transform.position = cam.ScreenToWorldPoint(playerPos + (fwd * new Vector3(screenSize.x, 0) * playerOffsetPercent));

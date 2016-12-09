@@ -121,7 +121,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                         if (hit.collider == null)
                         {
                             hit = Physics2D.Raycast(transform.position - new Vector3(0, HalfHeight / 2), Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
-
+                          
                             if (hit.collider == null)
                             {
                                 hit = Physics2D.Raycast(transform.position + new Vector3(0, HalfHeight / 2), Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
@@ -186,6 +186,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 {
                     (magGloves as MagnetGloves).Use();
                 }
+                myRigidBody.ClampVelocity(maxSpeed * 3, VelocityType.Full);
             }
         }
         
@@ -336,7 +337,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			{
 				myRigidBody.gravityScale = 0;
 			}
-		}
+		} else if (col.CompareTag("Spike"))
+        {
+            GameManager.Instance.Reset();
+        }
 	}
 
 	void OnTriggerExit2D(Collider2D col)

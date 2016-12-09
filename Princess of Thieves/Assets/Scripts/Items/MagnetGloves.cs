@@ -10,13 +10,14 @@ public class MagnetGloves : UsableItem {
     public float force = 100;
     // Use this for initialization
     GameObject target;
+    Rigidbody2D targetBody;
     Player player;
-    ObjectWeight playerWeight;
+    Rigidbody2D playerBody;
 
     private void Start()
     {
         player = GameManager.Instance.Player;
-        playerWeight = player.GetComponent<ObjectWeight>();
+        playerBody = player.GetComponent<Rigidbody2D>();
     }
 
 
@@ -32,6 +33,7 @@ public class MagnetGloves : UsableItem {
 
             target = hit.collider.gameObject;
             target.GetComponent<SpriteRenderer>().color = Color.blue;
+            targetBody = target.GetComponent<Rigidbody2D>();
             player.IsPushing = true;
         }
             
@@ -43,8 +45,7 @@ public class MagnetGloves : UsableItem {
         if (target != null)
         {
             Vector3 distance = player.transform.position - target.transform.position;
-            Rigidbody2D playerBody = player.GetComponent<Rigidbody2D>();
-            Rigidbody2D targetBody = target.GetComponent<Rigidbody2D>();
+        
             if (distance.sqrMagnitude <= 10000)
             {
                 if (toggled)
@@ -102,6 +103,7 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
             player.IsPushing = false;
             target.GetComponent<SpriteRenderer>().color = Color.white;
             target = null;
+            targetBody = null;
         }
     }
 
