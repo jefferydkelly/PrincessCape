@@ -30,7 +30,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     private int numRopesTouching = 0;
 	PlayerState state = PlayerState.Normal;
-
+    bool tryingToJump = false;
     public float lightOnPlayer;
 
     //Rose Makes Dust-------------------------------***
@@ -88,30 +88,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
 
+                myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
 
-                if (controller.Sneak)
-                    myRigidBody.ClampVelocity(sneakSpeed, VelocityType.X);
-                else
-                    myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
-
-                if (IsOnRope)
+                if (IsOnGround)
                 {
-                    Vector2 vel = myRigidBody.velocity;
-                    //vel.x = 0;
-                    vel.y = controller.Vertical * maxSpeed;
-                    myRigidBody.velocity = vel;
-                    //myRigidBody.AddForce(new Vector2(0, controller.Vertical) * 35);
-                    //myRigidBody.ClampVelocity(maxSpeed, VelocityType.Y);
-
-                    if (controller.Jump)
+                    if (tryingToJump)
                     {
-                        Jump();
-                    }
-                }
-                else if (IsOnGround)
-                {
-                    if (controller.Jump)
-                    {
+                        
                         Jump();
                     }
                     else
@@ -129,7 +112,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                         }
                         if (hit.collider != null)
                         {
-                            // Debug.Log("Found" + hit.collider.gameObject.name);
                             InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
 
                             if (controller.Interact)
@@ -176,7 +158,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
                 //UIManager.Instance.LightLevel = 0;
             }
-            else if (IsDashing && IsOnGround && controller.Jump)
+            else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
             } else if (IsPushing)
@@ -189,6 +171,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 myRigidBody.ClampVelocity(maxSpeed * 3, VelocityType.Full);
             }
         }
+
+        tryingToJump = false;
         
 	}
 	// Update is called once per frame
@@ -197,7 +181,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (Controller.Pause)
 		{
 			GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused;
-		}
+		} else if (Controller.Jump)
+        {
+            tryingToJump = true;
+        }
 
 		if (!GameManager.Instance.IsPaused)
 		{
@@ -380,42 +367,23 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
             int finalMask = mask | mask2;
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-            if (Physics2D.Raycast(transform.position, down, HalfHeight + 0.1f,
+            float checkDist = HalfHeight + 0.1f;
+            if (Physics2D.Raycast(transform.position, down, checkDist,
                finalMask))
             { //Straight down
                 return true;
             }
-            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f,
+            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, checkDist,
                 finalMask))
             { //backwards
                 return true;
             }
-            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, HalfHeight + 0.1f,
+            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, checkDist,
                 finalMask))
             {//forwards
                 return true;
-            }
-            bool exists = Enum.IsDefined(typeof(MagicState), 2);      // exists = true
-            if (HasFlag(mState,MagicState.WallJump))
-            {
-                Debug.Log("I've done it!");
-
-                if (Physics2D.Raycast(transform.position, Vector2.right, HalfWidth + 0.4f, (1 << LayerMask.NameToLayer("Wall")))) //Right
-                {
-                    if (Time.time - lastDustPart >= 0.2f)
-                        CreateDustParticle(new Vector2(transform.position.x + 0.4f, transform.position.y));
-                    return true;
-                }
-                if (Physics2D.Raycast(transform.position, -Vector2.right, HalfWidth - 0.4f, (1 << LayerMask.NameToLayer("Wall")))) //Right
-                {
-                    if (Time.time - lastDustPart >= 0.2f)
-                        CreateDustParticle(new Vector2(transform.position.x - 0.4f, transform.position.y));
-                    return true;
-
-                }
-
-            }		
-        return false;
+            }	
+            return false;
 		} // end Get
 	}
 

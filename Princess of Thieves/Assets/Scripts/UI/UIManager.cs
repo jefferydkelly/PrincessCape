@@ -370,7 +370,6 @@ public struct ItemBox
         background = GameObject.Find(s);
         itemRenderer = background.GetComponentsInChildren<Image>()[1];
         keyText = background.GetComponentInChildren<Text>();
-        Debug.Log(keyText == null);
     }
 
     public Sprite ItemSprite

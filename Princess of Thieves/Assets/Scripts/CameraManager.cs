@@ -32,7 +32,7 @@ public class CameraManager : MonoBehaviour {
            
             screenSize = new Vector2(Screen.width, Screen.height);
             Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
-            cam.transform.position = cam.ScreenToWorldPoint(playerPos + (fwd * new Vector3(screenSize.x, 0) * playerOffsetPercent));
+            cam.transform.position = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
 
         }
 		else {
@@ -62,7 +62,7 @@ public class CameraManager : MonoBehaviour {
                 Vector3 newCamPos = cam.transform.position;
                 if (target.Forward.x == fwd)
                 {  
-                     Vector3 posTarget = cam.ScreenToWorldPoint(playerPos + (fwd * new Vector3(screenSize.x, 0) * playerOffsetPercent));
+                     Vector3 posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6)); ;
                      posTarget.z = cam.transform.position.z;
                      newCamPos = Vector3.SmoothDamp(cam.transform.position, posTarget, ref vel, dampTime);   
                 }

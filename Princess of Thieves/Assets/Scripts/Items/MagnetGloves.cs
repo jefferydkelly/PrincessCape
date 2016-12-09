@@ -46,7 +46,7 @@ public class MagnetGloves : UsableItem {
         {
             Vector3 distance = player.transform.position - target.transform.position;
         
-            if (distance.sqrMagnitude <= 10000)
+            if (distance.sqrMagnitude <= 100)
             {
                 if (toggled)
                 {
@@ -56,14 +56,14 @@ public class MagnetGloves : UsableItem {
                         //Heavier object, so the player gets moved
 
                         //float dist = Vector3.Distance(thatWeight.transform.position, player.transform.position);
-                        player.GetComponent<Rigidbody2D>().AddForce(
-                            distance.normalized * -force,
+                        playerBody.AddForce(
+                            player.Aiming * force,
                             ForceMode2D.Force);
                     }
                     else
                     {
-                        target.GetComponent<Rigidbody2D>().AddForce(
-                            distance.normalized * force,
+                        targetBody.AddForce(
+                            player.Aiming * -force,
                             ForceMode2D.Force);
                     }
                 }
@@ -73,14 +73,14 @@ public class MagnetGloves : UsableItem {
                     {
                         //Heavier object, so the player gets moved
 
-                        player.GetComponent<Rigidbody2D>().AddForce(
-                            distance.normalized * force,
+                        playerBody.AddForce(
+                            player.Aiming * -force,
                             ForceMode2D.Force);
                     }
                     else
                     {
-                        target.GetComponent<Rigidbody2D>().AddForce(
-                            distance.normalized * -force,
+                        targetBody.AddForce(
+                            player.Aiming * force,
                             ForceMode2D.Force);
                     }
                 }
