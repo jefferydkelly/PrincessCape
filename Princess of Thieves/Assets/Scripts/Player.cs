@@ -225,14 +225,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	void Jump()
 	{
-		foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, Vector3.up, JumpHeight, 1 << LayerMask.NameToLayer("Platforms")))
-		{
-			PlatformObject po = hit.collider.GetComponent<PlatformObject>();
-			if (po != null && po.passThrough)
-			{
-				po.AllowPassThrough();
-			}
-		}
         float ji = IsDashing ? jumpImpulse * 1.5f : jumpImpulse;
 		myRigidBody.AddForce(new Vector2(0, ji * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
 	}
@@ -295,7 +287,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             IsDashing = false;
         }
 		if (col.collider.CompareTag ("Platform")) {
-
 			if (lastYVel < -10) {
                 GameManager.Instance.Reset();
 			} else if (lastYVel < 0 && IsPushing)
@@ -363,30 +354,39 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		get
 		{
-            LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
-            LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
-            int finalMask = mask | mask2;
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-            float checkDist = HalfHeight + 0.1f;
-            if (Physics2D.Raycast(transform.position, down, checkDist,
-               finalMask))
+            RaycastHit2D hit = CheckForPlatformHit(transform.position, down);
+            RaycastHit2D rhit = CheckForPlatformHit(transform.position, Vector2.right);
+            RaycastHit2D lhit = CheckForPlatformHit(transform.position, Vector2.left);
+
+            if (!hit)
+            {
+                hit = CheckForPlatformHit(transform.position + new Vector3(HalfWidth, 0), down);
+
+                if (!hit)
+                {
+                    hit = CheckForPlatformHit(transform.position - new Vector3(HalfWidth, 0), down);
+                }
+            }
+            if (hit)
             { //Straight down
-                return true;
+                return !(hit.collider == rhit.collider || hit.collider == lhit.collider);
             }
-            if (Physics2D.Raycast(transform.position - new Vector3(HalfWidth, 0), down, checkDist,
-                finalMask))
-            { //backwards
-                return true;
-            }
-            if (Physics2D.Raycast(transform.position + new Vector3(HalfWidth, 0), down, checkDist,
-                finalMask))
-            {//forwards
-                return true;
-            }	
+            
             return false;
 		} // end Get
 	}
 
+    public RaycastHit2D CheckForPlatformHit(Vector2 pos, Vector2 dir)
+    {
+        LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
+        LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
+        int finalMask = mask | mask2;
+        
+        float checkDist = HalfHeight + 0.1f;
+        return Physics2D.Raycast(pos, dir, checkDist,
+                finalMask);
+    }
 
 	/// <summary>
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on rope.
@@ -397,18 +397,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		get
 		{
 			return numRopesTouching > 0;
-		}
-	}
-
-	/// <summary>
-	/// Gets the height of the jump.
-	/// </summary>
-	/// <value>The height of the jump.</value>
-	float JumpHeight
-	{
-		get
-		{
-			return Mathf.Pow(jumpImpulse, 2) / (Physics.gravity.y * myRigidBody.gravityScale * -2);
 		}
 	}
 
