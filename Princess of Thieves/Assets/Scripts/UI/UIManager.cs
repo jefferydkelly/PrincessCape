@@ -201,8 +201,9 @@ public class UIManager : MonoBehaviour
 	 */
 	public void ShowMessage(string msg, float time, bool isDialog = false)
 	{
-        hpBar.enabled = false;
-        mpBar.enabled = false;
+        hpBar.enabled = !isDialog;
+        mpBar.enabled = !isDialog;
+        GameManager.Instance.IsInCutscene = true;
         //stealthMeter.Enabled = false;
         if (isDialog)
         {
@@ -225,7 +226,9 @@ public class UIManager : MonoBehaviour
         //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
-	}
+        GameManager.Instance.IsInCutscene = false;
+        GameManager.Instance.IsPaused = false;
+    }
 
 	public bool InCutscene
 	{

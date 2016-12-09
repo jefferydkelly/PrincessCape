@@ -34,6 +34,10 @@ public class MagnetGloves : UsableItem {
             target = hit.collider.gameObject;
             target.GetComponent<SpriteRenderer>().color = Color.blue;
             targetBody = target.GetComponent<Rigidbody2D>();
+            if (targetBody)
+            {
+                targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            }
             player.IsPushing = true;
         }
             
@@ -55,7 +59,6 @@ public class MagnetGloves : UsableItem {
                     {
                         //Heavier object, so the player gets moved
 
-                        //float dist = Vector3.Distance(thatWeight.transform.position, player.transform.position);
                         playerBody.AddForce(
                             player.Aiming * force,
                             ForceMode2D.Force);
@@ -72,9 +75,10 @@ public class MagnetGloves : UsableItem {
                     if (targetBody == null || targetBody.mass > playerBody.mass)
                     {
                         //Heavier object, so the player gets moved
-
+                        Vector3 aim = player.Aiming;
+                        aim.x *= -1;
                         playerBody.AddForce(
-                            player.Aiming * -force,
+                            aim * -force,
                             ForceMode2D.Force);
                     }
                     else
@@ -102,8 +106,12 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
             Toggled = !Toggled;
             player.IsPushing = false;
             target.GetComponent<SpriteRenderer>().color = Color.white;
+            if (targetBody)
+            {
+                targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                targetBody = null;
+            }
             target = null;
-            targetBody = null;
         }
     }
 
