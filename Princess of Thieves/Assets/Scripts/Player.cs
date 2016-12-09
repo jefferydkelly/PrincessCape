@@ -62,15 +62,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		curMP = maxMP;
         //UIManager.Instance.LightLevel = 0;
 		DontDestroyOnLoad(gameObject);
-        GameObject item = Instantiate(startItemObject);
-        item.transform.SetParent(transform);
-        leftItem = item.GetComponent<UsableItem>();
+        
         UIManager.Instance.UpdateUI(controller);
         inventory = new List<UsableItem>();
-        foreach (GameObject go in startInventory)
-        {
-            AddItem(go);
-        }
+      
 	}
 
     public void ResetBecauseINeed()
@@ -120,7 +115,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     {
                         
                         RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+                        if (hit.collider == null)
+                        {
+                            hit = Physics2D.Raycast(transform.position - new Vector3(0, HalfHeight / 2), Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
 
+                            if (hit.collider == null)
+                            {
+                                hit = Physics2D.Raycast(transform.position + new Vector3(0, HalfHeight / 2), Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+                            }
+                        }
                         if (hit.collider != null)
                         {
                             // Debug.Log("Found" + hit.collider.gameObject.name);
