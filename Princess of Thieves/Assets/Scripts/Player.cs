@@ -9,7 +9,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-
+    private Animator myAnimator;
     private MagicState mState = MagicState.Stun;
     private ArmorState aState = ArmorState.Base;
 	private int fwdX = 1;
@@ -54,10 +54,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	// Use this for initialization
 	void Start()
 	{
+
         startPos = transform;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
+        myAnimator = GetComponent<Animator>();
 		curHP = maxHP;
 		curMP = maxMP;
         //UIManager.Instance.LightLevel = 0;
@@ -82,6 +84,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         if (!GameManager.Instance.IsPaused)
         {
+
             //lightOnPlayer = GetLocalLightLevel();
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
@@ -194,7 +197,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{
-			if (!Hidden)
+            if (controller.Horizontal != 0)
+                myAnimator.SetBool("FWD", true);
+            else
+                myAnimator.SetBool("FWD", false);
+            if (!Hidden)
 			{
                 //UIManager.Instance.LightLevel = GetLocalLightLevel();
                 if (leftItem != null)
