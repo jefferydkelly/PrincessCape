@@ -4,7 +4,6 @@ using System;
 
 [RequireComponent(typeof(Collider2D))]
 public class PlatformObject: JDMappableObject, ActivateableObject{
-	public bool passThrough = false;
 
     public bool active = true;
     public bool atFinalLoc = false;
@@ -21,7 +20,7 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
     {
         get
         {
-            throw new NotImplementedException();
+            return active;
         }
     }
 
@@ -43,18 +42,6 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
         }
 	}
 
-	public void AllowPassThrough()
-	{
-		myCollider.isTrigger = true;
-	}
-
-	void OnTriggerExit2D(Collider2D col)
-	{
-		if (passThrough && col.CompareTag("Player"))
-		{
-			myCollider.isTrigger = false;
-		}
-	}
 
     void Update()
     {

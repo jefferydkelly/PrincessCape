@@ -283,15 +283,14 @@ public class Controller
     {
         get
         {
-            string controls = "";
+            string controls = "Movement\n";
             if (controllerType == ControllerType.Keyboard)
             {
                 controls += "Left: " + leftKey + "\n";
                 controls += "Right: " + rightKey + "\n";
                 controls += "Up: " + upKey + "\n";
                 controls += "Down: " + downKey + "\n";
-                controls += "Sneak: " + sneakKey + "\n";
-                controls += "Jump: " + jumpKey + "\n";
+                
             }
             return controls;
         }
@@ -301,10 +300,10 @@ public class Controller
     {
         get
         {
-            string controls = "";
+            string controls = "Actions\n";
             if (controllerType == ControllerType.Keyboard)
             {
-                controls += "Proceed: " + jumpKey + "\n";
+                controls += "Jump: " + jumpKey + "\n";
                 controls += "Interact: " + interactKey + "\n";
                 controls += "Left Item: " + leftItemKey + "\n";
                 controls += "Right Item: " + rightItemKey + "\n";

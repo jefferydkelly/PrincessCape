@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Checkpoint : MonoBehaviour {
+public class Checkpoint : JDMappableObject {
     //Whether or not this checkpoint has been activated
     bool activated = false;
     SpriteRenderer myRenderer;
