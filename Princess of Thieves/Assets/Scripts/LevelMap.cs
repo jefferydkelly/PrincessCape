@@ -94,7 +94,7 @@ public class LevelMap : MonoBehaviour {
 	public bool IsOccupied(Vector2 v, MapLayer ml = MapLayer.Foreground)
 	{
 		
-		GameObject[,] arr;
+		GameObject[,] arr = field;
 		switch (ml)
 		{
 			case MapLayer.Foreground:

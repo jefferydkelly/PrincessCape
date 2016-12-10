@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	void Update() {
+    void Update() {
 		if (revealing && done && GameManager.Instance.Player.Controller.Jump)
 		{
 			StartCoroutine(NextElement());
@@ -62,8 +62,10 @@ public class UIManager : MonoBehaviour
 	//Resets the objects when the scene changes
 	public void Reload()
 	{
+
 		if (FindObjectOfType<Canvas>())
 		{
+            
 			CancelInvoke();
 			messageBox = new ImageTextCombo("MessageBox");
 			messageBox.Enabled = false;
@@ -86,6 +88,7 @@ public class UIManager : MonoBehaviour
 
             leftBox = new ItemBox("LeftBox");
             rightBox = new ItemBox("RightBox");
+          
           
             inventoryMenu = GameObject.Find("InventoryMenu");
             inventoryMenu.SetActive(false);
@@ -197,9 +200,10 @@ public class UIManager : MonoBehaviour
 	 * time - The amount of time the message will be displayed
 	 */
 	public void ShowMessage(string msg, float time, bool isDialog = false)
-	{
-        hpBar.enabled = false;
-        mpBar.enabled = false;
+	{   
+        GameManager.Instance.IsInCutscene = true;
+        hpBar.enabled = isDialog;
+        mpBar.enabled = isDialog;
         //stealthMeter.Enabled = false;
         if (isDialog)
         {
@@ -211,6 +215,7 @@ public class UIManager : MonoBehaviour
             messageBox.Enabled = true;
             messageBox.Text = msg;
         }
+        
 		Invoke("HideMessage", time);
 	}
 
@@ -222,7 +227,9 @@ public class UIManager : MonoBehaviour
         //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
-	}
+        GameManager.Instance.IsInCutscene = false;
+        GameManager.Instance.IsPaused = false;
+    }
 
 	public bool InCutscene
 	{
@@ -279,6 +286,7 @@ public class UIManager : MonoBehaviour
     public void UpdateUI()
     {
         Player p = GameManager.Instance.Player;
+        
         leftBox.ItemSprite = p.LeftItem;
         rightBox.ItemSprite = p.RightItem;
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
@@ -287,9 +295,15 @@ public class UIManager : MonoBehaviour
     public void UpdateUI(Controller c)
     {
         Player p = GameManager.Instance.Player;
-        leftBox.ItemSprite = p.LeftItem;
+        if (p.LeftItem != null)
+        {
+            leftBox.ItemSprite = p.LeftItem;
+        }
         leftBox.Key = c.LeftItemKey.ToUpper();
-        rightBox.ItemSprite = p.RightItem;
+        if (p.RightItem != null)
+        {
+            rightBox.ItemSprite = p.RightItem;
+        }
         rightBox.Key = c.RightItemKey.ToUpper();
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
     }
