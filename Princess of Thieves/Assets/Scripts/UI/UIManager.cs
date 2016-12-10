@@ -200,10 +200,10 @@ public class UIManager : MonoBehaviour
 	 * time - The amount of time the message will be displayed
 	 */
 	public void ShowMessage(string msg, float time, bool isDialog = false)
-	{
-        hpBar.enabled = !isDialog;
-        mpBar.enabled = !isDialog;
+	{   
         GameManager.Instance.IsInCutscene = true;
+        hpBar.enabled = isDialog;
+        mpBar.enabled = isDialog;
         //stealthMeter.Enabled = false;
         if (isDialog)
         {
@@ -215,6 +215,7 @@ public class UIManager : MonoBehaviour
             messageBox.Enabled = true;
             messageBox.Text = msg;
         }
+        
 		Invoke("HideMessage", time);
 	}
 
