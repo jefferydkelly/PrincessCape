@@ -183,10 +183,34 @@ public static class ExtensionMethods{
 		return v.x + "x" + v.y;
 	}
 
-	public static string ToXString(this Vector3 v)
+    public static Vector2 XVector(this Vector2 v)
+    {
+        return new Vector2(v.x, 0);
+    }
+    public static Vector2 YVector(this Vector2 v)
+    {
+        return new Vector2(0, v.y);
+    }
+
+
+    public static string ToXString(this Vector3 v)
 	{
 		return v.x + "x" + v.y + "x" + v.z;
 	}
+
+    public static Vector3 XVector(this Vector3 v)
+    {
+        return new Vector3(v.x, 0);
+    }
+    public static Vector3 YVector(this Vector3 v)
+    {
+        return new Vector3(0, v.y);
+    }
+
+    public static Vector3 ZVector(this Vector3 v)
+    {
+        return new Vector3(0, 0, v.z);
+    }
 }
 
 public enum VelocityType

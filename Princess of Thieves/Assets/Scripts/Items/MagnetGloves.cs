@@ -4,6 +4,7 @@ using System;
 
 public class MagnetGloves : UsableItem {
 
+    int range = 10;
     bool toggled = false;
     public Sprite pushSprite;
     public Sprite pullSprite;
@@ -13,11 +14,16 @@ public class MagnetGloves : UsableItem {
     Rigidbody2D targetBody;
     Player player;
     Rigidbody2D playerBody;
+    PushPullDirection direction;
+    bool pushingOnTarget = true;
+    LineRenderer lineRenderer;
 
     private void Start()
     {
         player = GameManager.Instance.Player;
         playerBody = player.GetComponent<Rigidbody2D>();
+        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.enabled = false;
     }
 
 
@@ -26,19 +32,39 @@ public class MagnetGloves : UsableItem {
         //Shoot a ray fowards
         RaycastHit2D hit;
         hit = (Physics2D.Raycast(player.transform.position, player.Aiming,
-            100f, 1<<LayerMask.NameToLayer("Metal") ));
+            range, 1<<LayerMask.NameToLayer("Metal") ));
 
         if (hit)
         {//first hit object has an ObjectWeight
 
             target = hit.collider.gameObject;
-            target.GetComponent<SpriteRenderer>().color = Color.blue;
+            Color col = toggled ? Color.blue : Color.red;
+            target.GetComponent<SpriteRenderer>().color = col;
+            lineRenderer.enabled = true;
+            lineRenderer.startColor = col;
+            lineRenderer.endColor = col;
+            lineRenderer.SetPositions(new Vector3[]{ player.transform.position, target.transform.position});
             targetBody = target.GetComponent<Rigidbody2D>();
             if (targetBody)
             {
+                pushingOnTarget = targetBody.mass < playerBody.mass;
                 targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
             player.IsPushing = true;
+
+            if (player.Aiming.y == 1)
+            {
+                direction = PushPullDirection.Up;
+            } else if (player.Aiming.y == -1)
+            {
+                direction = PushPullDirection.Down;
+            } else if (player.Aiming.x == 1)
+            {
+                direction = PushPullDirection.Right;
+            } else
+            {
+                direction = PushPullDirection.Left;
+            }
         }
             
       
@@ -49,46 +75,66 @@ public class MagnetGloves : UsableItem {
         if (target != null)
         {
             Vector3 distance = player.transform.position - target.transform.position;
-        
-            if (distance.sqrMagnitude <= 100)
+            Vector2 moveDir = Vector3.zero;
+            
+            if (distance.sqrMagnitude <= range * range)
             {
+                if (direction == PushPullDirection.Up)
+                {
+                    moveDir = Vector2.up;
+                }
+                else if (direction == PushPullDirection.Down)
+                {
+                    moveDir = Vector2.down;
+                }
+                else
+                {
+                    moveDir = new Vector2(direction == PushPullDirection.Right ? 1 : -1, 0);
+                }
+                if (pushingOnTarget && (direction == PushPullDirection.Up || direction == PushPullDirection.Down))
+                {
+                    moveDir += player.Aiming.XVector();
+                }
+
+                moveDir.Normalize();
                 if (toggled)
                 {
 
-                    if (targetBody == null || targetBody.mass > playerBody.mass)
+                    if (pushingOnTarget)
                     {
                         //Heavier object, so the player gets moved
 
                         playerBody.AddForce(
-                            player.Aiming * force,
+                            moveDir * force,
                             ForceMode2D.Force);
                     }
                     else
                     {
                         targetBody.AddForce(
-                            player.Aiming * -force,
+                            moveDir * -force,
                             ForceMode2D.Force);
                     }
                 }
                 else
                 {
-                    if (targetBody == null || targetBody.mass > playerBody.mass)
+                    if (pushingOnTarget)
                     {
                         //Heavier object, so the player gets moved
-                        Vector3 aim = player.Aiming;
-                        aim.x *= -1;
+                        moveDir.y *= -1;
                         playerBody.AddForce(
-                            aim * -force,
+                            moveDir * force,
                             ForceMode2D.Force);
                     }
                     else
                     {
                         targetBody.AddForce(
-                            player.Aiming * force,
+                            moveDir * force,
                             ForceMode2D.Force);
                     }
                 }
             }
+
+            lineRenderer.SetPositions(new Vector3[] { player.transform.position, target.transform.position });
         }
     }
 
@@ -103,7 +149,7 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
     {
         if (player.IsPushing)
         {
-            Toggled = !Toggled;
+            
             player.IsPushing = false;
             target.GetComponent<SpriteRenderer>().color = Color.white;
             if (targetBody)
@@ -112,7 +158,11 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
                 targetBody = null;
             }
             target = null;
+            pushingOnTarget = true;
+            lineRenderer.enabled = false;
         }
+
+        Toggled = !Toggled;
     }
 
     private bool Toggled
@@ -130,4 +180,9 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
         }
     }
 
+}
+
+public enum PushPullDirection
+{
+    Up, Down, Left, Right
 }

@@ -154,6 +154,24 @@ public class UIManager : MonoBehaviour
 		done = true;
 	}
 
+    private IEnumerator RevealMessage(string msg)
+    {
+        done = false;
+        int lettersRevealed = 0;
+        while (lettersRevealed < msg.Length)
+        {
+            yield return new WaitForSeconds(0.02f);
+            lettersRevealed++;
+            dialogBox.Text = msg.Substring(0, lettersRevealed);
+        }
+
+        while (!GameManager.Instance.Player.Controller.Interact)
+        {
+            yield return null;
+        }
+        done = true;
+    }
+
 	IEnumerator NextElement()
 	{
 		yield return new WaitForEndOfFrame();
@@ -199,25 +217,32 @@ public class UIManager : MonoBehaviour
 	 * msg - The message to be displayed
 	 * time - The amount of time the message will be displayed
 	 */
-	public void ShowMessage(string msg, float time, bool isDialog = false)
+	public void ShowMessage(string msg, float time)
 	{   
         GameManager.Instance.IsInCutscene = true;
-        hpBar.enabled = isDialog;
-        mpBar.enabled = isDialog;
         //stealthMeter.Enabled = false;
-        if (isDialog)
-        {
-            dialogBox.Enabled = true;
-            dialogBox.Text = msg;
-        }
-        else
-        {
-            messageBox.Enabled = true;
-            messageBox.Text = msg;
-        }
+       
+        messageBox.Enabled = true;
+        messageBox.Text = msg;
+        
         
 		Invoke("HideMessage", time);
 	}
+
+    public IEnumerator ShowFoundItemMessage(string[] msg)
+    {
+        GameManager.Instance.IsInCutscene = true;
+        dialogBox.Enabled = true;
+        hpBar.enabled = true;
+        mpBar.enabled = true;
+        foreach (string s in msg)
+        {
+            yield return StartCoroutine(RevealMessage(s)); 
+        }
+        dialogBox.Enabled = false;
+        GameManager.Instance.IsInCutscene = false;
+        GameManager.Instance.IsPaused = false;
+    }
 
 	//Hides the message in the message box
 	public void HideMessage()
