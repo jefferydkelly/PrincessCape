@@ -50,7 +50,7 @@ public class MagnetGloves : UsableItem {
                 pushingOnTarget = targetBody.mass < playerBody.mass;
                 targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
-            player.IsPushing = true;
+            player.IsUsingMagnetGloves = true;
 
             if (player.Aiming.y == 1)
             {
@@ -147,10 +147,10 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
     }
     public override void Deactivate()
     {
-        if (player.IsPushing)
+        if (player.IsUsingMagnetGloves)
         {
             
-            player.IsPushing = false;
+            player.IsUsingMagnetGloves = false;
             target.GetComponent<SpriteRenderer>().color = Color.white;
             if (targetBody)
             {

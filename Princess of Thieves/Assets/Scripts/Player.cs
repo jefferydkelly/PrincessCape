@@ -47,6 +47,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     List<UsableItem> inventory;
 
     InteractiveObject highlighted;
+    Rigidbody2D highlightedBody;
     void Awake()
     {
         startPos = transform;
@@ -125,6 +126,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                                 }
 
                                 highlighted = io;
+                               
                                 highlighted.Highlight();
                             }
                             
@@ -161,7 +163,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
-            } else if (IsPushing)
+            } else if (IsUsingMagnetGloves)
             {
                 UsableItem magGloves = leftItem is MagnetGloves ? leftItem : rightItem;
                 if (leftItem == magGloves ? controller.LeftItemDown : controller.RightItemDown)
@@ -169,6 +171,18 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     (magGloves as MagnetGloves).Use();
                 }
                 myRigidBody.ClampVelocity(maxSpeed * 3, VelocityType.Full);
+            } else if (IsPushing && highlightedBody)
+            {
+                if (Controller.Interact)
+                {
+                    highlighted.Interact();
+                }
+                else
+                {
+                    Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
+                    highlightedBody.Translate(blockMove);
+                    myRigidBody.Translate(blockMove);
+                }
             }
         }
 
@@ -289,13 +303,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (col.collider.CompareTag ("Platform")) {
 			if (lastYVel < -10) {
                 GameManager.Instance.Reset();
-			} else if (lastYVel < 0 && IsPushing)
+			} else if (lastYVel < 0 && IsUsingMagnetGloves)
             {
                 myRigidBody.velocity = Vector2.zero;
             }
 		} else if (col.collider.CompareTag ("Enemy")) {
             GameManager.Instance.Reset();
-		} else if (col.collider.OnLayer("Metal") && IsPushing)
+		} else if (col.collider.OnLayer("Metal") && IsUsingMagnetGloves)
         {
             if (lastYVel < 0)
             {
@@ -682,8 +696,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             if (value && !IsPushing && !IsFrozen)
             {
+                UIManager.Instance.ShowInteraction("Stop");
                 state |= PlayerState.Pushing;
                 state |= PlayerState.Frozen;
+                highlightedBody = (highlighted as BlockController).GetComponent<Rigidbody2D>();
             }
             else
             {
@@ -693,9 +709,31 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
-	#endregion gets
+    public bool IsUsingMagnetGloves
+    {
+        get
+        {
+            return (state & PlayerState.UsingMagnetGloves) > 0;
+        }
 
-	void Unfreeze() {
+        set
+        {
+            if (value && !IsUsingMagnetGloves && !IsFrozen)
+            {
+                state |= PlayerState.UsingMagnetGloves;
+                state |= PlayerState.Frozen;
+            }
+            else
+            {
+                state &= ~PlayerState.UsingMagnetGloves;
+                state &= ~PlayerState.Frozen;
+            }
+        }
+    }
+
+    #endregion gets
+
+    void Unfreeze() {
 		IsFrozen = false;
 	}
     #region UpgradeRegion
@@ -806,7 +844,8 @@ public enum PlayerState
 	InCover = 1,
 	Dashing = 2,
 	Frozen = 4,
-    Pushing = 8
+    Pushing = 8,
+    UsingMagnetGloves = 16
 }
 
 [System.Flags]
