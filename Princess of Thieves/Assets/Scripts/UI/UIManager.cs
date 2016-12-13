@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
 
     ItemBox rightBox;
     ItemBox leftBox;
+    InteractionBox interactionBox;
 
     GameObject inventoryMenu;
 	/*
@@ -88,7 +89,8 @@ public class UIManager : MonoBehaviour
 
             leftBox = new ItemBox("LeftBox");
             rightBox = new ItemBox("RightBox");
-          
+            interactionBox = new InteractionBox("InteractBox");
+            
           
             inventoryMenu = GameObject.Find("InventoryMenu");
             inventoryMenu.SetActive(false);
@@ -158,17 +160,20 @@ public class UIManager : MonoBehaviour
     {
         done = false;
         int lettersRevealed = 0;
+        interactionBox.Interaction = "";
         while (lettersRevealed < msg.Length)
         {
             yield return new WaitForSeconds(0.02f);
             lettersRevealed++;
             dialogBox.Text = msg.Substring(0, lettersRevealed);
         }
-
+        interactionBox.Interaction = "Next";
         while (!GameManager.Instance.Player.Controller.Interact)
         {
+            
             yield return null;
         }
+        interactionBox.Interaction = "";
         done = true;
     }
 
@@ -330,7 +335,14 @@ public class UIManager : MonoBehaviour
             rightBox.ItemSprite = p.RightItem;
         }
         rightBox.Key = c.RightItemKey.ToUpper();
+        interactionBox.Key = c.InteractKey.ToUpper();
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
+    }
+
+    public void ShowInteraction(string s)
+    {
+        interactionBox.Enabled = true;
+        interactionBox.Interaction = s;
     }
 }
 
@@ -427,6 +439,58 @@ public struct ItemBox
         }
     }
 
+    public string Key
+    {
+        get
+        {
+            return keyText.text;
+        }
+
+        set
+        {
+            keyText.text = value;
+        }
+    }
+}
+
+public struct InteractionBox
+{
+    GameObject background;
+    Text interactionText;
+    Text keyText;
+
+    public InteractionBox(string s)
+    {
+        background = GameObject.Find(s);
+        Text[] texts = background.GetComponentsInChildren<Text>();
+        keyText = texts[0];
+        interactionText = texts[1];
+    }
+    public bool Enabled
+    {
+        get
+        {
+            return background.activeSelf;
+        }
+
+        set
+        {
+            background.SetActive(value);
+        }
+    }
+
+    public string Interaction
+    {
+        get
+        {
+            return interactionText.text;
+        }
+
+        set
+        {
+            interactionText.text = value;
+        }
+    }
     public string Key
     {
         get
