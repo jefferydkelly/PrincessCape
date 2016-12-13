@@ -8,6 +8,7 @@ public class MagnetGloves : UsableItem {
     bool toggled = false;
     public Sprite pushSprite;
     public Sprite pullSprite;
+    public float maxTargetSpeed = 10;
     public float force = 100;
     // Use this for initialization
     GameObject target;
@@ -113,6 +114,7 @@ public class MagnetGloves : UsableItem {
                         targetBody.AddForce(
                             moveDir * -force,
                             ForceMode2D.Force);
+                        targetBody.ClampVelocity(maxTargetSpeed);
                     }
                 }
                 else
@@ -130,6 +132,7 @@ public class MagnetGloves : UsableItem {
                         targetBody.AddForce(
                             moveDir * force,
                             ForceMode2D.Force);
+                        targetBody.ClampVelocity(maxTargetSpeed);
                     }
                 }
             }
