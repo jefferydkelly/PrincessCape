@@ -212,17 +212,29 @@ public class UIManager : MonoBehaviour
         hpBar.enabled = false;
         mpBar.enabled = false;
         //stealthMeter.Enabled = false;
-		messageBox.Enabled = true;
-		messageBox.Text = msg;
+
+        messageBox.Enabled = true;
+        messageBox.Text = msg;
+        
+        ShowInteraction("Close");
 	}
 
-	/*
+    public void ShowDialog(string msg)
+    {
+        dialogBox.Enabled = true;
+        dialogBox.Text = msg;
+      
+        ShowInteraction("Close");
+    }
+
+
+    /*
 	 * Shows the given string as a message in the upper box for a set amount of time.
 	 * 
 	 * msg - The message to be displayed
 	 * time - The amount of time the message will be displayed
 	 */
-	public void ShowMessage(string msg, float time)
+    public void ShowMessage(string msg, float time)
 	{   
         GameManager.Instance.IsInCutscene = true;
         //stealthMeter.Enabled = false;
@@ -259,6 +271,11 @@ public class UIManager : MonoBehaviour
         dialogBox.Enabled = false;
         GameManager.Instance.IsInCutscene = false;
         GameManager.Instance.IsPaused = false;
+    }
+
+    public void HideDialogBox()
+    {
+        dialogBox.Enabled = false;
     }
 
 	public bool InCutscene

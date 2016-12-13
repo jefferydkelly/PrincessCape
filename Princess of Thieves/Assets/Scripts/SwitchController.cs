@@ -11,17 +11,23 @@ public class SwitchController : ActivatorObject {
     {
         myRenderer = GetComponent<SpriteRenderer>();
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.collider.CompareTag("Seed"))
+        if (collision.CompareTag("Seed"))
         {
+            Destroy(collision.gameObject);
+            Activated = !Activated;
             if (activated)
-            {
-                Deactivate();
-            } else
             {
                 Activate();
             }
+            else
+            {
+                Deactivate();
+            }
+
+            
         }
     }
 

@@ -12,6 +12,8 @@ public class InventoryMenu : MonoBehaviour {
 
     bool leftItemDown = false;
     bool rightItemDown = false;
+    bool interactDown = false;
+    bool showingInfo = false;
     private void OnEnable()
     {
         if (controller == null)
@@ -21,15 +23,19 @@ public class InventoryMenu : MonoBehaviour {
 
         childImages = GetComponentsInChildren<Image>();
         UpdateUI();
+        UIManager.Instance.ShowInteraction("Info");
         InvokeRepeating("HandleInput", waitTime, waitTime);
 
         leftItemDown = false;
         rightItemDown = false;
+        interactDown = false;
+        showingInfo = false;
     }
 
     private void OnDisable()
     {
         CancelInvoke();
+        UIManager.Instance.HideMessage();
     }
 
     private void Update()
@@ -40,6 +46,7 @@ public class InventoryMenu : MonoBehaviour {
             {
                 leftItemDown = true;
                 rightItemDown = false;
+                interactDown = false;
             }
             else if (controller.DeactivateLeftItem)
             {
@@ -50,9 +57,17 @@ public class InventoryMenu : MonoBehaviour {
             {
                 rightItemDown = true;
                 leftItemDown = false;
+                interactDown = false;
             }
             else if (controller.DeactivateRightItem)
             {
+                rightItemDown = false;
+            }
+
+            if (controller.Interact)
+            {
+                interactDown = true;
+                leftItemDown = false;
                 rightItemDown = false;
             }
         }
@@ -67,6 +82,12 @@ public class InventoryMenu : MonoBehaviour {
             curSelected += 4;
             curSelected %= 4;
 
+            UsableItem item = GameManager.Instance.Player.Inventory[curSelected];
+            if (item)
+            {
+                UIManager.Instance.ShowMessage(item.itemName);
+            }
+
             curImg = childImages[curSelected + 1];
             curImg.color = Color.blue;
 
@@ -79,6 +100,22 @@ public class InventoryMenu : MonoBehaviour {
             {
                 GameManager.Instance.Player.EquipItem(curSelected, false);
                 rightItemDown = false;
+            } else if (interactDown)
+            {
+                if (!showingInfo)
+                {
+                    
+                    if (item)
+                    {
+                        showingInfo = true;
+                        UIManager.Instance.ShowDialog(item.info);
+                    }
+                } else
+                {
+                    showingInfo = false;
+                    UIManager.Instance.HideDialogBox();
+                }
+                interactDown = false;
             }
         }
 
