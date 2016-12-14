@@ -194,7 +194,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		if (Controller.Pause)
 		{
-			GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused;
+            GameManager.Instance.IsInMenu = !GameManager.Instance.IsInMenu;
 		} else if (Controller.Jump)
         {
             tryingToJump = true;

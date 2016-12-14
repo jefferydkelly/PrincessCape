@@ -81,11 +81,14 @@ public class InventoryMenu : MonoBehaviour {
             curSelected += controller.Horizontal + controller.Vertical * 2;
             curSelected += 4;
             curSelected %= 4;
-
-            UsableItem item = GameManager.Instance.Player.Inventory[curSelected];
-            if (item)
+            UsableItem item = null;
+            if (curSelected < GameManager.Instance.Player.Inventory.Count)
             {
-                UIManager.Instance.ShowMessage(item.itemName);
+                 item = GameManager.Instance.Player.Inventory[curSelected];
+                if (item)
+                {
+                    UIManager.Instance.ShowMessage(item.itemName);
+                }
             }
 
             curImg = childImages[curSelected + 1];

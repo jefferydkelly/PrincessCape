@@ -193,14 +193,19 @@ public class UIManager : MonoBehaviour
 		Invoke("Proceed", time);
 	}
 
-    public void Pause()
+    public bool ShowMenu
     {
-        GameManager gm = GameManager.Instance;
-        if (!gm.IsInCutscene)
+        get
+        {
+            return inventoryMenu.activeSelf;
+        }
+        
+        set
         {
             //Set the inventory's visibility to the game's pause state
-            inventoryMenu.SetActive(gm.IsPaused);
+            inventoryMenu.SetActive(value);
         }
+        
     }
 	/*
 	 * Shows the given string as a message in the upper box
@@ -258,7 +263,6 @@ public class UIManager : MonoBehaviour
         }
         dialogBox.Enabled = false;
         GameManager.Instance.IsInCutscene = false;
-        GameManager.Instance.IsPaused = false;
     }
 
 	//Hides the message in the message box
@@ -270,7 +274,6 @@ public class UIManager : MonoBehaviour
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
         GameManager.Instance.IsInCutscene = false;
-        GameManager.Instance.IsPaused = false;
     }
 
     public void HideDialogBox()
