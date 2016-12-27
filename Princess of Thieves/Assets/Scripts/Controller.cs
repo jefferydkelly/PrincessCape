@@ -64,7 +64,6 @@ public class Controller
             sneakKey = "left shift";
 			pauseKey = "p";
 
-
         }
         else
         {
@@ -271,6 +270,7 @@ public class Controller
             return Input.GetKeyDown(pauseKey);
 		}
 	}
+
     bool IsKeyboard
     {
         get

@@ -386,7 +386,6 @@ public class Cutscene
 		else {
 			//End the cutscene
 			GameManager.Instance.IsInCutscene = false;
-			GameManager.Instance.IsPaused = false;
             UIManager.Instance.StartCoroutine("HideDialog");
     
 			foreach (CutsceneActor ca in charactersOnStage)

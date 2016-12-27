@@ -153,7 +153,12 @@ public static class ExtensionMethods{
 		rb.gravityScale *= -1;
 	}
 
-	public static IEnumerator RunAfter(this GameObject go, WaitDelegate w, float time)
+    public static void Translate(this Rigidbody2D rb, Vector2 v)
+    {
+        rb.MovePosition((Vector2)rb.transform.position + v);
+    }
+
+    public static IEnumerator RunAfter(this GameObject go, WaitDelegate w, float time)
 	{
 		float dt = 0;
 		while (dt < time)

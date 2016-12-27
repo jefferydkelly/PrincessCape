@@ -26,7 +26,7 @@ public class BounceSeed : MonoBehaviour
                 } 
             }
 
-            if (!collision.OnLayer("Background"))
+            if (!(collision.OnLayer("Background") || collision.OnLayer("Interactive")))
             {
 
                 Destroy(gameObject);

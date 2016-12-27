@@ -67,20 +67,7 @@ public class GameManager {
 	{
 		get
 		{
-			return (state & GameState.Paused) > 0;
-		}
-
-		set
-		{
-			if (value)
-			{
-				state |= GameState.Paused;
-			}
-			else {
-				state &= ~GameState.Paused;
-			}
-
-            UIManager.Instance.Pause();
+			return (state & (GameState.Any & ~GameState.Play)) > 0;
 		}
 	}
 
@@ -112,13 +99,34 @@ public class GameManager {
 			UIManager.Instance.InCutscene = value;
 			if (value)
 			{
-				state |= GameState.Cutscene | GameState.Paused;
+				state |= GameState.Cutscene;
 			}
 			else {
 				state &= ~GameState.Cutscene;
 			}
 		}
 	}
+
+    public bool IsInMenu
+    {
+        get
+        {
+            return (state & GameState.Menu) > 0;
+        }
+
+        set
+        {
+            UIManager.Instance.ShowMenu = value;
+            if (value)
+            {
+                state |= GameState.Menu;
+            }
+            else
+            {
+                state &= ~GameState.Menu;
+            }
+        }
+    }
 
 	/// <summary>
 	/// Gets the player.
@@ -170,7 +178,7 @@ public class GameManager {
 		{
 			yield return new WaitForEndOfFrame();
 
-			SceneManager.UnloadScene(sceneName);
+			SceneManager.UnloadSceneAsync(sceneName);
 		}
 	}
 	void OnSceneUnloaded(Scene scene)
@@ -194,6 +202,5 @@ public enum GameState {
 	Menu = 2,
 	Cutscene = 4,
 	GameOver = 8,
-	Paused = 16,
 	Any = int.MaxValue
 }

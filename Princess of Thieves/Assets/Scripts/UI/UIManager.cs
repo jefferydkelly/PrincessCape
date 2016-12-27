@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
 
     ItemBox rightBox;
     ItemBox leftBox;
+    InteractionBox interactionBox;
 
     GameObject inventoryMenu;
 	/*
@@ -88,7 +89,8 @@ public class UIManager : MonoBehaviour
 
             leftBox = new ItemBox("LeftBox");
             rightBox = new ItemBox("RightBox");
-          
+            interactionBox = new InteractionBox("InteractBox");
+            
           
             inventoryMenu = GameObject.Find("InventoryMenu");
             inventoryMenu.SetActive(false);
@@ -158,17 +160,20 @@ public class UIManager : MonoBehaviour
     {
         done = false;
         int lettersRevealed = 0;
+        interactionBox.Interaction = "";
         while (lettersRevealed < msg.Length)
         {
             yield return new WaitForSeconds(0.02f);
             lettersRevealed++;
             dialogBox.Text = msg.Substring(0, lettersRevealed);
         }
-
+        interactionBox.Interaction = "Next";
         while (!GameManager.Instance.Player.Controller.Interact)
         {
+            
             yield return null;
         }
+        interactionBox.Interaction = "";
         done = true;
     }
 
@@ -188,14 +193,19 @@ public class UIManager : MonoBehaviour
 		Invoke("Proceed", time);
 	}
 
-    public void Pause()
+    public bool ShowMenu
     {
-        GameManager gm = GameManager.Instance;
-        if (!gm.IsInCutscene)
+        get
+        {
+            return inventoryMenu.activeSelf;
+        }
+        
+        set
         {
             //Set the inventory's visibility to the game's pause state
-            inventoryMenu.SetActive(gm.IsPaused);
+            inventoryMenu.SetActive(value);
         }
+        
     }
 	/*
 	 * Shows the given string as a message in the upper box
@@ -207,17 +217,29 @@ public class UIManager : MonoBehaviour
         hpBar.enabled = false;
         mpBar.enabled = false;
         //stealthMeter.Enabled = false;
-		messageBox.Enabled = true;
-		messageBox.Text = msg;
+
+        messageBox.Enabled = true;
+        messageBox.Text = msg;
+        
+        ShowInteraction("Close");
 	}
 
-	/*
+    public void ShowDialog(string msg)
+    {
+        dialogBox.Enabled = true;
+        dialogBox.Text = msg;
+      
+        ShowInteraction("Close");
+    }
+
+
+    /*
 	 * Shows the given string as a message in the upper box for a set amount of time.
 	 * 
 	 * msg - The message to be displayed
 	 * time - The amount of time the message will be displayed
 	 */
-	public void ShowMessage(string msg, float time)
+    public void ShowMessage(string msg, float time)
 	{   
         GameManager.Instance.IsInCutscene = true;
         //stealthMeter.Enabled = false;
@@ -241,7 +263,6 @@ public class UIManager : MonoBehaviour
         }
         dialogBox.Enabled = false;
         GameManager.Instance.IsInCutscene = false;
-        GameManager.Instance.IsPaused = false;
     }
 
 	//Hides the message in the message box
@@ -253,7 +274,11 @@ public class UIManager : MonoBehaviour
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
         GameManager.Instance.IsInCutscene = false;
-        GameManager.Instance.IsPaused = false;
+    }
+
+    public void HideDialogBox()
+    {
+        dialogBox.Enabled = false;
     }
 
 	public bool InCutscene
@@ -319,18 +344,25 @@ public class UIManager : MonoBehaviour
 
     public void UpdateUI(Controller c)
     {
-        //Player p = GameManager.Instance.Player;
-        //if (p.LeftItem != null)
-        //{
-        //    leftBox.ItemSprite = p.LeftItem;
-        //}
-        //leftBox.Key = c.LeftItemKey.ToUpper();
-        //if (p.RightItem != null)
-        //{
-        //    rightBox.ItemSprite = p.RightItem;
-        //}
-        //rightBox.Key = c.RightItemKey.ToUpper();
-        //inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
+        Player p = GameManager.Instance.Player;
+        if (p.LeftItem != null)
+        {
+            leftBox.ItemSprite = p.LeftItem;
+        }
+        leftBox.Key = c.LeftItemKey.ToUpper();
+        if (p.RightItem != null)
+        {
+            rightBox.ItemSprite = p.RightItem;
+        }
+        rightBox.Key = c.RightItemKey.ToUpper();
+        interactionBox.Key = c.InteractKey.ToUpper();
+        inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
+    }
+
+    public void ShowInteraction(string s)
+    {
+        interactionBox.Enabled = true;
+        interactionBox.Interaction = s;
     }
 }
 
@@ -427,6 +459,58 @@ public struct ItemBox
         }
     }
 
+    public string Key
+    {
+        get
+        {
+            return keyText.text;
+        }
+
+        set
+        {
+            keyText.text = value;
+        }
+    }
+}
+
+public struct InteractionBox
+{
+    GameObject background;
+    Text interactionText;
+    Text keyText;
+
+    public InteractionBox(string s)
+    {
+        background = GameObject.Find(s);
+        Text[] texts = background.GetComponentsInChildren<Text>();
+        keyText = texts[0];
+        interactionText = texts[1];
+    }
+    public bool Enabled
+    {
+        get
+        {
+            return background.activeSelf;
+        }
+
+        set
+        {
+            background.SetActive(value);
+        }
+    }
+
+    public string Interaction
+    {
+        get
+        {
+            return interactionText.text;
+        }
+
+        set
+        {
+            interactionText.text = value;
+        }
+    }
     public string Key
     {
         get
