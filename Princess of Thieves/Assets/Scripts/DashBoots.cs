@@ -21,4 +21,9 @@ public class DashBoots : UsableItem {
             StartCoroutine(gameObject.RunAfter(w, cooldownTime));
         }
     }
+
+    public override void UseMana()
+    {
+        throw new NotImplementedException();
+    }
 }

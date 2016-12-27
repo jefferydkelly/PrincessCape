@@ -5,6 +5,7 @@ using System;
 public class MagnetGloves : UsableItem {
 
     int range = 10;
+    public float manaCost = 100f;
     bool toggled = false;
     public Sprite pushSprite;
     public Sprite pullSprite;
@@ -41,8 +42,7 @@ public class MagnetGloves : UsableItem {
             Color col = toggled ? Color.blue : Color.red;
             target.GetComponent<SpriteRenderer>().color = col;
             lineRenderer.enabled = true;
-            lineRenderer.startColor = col;
-            lineRenderer.endColor = col;
+            lineRenderer.SetColors(col, col);
             lineRenderer.SetPositions(new Vector3[]{ player.transform.position, target.transform.position});
             targetBody = target.GetComponent<Rigidbody2D>();
             if (targetBody)
@@ -72,6 +72,10 @@ public class MagnetGloves : UsableItem {
 
     public void Use()
     {
+        //if (GameManager.Instance.Player.MP <= manaCost)
+        //    return;
+
+        UseMana();
         if (target != null)
         {
             Vector3 distance = player.transform.position - target.transform.position;
@@ -163,6 +167,13 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
         }
 
         Toggled = !Toggled;
+    }
+
+    public override void UseMana()
+    {
+        
+        GameManager.Instance.Player.curMP = GameManager.Instance.Player.MP - manaCost;
+        Debug.Log(GameManager.Instance.Player.MPPercent);
     }
 
     private bool Toggled

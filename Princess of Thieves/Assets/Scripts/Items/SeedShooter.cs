@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class SeedShooter : UsableItem {
     public GameObject seedObj;
@@ -29,5 +30,10 @@ public class SeedShooter : UsableItem {
             WaitDelegate w = () => { onCooldown = false; };
             StartCoroutine(gameObject.RunAfter(w, cooldownTime));
         }
+    }
+
+    public override void UseMana()
+    {
+        throw new NotImplementedException();
     }
 }

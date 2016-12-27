@@ -319,18 +319,18 @@ public class UIManager : MonoBehaviour
 
     public void UpdateUI(Controller c)
     {
-        Player p = GameManager.Instance.Player;
-        if (p.LeftItem != null)
-        {
-            leftBox.ItemSprite = p.LeftItem;
-        }
-        leftBox.Key = c.LeftItemKey.ToUpper();
-        if (p.RightItem != null)
-        {
-            rightBox.ItemSprite = p.RightItem;
-        }
-        rightBox.Key = c.RightItemKey.ToUpper();
-        inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
+        //Player p = GameManager.Instance.Player;
+        //if (p.LeftItem != null)
+        //{
+        //    leftBox.ItemSprite = p.LeftItem;
+        //}
+        //leftBox.Key = c.LeftItemKey.ToUpper();
+        //if (p.RightItem != null)
+        //{
+        //    rightBox.ItemSprite = p.RightItem;
+        //}
+        //rightBox.Key = c.RightItemKey.ToUpper();
+        //inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
     }
 }
 

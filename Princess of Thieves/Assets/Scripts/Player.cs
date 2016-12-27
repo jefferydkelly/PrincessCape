@@ -10,6 +10,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
     private Animator myAnimator;
+    public Light myLight;
+    private float lightBase = 4;
     private MagicState mState = MagicState.Stun;
     private ArmorState aState = ArmorState.Base;
 	private int fwdX = 1;
@@ -23,7 +25,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	private int curHP = 0;
 	public int maxHP = 100;
 
-	private float curMP = 0;
+	public float curMP = 0;
 	public float maxMP = 100;
    
 	int curSpell = 0;
@@ -45,6 +47,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     [SerializeField]
     List<GameObject> startInventory;
     List<UsableItem> inventory;
+    private bool usedItem;
 
     InteractiveObject highlighted;
     void Awake()
@@ -79,7 +82,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         if (!GameManager.Instance.IsPaused)
         {
-
+            Debug.Log(myRigidBody.velocity);
+            myLight.intensity = 4 + Math.Abs(myRigidBody.velocity.x);
             //lightOnPlayer = GetLocalLightLevel();
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;

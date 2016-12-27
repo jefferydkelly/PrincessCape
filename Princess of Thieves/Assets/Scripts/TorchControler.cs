@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class TorchControler : JDMappableObject, BurnableObject {
-	Light yagami;
+	Light yagami; //my god
 	public Sprite onSprite;
 	public Sprite offSprite;
 	SpriteRenderer myRenderer;
@@ -12,6 +12,10 @@ public class TorchControler : JDMappableObject, BurnableObject {
 		myRenderer = GetComponent<SpriteRenderer>();
 	}
 
+    void Update()
+    {
+        yagami.range = Random.Range(9, 12);
+    }
 	public void Burn()
 	{
 		yagami.enabled = true;

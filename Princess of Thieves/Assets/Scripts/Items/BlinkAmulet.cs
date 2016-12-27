@@ -33,6 +33,11 @@ public class BlinkAmulet : UsableItem {
         
     }
 
+    public override void UseMana()
+    {
+        throw new NotImplementedException();
+    }
+
     // Use this for initialization
     void Start () {
 	
