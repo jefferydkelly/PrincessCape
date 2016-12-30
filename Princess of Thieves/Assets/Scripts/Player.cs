@@ -83,9 +83,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         if (!GameManager.Instance.IsPaused)
         {
-            Debug.Log(myRigidBody.velocity);
-            myLight.intensity = 4 + Math.Abs(myRigidBody.velocity.x);
-            //lightOnPlayer = GetLocalLightLevel();
+           
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
 

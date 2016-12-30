@@ -178,7 +178,7 @@ public class GameManager {
 		{
 			yield return new WaitForEndOfFrame();
 
-			SceneManager.UnloadSceneAsync(sceneName);
+			//SceneManager.UnloadSceneAsync(sceneName);
 		}
 	}
 	void OnSceneUnloaded(Scene scene)

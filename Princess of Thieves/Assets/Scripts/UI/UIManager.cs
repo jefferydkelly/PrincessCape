@@ -371,8 +371,8 @@ public class UIManager : MonoBehaviour
  */
 public struct ImageTextCombo
 {
-	//The background image
-	public Image bg;
+    //The background image
+    public Image bg;
 	public Image img;
 	//The text box
 	public Text txt;
@@ -381,9 +381,10 @@ public struct ImageTextCombo
 
 	public ImageTextCombo(string s)
 	{
+        
         bg = GameObject.Find(s).GetComponent<Image>();
 
-		img = bg.GetComponentsInChildren<Image>()[1];
+		img = bg.GetComponentsInChildren<Image>()[0];
 		txt = img.GetComponentInChildren<Text>();
 		txt.text = "";
 		enabled = true;
