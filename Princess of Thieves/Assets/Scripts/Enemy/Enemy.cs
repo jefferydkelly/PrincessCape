@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+
+//--------------------
+//Bug Fixes:
+//When reseting, it not longer looks for Vector zero, and will take it's original patrol destination.
+//Only sees 'behind' it, needed negative forward
+
+//------------
+//Bugs
+//
 public class Enemy : ResettableObject {
     Rigidbody2D myRigidBody;
     SpriteRenderer myRenderer;
@@ -96,6 +105,7 @@ public class Enemy : ResettableObject {
             {
                 atPatrolDest = true;
                 goingToPatrolDest = false;
+                Flip();
                 //transform.position = Vector3.MoveTowards(transform.position, originalDest, 0.05f);
             }
         }
@@ -108,6 +118,7 @@ public class Enemy : ResettableObject {
             }
             else
             {
+                Flip();
                 atPatrolDest = true;
                 goingToPatrolDest = true;
             }
@@ -117,8 +128,10 @@ public class Enemy : ResettableObject {
     void Update () {
         if (!GameManager.Instance.IsPaused)
         {
+           // Debug.Log(curState);
             switch (curState)
             {
+               
                 case EnemyState.Patrol://it's patrolling
                     Patrol(); //moved in order to save space.
                     break; //AT PATROL STATE---------------------   
@@ -127,6 +140,7 @@ public class Enemy : ResettableObject {
                     transform.position = Vector3.MoveTowards(transform.position, GameManager.Instance.Player.transform.position, 0.03f);
                     if(Time.time - lastTimeSeenPlayer > 3f)
                     {
+                        Debug.Log("This machine is experiencing uncertainty");
                         curState = EnemyState.Patrol;
                     }
                     break;
@@ -148,16 +162,14 @@ public class Enemy : ResettableObject {
             Vector3 dif = p.transform.position - transform.position;
             if (dif.sqrMagnitude <= sightRange * sightRange)
             {
-                if (InSightCone(p.gameObject, sightAngle)) //this is no longer working
+                if (InSightCone(p.gameObject, sightAngle))
                 {
-                   
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
                     {                      
-                        Debug.Log("See");
+                       // 
                         playerInSight = true;
                         curState = EnemyState.Chase;
                         lastTimeSeenPlayer = Time.time;
-
                         return;                       
                     }
                 }
@@ -189,17 +201,18 @@ public class Enemy : ResettableObject {
     }
     protected bool InSightCone(GameObject go, float ang)
 	{
+        //angle is 60deg
         //Vector2 dif = go.transform.position - transform.position;
         //float dot = Vector2.Dot(dif.normalized, Forward);
         //return dot >= Mathf.Cos(ang * Mathf.Deg2Rad);
-        float dot = Vector3.Dot(transform.position, (go.transform.position - transform.position).normalized);
-       
-        if (dot < ang)
-        {
-            Debug.Log("Quite facing");
+        float dot = Vector2.Dot(-Forward, (go.transform.position - transform.position).normalized);
 
+        if (dot >= Mathf.Cos(ang * Mathf.Deg2Rad))
+        {
+            Debug.Log("forward sensors detect motion");
             return true;
-        }else
+        }
+        else
         {
             return false;
         }
@@ -246,11 +259,11 @@ public class Enemy : ResettableObject {
     {
         transform.position = startPosition;
         isFrozen = false;
-        curState = EnemyState.Stationary;
+        curState = EnemyState.Patrol;
         lastTimeSeenPlayer = 0f;
         playerChaseDest = Vector3.zero;
         atChaseDest = true;
-        patrolDest = Vector3.zero;
+        patrolDest = new Vector3(transform.position.x + patrolDist, transform.position.y, 0);
         patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
         atPatrolDest = true;
     }

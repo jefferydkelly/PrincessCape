@@ -248,12 +248,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                    
                     if (controller.ActivateRightItem)
                     {
-                        Debug.Log("Here");
+                       // Debug.Log("Here");
                         rightItem.Activate();
                     }
                     else if (controller.DeactivateRightItem)
                     {
-                        Debug.Log("Out of Here");
+                       // Debug.Log("Out of Here");
                         rightItem.Deactivate();
                     }
                 }
