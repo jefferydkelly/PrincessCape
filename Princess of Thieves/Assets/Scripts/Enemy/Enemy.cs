@@ -13,7 +13,7 @@ public class Enemy : ResettableObject {
 
 
     //AI Things
-    public enum EnemyState { Stationary, Patrol, Chase, Charge, ActualShoot };
+    public enum EnemyState { Stationary, Patrol, Chase, Charge };
     EnemyState curState = EnemyState.Patrol;
     float sightRange = 5.0f;
     float sightAngle = 60.0f;
@@ -53,7 +53,7 @@ public class Enemy : ResettableObject {
         playerObj = GameManager.Instance.Player.GameObject;
         originalDest = transform.position;
         patrolDest = new Vector3(transform.position.x + patrolDist, transform.position.y, 0);
-        Debug.Log(patrolDest);
+       // Debug.Log(patrolDest);
     }
 
     /// <summary>
@@ -82,6 +82,37 @@ public class Enemy : ResettableObject {
         Flip();
         return new Vector3(transform.position.x + fwdX * 5, transform.position.y, transform.position.z);
     }
+
+    void Patrol()
+    {
+        if (goingToPatrolDest)
+        {
+            if (Vector3.Distance(patrolDest, transform.position) >= 0.5f)
+            {
+                // Debug.Log("here");                        
+                transform.position = Vector3.MoveTowards(transform.position, patrolDest, 0.03f);
+            }
+            else
+            {
+                atPatrolDest = true;
+                goingToPatrolDest = false;
+                //transform.position = Vector3.MoveTowards(transform.position, originalDest, 0.05f);
+            }
+        }
+        else
+        {
+            if (Vector3.Distance(originalDest, transform.position) >= 0.5f)
+            {
+                // Debug.Log("here2");
+                transform.position = Vector3.MoveTowards(transform.position, originalDest, 0.03f);
+            }
+            else
+            {
+                atPatrolDest = true;
+                goingToPatrolDest = true;
+            }
+        }
+    }
     // Update is called once per frame
     void Update () {
         if (!GameManager.Instance.IsPaused)
@@ -89,33 +120,7 @@ public class Enemy : ResettableObject {
             switch (curState)
             {
                 case EnemyState.Patrol://it's patrolling
-                    if (goingToPatrolDest)
-                    {
-                        if (Vector3.Distance(patrolDest, transform.position) >= 0.5f)
-                        {
-                           // Debug.Log("here");                        
-                            transform.position = Vector3.MoveTowards(transform.position, patrolDest, 0.03f);
-                        }
-                        else
-                        {
-                            atPatrolDest = true;
-                            goingToPatrolDest = false;
-                            //transform.position = Vector3.MoveTowards(transform.position, originalDest, 0.05f);
-                        }
-                    }
-                    else
-                    {
-                        if (Vector3.Distance(originalDest, transform.position) >= 0.5f)
-                        {
-                           // Debug.Log("here2");
-                            transform.position = Vector3.MoveTowards(transform.position, originalDest, 0.03f);
-                        }
-                        else
-                        {
-                            atPatrolDest = true;
-                            goingToPatrolDest = true;              
-                        }
-                    }
+                    Patrol(); //moved in order to save space.
                     break; //AT PATROL STATE---------------------   
                 case EnemyState.Chase:
                     
@@ -138,24 +143,22 @@ public class Enemy : ResettableObject {
         Color color = Color.red;
         //is it more efficient to 'get player' once in Start? 
         Player p = GameManager.Instance.Player;
-        if (!p.Hidden)
+        if (!GameManager.Instance.Player.IsUsingInvisibilityCloak) //new Hidden
         {
             Vector3 dif = p.transform.position - transform.position;
             if (dif.sqrMagnitude <= sightRange * sightRange)
             {
-              
-
                 if (InSightCone(p.gameObject, sightAngle)) //this is no longer working
                 {
                    
                     if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
-                    {
-
+                    {                      
+                        Debug.Log("See");
                         playerInSight = true;
                         curState = EnemyState.Chase;
                         lastTimeSeenPlayer = Time.time;
-                           
-                        return;
+
+                        return;                       
                     }
                 }
             }

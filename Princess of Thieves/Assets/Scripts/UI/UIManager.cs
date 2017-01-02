@@ -384,7 +384,7 @@ public struct ImageTextCombo
         
         bg = GameObject.Find(s).GetComponent<Image>();
 
-		img = bg.GetComponentsInChildren<Image>()[0];
+		img = bg.GetComponentsInChildren<Image>()[1];
 		txt = img.GetComponentInChildren<Text>();
 		txt.text = "";
 		enabled = true;
@@ -496,6 +496,7 @@ public struct InteractionBox
 
         set
         {
+            //12/31 throwing errors in 5.5. When moving towards the item chest, it doesn't seem to have an object reference.
             background.SetActive(value);
         }
     }

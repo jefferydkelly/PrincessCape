@@ -43,7 +43,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     [SerializeField]
     GameObject startItemObject;
     UsableItem leftItem;
-    UsableItem rightItem;
+    public UsableItem rightItem;
     [SerializeField]
     List<GameObject> startInventory;
     List<UsableItem> inventory;
@@ -51,6 +51,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
+    private bool isInvisible;
+
+    public bool isUisngInvisibilityCloak = false;
     void Awake()
     {
         startPos = transform;
@@ -165,11 +168,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
-            } else if (IsUsingMagnetGloves)
+            }
+            else if (IsUsingMagnetGloves)
             {
+
                 UsableItem magGloves = leftItem is MagnetGloves ? leftItem : rightItem;
                 if (leftItem == magGloves ? controller.LeftItemDown : controller.RightItemDown)
                 {
+                
                     (magGloves as MagnetGloves).Use();
                 }
                 myRigidBody.ClampVelocity(maxSpeed * 3, VelocityType.Full);
@@ -186,6 +192,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     myRigidBody.Translate(blockMove);
                 }
             }
+            
         }
 
         tryingToJump = false;
@@ -204,6 +211,18 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{
+            if (IsUsingInvisibilityCloak)
+            {
+                Color col = myRenderer.color;
+                col.a = 0.5f;
+                myRenderer.color = col;
+            }
+            else
+            {
+                Color col = myRenderer.color;
+                col.a = 1f;
+                myRenderer.color = col;
+            }
             if (controller.Horizontal != 0)
                 myAnimator.SetBool("FWD", true);
             else
@@ -215,6 +234,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 {
                     if (controller.ActivateLeftItem)
                     {
+
                         leftItem.Activate();
                     }
                     else if (controller.DeactivateLeftItem)
@@ -225,12 +245,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
                 if (rightItem != null)
                 {
+                   
                     if (controller.ActivateRightItem)
                     {
+                        Debug.Log("Here");
                         rightItem.Activate();
                     }
                     else if (controller.DeactivateRightItem)
                     {
+                        Debug.Log("Out of Here");
                         rightItem.Deactivate();
                     }
                 }
@@ -807,7 +830,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         return a ^ b;
     }
     #endregion flags
-
+    /// <summary>
+    /// Sets whether or not the player is invisible
+    /// </summary>
+    /// <param name="TF"></param>
+    public bool IsUsingInvisibilityCloak
+    {
+        get { return isInvisible; } //Space Conserved
+        set { isInvisible = value;}
+    }
     public void EquipItem(int itemNum, bool left)
     {
         if (itemNum < inventory.Count)

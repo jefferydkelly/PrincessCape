@@ -8,7 +8,8 @@ public class LightAffectedByPlayer : MonoBehaviour {
     Light myLight;
     Rigidbody2D myRigidBody;
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         myLight = GetComponent<Light>();
         myRigidBody = GameManager.Instance.Player.GetComponent<Rigidbody2D>();
 
@@ -16,7 +17,7 @@ public class LightAffectedByPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(myRigidBody.velocity);
+      //  Debug.Log(myRigidBody.velocity);
         myLight.intensity = 4 + Math.Abs(myRigidBody.velocity.x);
         //lightOnPlayer = GetLocalLightLevel();
     }
