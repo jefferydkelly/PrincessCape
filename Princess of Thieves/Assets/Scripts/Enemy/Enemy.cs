@@ -164,12 +164,13 @@ public class Enemy : ResettableObject {
             {
                 if (InSightCone(p.gameObject, sightAngle))
                 {
-                    if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
+                    if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms"))) //doesn't hit a platform
                     {                      
                        // 
                         playerInSight = true;
                         curState = EnemyState.Chase;
                         lastTimeSeenPlayer = Time.time;
+                        
                         return;                       
                     }
                 }

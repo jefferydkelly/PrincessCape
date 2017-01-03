@@ -53,7 +53,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     Rigidbody2D highlightedBody;
     private bool isInvisible;
 
-    public bool isUisngInvisibilityCloak = false;
+    private bool isUsingReflectCape = false;
+    public float lastTimeReflectUsed = 0;
     void Awake()
     {
         startPos = transform;
@@ -248,7 +249,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                    
                     if (controller.ActivateRightItem)
                     {
-                       // Debug.Log("Here");
+                        Debug.Log("Here");
                         rightItem.Activate();
                     }
                     else if (controller.DeactivateRightItem)
@@ -342,6 +343,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 myRigidBody.velocity = Vector2.zero;
             }
         }
+       
 	}
 
 	void OnTriggerEnter2D(Collider2D col)
@@ -358,7 +360,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             GameManager.Instance.Reset();
         }
-	}
+        if (col.CompareTag("Projectile"))
+        {
+            if (IsUsingReflectCape)
+            {
+                Reflect(col.gameObject);
+            }
+        }
+    }
 
 	void OnTriggerExit2D(Collider2D col)
 	{
@@ -374,7 +383,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 	#endregion
    
-
+    void Reflect(GameObject proj)
+    {
+        proj.GetComponent<Rigidbody2D>().velocity = proj.GetComponent<Rigidbody2D>().velocity * -1;
+    }
     void CreateDustParticle(Vector2 posOfParticle)
     {
         lastDustPart = Time.time;
@@ -734,6 +746,17 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+    public bool IsUsingReflectCape
+    {
+        get
+        {
+            return isUsingReflectCape;
+        }
+        set
+        {
+            isUsingReflectCape = value; 
+        }
+    }
     public bool IsUsingMagnetGloves
     {
         get
