@@ -383,7 +383,6 @@ public struct ImageTextCombo
 	{
         
         bg = GameObject.Find(s).GetComponent<Image>();
-
 		img = bg.GetComponentsInChildren<Image>()[1];
 		txt = img.GetComponentInChildren<Text>();
 		txt.text = "";

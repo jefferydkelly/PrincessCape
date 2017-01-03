@@ -16,20 +16,21 @@ public class InventoryMenu : MonoBehaviour {
     bool showingInfo = false;
     private void OnEnable()
     {
-        if (controller == null)
-        {
-            controller = GameManager.Instance.Player.Controller;
-        }
+		if (GameManager.Instance.IsInMenu) {
+			if (controller == null) {
+				controller = GameManager.Instance.Player.Controller;
+			}
 
-        childImages = GetComponentsInChildren<Image>();
-        UpdateUI();
-        UIManager.Instance.ShowInteraction("Info");
-        InvokeRepeating("HandleInput", waitTime, waitTime);
+			childImages = GetComponentsInChildren<Image> ();
+			UpdateUI ();
+			UIManager.Instance.ShowInteraction ("Info");
+			InvokeRepeating ("HandleInput", waitTime, waitTime);
 
-        leftItemDown = false;
-        rightItemDown = false;
-        interactDown = false;
-        showingInfo = false;
+			leftItemDown = false;
+			rightItemDown = false;
+			interactDown = false;
+			showingInfo = false;
+		}
     }
 
     private void OnDisable()
