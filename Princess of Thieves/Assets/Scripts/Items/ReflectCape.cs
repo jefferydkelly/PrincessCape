@@ -21,7 +21,7 @@ public class ReflectCape : UsableItem
 
     public override void Activate()
     {
-        if (Time.time - GameManager.Instance.Player.lastTimeReflectUsed >= 3f)
+		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
         {
             GameManager.Instance.Player.IsUsingReflectCape = true;
         }
@@ -36,7 +36,9 @@ public class ReflectCape : UsableItem
         if (GameManager.Instance.Player.IsUsingReflectCape == true)
         {
             GameManager.Instance.Player.IsUsingReflectCape = false;
-            GameManager.Instance.Player.lastTimeReflectUsed = Time.time;
+			onCooldown = true;
+			WaitDelegate w = () => { onCooldown = false; };
+			StartCoroutine(gameObject.RunAfter(w, cooldownTime));
         }
     }
 

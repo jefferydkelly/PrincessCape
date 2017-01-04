@@ -8,12 +8,12 @@ public class InvisibilityCloak : UsableItem {
     
     public override void Activate()
     {
-        GameManager.Instance.Player.IsUsingInvisibilityCloak = true;
+        
     }
 
     public override void Deactivate()
     {
-        GameManager.Instance.Player.IsUsingInvisibilityCloak = false;
+        
     }
 
     public override void UseMana()

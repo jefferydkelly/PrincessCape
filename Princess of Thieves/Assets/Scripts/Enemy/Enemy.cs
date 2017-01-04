@@ -157,24 +157,23 @@ public class Enemy : ResettableObject {
         Color color = Color.red;
         //is it more efficient to 'get player' once in Start? 
         Player p = GameManager.Instance.Player;
-        if (!GameManager.Instance.Player.IsUsingInvisibilityCloak) //new Hidden
+        
+        Vector3 dif = p.transform.position - transform.position;
+        if (dif.sqrMagnitude <= sightRange * sightRange)
         {
-            Vector3 dif = p.transform.position - transform.position;
-            if (dif.sqrMagnitude <= sightRange * sightRange)
+            if (InSightCone(p.gameObject, sightAngle))
             {
-                if (InSightCone(p.gameObject, sightAngle))
-                {
-                    if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms"))) //doesn't hit a platform
-                    {                      
-                       // 
-                        playerInSight = true;
-                        curState = EnemyState.Chase;
-                        lastTimeSeenPlayer = Time.time;
-                        
-                        return;                       
-                    }
+                if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms"))) //doesn't hit a platform
+                {                      
+                   // 
+                    playerInSight = true;
+                    curState = EnemyState.Chase;
+                    lastTimeSeenPlayer = Time.time;
+                    
+                    return;                       
                 }
             }
+            
         }
 	
         playerInSight = false;

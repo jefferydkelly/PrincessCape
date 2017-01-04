@@ -27,8 +27,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	public float curMP = 0;
 	public float maxMP = 100;
-   
-	int curSpell = 0;
 
     private int numRopesTouching = 0;
 	PlayerState state = PlayerState.Normal;
@@ -51,10 +49,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
-    private bool isInvisible;
-
-    private bool isUsingReflectCape = false;
-    public float lastTimeReflectUsed = 0;
+   
     void Awake()
     {
         startPos = transform;
@@ -211,19 +206,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
 
 		if (!GameManager.Instance.IsPaused)
-		{
-            if (IsUsingInvisibilityCloak)
-            {
-                Color col = myRenderer.color;
-                col.a = 0.5f;
-                myRenderer.color = col;
-            }
-            else
-            {
-                Color col = myRenderer.color;
-                col.a = 1f;
-                myRenderer.color = col;
-            }
+		{   
             if (controller.Horizontal != 0)
                 myAnimator.SetBool("FWD", true);
             else
@@ -609,6 +592,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets the inventory.
+	/// </summary>
+	/// <value>The inventory.</value>
     public List<UsableItem> Inventory
     {
         get
@@ -617,6 +604,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Gets the sprite for the left item.
+	/// </summary>
+	/// <value>The left item's sprite.  Null otherwise.</value>
     public Sprite LeftItem
     {
         get
@@ -625,6 +616,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Gets the sprite for the right item.
+	/// </summary>
+	/// <value>The right item's sprite if there is one.  Null otherwise.</value>
     public Sprite RightItem
     {
         get
@@ -633,6 +628,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Adds the item to the player's inventory.
+	/// </summary>
+	/// <param name="go">The GameObjet containing the item.</param>
     public void AddItem(GameObject go)
     {
         if (go.GetComponent<UsableItem>() != null)
@@ -722,6 +721,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is pushing.
+	/// </summary>
+	/// <value><c>true</c> if is pushing; otherwise, <c>false</c>.</value>
     public bool IsPushing
     {
         get
@@ -746,17 +749,35 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is using reflect cape.
+	/// </summary>
+	/// <value><c>true</c> if is using reflect cape; otherwise, <c>false</c>.</value>
     public bool IsUsingReflectCape
     {
         get
         {
-            return isUsingReflectCape;
+			return (state & PlayerState.UsingReflectCape) > 0;;
         }
         set
         {
-            isUsingReflectCape = value; 
+			if (value && !IsUsingReflectCape && !IsFrozen)
+			{
+				state |= PlayerState.UsingReflectCape;
+				state |= PlayerState.Frozen;
+			}
+			else
+			{
+				state &= ~PlayerState.UsingReflectCape;
+				state &= ~PlayerState.Frozen;
+			}
         }
     }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is using magnet gloves.
+	/// </summary>
+	/// <value><c>true</c> if is using magnet gloves; otherwise, <c>false</c>.</value>
     public bool IsUsingMagnetGloves
     {
         get
@@ -784,84 +805,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     void Unfreeze() {
 		IsFrozen = false;
 	}
-    #region UpgradeRegion
-    public void UnlockMagicWand()
-    {
-        mState = UnsetFlag(mState, MagicState.NoMagic);
-        mState = SetFlag(mState, MagicState.Range);
-        
-    }
-    public void ArmorUp()
-    {
-        Debug.Log("I upgraded my armor");
-        
-    }
-
-    public void UnlockDoubleJump()
-    {
-        //Unlocks Double Jump
-        mState = SetFlag(mState, MagicState.DJump);
-    }
-    public void UnlockWallJump()
-    {
-        mState = SetFlag(mState, MagicState.WallJump);
-        Debug.Log("Play WJump? " + HasFlag(mState, MagicState.WallJump));
-    }
-    #endregion
-    #region flags
-    public static MagicState SetFlag(MagicState a, MagicState b)
-    {
-        //a |= b;
-        return a |= b;
-    }
-
-    public static MagicState UnsetFlag(MagicState a, MagicState b)
-    {
-        return a & (~b);
-    }
-
-    // Works with "None" as well
-    public static bool HasFlag(MagicState a, MagicState b)
-    {
-        return (a & b) == b;
-    }
-
-    public static MagicState ToggleFlag(MagicState a, MagicState b)
-    {
-        return a ^ b;
-    }
-
-    public static ArmorState ASetFlag(ArmorState a, ArmorState b)
-    {
-        //a |= b;
-        return a | b;
-    }
-
-    public static ArmorState AUnsetFlag(ArmorState a, ArmorState b)
-    {
-        return a & (~b);
-    }
-
-    // Works with "None" as well
-    public static bool AHasFlag(ArmorState a, ArmorState b)
-    {
-        return (a & b) == b;
-    }
-
-    public static ArmorState AToggleFlag(ArmorState a, ArmorState b)
-    {
-        return a ^ b;
-    }
-    #endregion flags
-    /// <summary>
-    /// Sets whether or not the player is invisible
-    /// </summary>
-    /// <param name="TF"></param>
-    public bool IsUsingInvisibilityCloak
-    {
-        get { return isInvisible; } //Space Conserved
-        set { isInvisible = value;}
-    }
+   
+	/// <summary>
+	/// Equips the item.
+	/// </summary>
+	/// <param name="itemNum">Item number.</param>
+	/// <param name="left">If set to <c>true</c> left.</param>
     public void EquipItem(int itemNum, bool left)
     {
         if (itemNum < inventory.Count)
@@ -883,6 +832,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Reset this instance.
+	/// </summary>
     public override void Reset()
     {
         myRigidBody.velocity = Vector2.zero;
@@ -901,7 +853,8 @@ public enum PlayerState
 	Dashing = 2,
 	Frozen = 4,
     Pushing = 8,
-    UsingMagnetGloves = 16
+    UsingMagnetGloves = 16,
+	UsingReflectCape = 32
 }
 
 [System.Flags]
