@@ -88,8 +88,11 @@ public class UIManager : MonoBehaviour
 			areaNameBox.enabled = false;
 
             leftBox = new ItemBox("LeftBox");
+			leftBox.Enabled = true;
             rightBox = new ItemBox("RightBox");
+			rightBox.Enabled = true;
             interactionBox = new InteractionBox("InteractBox");
+			interactionBox.Enabled = true;
             
           
             inventoryMenu = GameObject.Find("InventoryMenu");
