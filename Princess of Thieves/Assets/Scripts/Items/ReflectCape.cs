@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Bugs
+//Cooldown coroutine doesn't run
 public class ReflectCape : UsableItem
 {
 

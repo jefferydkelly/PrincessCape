@@ -216,7 +216,15 @@ public class Enemy : ResettableObject {
         {
             return false;
         }
-       
+    }
+
+    /// <summary>
+    /// Fires in an arc.
+    /// </summary>
+    private void Fire()
+    {
+        GameObject temp = new GameObject(); //change to instantiate once I put a prefab in
+        temp.GetComponent<Rigidbody2D>().AddForce(new Vector2(fwdX, 1), ForceMode2D.Force);
     }
     private void Flip()
     {
