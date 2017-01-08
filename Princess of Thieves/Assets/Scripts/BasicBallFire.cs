@@ -11,21 +11,22 @@ public class BasicBallFire : MonoBehaviour {
     public float timeToFire = 3f;
 	// Use this for initialization
 	void Start () {
-		
+		WaitDelegate wd;
+		wd = () => {
+			Fire();
+		};
+
+		StartCoroutine (gameObject.RunAfterRepeating (wd, timeToFire));
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(Time.time - lastTimeFire >= timeToFire)
-        {
-            Fire();
-            lastTimeFire = Time.time;
-        }
+		
 	}
     void Fire()
     {
         GameObject temp = Instantiate(projectile, transform.position,transform.rotation);
-        temp.GetComponent<Rigidbody2D>().AddForce(new Vector2(1, 0)*150,ForceMode2D.Force);
+        temp.GetComponent<Rigidbody2D>().AddForce(new Vector2(0.5f, 0.5f)*150,ForceMode2D.Force);
     }
 
 }

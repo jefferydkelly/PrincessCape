@@ -368,7 +368,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
    
     void Reflect(GameObject proj)
     {
-        proj.GetComponent<Rigidbody2D>().velocity = proj.GetComponent<Rigidbody2D>().velocity * -1;
+		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
+		rb.velocity = new Vector2 (-rb.velocity.x, rb.velocity.y);
     }
     void CreateDustParticle(Vector2 posOfParticle)
     {

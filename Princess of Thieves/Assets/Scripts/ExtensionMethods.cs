@@ -173,6 +173,21 @@ public static class ExtensionMethods{
 		w();
 	}
 
+	public static IEnumerator RunAfterRepeating(this GameObject go, WaitDelegate w, float time) {
+		float dt = 0;
+		while(true) {
+			do {
+				if (!GameManager.Instance.IsPaused) {
+					dt += Time.deltaTime;
+				}
+				yield return null;
+
+			} while(dt < time);
+			w();
+			dt = 0;
+		}
+	}
+
 	public static bool BetweenEx(this float f, float min, float max)
 	{
 		return f > min && f < max;
@@ -196,6 +211,20 @@ public static class ExtensionMethods{
     {
         return new Vector2(0, v.y);
     }
+
+	/// <summary>
+	/// Rotate the specified Vector2 by the given angle.
+	/// </summary>
+	/// <param name="v">V.</param>
+	/// <param name="angle">Angle.</param>
+	public static void Rotate(this Vector2 v, float angle) {
+		float dx = v.x;
+		float dy = v.y;
+		float sin = Mathf.Sin (angle);
+		float cos = Mathf.Cos (angle);
+		v.x = dx * cos - dy * sin;
+		v.y = dx * sin + dy * cos;
+	}
 
 
     public static string ToXString(this Vector3 v)
