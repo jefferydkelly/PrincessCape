@@ -6,6 +6,6 @@ public class GoToSceneButton : UIElement {
 	public string scene;
 	public override void Click()
 	{
-		SceneManager.LoadScene(scene);
+		//SceneManager.LoadScene(scene);
 	}
 }
