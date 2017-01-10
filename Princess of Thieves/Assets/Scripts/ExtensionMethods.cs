@@ -4,7 +4,13 @@ using System.Collections.Generic;
 
 public delegate void WaitDelegate();
 public static class ExtensionMethods{
-	
+
+	/// <summary>
+	/// Checks if the tag of the Collider's objects contains the given string
+	/// </summary>
+	/// <returns><c>true</c>, if the Collider's tag contains the string, <c>false</c> otherwise.</returns>
+	/// <param name="col">Col.</param>
+	/// <param name="tag">Tag.</param>
 	public static bool TagContains(this Collider2D col, string tag)
 	{
 		

@@ -1,4 +1,8 @@
 sceneSetups:
+<<<<<<< HEAD
 - path: Assets/Scenes/3dScene.unity
+=======
+- path: Assets/Scenes/TitleScreen.unity
+>>>>>>> adfdf6420f1560ddffd902989a9d85404edfe834
   isLoaded: 1
   isActive: 1
