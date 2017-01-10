@@ -33,6 +33,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     bool tryingToJump = false;
     public float lightOnPlayer;
 
+    
     //Rose Makes Dust-------------------------------***
     [SerializeField]
     GameObject dustParticle;
@@ -211,6 +212,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 myAnimator.SetBool("FWD", true);
             else
                 myAnimator.SetBool("FWD", false);
+
+            if (controller.PeerDown)
+            {
+                Camera.main.transform.Rotate(new Vector3(15, 0, 0));
+            }
+            else if (controller.PeerUp)
+            {
+                Camera.main.transform.Rotate(new Vector3(-15, 0, 0));
+            }
+            else if(!controller.PeerUp && !controller.PeerDown)
+            {
+                //of course this wouldn't work
+                Camera.main.transform.Rotate(new Vector3(0, 0, 0));
+            }
             if (!Hidden)
 			{
                 //UIManager.Instance.LightLevel = GetLocalLightLevel();

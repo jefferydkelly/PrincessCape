@@ -19,6 +19,8 @@ public class Controller
     string interactKey;
     string sneakKey;
 
+    string peerDownKey;
+    string peerUpKey;
 	//Menu Keys
 	string pauseKey;
 
@@ -63,6 +65,8 @@ public class Controller
             leftItemKey = "x";
             sneakKey = "left shift";
 			pauseKey = "p";
+            peerDownKey = "m";
+            peerUpKey = "k";
 
         }
         else
@@ -189,6 +193,22 @@ public class Controller
         get
         {
             return Input.GetKey(sneakKey);
+        }
+    }
+
+    public bool PeerUp
+    {
+        get
+        {
+            return Input.GetKeyDown(peerUpKey);
+        }
+    }
+
+    public bool PeerDown
+    {
+        get
+        {
+            return Input.GetKeyDown(peerDownKey);
         }
     }
 
