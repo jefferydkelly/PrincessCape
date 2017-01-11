@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
 	private static UIManager instance = null;
 
 	//The text box that shows messages at the top of the screen
-	ImageTextCombo messageBox, dialogBox, nameBox, spellBox;
+	ImageTextCombo messageBox, dialogBox, nameBox;
 
     //The Stealth Meter that displays how much light is currently shining on the player
     StealthMeter stealthMeter;
@@ -80,9 +80,6 @@ public class UIManager : MonoBehaviour
 
 			dialogBox = new ImageTextCombo("DialogBox");
 			dialogBox.Enabled = false;
-
-			spellBox = new ImageTextCombo("SpellNameBox");
-			spellBox.Enabled = false;
 
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
@@ -293,11 +290,6 @@ public class UIManager : MonoBehaviour
 			mpBar.enabled = val;
             //stealthMeter.Enabled = val;
 		}
-	}
-
-	public void UpdateSpellName(string spellName)
-	{
-		spellBox.Text = spellName;
 	}
 
 	public void EnterArea(string s)

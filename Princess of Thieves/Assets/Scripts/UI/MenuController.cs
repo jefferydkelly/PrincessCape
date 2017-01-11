@@ -5,13 +5,18 @@ using System.Linq;
 
 public class MenuController : MonoBehaviour {
 
+	static Controller controller = null;
 	List<UIElement> elements;
 	UIElement selected = null;
 	// Use this for initialization
 	float waitTime = 0.2f;
 	float timeWaited = 0.0f;
 	void Start () {
-        GetElements();
+		if (controller == null) {
+			controller = new Controller ();
+			GetElements ();
+		}
+        
 	}
 	
     protected void GetElements()
@@ -26,31 +31,17 @@ public class MenuController : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
+		
 		timeWaited += Time.deltaTime;
 
-		if (Input.GetKeyDown(KeyCode.Return))
-		{
-			Selected.Click();
-		}
-		else if (Input.GetKeyDown(KeyCode.DownArrow))
-		{
-			SelectedElement--;
-			timeWaited = 0;
-		}
-		else if (Input.GetKeyDown(KeyCode.UpArrow))
-		{
-			SelectedElement++;
-			timeWaited = 0;
-		} else if (timeWaited >= waitTime)
-		{
+		if (controller.Jump) {
+			Selected.OnClick.Invoke ();
+		} else if (timeWaited >= waitTime) {
 			timeWaited -= waitTime;
 
-			if (Input.GetKey(KeyCode.DownArrow))
-			{
+			if (controller.Vertical < 0) {
 				SelectedElement--;
-			}
-			else if (Input.GetKey(KeyCode.UpArrow))
-			{
+			} else if (controller.Vertical > 0) {
 				SelectedElement++;
 			}
 
@@ -65,11 +56,11 @@ public class MenuController : MonoBehaviour {
 		{
 			if (selected != null)
 			{
-				selected.Unselected();
+				selected.OnMouseLeave.Invoke ();
 			}
 
 			selected = value;
-			selected.Selected();
+			selected.OnMouseOver.Invoke ();
 		}
 
 		get

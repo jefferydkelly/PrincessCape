@@ -291,7 +291,7 @@ public class Controller
 		}
 	}
 
-    bool IsKeyboard
+    public bool IsKeyboard
     {
         get
         {
