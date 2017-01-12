@@ -6,9 +6,10 @@ public class HowToPlayScreen : MenuController {
 
 	// Use this for initialization
 	void Start () {
-        GetElements();
-        Controller c = new Controller();
-        GameObject.Find("MoveText").GetComponent<Text>().text = c.MovementInfo;
-        GameObject.Find("ActionText").GetComponent<Text>().text = c.ActionInfo;
+		if (controller == null) {
+			controller = new Controller ();
+		}
+        GameObject.Find("MoveText").GetComponent<Text>().text = controller.MovementInfo;
+        GameObject.Find("ActionText").GetComponent<Text>().text = controller.ActionInfo;
     }
 }
