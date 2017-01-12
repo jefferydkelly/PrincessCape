@@ -46,6 +46,8 @@ public class Enemy : ResettableObject {
     private float abilityTimeStart = 0f;
 
     private bool isFrozen = false;
+
+    private float dieValue;
     #region cooldownTimes
     [SerializeField]
     float timeToChargeAttack = 1f;
@@ -56,6 +58,10 @@ public class Enemy : ResettableObject {
     #endregion cooldownTimes
     // Use this for initialization
     void Start () {
+        Dies();
+        //MaterialPropertyBlock mater = new MaterialPropertyBlock();// = GetComponent<MaterialPropertyBlock>();
+        //mater.SetFloat("_SliceAmount", 0);
+        //GetComponent<SpriteRenderer>().SetPropertyBlock(mater);
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
@@ -91,7 +97,22 @@ public class Enemy : ResettableObject {
         Flip();
         return new Vector3(transform.position.x + fwdX * 5, transform.position.y, transform.position.z);
     }
-
+    void DieALittleMore()
+    {
+        dieValue += 1f;
+        MaterialPropertyBlock mater = new MaterialPropertyBlock();// = GetComponent<MaterialPropertyBlock>();
+        float sliceamt = 0.01f * dieValue;
+        mater.SetFloat("_SliceAmount", sliceamt);
+        GetComponent<SpriteRenderer>().SetPropertyBlock(mater);
+        if (dieValue >= 35)
+        {
+            Destroy(GameObject);
+        }
+    }
+    void Dies()
+    {
+        InvokeRepeating("DieALittleMore", 0f, 0.1f);
+    }
     void Patrol()
     {
         if (goingToPatrolDest)
@@ -128,7 +149,9 @@ public class Enemy : ResettableObject {
     void Update () {
         if (!GameManager.Instance.IsPaused)
         {
-           // Debug.Log(curState);
+           
+            //   GetComponent<MaterialPropertyBlock>().SetFloat("slice amount", 1);
+            // Debug.Log(curState);
             switch (curState)
             {
                

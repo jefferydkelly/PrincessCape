@@ -6,7 +6,10 @@ public class BlinkAmulet : UsableItem {
 
     public override void Activate()
     {
-
+        if (onCooldown)
+        {
+            return;
+        }
         GameObject temp = (GameObject)Instantiate(gameObject, transform.position, transform.rotation);
         temp.AddComponent<Rigidbody2D>();
         temp.AddComponent<BoxCollider2D>();
@@ -21,8 +24,7 @@ public class BlinkAmulet : UsableItem {
                 return;
             }
         }
-        //didn't breadk
-        Debug.Log("All gucci");
+        //didn't break
         GameManager.Instance.Player.transform.position = temp.transform.position;
         Destroy(temp);
 
@@ -30,7 +32,10 @@ public class BlinkAmulet : UsableItem {
 
     public override void Deactivate()
     {
-        
+        Debug.Log("hello");
+        onCooldown = true;
+        WaitDelegate w = () => { onCooldown = false; };
+        StartCoroutine(gameObject.RunAfter(w, cooldownTime));
     }
 
     public override void UseMana()
