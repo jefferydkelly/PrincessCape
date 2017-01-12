@@ -33,6 +33,7 @@ public class MagnetGloves : UsableItem {
     {
         //Shoot a ray fowards
         RaycastHit2D hit;
+
         hit = (Physics2D.Raycast(player.transform.position, player.Aiming,
             range, 1<<LayerMask.NameToLayer("Metal") ));
 
@@ -150,7 +151,6 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
         yield return new WaitForSeconds(delayTime);
         //if (hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == ~RigidbodyConstraints2D.FreezePosition)
             hit.collider.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-        Debug.Log("I'm here");
     }
     public override void Deactivate()
     {
@@ -176,7 +176,6 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
     {
         
         GameManager.Instance.Player.curMP = GameManager.Instance.Player.MP - manaCost;
-        Debug.Log(GameManager.Instance.Player.MPPercent);
     }
 
     private bool Toggled
