@@ -43,7 +43,7 @@ public class ExperimentalAudioScript : MonoBehaviour {
     void GenerateSoundValue(int kP)
     {
         Debug.Log(kP);
-        myAudio.volume = .25f + kP*.15f;
+        myAudio.volume = .25f + kP*.10f;
 
     }
 }
