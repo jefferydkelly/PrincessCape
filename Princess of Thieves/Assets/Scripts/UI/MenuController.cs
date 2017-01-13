@@ -5,7 +5,8 @@ using System.Linq;
 
 public class MenuController : MonoBehaviour {
 
-	static Controller controller = null;
+	protected static Controller controller = null;
+	[SerializeField]
 	List<UIElement> elements;
 	UIElement selected = null;
 	// Use this for initialization
@@ -14,21 +15,12 @@ public class MenuController : MonoBehaviour {
 	void Start () {
 		if (controller == null) {
 			controller = new Controller ();
-			GetElements ();
+		}
+		if (elements.Count > 0) {
+			SelectedElement = 0;
 		}
         
 	}
-	
-    protected void GetElements()
-    {
-        elements = FindObjectsOfType<UIElement>().ToList();
-        elements.Reverse();
-		if (elements.Count > 0)
-
-        {
-            Selected = elements[0];
-        }
-    }
 	// Update is called once per frame
 	void Update () {
 		
@@ -40,9 +32,9 @@ public class MenuController : MonoBehaviour {
 			timeWaited -= waitTime;
 
 			if (controller.Vertical < 0) {
-				SelectedElement--;
-			} else if (controller.Vertical > 0) {
 				SelectedElement++;
+			} else if (controller.Vertical > 0) {
+				SelectedElement--;
 			}
 
 		}
@@ -50,7 +42,7 @@ public class MenuController : MonoBehaviour {
 
 	}
 
-	UIElement Selected
+	public UIElement Selected
 	{
 		set
 		{

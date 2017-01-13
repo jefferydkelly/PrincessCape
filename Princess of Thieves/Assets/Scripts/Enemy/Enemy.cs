@@ -14,7 +14,7 @@ public class Enemy : ResettableObject {
     Rigidbody2D myRigidBody;
     SpriteRenderer myRenderer;
 
-    int fwdX = 1;
+    int fwdX = -1;
     public float maxSpeed = 1;
 
     [SerializeField]
@@ -26,6 +26,7 @@ public class Enemy : ResettableObject {
     EnemyState curState = EnemyState.Patrol;
     float sightRange = 5.0f;
     float sightAngle = 60.0f;
+	float sightCos = 0;
     bool playerInSight = false;
     GameObject playerObj;
     /// <summary>
@@ -68,6 +69,7 @@ public class Enemy : ResettableObject {
         playerObj = GameManager.Instance.Player.GameObject;
         originalDest = transform.position;
         patrolDest = new Vector3(transform.position.x + patrolDist, transform.position.y, 0);
+		sightCos = Mathf.Cos (sightAngle * Mathf.Deg2Rad);
        // Debug.Log(patrolDest);
     }
 
@@ -184,7 +186,7 @@ public class Enemy : ResettableObject {
         Vector3 dif = p.transform.position - transform.position;
         if (dif.sqrMagnitude <= sightRange * sightRange)
         {
-            if (InSightCone(p.gameObject, sightAngle))
+            if (InSightCone(p.gameObject))
             {
                 if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms"))) //doesn't hit a platform
                 {                      
@@ -222,23 +224,21 @@ public class Enemy : ResettableObject {
 
         }
     }
-    protected bool InSightCone(GameObject go, float ang)
+    protected bool InSightCone(GameObject go)
 	{
         //angle is 60deg
         //Vector2 dif = go.transform.position - transform.position;
         //float dot = Vector2.Dot(dif.normalized, Forward);
         //return dot >= Mathf.Cos(ang * Mathf.Deg2Rad);
-        float dot = Vector2.Dot(-Forward, (go.transform.position - transform.position).normalized);
+        float dot = Vector2.Dot(Forward, (go.transform.position - transform.position).normalized);
 
-        if (dot >= Mathf.Cos(ang * Mathf.Deg2Rad))
+		if (dot >= sightCos)
         {
             Debug.Log("forward sensors detect motion");
-            return true;
+            
         }
-        else
-        {
-            return false;
-        }
+
+		return dot >= sightCos;
     }
 
     /// <summary>
@@ -252,7 +252,7 @@ public class Enemy : ResettableObject {
     private void Flip()
     {
 		fwdX *= -1;
-		myRenderer.flipX = (fwdX == -1);
+		myRenderer.flipX = (fwdX == 1);
     }
     public Vector3 Forward
     {

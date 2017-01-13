@@ -12,10 +12,12 @@ public class UIElement: MonoBehaviour {
 	public UnityEvent OnMouseOver;
 	public UnityEvent OnMouseLeave;
 	public UnityEvent OnClick;
+	MenuController controller;
 	void Start() {
 		rect = GetComponent<RectTransform> ();
 		min = (Vector2)rect.transform.position - rect.rect.size / 2;
 		max = (Vector2)rect.transform.position + rect.rect.size / 2;
+		controller = FindObjectOfType<MenuController> ();
 
 	}
 	void Update() {
@@ -29,7 +31,11 @@ public class UIElement: MonoBehaviour {
 				OnClick.Invoke ();
 			} else {
 				if (!mouseOver) {
-					OnMouseOver.Invoke ();
+					if (controller) {
+						controller.Selected = this;
+					} else {
+						OnMouseOver.Invoke ();
+					}
 				}
 			}
 		} else if (mouseOver) {
