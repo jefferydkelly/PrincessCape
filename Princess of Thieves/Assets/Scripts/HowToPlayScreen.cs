@@ -11,5 +11,6 @@ public class HowToPlayScreen : MenuController {
 		}
         GameObject.Find("MoveText").GetComponent<Text>().text = controller.MovementInfo;
         GameObject.Find("ActionText").GetComponent<Text>().text = controller.ActionInfo;
+		SelectedElement = 0;
     }
 }

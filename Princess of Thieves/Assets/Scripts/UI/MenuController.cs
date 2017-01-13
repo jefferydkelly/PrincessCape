@@ -61,7 +61,7 @@ public class MenuController : MonoBehaviour {
 		}
 	}
 
-	int SelectedElement
+	protected int SelectedElement
 	{
 		set
 		{
