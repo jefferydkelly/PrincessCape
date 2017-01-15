@@ -6,11 +6,16 @@ public class HowToPlayScreen : MenuController {
 
 	// Use this for initialization
 	void Start () {
-		if (controller == null) {
-			controller = new Controller ();
+        GameObject.Find("MoveText").GetComponent<Text>().text = TheController.MovementInfo;
+        GameObject.Find("ActionText").GetComponent<Text>().text = TheController.ActionInfo;
+
+		if (buttons.Count > 0) {
+			IndexOfSelected = 0;
+			WaitDelegate wd = () => {
+				CheckInput ();
+			};
+			StartCoroutine (gameObject.RunAfterRepeatingUI (wd, 0.2f));
+
 		}
-        GameObject.Find("MoveText").GetComponent<Text>().text = controller.MovementInfo;
-        GameObject.Find("ActionText").GetComponent<Text>().text = controller.ActionInfo;
-		SelectedElement = 0;
     }
 }

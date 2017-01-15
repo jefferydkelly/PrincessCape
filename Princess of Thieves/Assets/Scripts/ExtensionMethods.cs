@@ -178,7 +178,7 @@ public static class ExtensionMethods{
 		}
 		w();
 	}
-
+		
 	public static IEnumerator RunAfterRepeating(this GameObject go, WaitDelegate w, float time) {
 		float dt = 0;
 		while(true) {
@@ -186,6 +186,20 @@ public static class ExtensionMethods{
 				if (!GameManager.Instance.IsPaused) {
 					dt += Time.deltaTime;
 				}
+				yield return null;
+
+			} while(dt < time);
+			w();
+			dt = 0;
+		}
+	}
+
+	public static IEnumerator RunAfterRepeatingUI(this GameObject go, WaitDelegate w, float time) {
+		float dt = 0;
+		while(true) {
+			do {
+				
+				dt += Time.deltaTime;
 				yield return null;
 
 			} while(dt < time);

@@ -2,83 +2,81 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour {
 
-	protected static Controller controller = null;
+	private static Controller controller = null;
 	[SerializeField]
-	List<UIElement> elements;
-	UIElement selected = null;
-	// Use this for initialization
-	float waitTime = 0.2f;
-	float timeWaited = 0.0f;
-	void Start () {
-		if (controller == null) {
-			controller = new Controller ();
-		}
-		if (elements.Count > 0) {
-			SelectedElement = 0;
-		}
-        
-	}
-	// Update is called once per frame
-	void Update () {
-		
-		timeWaited += Time.deltaTime;
-
-		if (controller.Jump) {
-			Selected.OnClick.Invoke ();
-		} else if (timeWaited >= waitTime) {
-			timeWaited -= waitTime;
-
-			if (controller.Vertical < 0) {
-				SelectedElement++;
-			} else if (controller.Vertical > 0) {
-				SelectedElement--;
-			}
+	protected List<Button> buttons;
+	Button selected;
+	bool jumpPushed = false;
+	void Start() {
+		if (buttons.Count > 0) {
+			WaitDelegate wd = () => {
+				CheckInput ();
+			};
+			StartCoroutine (gameObject.RunAfterRepeatingUI (wd, 0.2f));
 
 		}
-
-
 	}
 
-	public UIElement Selected
-	{
-		set
-		{
-			if (selected != null)
-			{
-				selected.OnMouseLeave.Invoke ();
+	void Update() {
+		if (TheController.Jump) {
+			jumpPushed = true;
+		}
+	}
+
+	protected void CheckInput() {
+		if (jumpPushed) {
+			Selected.onClick.Invoke ();
+		}
+		IndexOfSelected -= TheController.Vertical;
+	}
+	public void ChangeScene(string sceneName) {
+		SceneManager.LoadScene(sceneName);
+	}
+
+	public void Quit() {
+		Application.Quit ();
+	}
+
+	public static Controller TheController {
+		get {
+			if (controller == null) {
+				controller = new Controller ();
 			}
 
-			selected = value;
-			selected.OnMouseOver.Invoke ();
+			return controller;
 		}
-
-		get
-		{
+	}
+	protected Button Selected {
+		get {
 			return selected;
 		}
+
+		set {
+			selected = value;
+			selected.Select ();
+		}
 	}
-
-	protected int SelectedElement
-	{
-		set
-		{
-			int val = value;
-
-			while (val < 0)
-			{
-				val += elements.Count;
+	protected int IndexOfSelected {
+		get {
+			if (selected == null) {
+				return 0;
 			}
-
-			val %= elements.Count;
-			Selected = elements[val];
+			return buttons.IndexOf (selected);
 		}
 
-		get
-		{
-			return elements.IndexOf(selected);
+		set {
+			int index = value;
+			while (index < 0) {
+				index += buttons.Count;
+			}
+
+			index %= buttons.Count;
+			Selected = buttons [index];
 		}
 	}
 }
