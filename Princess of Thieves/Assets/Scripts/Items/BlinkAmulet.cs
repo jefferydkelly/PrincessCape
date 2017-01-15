@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
-
+//Bug---------------------------
+//Doesn't seem to go on cooldown - 1/13/17
+//Note: Doesn't always last four seconds either
+//Jamming the button quickly overrides the cooldown apparently
 public class BlinkAmulet : UsableItem {
 
+    float cdTime;
     public override void Activate()
     {
         if (onCooldown)
         {
+            Debug.Log("fizzles");
             return;
         }
         GameObject temp = (GameObject)Instantiate(gameObject, transform.position, transform.rotation);
@@ -30,12 +34,19 @@ public class BlinkAmulet : UsableItem {
 
     }
 
+    //Is there an issue with this being called over and over?
     public override void Deactivate()
     {
-        Debug.Log("hello");
-        onCooldown = true;
-        WaitDelegate w = () => { onCooldown = false; };
-        StartCoroutine(gameObject.RunAfter(w, cooldownTime));
+        Debug.Log("Goes on Cooldown");
+        if (!onCooldown)
+        {
+            onCooldown = true;
+            cdTime = Time.time;
+        }
+
+        
+        //WaitDelegate w = () => { onCooldown = false; Debug.Log("I'm in a thing");}; //well it works
+        //StartCoroutine(gameObject.RunAfter(w, cooldownTime));
     }
 
     public override void UseMana()
@@ -45,12 +56,16 @@ public class BlinkAmulet : UsableItem {
 
     // Use this for initialization
     void Start () {
-	
+	    
 	}   
 	
 	// Update is called once per frame
 	void Update () {
+        Debug.Log(onCooldown + " : Cooldown");  
         transform.position = GameManager.Instance.Player.transform.position;
-
+        if(Time.time - cdTime >= 4)
+        {
+            onCooldown = false;
+        }
     }
 }
