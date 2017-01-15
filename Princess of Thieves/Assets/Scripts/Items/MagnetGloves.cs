@@ -5,7 +5,6 @@ using System;
 public class MagnetGloves : UsableItem {
 
     int range = 10;
-    public float manaCost = 100f;
     bool toggled = false;
     public Sprite pushSprite;
     public Sprite pullSprite;
@@ -31,119 +30,98 @@ public class MagnetGloves : UsableItem {
 
     public override void Activate()
     {
-        //Shoot a ray fowards
-        RaycastHit2D hit;
+		if (player.MP >= activationManaCost && !onCooldown) {
+			player.MP -= activationManaCost;
+			//Shoot a ray fowards
+			RaycastHit2D hit;
 
-        hit = (Physics2D.Raycast(player.transform.position, player.Aiming,
-            range, 1<<LayerMask.NameToLayer("Metal") ));
+			hit = (Physics2D.Raycast (player.transform.position, player.Aiming,
+				range, 1 << LayerMask.NameToLayer ("Metal")));
 
-        if (hit)
-        {//first hit object has an ObjectWeight
+			if (hit) {//first hit object has an ObjectWeight
 
-            target = hit.collider.gameObject;
-            Color col = toggled ? Color.blue : Color.red;
-            target.GetComponent<SpriteRenderer>().color = col;
-            lineRenderer.enabled = true;
-            lineRenderer.SetColors(col, col);
-            lineRenderer.SetPositions(new Vector3[]{ player.transform.position, target.transform.position});
-            targetBody = target.GetComponent<Rigidbody2D>();
-            if (targetBody)
-            {
-                pushingOnTarget = targetBody.mass < playerBody.mass;
-                targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
-            }
-            player.IsUsingMagnetGloves = true;
+				target = hit.collider.gameObject;
+				Color col = toggled ? Color.blue : Color.red;
+				target.GetComponent<SpriteRenderer> ().color = col;
+				lineRenderer.enabled = true;
+				lineRenderer.SetColors (col, col);
+				lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
+				targetBody = target.GetComponent<Rigidbody2D> ();
+				if (targetBody) {
+					pushingOnTarget = targetBody.mass < playerBody.mass;
+					targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+				}
+				player.IsUsingMagnetGloves = true;
 
-            if (player.Aiming.y == 1)
-            {
-                direction = PushPullDirection.Up;
-            } else if (player.Aiming.y == -1)
-            {
-                direction = PushPullDirection.Down;
-            } else if (player.Aiming.x == 1)
-            {
-                direction = PushPullDirection.Right;
-            } else
-            {
-                direction = PushPullDirection.Left;
-            }
-        }
+				if (player.Aiming.y == 1) {
+					direction = PushPullDirection.Up;
+				} else if (player.Aiming.y == -1) {
+					direction = PushPullDirection.Down;
+				} else if (player.Aiming.x == 1) {
+					direction = PushPullDirection.Right;
+				} else {
+					direction = PushPullDirection.Left;
+				}
+			}
             
-      
+		}
     }
 
-    public void Use()
+    public override void Use()
     {
-        //if (GameManager.Instance.Player.MP <= manaCost)
-        //    return;
 
-        UseMana();
-        if (target != null)
-        {
-            Vector3 distance = player.transform.position - target.transform.position;
-            Vector2 moveDir = Vector3.zero;
+		if (player.MP >= manaPerSecondCost * Time.deltaTime) {
+			player.MP -= manaPerSecondCost * Time.deltaTime;
+			if (target != null) {
+				Vector3 distance = player.transform.position - target.transform.position;
+				Vector2 moveDir = Vector3.zero;
             
-            if (distance.sqrMagnitude <= range * range)
-            {
-                if (direction == PushPullDirection.Up)
-                {
-                    moveDir = Vector2.up;
-                }
-                else if (direction == PushPullDirection.Down)
-                {
-                    moveDir = Vector2.down;
-                }
-                else
-                {
-                    moveDir = new Vector2(direction == PushPullDirection.Right ? 1 : -1, 0);
-                }
-                if (pushingOnTarget && (direction == PushPullDirection.Up || direction == PushPullDirection.Down))
-                {
-                    moveDir += player.Aiming.XVector();
-                }
+				if (distance.sqrMagnitude <= range * range) {
+					if (direction == PushPullDirection.Up) {
+						moveDir = Vector2.up;
+					} else if (direction == PushPullDirection.Down) {
+						moveDir = Vector2.down;
+					} else {
+						moveDir = new Vector2 (direction == PushPullDirection.Right ? 1 : -1, 0);
+					}
+					if (pushingOnTarget && (direction == PushPullDirection.Up || direction == PushPullDirection.Down)) {
+						moveDir += player.Aiming.XVector ();
+					}
 
-                moveDir.Normalize();
-                if (toggled)
-                {
+					moveDir.Normalize ();
+					if (toggled) {
 
-                    if (pushingOnTarget)
-                    {
-                        //Heavier object, so the player gets moved
+						if (pushingOnTarget) {
+							//Heavier object, so the player gets moved
 
-                        playerBody.AddForce(
-                            moveDir * force,
-                            ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        targetBody.AddForce(
-                            moveDir * -force,
-                            ForceMode2D.Force);
-                        targetBody.ClampVelocity(maxTargetSpeed);
-                    }
-                }
-                else
-                {
-                    if (pushingOnTarget)
-                    {
-                        //Heavier object, so the player gets moved
-                        moveDir.y *= -1;
-                        playerBody.AddForce(
-                            moveDir * force,
-                            ForceMode2D.Force);
-                    }
-                    else
-                    {
-                        targetBody.AddForce(
-                            moveDir * force,
-                            ForceMode2D.Force);
-                        targetBody.ClampVelocity(maxTargetSpeed);
-                    }
-                }
-            }
+							playerBody.AddForce (
+								moveDir * force,
+								ForceMode2D.Force);
+						} else {
+							targetBody.AddForce (
+								moveDir * -force,
+								ForceMode2D.Force);
+							targetBody.ClampVelocity (maxTargetSpeed);
+						}
+					} else {
+						if (pushingOnTarget) {
+							//Heavier object, so the player gets moved
+							moveDir.y *= -1;
+							playerBody.AddForce (
+								moveDir * force,
+								ForceMode2D.Force);
+						} else {
+							targetBody.AddForce (
+								moveDir * force,
+								ForceMode2D.Force);
+							targetBody.ClampVelocity (maxTargetSpeed);
+						}
+					}
+				}
 
-            lineRenderer.SetPositions(new Vector3[] { player.transform.position, target.transform.position });
-        }
+				lineRenderer.SetPositions (new Vector3[] { player.transform.position, target.transform.position });
+			}
+		}
     }
 
 IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
@@ -167,15 +145,14 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
             target = null;
             pushingOnTarget = true;
             lineRenderer.enabled = false;
+			onCooldown = true;
+			WaitDelegate w = () => {
+				onCooldown = false;
+			};
+			StartCoroutine (gameObject.RunAfter (w, cooldownTime));
         }
 
         Toggled = !Toggled;
-    }
-
-    public override void UseMana()
-    {
-        
-        GameManager.Instance.Player.curMP = GameManager.Instance.Player.MP - manaCost;
     }
 
     private bool Toggled

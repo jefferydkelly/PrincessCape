@@ -34,8 +34,8 @@ public class HeavyArmor : UsableItem {
        
     }
 
-    public override void UseMana()
+    public override void Use()
     {
-        throw new NotImplementedException();
+        
     }
 }

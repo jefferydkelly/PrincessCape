@@ -32,8 +32,8 @@ public class SeedShooter : UsableItem {
         }
     }
 
-    public override void UseMana()
+    public override void Use()
     {
-        throw new NotImplementedException();
+        
     }
 }

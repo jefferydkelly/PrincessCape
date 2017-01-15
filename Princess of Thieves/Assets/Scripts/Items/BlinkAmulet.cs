@@ -49,9 +49,9 @@ public class BlinkAmulet : UsableItem {
         //StartCoroutine(gameObject.RunAfter(w, cooldownTime));
     }
 
-    public override void UseMana()
+    public override void Use()
     {
-        throw new NotImplementedException();
+       
     }
 
     // Use this for initialization

@@ -44,7 +44,7 @@ public class ReflectCape : UsableItem
         }
     }
 
-    public override void UseMana()
+    public override void Use()
     {
        
     }
