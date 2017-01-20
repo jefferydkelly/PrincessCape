@@ -23,8 +23,8 @@ public class ShockShooter : UsableItem {
         
     }
 
-    public override void UseMana()
+    public override void Use()
     {
-        throw new NotImplementedException();
+        
     }
 }

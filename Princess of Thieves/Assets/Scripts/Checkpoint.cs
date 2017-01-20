@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Checkpoint : JDMappableObject {
     //Whether or not this checkpoint has been activated
@@ -11,11 +12,15 @@ public class Checkpoint : JDMappableObject {
     public static GameObject[] checkpoints;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
         myRenderer = GetComponent<SpriteRenderer>();
+		SceneManager.sceneLoaded += OnLevelLoaded;
 	}
-	
+
+	void OnLevelLoaded(Scene scene, LoadSceneMode lsm) {
+		activated = false;
+	}
 	void ActivateCheckpoint()
     {
         foreach(GameObject cp in checkpoints)

@@ -16,7 +16,7 @@ public class InvisibilityCloak : UsableItem {
         
     }
 
-    public override void UseMana()
+    public override void Use()
     {
         
     }

@@ -17,12 +17,12 @@ public class Controller
     string leftItemKey;
     string rightItemKey;
     string interactKey;
-    string sneakKey;
 
     string peerDownKey;
     string peerUpKey;
 	//Menu Keys
 	string pauseKey;
+	string submitKey;
 
     //Axis Check Bools
     float resetTime = 0.5f;
@@ -63,10 +63,10 @@ public class Controller
             interactKey = "z";
             rightItemKey = "c";
             leftItemKey = "x";
-            sneakKey = "left shift";
 			pauseKey = "p";
             peerDownKey = "m";
             peerUpKey = "k";
+			submitKey = "enter";
 
         }
         else
@@ -75,8 +75,13 @@ public class Controller
             leftKey = c.horizontalAxis;
             upKey = c.verticalAxis;
             interactKey = c.interactKey;
-            sneakKey = c.sneakKey;
             jumpKey = c.jumpKey;
+			submitKey = c.jumpKey;
+			leftItemKey = c.leftItemKey;
+			rightItemKey = c.rightItemKey;
+			pauseKey = c.pauseKey;
+			peerUpKey = c.peerUpKey;
+			peerDownKey = c.peerDownKey;
 
         }
     }
@@ -188,18 +193,21 @@ public class Controller
         }
     }
 
-    public bool Sneak
-    {
-        get
-        {
-            return Input.GetKey(sneakKey);
-        }
-    }
+	public bool Submit {
+		get {
+
+
+			return Input.GetKey (submitKey);
+		}
+	}
 
     public bool PeerUp
     {
         get
         {
+			if (controllerType == ControllerType.GamepadWindows) {
+				return Input.GetAxis (peerUpKey) > 0.9f;
+			}
             return Input.GetKeyDown(peerUpKey);
         }
     }
@@ -208,6 +216,9 @@ public class Controller
     {
         get
         {
+			if (controllerType == ControllerType.GamepadWindows) {
+				return Input.GetAxis (peerUpKey) < -0.9f;
+			}
             return Input.GetKeyDown(peerDownKey);
         }
     }
@@ -347,11 +358,12 @@ public struct Controller360
 	public string horizontalAxis;
 	public string verticalAxis;
 	public string jumpKey;
-	public string sneakKey;
 	public string interactKey;
-	public string spellKey;
-	public string nextSpellKey;
-	public string prevSpellKey;
+	public string leftItemKey;
+	public string rightItemKey;
+	public string pauseKey;
+	public string peerDownKey;
+	public string peerUpKey;
 
 	public Controller360(ControllerType c)
 	{
@@ -362,20 +374,22 @@ public struct Controller360
 		if (c == ControllerType.GamepadMac)
 		{
 			jumpKey = "joystick button 16";
-			sneakKey = "joystick button 17";
 			interactKey = "joystick button 18";
-			spellKey = "joystick button 19";
-			nextSpellKey = "joystick button 8";
-			prevSpellKey = "joystick button 7";
+			leftItemKey = "joystick button 19";
+			rightItemKey = "joystick button 17";
+			pauseKey = "joystick button 9";
+			peerUpKey = "joystick button 5";
+			peerDownKey = "joystick button 6";
 		}
 		else
 		{
 			jumpKey = "joystick button 0";
-			sneakKey = "joystick button 1";
 			interactKey = "joystick button 2";
-			spellKey = "joystick button 3";
-			nextSpellKey = "DPadXWindows";
-			prevSpellKey = "DPadXWindows";
+			leftItemKey = "joystick button 3";
+			rightItemKey = "joystick button 1";
+			pauseKey = "joystick button 7";
+			peerUpKey = "DPadYWindows";
+			peerDownKey = "DPadYWindows";
 		}
 	}
 }

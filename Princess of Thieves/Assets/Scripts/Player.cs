@@ -508,6 +508,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		{
 			return curMP;
 		}
+
+		set {
+			curMP = value;
+		}
 	}
 
 	/// <summary>
