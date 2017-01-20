@@ -77,6 +77,12 @@ public class Controller
             interactKey = c.interactKey;
             jumpKey = c.jumpKey;
 			submitKey = c.jumpKey;
+			leftItemKey = c.leftItemKey;
+			rightItemKey = c.rightItemKey;
+			pauseKey = c.pauseKey;
+			peerUpKey = c.peerUpKey;
+			peerDownKey = c.peerDownKey;
+
         }
     }
     public int Horizontal
@@ -189,22 +195,19 @@ public class Controller
 
 	public bool Submit {
 		get {
+
+
 			return Input.GetKey (submitKey);
 		}
 	}
-
-    public bool Sneak
-    {
-        get
-        {
-            return Input.GetKey(sneakKey);
-        }
-    }
 
     public bool PeerUp
     {
         get
         {
+			if (controllerType == ControllerType.GamepadWindows) {
+				return Input.GetAxis (peerUpKey) > 0.9f;
+			}
             return Input.GetKeyDown(peerUpKey);
         }
     }
@@ -213,6 +216,9 @@ public class Controller
     {
         get
         {
+			if (controllerType == ControllerType.GamepadWindows) {
+				return Input.GetAxis (peerUpKey) < -0.9f;
+			}
             return Input.GetKeyDown(peerDownKey);
         }
     }
@@ -356,6 +362,8 @@ public struct Controller360
 	public string leftItemKey;
 	public string rightItemKey;
 	public string pauseKey;
+	public string peerDownKey;
+	public string peerUpKey;
 
 	public Controller360(ControllerType c)
 	{
@@ -367,17 +375,21 @@ public struct Controller360
 		{
 			jumpKey = "joystick button 16";
 			interactKey = "joystick button 18";
-			leftItemKey = "joystick button 13";
-			rightItemKey = "joystick button 14";
+			leftItemKey = "joystick button 19";
+			rightItemKey = "joystick button 17";
 			pauseKey = "joystick button 9";
+			peerUpKey = "joystick button 5";
+			peerDownKey = "joystick button 6";
 		}
 		else
 		{
 			jumpKey = "joystick button 0";
 			interactKey = "joystick button 2";
-			leftItemKey = "joystick button 4";
-			rightItemKey = "joystick button 5";
+			leftItemKey = "joystick button 3";
+			rightItemKey = "joystick button 1";
 			pauseKey = "joystick button 7";
+			peerUpKey = "DPadYWindows";
+			peerDownKey = "DPadYWindows";
 		}
 	}
 }
