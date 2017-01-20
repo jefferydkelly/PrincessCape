@@ -223,6 +223,15 @@ public class Enemy : ResettableObject {
             //Code that works goes here
 
         }
+        if (collision.CompareTag("Spike"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+
     }
     protected bool InSightCone(GameObject go)
 	{

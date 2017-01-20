@@ -31,6 +31,8 @@ public class MagnetGloves : UsableItem {
 
     public override void Activate()
     {
+        GetComponent<AudioSource>().loop = true;
+        GetComponent<AudioSource>().Play();
         //Shoot a ray fowards
         RaycastHit2D hit;
 
@@ -154,9 +156,11 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
     }
     public override void Deactivate()
     {
+        GetComponent<AudioSource>().Stop();
+        GetComponent<AudioSource>().loop = false;
         if (player.IsUsingMagnetGloves)
         {
-            
+           
             player.IsUsingMagnetGloves = false;
             target.GetComponent<SpriteRenderer>().color = Color.white;
             if (targetBody)
