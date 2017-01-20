@@ -193,6 +193,10 @@ public class GameManager {
             ro.Reset();
         }
     }
+
+	public void EndGame() {
+		instance = null;
+	}
 }
 
 [System.Flags]

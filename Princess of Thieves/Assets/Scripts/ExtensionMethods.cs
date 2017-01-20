@@ -173,12 +173,10 @@ public static class ExtensionMethods{
 			if (!GameManager.Instance.IsPaused)
 			{
 				dt += Time.deltaTime;
-				Debug.Log ("Delta Time");
 			}
 			yield return null;
 
 		}
-		Debug.Log ("DT: " + dt + " Time: " + time);
 		w();
 	}
 		

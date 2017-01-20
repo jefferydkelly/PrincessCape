@@ -39,7 +39,6 @@ public class CameraManager : MonoBehaviour {
 			Destroy(gameObject);
 		}
 	}
-
 	/// <summary>
 	/// Gets the instance.
 	/// </summary>

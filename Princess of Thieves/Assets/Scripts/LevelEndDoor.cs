@@ -10,6 +10,13 @@ public class LevelEndDoor : MonoBehaviour {
 	{
 		if (collision.CompareTag("Player"))
 		{
+			if (nextScene == "ThanksForPlaying") {
+				Destroy (UIManager.Instance.gameObject);
+				Destroy (CameraManager.Instance.gameObject);
+				Destroy (GameManager.Instance.Player.gameObject);
+				GameManager.Instance.EndGame ();
+			}
+
 			SceneManager.LoadScene (nextScene);
 		}
 	}
