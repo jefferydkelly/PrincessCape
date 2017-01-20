@@ -208,7 +208,7 @@ public class Controller
 			if (controllerType == ControllerType.GamepadWindows) {
 				return Input.GetAxis (peerUpKey) > 0.9f;
 			}
-            return Input.GetKeyDown(peerUpKey);
+            return Input.GetKey(peerUpKey);
         }
     }
 
@@ -219,7 +219,7 @@ public class Controller
 			if (controllerType == ControllerType.GamepadWindows) {
 				return Input.GetAxis (peerUpKey) < -0.9f;
 			}
-            return Input.GetKeyDown(peerDownKey);
+            return Input.GetKey(peerDownKey);
         }
     }
 
