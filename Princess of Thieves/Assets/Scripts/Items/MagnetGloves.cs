@@ -145,11 +145,6 @@ IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
             target = null;
             pushingOnTarget = true;
             lineRenderer.enabled = false;
-			onCooldown = true;
-			WaitDelegate w = () => {
-				onCooldown = false;
-			};
-			StartCoroutine (gameObject.RunAfter (w, cooldownTime));
         }
 
         Toggled = !Toggled;

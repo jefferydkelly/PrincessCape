@@ -29,15 +29,9 @@ public class MenuController : MonoBehaviour {
 
 		}
 	}
-
-	void Update() {
-		if (TheController.Jump) {
-			jumpPushed = true;
-		}
-	}
 		
 	protected void CheckInput() {
-		if (jumpPushed) {
+		if (TheController.Submit) {
 			Selected.onClick.Invoke ();
 		}
 		int vert = TheController.Vertical;
@@ -77,11 +71,8 @@ public class MenuController : MonoBehaviour {
 		}
 
 		set {
-			Debug.Log ("Setting new selected");
 			if (buttons.Contains (selected)) {
-				Debug.Log ("We have it.");
 				if (value != selected) {
-					Debug.Log ("It's not the old one");
 					selected.OnDeselect (new BaseEventData (EventSystem.current));
 					selected = value;
 					EventSystem.current.SetSelectedGameObject (Selected.gameObject);

@@ -22,8 +22,7 @@ public class UIManager : MonoBehaviour
     StealthMeter stealthMeter;
 	//The HP and MP bars
 	//public PlayerBarController hpBar, mpBar;
-	HPBar hpBar;
-	MPBar mpBar;
+	HPMPBars bars;
 
     GameObject itemManager;
 
@@ -74,9 +73,7 @@ public class UIManager : MonoBehaviour
 			nameBox = new ImageTextCombo("NameBox");
 			nameBox.Enabled = false;
 
-			hpBar = GameObject.Find("HPBar").GetComponent<HPBar>();
-
-			mpBar = GameObject.Find("MPBar").GetComponent<MPBar>();
+			bars = GameObject.Find("Bars").GetComponent<HPMPBars>();
 
 			dialogBox = new ImageTextCombo("DialogBox");
 			dialogBox.Enabled = false;
@@ -214,8 +211,7 @@ public class UIManager : MonoBehaviour
 	 */
 	public void ShowMessage(string msg)
 	{
-        hpBar.enabled = false;
-        mpBar.enabled = false;
+        bars.enabled = false;
         //stealthMeter.Enabled = false;
 
         messageBox.Enabled = true;
@@ -255,8 +251,7 @@ public class UIManager : MonoBehaviour
     {
         GameManager.Instance.IsInCutscene = true;
         dialogBox.Enabled = true;
-        hpBar.enabled = true;
-        mpBar.enabled = true;
+		bars.enabled = true;
         foreach (string s in msg)
         {
             yield return StartCoroutine(RevealMessage(s)); 
@@ -268,8 +263,7 @@ public class UIManager : MonoBehaviour
 	//Hides the message in the message box
 	public void HideMessage()
 	{
-        hpBar.enabled = true;
-        mpBar.enabled = true;
+		bars.enabled = true;
         //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
@@ -286,8 +280,7 @@ public class UIManager : MonoBehaviour
 		set
 		{
 			bool val = !value;
-			hpBar.enabled = val;
-			mpBar.enabled = val;
+			bars.enabled = val;
             //stealthMeter.Enabled = val;
 		}
 	}
