@@ -26,9 +26,7 @@ public class SeedShooter : UsableItem {
             GameObject seed = Instantiate(seedObj);
             seed.transform.position = p.transform.position;
             seed.GetComponent<Rigidbody2D>().AddForce(p.Aiming * 20, ForceMode2D.Impulse);
-            onCooldown = true;
-            WaitDelegate w = () => { onCooldown = false; };
-            StartCoroutine(gameObject.RunAfter(w, cooldownTime));
+			StartCooldown ();
         }
     }
 
@@ -36,4 +34,8 @@ public class SeedShooter : UsableItem {
     {
         
     }
+
+	void Start() {
+		CreateCooldownTimer ();
+	}
 }

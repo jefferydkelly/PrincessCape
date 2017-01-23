@@ -4,6 +4,9 @@ using System;
 
 public class DashBoots : UsableItem {
 
+	void Start() {
+		CreateCooldownTimer ();
+	}
     public override void Activate()
     {
         if (!onCooldown)
@@ -17,8 +20,7 @@ public class DashBoots : UsableItem {
     {
         if (!GameManager.Instance.Player.IsDashing)
         {
-            WaitDelegate w = () => { onCooldown = false; };
-            StartCoroutine(gameObject.RunAfter(w, cooldownTime));
+			StartCooldown ();
         }
     }
 

@@ -11,7 +11,7 @@ public class ReflectCape : UsableItem
 
     // Use this for initialization
     void Start () {
-		
+		CreateCooldownTimer ();
 	}
 	
 	// Update is called once per frame
@@ -38,9 +38,7 @@ public class ReflectCape : UsableItem
         if (GameManager.Instance.Player.IsUsingReflectCape == true)
         {
             GameManager.Instance.Player.IsUsingReflectCape = false;
-			onCooldown = true;
-			WaitDelegate w = () => { onCooldown = false; };
-			StartCoroutine(gameObject.RunAfter(w, cooldownTime));
+			StartCooldown ();
         }
     }
 

@@ -35,6 +35,8 @@ public abstract class UsableItem : MonoBehaviour {
 	/// The cooldown time.
 	/// </summary>
     public float cooldownTime = 0.0f;
+	protected Timer cooldownTimer;
+	protected WaitDelegate cooldownDelegate;
 
 	/// <summary>
 	/// Activate this instance.
@@ -47,4 +49,17 @@ public abstract class UsableItem : MonoBehaviour {
     public abstract void Deactivate();
 
 	public abstract void Use();
+
+	protected void CreateCooldownTimer() {
+		cooldownDelegate = () => {
+			onCooldown = false;
+		};
+
+		cooldownTimer = new Timer (cooldownDelegate, cooldownTime);
+	}
+	protected void StartCooldown() {
+		onCooldown = true;
+		cooldownTimer.Reset ();
+		TimerManager.Instance.AddTimer (cooldownTimer);
+	}
 }
