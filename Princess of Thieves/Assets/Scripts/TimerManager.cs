@@ -8,7 +8,7 @@ public class TimerManager : MonoBehaviour {
 	List<Timer> toAdd;
 	List<Timer> toRemove;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		if (instance == null) {
 			instance = this;
 			timers = new List<Timer> ();
@@ -40,6 +40,9 @@ public class TimerManager : MonoBehaviour {
 
 	public static TimerManager Instance {
 		get {
+			if (instance == null) {
+				Camera.main.gameObject.AddComponent<TimerManager> ();
+			}
 			return instance;
 		}
 	}

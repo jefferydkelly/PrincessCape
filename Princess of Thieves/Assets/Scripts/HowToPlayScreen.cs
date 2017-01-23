@@ -14,13 +14,13 @@ public class HowToPlayScreen : MenuController {
 		if (curSelected) {
 			selected = curSelected.GetComponent<Button> ();
 		}
+
+		inputDelegate = () => {
+			CheckInput();
+		};
+		inputTimer = new Timer(inputDelegate, 0.25f, true);
 		if (buttons.Count > 0) {
 			IndexOfSelected = 0;
-			WaitDelegate wd = () => {
-				CheckInput ();
-			};
-			StartCoroutine (gameObject.RunAfterRepeatingUI (wd, 0.2f));
-
 		}
     }
 }

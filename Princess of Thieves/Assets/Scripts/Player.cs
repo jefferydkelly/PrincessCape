@@ -857,6 +857,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// </summary>
     public override void Reset()
     {
+		state = PlayerState.Normal;
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
         curHP = maxHP;
