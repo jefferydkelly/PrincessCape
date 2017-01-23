@@ -24,7 +24,9 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 			UIManager.Instance.ShowInteraction("");
 			GameManager.Instance.Player.AddItem(contents);
 			myRenderer.color = Color.white;
-			//myRenderer.sprite = openedSprite;
+			if (openedSprite != null) {
+				myRenderer.sprite = openedSprite;
+			}
 			looted = true;
 		}
 	}

@@ -2,7 +2,6 @@
 using System.Collections;
 using System;
 
-[RequireComponent(typeof(Collider2D))]
 public class PlatformObject: JDMappableObject, ActivateableObject{
 
     public bool active = true;
@@ -14,8 +13,6 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
     public float moveDist = 0f;
     Vector3 startingloc, endingLoc;
 
-    Collider2D myCollider = null;
-
     public bool IsActive
     {
         get
@@ -26,7 +23,7 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
 
     void Awake()
 	{
-		myCollider = GetComponent<Collider2D>();
+		
         startingloc = transform.position;
         if (moveLeft)
         {
@@ -81,7 +78,7 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
             GetComponent<Rigidbody2D>().velocity = spd;
         }
     }
-
+		
     public void Activate()
     {
         active = true;

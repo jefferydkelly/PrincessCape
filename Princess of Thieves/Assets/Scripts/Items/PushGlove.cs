@@ -106,13 +106,7 @@ public class PushGlove : UsableItem {
 			}
 		}
 	}
-
-	IEnumerator toggleLater(RaycastHit2D hit, float delayTime)
-	{
-		yield return new WaitForSeconds(delayTime);
-		//if (hit.collider.gameObject.GetComponent<Rigidbody2D>().constraints == ~RigidbodyConstraints2D.FreezePosition)
-		hit.collider.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-	}
+		
 	public override void Deactivate()
 	{
 		if (player.IsUsingMagnetGloves)
