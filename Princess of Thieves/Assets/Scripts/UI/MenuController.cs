@@ -13,6 +13,8 @@ public class MenuController : MonoBehaviour {
 	[SerializeField]
 	protected List<Button> buttons;
 	protected Button selected;
+	protected WaitDelegate inputDelegate;
+	protected Timer inputTimer;
 	bool jumpPushed = false;
 
 	void Start() {
@@ -21,12 +23,12 @@ public class MenuController : MonoBehaviour {
 		if (curSelected) {
 			selected = curSelected.GetComponent<Button> ();
 		}
+		inputDelegate = () => {
+			CheckInput();
+		};
+		inputTimer = new Timer(inputDelegate, 0.25f, true);
 		if (buttons.Count > 0) {
-			WaitDelegate wd = () => {
-				CheckInput ();
-			};
-			StartCoroutine (gameObject.RunAfterRepeatingUI (wd, 0.2f));
-
+			TimerManager.Instance.AddTimer (inputTimer);
 		}
 	}
 		
@@ -42,6 +44,7 @@ public class MenuController : MonoBehaviour {
 
 	}
 	public void ChangeScene(string sceneName) {
+		TimerManager.Instance.RemoveTimer (inputTimer);
 		SceneManager.LoadScene(sceneName);
 	}
 
@@ -95,7 +98,6 @@ public class MenuController : MonoBehaviour {
 			}
 
 			index %= buttons.Count;
-			Debug.Log (index);
 			Selected = buttons [index];
 		}
 	}

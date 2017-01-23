@@ -13,7 +13,6 @@ public class Controller
     string jumpKey;
 
     //The action keys
-    string attackKey;
     string leftItemKey;
     string rightItemKey;
     string interactKey;
@@ -27,6 +26,7 @@ public class Controller
     //Axis Check Bools
     float resetTime = 0.5f;
     bool spellAxisFrozen = false;
+	Controller360 gamepad;
 
     public Controller()
     {
@@ -71,17 +71,19 @@ public class Controller
         }
         else
         {
-            Controller360 c = new Controller360(controllerType);
-            leftKey = c.horizontalAxis;
-            upKey = c.verticalAxis;
-            interactKey = c.interactKey;
-            jumpKey = c.jumpKey;
-			submitKey = c.jumpKey;
-			leftItemKey = c.leftItemKey;
-			rightItemKey = c.rightItemKey;
-			pauseKey = c.pauseKey;
-			peerUpKey = c.peerUpKey;
-			peerDownKey = c.peerDownKey;
+			gamepad = new Controller360(controllerType);
+			leftKey = gamepad.horizontalAxis;
+			rightKey = gamepad.horizontalAxis;
+			upKey = gamepad.verticalAxis;
+			downKey = gamepad.verticalAxis;
+			interactKey = gamepad.interactKey;
+			jumpKey = gamepad.jumpKey;
+			submitKey = gamepad.jumpKey;
+			leftItemKey = gamepad.leftItemKey;
+			rightItemKey = gamepad.rightItemKey;
+			pauseKey = gamepad.pauseKey;
+			peerUpKey = gamepad.peerUpKey;
+			peerDownKey = gamepad.peerDownKey;
 
         }
     }
@@ -119,14 +121,6 @@ public class Controller
         get
         {
             return new Vector2(Horizontal, Vertical);
-        }
-    }
-
-    public bool Attack
-    {
-        get
-        {
-            return Input.GetKeyDown(attackKey);
         }
     }
 
@@ -227,7 +221,7 @@ public class Controller
     {
         get
         {
-            return leftKey;
+			return IsKeyboard ? leftKey : gamepad.Translate(leftKey, true);
         }
     }
 
@@ -235,7 +229,7 @@ public class Controller
     {
         get
         {
-            return rightKey;
+			return IsKeyboard ? rightKey : gamepad.Translate(rightKey, false);
         }
     }
 
@@ -243,7 +237,7 @@ public class Controller
     {
         get
         {
-            return upKey;
+			return IsKeyboard ? upKey : gamepad.Translate(upKey, true);
         }
     }
 
@@ -251,7 +245,7 @@ public class Controller
     {
         get
         {
-            return downKey;
+			return IsKeyboard ? downKey : gamepad.Translate(downKey, false);
         }
     }
 
@@ -259,7 +253,7 @@ public class Controller
     {
         get
         {
-            return jumpKey;
+			return IsKeyboard ? jumpKey : gamepad.Translate(jumpKey);
         }
     }
 
@@ -267,15 +261,7 @@ public class Controller
     {
         get
         {
-            return interactKey;
-        }
-    }
-
-    public string AttackKey
-    {
-        get
-        {
-            return attackKey;
+			return IsKeyboard ? interactKey : gamepad.Translate(interactKey);
         }
     }
 
@@ -283,7 +269,7 @@ public class Controller
     {
         get
         {
-            return leftItemKey;
+			return IsKeyboard ? leftItemKey : gamepad.Translate(leftItemKey);
         }
     }
 
@@ -291,14 +277,14 @@ public class Controller
     {
         get
         {
-            return rightItemKey;
+			return IsKeyboard ? rightItemKey : gamepad.Translate(rightItemKey);
         }
     }
 	public bool Pause
 	{
 		get
 		{
-            return Input.GetKeyDown(pauseKey);
+			return Input.GetKeyDown (pauseKey);
 		}
 	}
 
@@ -315,14 +301,14 @@ public class Controller
         get
         {
             string controls = "Movement\n";
-            if (controllerType == ControllerType.Keyboard)
-            {
-                controls += "Left: " + leftKey + "\n";
-                controls += "Right: " + rightKey + "\n";
-                controls += "Up: " + upKey + "\n";
-                controls += "Down: " + downKey + "\n";
+            //if (controllerType == ControllerType.Keyboard)
+            //{
+                controls += "Left: " + LeftKey + "\n";
+                controls += "Right: " + RightKey + "\n";
+                controls += "Up: " + UpKey + "\n";
+                controls += "Down: " + DownKey + "\n";
                 
-            }
+            //}
             return controls;
         }
     }
@@ -332,13 +318,13 @@ public class Controller
         get
         {
             string controls = "Actions\n";
-            if (controllerType == ControllerType.Keyboard)
-            {
-                controls += "Jump: " + jumpKey + "\n";
-                controls += "Interact: " + interactKey + "\n";
-                controls += "Left Item: " + leftItemKey + "\n";
-                controls += "Right Item: " + rightItemKey + "\n";
-            }
+            //if (controllerType == ControllerType.Keyboard)
+           // {
+                controls += "Jump: " + JumpKey + "\n";
+                controls += "Interact: " + InteractKey + "\n";
+                controls += "Left Item: " + LeftItemKey + "\n";
+                controls += "Right Item: " + RightItemKey + "\n";
+            //}
             return controls;
         }
     }
@@ -355,6 +341,7 @@ public enum ControllerType
 
 public struct Controller360
 {
+	ControllerType type;
 	public string horizontalAxis;
 	public string verticalAxis;
 	public string jumpKey;
@@ -370,7 +357,7 @@ public struct Controller360
 		
 		horizontalAxis = "Horizontal";
 		verticalAxis = "Vertical";
-
+		type = c;
 		if (c == ControllerType.GamepadMac)
 		{
 			jumpKey = "joystick button 16";
@@ -391,5 +378,84 @@ public struct Controller360
 			peerUpKey = "DPadYWindows";
 			peerDownKey = "DPadYWindows";
 		}
+	}
+
+	public string Translate(string s, bool upLeft = false) {
+		if (s == "Horizontal") {
+			return "L. Joystick " + (upLeft ? "Up" : "Down");
+		} else if (s == "Vertical") {
+			return "L. Joystick " + (upLeft ? "Left" : "Right");
+		} else if (s == "DPadYWindows") {
+			return upLeft ? "D-Pad Up" : "D-Pad Down";
+		} else if (s == "DPadXWindows") { 
+			return upLeft ? "D-Pad Left" : "D-Pad Right";
+		} else {
+			string[] subs = s.Split (new char[]{' '});
+			int i = int.Parse(subs [subs.Length - 1]);
+
+			switch (i) {
+			case 0:
+				return "A";
+				
+			case 1:
+				return "B";
+				
+			case 2:
+				return "X";
+				
+			case 3:
+				return "Y";
+				
+			case 4:
+				return "LB";
+				
+			case 5:
+				return type == ControllerType.GamepadMac ? "D-Pad Up" : "RB";
+				
+			case 6:
+				return type == ControllerType.GamepadMac ? "D-Pad Down" :"Back";
+				
+			case 7:
+				return type == ControllerType.GamepadMac ? "D-Pad Left" :"Start";
+				
+			case 8:
+				return type == ControllerType.GamepadMac ? "D-Pad Right" :"Left Click";
+				
+			case 9:
+				return type == ControllerType.GamepadMac ? "Start" :"Right Click";
+				
+			case 10:
+				return "Back";
+				
+			case 11:
+				return "Left Click";
+				
+			case 12:
+				return "Right Click";
+				
+			case 13:
+				return "LB";
+				
+			case 14:
+				return "RB";
+				
+			case 15:
+				return "Xbox";
+				
+			case 16:
+				return "A";
+				
+			case 17:
+				return "B";
+				
+			case 18:
+				return "X";
+				
+			case 19:
+				return "Y";
+				
+			}
+		}
+		return "";
 	}
 }
