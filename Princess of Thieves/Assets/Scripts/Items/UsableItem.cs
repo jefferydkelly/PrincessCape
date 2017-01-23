@@ -31,6 +31,10 @@ public abstract class UsableItem : MonoBehaviour {
 	/// </summary>
     protected bool onCooldown = false;
 
+	[SerializeField]
+	bool continuous = false;
+
+	protected bool itemActive = false;
 	/// <summary>
 	/// The cooldown time.
 	/// </summary>
@@ -50,6 +54,9 @@ public abstract class UsableItem : MonoBehaviour {
 
 	public abstract void Use();
 
+	/// <summary>
+	/// Creates the cooldown timer.
+	/// </summary>
 	protected void CreateCooldownTimer() {
 		cooldownDelegate = () => {
 			onCooldown = false;
@@ -57,9 +64,25 @@ public abstract class UsableItem : MonoBehaviour {
 
 		cooldownTimer = new Timer (cooldownDelegate, cooldownTime);
 	}
+
+	/// <summary>
+	/// Starts the cooldown.
+	/// </summary>
 	protected void StartCooldown() {
 		onCooldown = true;
 		cooldownTimer.Reset ();
 		TimerManager.Instance.AddTimer (cooldownTimer);
+	}
+
+	public bool Continuous {
+		get {
+			return continuous;
+		}
+	}
+
+	public bool IsActive {
+		get {
+			return itemActive;
+		}
 	}
 }

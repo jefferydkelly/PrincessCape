@@ -23,6 +23,7 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 		{
 			UIManager.Instance.ShowInteraction("");
 			GameManager.Instance.Player.AddItem(contents);
+			myRenderer.color = Color.white;
 			//myRenderer.sprite = openedSprite;
 			looted = true;
 		}
@@ -33,6 +34,7 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 		if (!looted)
 		{
 			UIManager.Instance.ShowInteraction("Loot");
+			myRenderer.color = Color.blue;
 			//myRenderer.sprite = highlightedSprite;
 		}
 	}
@@ -42,6 +44,7 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 		if (!looted)
 		{
 			UIManager.Instance.ShowInteraction("");
+			myRenderer.color = Color.white;
 			//myRenderer.sprite = closedSprite;
 		}
 	}

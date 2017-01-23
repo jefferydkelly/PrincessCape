@@ -165,17 +165,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
-            }
-            else if (IsUsingMagnetGloves)
-            {
-
-                UsableItem magGloves = leftItem is MagnetGloves ? leftItem : rightItem;
-                if (leftItem == magGloves ? controller.LeftItemDown : controller.RightItemDown)
-                {
-                
-                    (magGloves as MagnetGloves).Use();
-                }
-                myRigidBody.ClampVelocity(maxSpeed * 3, VelocityType.Full);
             } else if (IsPushing && highlightedBody)
             {
                 if (Controller.Interact)
@@ -231,11 +220,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 //UIManager.Instance.LightLevel = GetLocalLightLevel();
                 if (leftItem != null)
                 {
-                    if (controller.ActivateLeftItem)
-                    {
+					if (controller.ActivateLeftItem) {
 
-                        leftItem.Activate();
-                    }
+						leftItem.Activate ();
+					} else if (controller.LeftItemDown && leftItem.Continuous && leftItem.IsActive) {
+						leftItem.Use ();
+					}
                     else if (controller.DeactivateLeftItem)
                     {
                         leftItem.Deactivate();
@@ -245,11 +235,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 if (rightItem != null)
                 {
                    
-                    if (controller.ActivateRightItem)
-                    {
-                        Debug.Log("Here");
-                        rightItem.Activate();
-                    }
+					if (controller.ActivateRightItem) {
+						rightItem.Activate ();
+					} else if (controller.RightItemDown && rightItem.Continuous && rightItem.IsActive) {
+						rightItem.Use ();
+					}
                     else if (controller.DeactivateRightItem)
                     {
                        // Debug.Log("Out of Here");
