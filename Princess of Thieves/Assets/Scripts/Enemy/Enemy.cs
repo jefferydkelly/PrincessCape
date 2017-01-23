@@ -214,7 +214,7 @@ public class Enemy : ResettableObject {
             {
                 isFrozen = true;
                 WaitDelegate w = () => { isFrozen = false; }; //Unsure what this does
-                StartCoroutine(gameObject.RunAfter(w, 2f)); //freezes for 2 seconds
+				TimerManager.Instance.AddTimer(new Timer(w, 2.0f));
             }
 
             Destroy(collision.gameObject);

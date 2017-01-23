@@ -95,4 +95,8 @@ public class Timer {
 			paused = value;
 		}
 	}
+
+	public void Reset() {
+		curTime = runTime;
+	}
 }

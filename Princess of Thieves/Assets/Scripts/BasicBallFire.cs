@@ -9,6 +9,7 @@ public class BasicBallFire : MonoBehaviour {
 
     float lastTimeFire = 0f;
     public float timeToFire = 3f;
+	Timer fireTimer;
 	// Use this for initialization
 	void Start () {
 		WaitDelegate wd;
@@ -16,7 +17,8 @@ public class BasicBallFire : MonoBehaviour {
 			Fire();
 		};
 
-		StartCoroutine (gameObject.RunAfterRepeating (wd, timeToFire));
+		fireTimer = new Timer (wd, timeToFire, true);
+		TimerManager.Instance.AddTimer (fireTimer);
 	}
 	
 	// Update is called once per frame

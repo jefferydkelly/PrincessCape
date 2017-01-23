@@ -15,7 +15,6 @@ public class MenuController : MonoBehaviour {
 	protected Button selected;
 	protected WaitDelegate inputDelegate;
 	protected Timer inputTimer;
-	bool jumpPushed = false;
 
 	void Start() {
 		current = this;
