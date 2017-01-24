@@ -87,7 +87,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
             lastYVel = myRigidBody.velocity.y;
 
-            if (!(Hidden || IsFrozen))
+            if (!IsFrozen)
             {
                 myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
 
@@ -152,16 +152,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 }
                 //CameraManager.Instance.Velocity = myRigidBody.velocity;
             }
-            else if (Hidden && !IsFrozen)
-            {
-                myRigidBody.velocity = Vector2.zero;
-                if (controller.Interact)
-                {
-                    Hidden = false;
-                }
-
-                //UIManager.Instance.LightLevel = 0;
-            }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
@@ -215,38 +205,35 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 //of course this wouldn't work
                 Camera.main.transform.Rotate(new Vector3(0, 0, 0));
             }
-            if (!Hidden)
-			{
-                //UIManager.Instance.LightLevel = GetLocalLightLevel();
-                if (leftItem != null)
-                {
-					if (controller.ActivateLeftItem) {
+           
+            if (leftItem != null)
+            {
+				if (controller.ActivateLeftItem) {
 
-						leftItem.Activate ();
-					} else if (controller.LeftItemDown && leftItem.Continuous && leftItem.IsActive) {
+					leftItem.Activate ();
+				} else if (leftItem.Continuous && leftItem.IsActive) {
+					if (controller.LeftItemDown) {
 						leftItem.Use ();
+					} else if (controller.DeactivateLeftItem) {
+						leftItem.Deactivate ();
 					}
-                    else if (controller.DeactivateLeftItem)
-                    {
-                        leftItem.Deactivate();
-                    }
-                }
-
-                if (rightItem != null)
-                {
-                   
-					if (controller.ActivateRightItem) {
-						rightItem.Activate ();
-					} else if (controller.RightItemDown && rightItem.Continuous && rightItem.IsActive) {
-						rightItem.Use ();
-					}
-                    else if (controller.DeactivateRightItem)
-                    {
-                       // Debug.Log("Out of Here");
-                        rightItem.Deactivate();
-                    }
-                }
+				}
             }
+
+            if (rightItem != null)
+            {
+               
+				if (controller.ActivateRightItem) {
+					rightItem.Activate ();
+				} else if (rightItem.Continuous && rightItem.IsActive) {
+					if (controller.RightItemDown) {
+						rightItem.Use ();
+					} else if (controller.DeactivateRightItem) {
+						rightItem.Deactivate ();
+					}
+				}
+            }
+            
 		}
         
 	}
@@ -271,41 +258,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		return curHP <= 0;
 	}
-
-	/// <summary>
-	/// Gets the closest light value within maxDistance.
-	/// </summary>
-	float GetLocalLightLevel(float maxDistance = 20f)
-	{
-		float lowestDist = maxDistance; //assume that the furthest light is optDist awawy
-
-		if (!Hidden)
-		{
-			//this means each light on an object has to be a seperate gameobject and be correctly layered. Cool.
-			Collider2D[] cols = Physics2D.OverlapCircleAll(this.transform.position, maxDistance, 1 << LayerMask.NameToLayer("Light"));
-			//each collider that was hit, we should mask
-			//mask'd
-
-			foreach (Collider2D col in cols)
-			{
-				//Debug.Log("Col is : " + col);
-				//Better than two v2Distance calls
-				Vector3 dif = col.transform.position - transform.position;
-				float tempD = dif.magnitude;
-				if (tempD < lowestDist)
-				{
-					if (!Physics2D.Raycast(transform.position, dif.normalized, tempD, 1 << LayerMask.NameToLayer("Platforms")))
-					{
-						lowestDist = tempD;
-					}
-				}
-
-			}
-			// Debug.Log("Light level is : " + lowestDist/10);
-		}
-		return 1 - lowestDist / maxDistance;
-	}
-
 
 	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
@@ -565,32 +517,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is hidden.
-	/// </summary>
-	/// <value><c>true</c> if hidden; otherwise, <c>false</c>.</value>
-	public bool Hidden
-	{
-		get
-		{
-			return (state & PlayerState.InCover) > 0;
-		}
-
-		set
-		{
-			if (value)
-			{
-				state |= PlayerState.InCover;
-			}
-			else {
-				state &= ~PlayerState.InCover;
-			}
-
-			GetComponent<Collider2D>().isTrigger = value;
-			myRigidBody.gravityScale = value ? 0 : 1;
-		}
-	}
-
-	/// <summary>
 	/// Gets the controller.
 	/// </summary>
 	/// <value>The controller.</value>
@@ -697,6 +623,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (value)
             {
                 state |= PlayerState.Frozen;
+				myRigidBody.velocity = new Vector2 (0f, myRigidBody.velocity.y);
             }else
             {
                 state &= ~PlayerState.Frozen;

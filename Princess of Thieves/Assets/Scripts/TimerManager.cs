@@ -36,6 +36,8 @@ public class TimerManager : MonoBehaviour {
 		foreach (Timer t in toRemove) {
 			timers.Remove (t);
 		}
+
+		toRemove = new List<Timer> ();
 	}
 
 	public static TimerManager Instance {

@@ -9,7 +9,7 @@ public class CoverController : JDMappableObject, InteractiveObject {
 	public void Interact()
 	{
 		Player player = GameManager.Instance.Player;
-		player.Hidden = true;
+		//player.Hidden = true;
 		player.transform.position = transform.position - new Vector3(0, gameObject.HalfHeight() - player.HalfHeight, 0);
 
 	}
