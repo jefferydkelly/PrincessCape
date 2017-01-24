@@ -268,11 +268,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
 		if (col.collider.CompareTag ("Platform")) {
 			if (lastYVel < -10) {
-                GameManager.Instance.Reset();
-			} else if (lastYVel < 0 && IsUsingMagnetGloves)
-            {
-                myRigidBody.velocity = Vector2.zero;
-            }
+				//GameManager.Instance.Reset();
+			} else if (lastYVel < 0 && IsUsingMagnetGloves) {
+				myRigidBody.velocity = Vector2.zero;
+			} else if (IsUsingReflectCape) {
+				UsableItem ui = leftItem is ReflectCape ? leftItem : rightItem;
+				ui.Deactivate ();
+			}
 		} else if (col.collider.CompareTag ("Enemy")) {
             GameManager.Instance.Reset();
 		} else if (col.collider.OnLayer("Metal") && IsUsingMagnetGloves)
@@ -702,11 +704,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			{
 				state |= PlayerState.UsingReflectCape;
 				state |= PlayerState.Frozen;
+
+				if (!IsOnGround) {
+					myRigidBody.gravityScale /= 2;
+				}
 			}
 			else
 			{
 				state &= ~PlayerState.UsingReflectCape;
 				state &= ~PlayerState.Frozen;
+				myRigidBody.gravityScale = 1.5f;
 			}
         }
     }
