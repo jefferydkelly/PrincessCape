@@ -6,7 +6,7 @@ public class BasicBallFire : MonoBehaviour {
 
     [SerializeField]
     GameObject projectile;
-
+	bool isActive = false;
     float lastTimeFire = 0f;
     public float timeToFire = 3f;
 	[SerializeField]
@@ -21,6 +21,7 @@ public class BasicBallFire : MonoBehaviour {
 
 		fireTimer = new Timer (wd, timeToFire, true);
 		TimerManager.Instance.AddTimer (fireTimer);
+
 	}
 	
 	// Update is called once per frame
@@ -31,7 +32,6 @@ public class BasicBallFire : MonoBehaviour {
     {
         GameObject temp = Instantiate(projectile);
 		temp.transform.position = transform.position + fwd * (gameObject.HalfWidth () + temp.HalfWidth () + 0.25f);
-		temp.GetComponent<Rigidbody2D>().AddForce(fwd*10,ForceMode2D.Impulse);
+		temp.GetComponent<Rigidbody2D>().AddForce(fwd*5,ForceMode2D.Impulse);
     }
-
 }

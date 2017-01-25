@@ -76,7 +76,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     public void ResetBecauseINeed()
     {
-        Debug.Log("StartPos is " + startPos.position);
         transform.position = startPos.position;
     }
 	void FixedUpdate()
@@ -328,7 +327,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     void Reflect(GameObject proj)
     {
 		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
-		rb.velocity = new Vector2 (-rb.velocity.x, rb.velocity.y);
+		//rb.AddForce (new Vector2 (fwdX * 5, 0), ForceMode2D.Impulse);
+		proj.transform.position = transform.position + new Vector3(fwdX * (HalfWidth + proj.HalfWidth() + 1), 0);
+		rb.velocity = new Vector2 (fwdX * 5, 0);
     }
     void CreateDustParticle(Vector2 posOfParticle)
     {
@@ -704,10 +705,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			{
 				myRenderer.material.color = Color.yellow;
 				state |= PlayerState.UsingReflectCape;
-				state |= PlayerState.Frozen;
+
 
 				if (!IsOnGround) {
-					myRigidBody.gravityScale /= 2;
+					myRigidBody.velocity = myRigidBody.velocity.XVector();
+					myRigidBody.gravityScale = 0;//0.75f;
+				} else {
+					state |= PlayerState.Frozen;
 				}
 			}
 			else
@@ -783,6 +787,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// </summary>
     public override void Reset()
     {
+		myRigidBody.gravityScale = 1.5f;
+		myRenderer.material.color = Color.white;
 		state = PlayerState.Normal;
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
