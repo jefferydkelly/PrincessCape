@@ -59,10 +59,8 @@ public class Enemy : ResettableObject {
     #endregion cooldownTimes
     // Use this for initialization
     void Start () {
-        Dies();
-        //MaterialPropertyBlock mater = new MaterialPropertyBlock();// = GetComponent<MaterialPropertyBlock>();
-        //mater.SetFloat("_SliceAmount", 0);
-        //GetComponent<SpriteRenderer>().SetPropertyBlock(mater);
+       // Dies();
+        
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
@@ -213,25 +211,33 @@ public class Enemy : ResettableObject {
             if (!isFrozen)
             {
                 isFrozen = true;
-                WaitDelegate w = () => { isFrozen = false; }; //Unsure what this does
+                WaitDelegate w = () => { isFrozen = false; };
 				TimerManager.Instance.AddTimer(new Timer(w, 2.0f));
             }
 
             Destroy(collision.gameObject);
         }
-        if (collision.gameObject.tag == "Metal"){//dies when hit with metal of a high velocity
-            //Code that works goes here
 
-        }
         if (collision.CompareTag("Spike"))
         {
-            Destroy(gameObject);
+            Dies();
         }
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
+        if (col.gameObject.tag == "Metal")
+        {//dies when hit with metal of a high velocity
+            Debug.Log("High Speed impact detected: " + col.gameObject.GetComponent<Rigidbody2D>().velocity);
+            if (col.gameObject.GetComponent<Rigidbody2D>().velocity.x > 7){
+                Destroy(gameObject);
+            }
+            if (col.gameObject.GetComponent<Rigidbody2D>().velocity.y > 7)
+            {
+                Dies();
+            }
 
+        }
     }
     protected bool InSightCone(GameObject go)
 	{
