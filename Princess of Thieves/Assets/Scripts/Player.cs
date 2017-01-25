@@ -702,6 +702,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
 			if (value && !IsUsingReflectCape && !IsFrozen)
 			{
+				myRenderer.material.color = Color.yellow;
 				state |= PlayerState.UsingReflectCape;
 				state |= PlayerState.Frozen;
 
@@ -711,6 +712,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			}
 			else
 			{
+				myRenderer.material.color = Color.white;
 				state &= ~PlayerState.UsingReflectCape;
 				state &= ~PlayerState.Frozen;
 				myRigidBody.gravityScale = 1.5f;

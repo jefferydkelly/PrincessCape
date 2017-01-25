@@ -30,7 +30,7 @@ public class BasicBallFire : MonoBehaviour {
     void Fire()
     {
         GameObject temp = Instantiate(projectile);
-		temp.transform.position = transform.position + fwd * (gameObject.HalfWidth () + temp.HalfWidth ());
+		temp.transform.position = transform.position + fwd * (gameObject.HalfWidth () + temp.HalfWidth () + 0.25f);
 		temp.GetComponent<Rigidbody2D>().AddForce(fwd*10,ForceMode2D.Impulse);
     }
 
