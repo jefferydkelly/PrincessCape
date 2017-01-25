@@ -7,11 +7,15 @@ using UnityEngine;
 //Cooldown coroutine doesn't run
 public class ReflectCape : UsableItem
 {
-
-
+	Timer deactivateTimer;
+	[SerializeField]
+	float timeActive = 1.0f;
     // Use this for initialization
     void Start () {
 		CreateCooldownTimer ();
+		deactivateTimer = new Timer (() => {
+			Deactivate ();
+		}, timeActive); 
 	}
 	
 	// Update is called once per frame
@@ -26,6 +30,8 @@ public class ReflectCape : UsableItem
 		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
         {
             GameManager.Instance.Player.IsUsingReflectCape = true;
+			deactivateTimer.Reset ();
+			TimerManager.Instance.AddTimer (deactivateTimer);
         }
         else
         {
@@ -35,11 +41,12 @@ public class ReflectCape : UsableItem
 
     public override void Deactivate()
     {
-        if (GameManager.Instance.Player.IsUsingReflectCape == true)
-        {
-            GameManager.Instance.Player.IsUsingReflectCape = false;
+		
+		if (GameManager.Instance.Player.IsUsingReflectCape) {
+			GameManager.Instance.Player.IsUsingReflectCape = false;
 			StartCooldown ();
-        }
+		}
+
     }
 
     public override void Use()

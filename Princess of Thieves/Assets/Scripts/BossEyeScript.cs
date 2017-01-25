@@ -147,21 +147,20 @@ public class BossEyeScript : MonoBehaviour {
         Color color = Color.red;
         //is it more efficient to 'get player' once in Start? 
         Player p = GameManager.Instance.Player;
-        if (!p.Hidden)
+    
+        Vector3 dif = p.transform.position - transform.position;
+        if (dif.sqrMagnitude <= sightRange * sightRange)
         {
-            Vector3 dif = p.transform.position - transform.position;
-            if (dif.sqrMagnitude <= sightRange * sightRange)
-            {
 
-                if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
-                {
-                    playerInSight = true;
-                    lastKnownPlayerPosition = player.Position;
-                    return;
-                }
-                
+            if (!Physics2D.Raycast(transform.position, dif.normalized, dif.magnitude, 1 << LayerMask.NameToLayer("Platforms")))
+            {
+                playerInSight = true;
+                lastKnownPlayerPosition = player.Position;
+                return;
             }
+            
         }
+        
         playerInSight = false;
 
 
