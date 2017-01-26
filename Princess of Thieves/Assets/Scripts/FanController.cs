@@ -6,7 +6,9 @@ public class FanController : MonoBehaviour, ActivateableObject {
 
 	[SerializeField]
 	Vector2 fwd = new Vector2(1, 0);
+	[SerializeField]
 	float force = 10;
+	[SerializeField]
 	float range = 10;
 	[SerializeField]
 	bool isActive = false;
