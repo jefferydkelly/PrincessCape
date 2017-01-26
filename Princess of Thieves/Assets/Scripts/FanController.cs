@@ -16,6 +16,8 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	// Use this for initialization
 	void Start () {
 		lineRenderer = GetComponent<LineRenderer> ();
+		Vector2 startPos = new Vector2 (transform.position.x + gameObject.HalfWidth (), transform.position.y);
+		lineRenderer.SetPositions(new Vector3[]{startPos, startPos + (fwd * range)});
 	}
 	
 	// Update is called once per frame

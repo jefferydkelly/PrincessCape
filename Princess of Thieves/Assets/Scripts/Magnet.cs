@@ -20,16 +20,14 @@ public class Magnet : MonoBehaviour, ActivateableObject {
 	// Update is called once per frame
 	void Update () {
 		if (isActive) {
-			RaycastHit2D hit = Physics2D.Raycast (transform.position, fwd, range, 1 << LayerMask.NameToLayer ("Metal"));
-			if (hit) {
+			RaycastHit2D[] hits = Physics2D.BoxCastAll (transform.position, new Vector2 (gameObject.HalfWidth () * 2, range), 0, fwd.normalized, range, 1 << LayerMask.NameToLayer ("Metal"));
+			foreach (RaycastHit2D hit in hits) {
 				Rigidbody2D rb = hit.collider.GetComponent<Rigidbody2D> ();
-				if (!attractedBodies.Contains (rb)) {
-					rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-					attractedBodies.Add (rb);
+
+				if (rb) {
+					attractedBodies.AddExclusive (rb);
+					rb.AddForce (fwd * (push ? 10 : -10));
 				}
-			}
-			foreach (Rigidbody2D r in attractedBodies) {
-				r.AddForce (fwd * (push ? 15 : -25), ForceMode2D.Force);
 			}
 		}
 	}
