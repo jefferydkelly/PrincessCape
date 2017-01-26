@@ -76,7 +76,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     public void ResetBecauseINeed()
     {
-        Debug.Log("StartPos is " + startPos.position);
         transform.position = startPos.position;
     }
 	void FixedUpdate()
@@ -267,13 +266,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             IsDashing = false;
         }
 		if (col.collider.CompareTag ("Platform")) {
-			if (lastYVel < -10) {
-				//GameManager.Instance.Reset();
-			} else if (lastYVel < 0 && IsUsingMagnetGloves) {
-				myRigidBody.velocity = Vector2.zero;
-			} else if (IsUsingReflectCape) {
-				UsableItem ui = leftItem is ReflectCape ? leftItem : rightItem;
-				ui.Deactivate ();
+			if (lastYVel < 0) {
+				CanFloat = true;
+				if (IsUsingMagnetGloves) {
+					myRigidBody.velocity = Vector2.zero;
+				}
 			}
 		} else if (col.collider.CompareTag ("Enemy")) {
             GameManager.Instance.Reset();
@@ -328,7 +325,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     void Reflect(GameObject proj)
     {
 		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
-		rb.velocity = new Vector2 (-rb.velocity.x, rb.velocity.y);
+		//rb.AddForce (new Vector2 (fwdX * 5, 0), ForceMode2D.Impulse);
+		proj.transform.position = transform.position + new Vector3(fwdX * (HalfWidth + proj.HalfWidth() + 1), 0);
+		rb.velocity = new Vector2 (fwdX * 5, 0);
     }
     void CreateDustParticle(Vector2 posOfParticle)
     {
@@ -704,10 +703,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			{
 				myRenderer.material.color = Color.yellow;
 				state |= PlayerState.UsingReflectCape;
-				state |= PlayerState.Frozen;
 
-				if (!IsOnGround) {
-					myRigidBody.gravityScale /= 2;
+
+				if (!IsOnGround && CanFloat) {
+					myRigidBody.velocity = myRigidBody.velocity.XVector();
+					myRigidBody.gravityScale = 0;//0.75f;
+					CanFloat = false;
+				} else {
+					state |= PlayerState.Frozen;
 				}
 			}
 			else
@@ -719,6 +722,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			}
         }
     }
+
+	bool CanFloat {
+		get {
+			return (state & PlayerState.CanFloat) > 0;
+		}
+
+		set {
+			if (value) {
+				state |= PlayerState.CanFloat;
+			} else {
+				state &= ~PlayerState.CanFloat;
+			}
+		}
+	}
 
 	/// <summary>
 	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is using magnet gloves.
@@ -783,6 +800,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// </summary>
     public override void Reset()
     {
+		myRigidBody.gravityScale = 1.5f;
+		myRenderer.material.color = Color.white;
 		state = PlayerState.Normal;
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
@@ -801,7 +820,8 @@ public enum PlayerState
 	Frozen = 4,
     Pushing = 8,
     UsingMagnetGloves = 16,
-	UsingReflectCape = 32
+	UsingReflectCape = 32,
+	CanFloat = 64
 }
 
 [System.Flags]

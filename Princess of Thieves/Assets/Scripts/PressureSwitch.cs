@@ -13,17 +13,7 @@ public class PressureSwitch : ActivatorObject {
     public bool needsHeavy = false;
 	// Use this for initialization
 	void Start () {
-		activators = new List<ActivateableObject>();
-		foreach (GameObject go in activatedObjects)
-		{
-			ActivateableObject ao = go.GetComponent<ActivateableObject>();
-
-			if (ao != null)
-			{
-				activators.Add(ao);
-			}
-            
-		}
+		Initialize ();
         if (triggered)
         {
             GetComponent<SpriteRenderer>().sprite = switchSprites[1];

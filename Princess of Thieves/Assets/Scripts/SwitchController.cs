@@ -7,14 +7,16 @@ public class SwitchController : ActivatorObject {
     public Sprite activatedSprite;
     public Sprite deactivatedSprite;
     private SpriteRenderer myRenderer;
+
     public void Start()
     {
+		Initialize ();
         myRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Seed"))
+		if (collision.CompareTag("Seed") || collision.CompareTag("Projectile"))
         {
             Destroy(collision.gameObject);
             Activated = !Activated;
