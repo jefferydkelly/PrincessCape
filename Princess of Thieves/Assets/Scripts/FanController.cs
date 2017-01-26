@@ -12,15 +12,16 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	float range = 10;
 	[SerializeField]
 	bool isActive = false;
+	LineRenderer lineRenderer;
 	// Use this for initialization
 	void Start () {
-		
+		lineRenderer = GetComponent<LineRenderer> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (IsActive) {
-			foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, fwd, range)) {
+			foreach (RaycastHit2D hit in Physics2D.BoxCastAll((Vector2)transform.position + new Vector2(range / 2, 0), new Vector2(range, 1.0f), 0f, fwd)) {
 				Rigidbody2D rb = hit.collider.GetComponent<Rigidbody2D> ();
 
 				if (rb) {

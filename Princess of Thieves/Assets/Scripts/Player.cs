@@ -66,7 +66,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         myAnimator = GetComponent<Animator>();
 		curHP = maxHP;
 		curMP = maxMP;
-        //UIManager.Instance.LightLevel = 0;
 		DontDestroyOnLoad(gameObject);
         
         UIManager.Instance.UpdateUI(controller);
@@ -102,34 +101,25 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     else
                     {
                         
-                        RaycastHit2D hit = Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
-                        if (hit.collider == null)
-                        {
-                            hit = Physics2D.Raycast(transform.position - new Vector3(0, HalfHeight / 2), Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
-                          
-                            if (hit.collider == null)
-                            {
-                                hit = Physics2D.Raycast(transform.position + new Vector3(0, HalfHeight / 2), Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
-                            }
-                        }
+						RaycastHit2D hit = Physics2D.BoxCast (transform.position + new Vector3(1.0f, 0), new Vector2 (2.0f, HalfHeight * 2), 0, Forward, 2.0f, 1 << LayerMask.NameToLayer("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+
                         if (hit.collider != null)
                         {
                             InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
 
-                            if (controller.Interact)
-                            {
-                                io.Interact();
-                            } else if (io != highlighted)
-                            {
-                                if (highlighted != null)
-                                {
-                                    highlighted.Dehighlight();
-                                }
+							if (io != null) {
+								if (controller.Interact) {
+									io.Interact ();
+								} else if (io != highlighted) {
+									if (highlighted != null) {
+										highlighted.Dehighlight ();
+									}
 
-                                highlighted = io;
+									highlighted = io;
                                
-                                highlighted.Highlight();
-                            }
+									highlighted.Highlight ();
+								}
+							}
                             
                         } else if (highlighted != null)
                         {
@@ -145,11 +135,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                         myRenderer.flipX = (fwdX == -1);
                     }
 
-
-                   //UIManager.Instance.LightLevel = GetLocalLightLevel();
-
                 }
-                //CameraManager.Instance.Velocity = myRigidBody.velocity;
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
@@ -347,39 +333,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		get
 		{
+			LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
+			LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
+			int finalMask = mask | mask2;
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-            RaycastHit2D hit = CheckForPlatformHit(transform.position, down);
-            RaycastHit2D rhit = CheckForPlatformHit(transform.position, Vector2.right);
-            RaycastHit2D lhit = CheckForPlatformHit(transform.position, Vector2.left);
-
-            if (!hit)
-            {
-                hit = CheckForPlatformHit(transform.position + new Vector3(HalfWidth, 0), down);
-
-                if (!hit)
-                {
-                    hit = CheckForPlatformHit(transform.position - new Vector3(HalfWidth, 0), down);
-                }
-            }
-            if (hit)
-            { //Straight down
-                return !(hit.collider == rhit.collider || hit.collider == lhit.collider);
-            }
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (HalfWidth, HalfHeight + 0.1f), 0, down, 1.1f, finalMask); 
             
-            return false;
+			return hit.collider != null;
 		} // end Get
 	}
-
-    public RaycastHit2D CheckForPlatformHit(Vector2 pos, Vector2 dir)
-    {
-        LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
-        LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
-        int finalMask = mask | mask2;
-        
-        float checkDist = HalfHeight + 0.1f;
-        return Physics2D.Raycast(pos, dir, checkDist,
-                finalMask);
-    }
 
 	/// <summary>
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on rope.
