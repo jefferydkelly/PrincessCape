@@ -149,26 +149,28 @@ public class Enemy : ResettableObject {
     void Update () {
         if (!GameManager.Instance.IsPaused)
         {
-           
-            //   GetComponent<MaterialPropertyBlock>().SetFloat("slice amount", 1);
-            // Debug.Log(curState);
-            switch (curState)
+            if (!isFrozen)
             {
-               
-                case EnemyState.Patrol://it's patrolling
-                    Patrol(); //moved in order to save space.
-                    break; //AT PATROL STATE---------------------   
-                case EnemyState.Chase:
-                    
-                    transform.position = Vector3.MoveTowards(transform.position, GameManager.Instance.Player.transform.position, 0.03f);
-                    if(Time.time - lastTimeSeenPlayer > 3f)
-                    {
-                        Debug.Log("This machine is experiencing uncertainty");
-                        curState = EnemyState.Patrol;
-                    }
-                    break;
+                //   GetComponent<MaterialPropertyBlock>().SetFloat("slice amount", 1);
+                // Debug.Log(curState);
+                switch (curState)
+                {
+
+                    case EnemyState.Patrol://it's patrolling
+                        Patrol(); //moved in order to save space.
+                        break; //AT PATROL STATE---------------------   
+                    case EnemyState.Chase:
+
+                        transform.position = Vector3.MoveTowards(transform.position, GameManager.Instance.Player.transform.position, 0.03f);
+                        if (Time.time - lastTimeSeenPlayer > 3f)
+                        {
+                            Debug.Log("This machine is experiencing uncertainty");
+                            curState = EnemyState.Patrol;
+                        }
+                        break;
+                }
             }
-	    }
+        }
     }
     void FixedUpdate()
     {
