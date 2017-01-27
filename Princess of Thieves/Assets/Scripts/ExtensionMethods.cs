@@ -113,6 +113,12 @@ public static class ExtensionMethods{
 		}
 	}
 
+	public static void AddExclusive<T>(this List<T> li, T item) {
+		if (!li.Contains (item)) {
+			li.Add (item);
+		}
+	}
+
 	public static T RandomElement<T>(this List<T> l)
 	{
 		return l[Mathf.RoundToInt(Random.value * l.Count)];
