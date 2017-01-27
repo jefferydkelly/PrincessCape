@@ -253,6 +253,10 @@ public static class ExtensionMethods{
 		v.y = dx * sin + dy * cos;
 	}
 
+	public static float GetAngle(this Vector2 v) {
+		return Mathf.Atan2 (v.y, v.x);
+	}
+
 
     public static string ToXString(this Vector3 v)
 	{

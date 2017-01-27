@@ -30,11 +30,7 @@ public class PushGlove : UsableItem {
 		if (player.MP >= activationManaCost && !onCooldown) {
 			player.MP -= activationManaCost;
 			//Shoot a ray fowards
-			RaycastHit2D hit;
-
-			hit = (Physics2D.Raycast (player.transform.position, player.Aiming,
-				range, 1 << LayerMask.NameToLayer ("Metal")));
-
+			RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), player.Aiming.GetAngle (), player.Aiming, range, 1 << LayerMask.NameToLayer ("Metal"));
 			if (hit) {//first hit object has an ObjectWeight
 
 				target = hit.collider.gameObject;
