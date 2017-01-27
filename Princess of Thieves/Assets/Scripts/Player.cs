@@ -264,7 +264,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             if (lastYVel < 0)
             {
-                (leftItem is MagnetGloves ? leftItem : rightItem).Deactivate();
+				(leftItem is PullGlove ? leftItem : rightItem).Deactivate();
                 myRigidBody.velocity = Vector2.zero;
             }
         }
@@ -762,6 +762,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// </summary>
     public override void Reset()
     {
+		if (leftItem.IsActive) { 
+			leftItem.Deactivate ();
+		}
+
+		if (rightItem.IsActive) {
+			rightItem.Deactivate ();
+		}
 		myRigidBody.gravityScale = 1.5f;
 		myRenderer.material.color = Color.white;
 		state = PlayerState.Normal;
