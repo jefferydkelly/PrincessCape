@@ -88,8 +88,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (!IsFrozen)
             {
                 myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
-
-                myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+				myRigidBody.ClampVelocity((IsPushedHorizontallyByTheWind ? maxSpeed * 3: maxSpeed), VelocityType.X);
+				myRigidBody.ClampVelocity(IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
 
                 if (IsOnGround)
                 {
@@ -725,6 +725,34 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	public bool IsPushedVerticallyByTheWind {
+		get {
+			return (state & PlayerState.PushedByTheWindVert) > 0;
+		}
+
+		set {
+			if (value) {
+				state |= PlayerState.PushedByTheWindVert;
+			} else {
+				state &= ~PlayerState.PushedByTheWindVert;
+			}
+		}
+	}
+
+	public bool IsPushedHorizontallyByTheWind {
+		get {
+			return (state & PlayerState.PushedByTheWindHorz) > 0;
+		}
+
+		set {
+			if (value) {
+				state |= PlayerState.PushedByTheWindHorz;
+			} else {
+				state &= ~PlayerState.PushedByTheWindHorz;
+			}
+		}
+	}
+
     #endregion gets
 
     void Unfreeze() {
@@ -790,7 +818,9 @@ public enum PlayerState
     Pushing = 8,
     UsingMagnetGloves = 16,
 	UsingReflectCape = 32,
-	CanFloat = 64
+	CanFloat = 64,
+	PushedByTheWindHorz = 128,
+	PushedByTheWindVert = 256
 }
 
 [System.Flags]
