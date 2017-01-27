@@ -762,11 +762,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// </summary>
     public override void Reset()
     {
-		if (leftItem.IsActive) { 
+		if (leftItem && leftItem.IsActive) { 
 			leftItem.Deactivate ();
 		}
 
-		if (rightItem.IsActive) {
+		if (rightItem && rightItem.IsActive) {
 			rightItem.Deactivate ();
 		}
 		myRigidBody.gravityScale = 1.5f;
