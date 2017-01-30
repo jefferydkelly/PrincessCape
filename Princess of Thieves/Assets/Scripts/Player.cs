@@ -182,11 +182,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
             if (controller.PeerDown)
             {
-                Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y-1, Camera.main.transform.position.z));
+                Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y-0.5f, Camera.main.transform.position.z));
             }
             else if (controller.PeerUp)
             {
-                Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + 1, Camera.main.transform.position.z));
+                Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + 0.5f, Camera.main.transform.position.z));
             }
             else if(!controller.PeerUp && !controller.PeerDown)
             {
