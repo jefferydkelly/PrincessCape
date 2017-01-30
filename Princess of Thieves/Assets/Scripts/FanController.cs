@@ -18,7 +18,10 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	void Start () {
 		lineRenderer = GetComponent<LineRenderer> ();
 		lineRenderer.useWorldSpace = false;
-		lineRenderer.SetPositions(new Vector3[]{Vector2.zero, (fwd * range)});
+		Vector3 endVec = fwd * range;
+		endVec.z = 1;
+		lineRenderer.SetPositions(new Vector3[]{new Vector3(fwd.x * gameObject.HalfWidth(), fwd.y * gameObject.HalfHeight(), 1), endVec});
+		lineRenderer.enabled = isActive;
 	}
 
 	// Update is called once per frame
@@ -54,10 +57,12 @@ public class FanController : MonoBehaviour, ActivateableObject {
 
 	public void Activate() {
 		isActive = true;
+		lineRenderer.enabled = true;
 	}
 
 	public void Deactivate() {
 		isActive = false;
+		lineRenderer.enabled = false;
 	}
 
 	public bool IsActive {

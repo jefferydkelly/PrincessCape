@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SideSlider : MonoBehaviour,ActivateableObject {
+public class SideSlider : ResettableObject,ActivateableObject {
 	SliderStatus status;
 	[SerializeField]
 	bool startOpen = false;
@@ -14,6 +14,7 @@ public class SideSlider : MonoBehaviour,ActivateableObject {
 
 	// Use this for initialization
 	void Start () {
+		startPosition = transform.position;
 		if (startOpen) {
 			openPos = transform.position;
 			closePos = openPos - new Vector3 (gameObject.HalfWidth () * 2, 0);
@@ -26,12 +27,13 @@ public class SideSlider : MonoBehaviour,ActivateableObject {
 	}
 
 	public void Activate() {
-		if (status == SliderStatus.Closed) {
+		if (status == SliderStatus.Closed || status == SliderStatus.Closing) {
 			StartCoroutine ("Open");
 		}
 	}
 
 	IEnumerator Open() {
+		StopCoroutine ("Close");
 		status = SliderStatus.Opening;
 
 		do {
@@ -44,6 +46,7 @@ public class SideSlider : MonoBehaviour,ActivateableObject {
 	}
 
 	IEnumerator Close() {
+		StopCoroutine ("Open");
 		status = SliderStatus.Closing;
 
 		do {
@@ -54,7 +57,7 @@ public class SideSlider : MonoBehaviour,ActivateableObject {
 		status = SliderStatus.Closed;
 	}
 	public void Deactivate() {
-		if (status == SliderStatus.Open) {
+		if (status == SliderStatus.Open || status == SliderStatus.Opening) {
 			StartCoroutine ("Close");
 		}
 	}
@@ -62,6 +65,17 @@ public class SideSlider : MonoBehaviour,ActivateableObject {
 	public bool IsActive {
 		get {
 			return status == SliderStatus.Closing || status == SliderStatus.Opening;
+		}
+	}
+
+	public override void Reset ()
+	{
+		if (startOpen) {
+			transform.position = openPos;
+			status = SliderStatus.Open;
+		} else {
+			transform.position = closePos;
+			status = SliderStatus.Closed;
 		}
 	}
 }
