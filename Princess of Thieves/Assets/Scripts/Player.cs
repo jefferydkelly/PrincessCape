@@ -88,7 +88,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (!IsFrozen)
             {
                 myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
-				myRigidBody.ClampVelocity((IsPushedHorizontallyByTheWind ? maxSpeed * 3: maxSpeed), VelocityType.X);
+				myRigidBody.ClampVelocity((IsPushedHorizontallyByTheWind ? maxSpeed * 5: maxSpeed), VelocityType.X);
 				myRigidBody.ClampVelocity(IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
 
                 if (IsOnGround)
