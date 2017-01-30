@@ -13,6 +13,7 @@ public class LightEmitter : MonoBehaviour {
 	LineRenderer myLineRenderer;
 	int allLayerMask;
 	int noPlayerMask;
+	LightActivatedObject lao = null;
 	// Use this for initialization
 	void Start () {
 		myLineRenderer = GetComponent<LineRenderer> ();
@@ -62,6 +63,12 @@ public class LightEmitter : MonoBehaviour {
 		if (!hitPlayer) {
 			positions.Add (stopPos);
 		}*/
+
+		for (int i = 0; i < positions.Count; i++) {
+			Vector3 pos = positions [i];
+			pos.z = 1.0f;
+			positions [i] = pos;
+		}
 		myLineRenderer.numPositions = positions.Count;
 		myLineRenderer.SetPositions (positions.ToArray());
 		
@@ -70,30 +77,69 @@ public class LightEmitter : MonoBehaviour {
 	void CheckForReflectiveObjects(Vector2 startPos, Vector2 forward, float range, int layerMask) {
 		Vector2 stopPos = startPos + forward * range;
 		float closeDist = range;
+		LightActivatedObject laObj = null;
 		foreach (RaycastHit2D hit in Physics2D.BoxCastAll(startPos, new Vector2(0.9f, 0.9f), forward.GetAngle(), forward, range, layerMask)) {
-			if (hit.collider.CompareTag ("Player")) {
-				Player player = GameManager.Instance.Player;
-				if (player.IsUsingReflectCape) {
+			if (hit.distance < closeDist) {
+				
 
-					//Reflect - Add a new set of point that reflect according to the player's forward
-					Vector3 pVec = player.transform.position;
-					if (forward.x == 0) {
-						pVec.x = transform.position.x;
-					} else if (forward.y == 0) {
-						pVec.y = transform.position.y;
+				if (hit.collider.CompareTag ("Player")) {
+					Player player = GameManager.Instance.Player;
+					if (player.IsUsingReflectCape) {
+
+						//Reflect - Add a new set of point that reflect according to the player's forward
+						Vector3 pVec = player.transform.position;
+						if (forward.x == 0) {
+							pVec.x = transform.position.x;
+						} else if (forward.y == 0) {
+							pVec.y = transform.position.y;
+						}
+
+						positions.Add (pVec);
+						CheckForReflectiveObjects (pVec, player.TrueAim.normalized, range - hit.distance, noPlayerMask);
+						return;
 					}
+				} else if (hit.collider.OnLayer ("Reflective")) {
+						
+					ReflectiveObject ro = hit.collider.GetComponent<ReflectiveObject> ();
 
-					positions.Add (pVec);
-					CheckForReflectiveObjects (pVec, player.TrueAim.normalized, range - hit.distance, noPlayerMask);
-					return;
-				}
-			} else {
-				if (hit.distance < closeDist) {
+					if (ro) {
+						positions.Add (ro.transform.position);
+						foreach (Vector3 v in ro.Reflect(this, range - hit.distance)) {
+							positions.Add (v);
+						}
+						//CheckForReflectiveObjects(ro.transform.position, ro.FWD, range - hit.distance, allLayerMask);
+						return;
+					} else {
+						laObj = hit.collider.GetComponent<LightActivatedObject> ();
+
+						if (laObj != lao) {
+							if (lao != null) {
+								lao.Deactivate ();
+							}
+							lao = laObj;
+
+							if (lao != null) {
+								lao.Activate ();
+
+							}
+
+						}
+
+						positions.Add (hit.point);
+						return;
+					}
+				} else {
 					closeDist = hit.distance;
 					stopPos = hit.point;
 				}
 			}
 		}
+
+		if (lao != null) {
+			lao.Deactivate ();
+			lao = null;
+		}
+
 		positions.Add (stopPos);
 	}
 }
