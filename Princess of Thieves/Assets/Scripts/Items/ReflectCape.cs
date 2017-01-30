@@ -30,8 +30,11 @@ public class ReflectCape : UsableItem
 		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
         {
             GameManager.Instance.Player.IsUsingReflectCape = true;
+			itemActive = true;
+			/*
 			deactivateTimer.Reset ();
 			TimerManager.Instance.AddTimer (deactivateTimer);
+			*/
         }
         else
         {
@@ -42,7 +45,7 @@ public class ReflectCape : UsableItem
     public override void Deactivate()
     {
 		
-		if (GameManager.Instance.Player.IsUsingReflectCape) {
+		if (IsActive) {
 			GameManager.Instance.Player.IsUsingReflectCape = false;
 			StartCooldown ();
 		}

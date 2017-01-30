@@ -172,10 +172,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{   
-            if (controller.Horizontal != 0)
-                myAnimator.SetBool("FWD", true);
-            else
-                myAnimator.SetBool("FWD", false);
+			if (!IsFrozen) {
+				if (controller.Horizontal != 0) {
+					myAnimator.SetBool ("FWD", true);
+				} else {
+					myAnimator.SetBool ("FWD", false);
+				}
+			}
 
             if (controller.PeerDown)
             {
@@ -312,8 +315,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     {
 		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
 		//rb.AddForce (new Vector2 (fwdX * 5, 0), ForceMode2D.Impulse);
-		proj.transform.position = transform.position + new Vector3(fwdX * (HalfWidth + proj.HalfWidth() + 1), 0);
-		rb.velocity = new Vector2 (fwdX * 5, 0);
+		Vector2 vel = rb.velocity;
+		vel = vel.Rotated (-vel.GetAngle ());
+
+		rb.velocity = vel.Rotated (TrueAim.GetAngle ());
+
+		proj.transform.position = transform.position + (Vector3)(TrueAim.normalized * (HalfWidth + 1));
+
+		//rb.velocity = new Vector2 (fwdX * 5, 0);
     }
     void CreateDustParticle(Vector2 posOfParticle)
     {
@@ -556,7 +565,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     }
 
     /// <summary>
-    /// Returns the direction the Player is aiming
+    /// Returns the direction the Player is aiming.  If there's no vertical component, it assumes the player is just aiming forward.
     /// </summary>
     public Vector2 Aiming
     {
@@ -572,6 +581,22 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             return new Vector2(controller.Horizontal, vert);
         }
     }
+
+	/// <summary>
+	/// Gets the true aim.  Unlike aiming, it doesn't make an assumption about the player aiming forward.
+	/// </summary>
+	/// <value>The true aim.</value>
+	public Vector2 TrueAim {
+		get
+		{
+			Vector2 aim = new Vector2 (controller.Horizontal, controller.Vertical);
+			if (Vector2.Equals (aim, Vector2.zero)) {
+				return new Vector2(fwdX, 0);
+			}
+
+			return aim;
+		}
+	}
     /// <summary>
     /// Getter and setter for whether or not the Player is able to move
     /// </summary>
@@ -666,11 +691,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				myRenderer.material.color = Color.yellow;
 				state |= PlayerState.UsingReflectCape;
 
-
 				if (!IsOnGround && CanFloat) {
+					CanFloat = false;
 					myRigidBody.velocity = myRigidBody.velocity.XVector();
 					myRigidBody.gravityScale = 0;//0.75f;
-					CanFloat = false;
+					TimerManager.Instance.AddTimer(new Timer(()=>{StopFloat();}, 1.0f));
 				} else {
 					state |= PlayerState.Frozen;
 				}
@@ -685,6 +710,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	void StopFloat() {
+		myRigidBody.gravityScale = 1.5f;
+	}
 	bool CanFloat {
 		get {
 			return (state & PlayerState.CanFloat) > 0;
