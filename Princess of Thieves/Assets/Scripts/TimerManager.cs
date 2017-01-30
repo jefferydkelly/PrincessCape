@@ -43,7 +43,9 @@ public class TimerManager : MonoBehaviour {
 	public static TimerManager Instance {
 		get {
 			if (instance == null) {
-				Camera.main.gameObject.AddComponent<TimerManager> ();
+				if (Camera.main.gameObject) {
+					Camera.main.gameObject.AddComponent<TimerManager> ();
+				}
 			}
 			return instance;
 		}

@@ -88,8 +88,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (!IsFrozen)
             {
                 myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
-
-                myRigidBody.ClampVelocity(maxSpeed, VelocityType.X);
+				myRigidBody.ClampVelocity((IsPushedHorizontallyByTheWind ? maxSpeed * 5: maxSpeed), VelocityType.X);
+				myRigidBody.ClampVelocity(IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
 
                 if (IsOnGround)
                 {
@@ -101,7 +101,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     else
                     {
                         
-						RaycastHit2D hit = Physics2D.BoxCast (transform.position + new Vector3(1.0f, 0), new Vector2 (2.0f, HalfHeight * 2), 0, Forward, 2.0f, 1 << LayerMask.NameToLayer("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+						RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.0f, HalfHeight * 2), 0, Forward, 0.25f, 1 << LayerMask.NameToLayer("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
 
                         if (hit.collider != null)
                         {
@@ -172,10 +172,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		if (!GameManager.Instance.IsPaused)
 		{   
-            if (controller.Horizontal != 0)
-                myAnimator.SetBool("FWD", true);
-            else
-                myAnimator.SetBool("FWD", false);
+			if (!IsFrozen) {
+				if (controller.Horizontal != 0) {
+					myAnimator.SetBool ("FWD", true);
+				} else {
+					myAnimator.SetBool ("FWD", false);
+				}
+			}
 
             if (controller.PeerDown)
             {
@@ -312,8 +315,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     {
 		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
 		//rb.AddForce (new Vector2 (fwdX * 5, 0), ForceMode2D.Impulse);
-		proj.transform.position = transform.position + new Vector3(fwdX * (HalfWidth + proj.HalfWidth() + 1), 0);
-		rb.velocity = new Vector2 (fwdX * 5, 0);
+		Vector2 vel = rb.velocity;
+		vel = vel.Rotated (-vel.GetAngle ());
+
+		rb.velocity = vel.Rotated (TrueAim.GetAngle ());
+
+		proj.transform.position = transform.position + (Vector3)(TrueAim.normalized * (HalfWidth + 1));
+
+		//rb.velocity = new Vector2 (fwdX * 5, 0);
     }
     void CreateDustParticle(Vector2 posOfParticle)
     {
@@ -556,7 +565,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     }
 
     /// <summary>
-    /// Returns the direction the Player is aiming
+    /// Returns the direction the Player is aiming.  If there's no vertical component, it assumes the player is just aiming forward.
     /// </summary>
     public Vector2 Aiming
     {
@@ -572,6 +581,22 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             return new Vector2(controller.Horizontal, vert);
         }
     }
+
+	/// <summary>
+	/// Gets the true aim.  Unlike aiming, it doesn't make an assumption about the player aiming forward.
+	/// </summary>
+	/// <value>The true aim.</value>
+	public Vector2 TrueAim {
+		get
+		{
+			Vector2 aim = new Vector2 (controller.Horizontal, controller.Vertical);
+			if (Vector2.Equals (aim, Vector2.zero)) {
+				return new Vector2(fwdX, 0);
+			}
+
+			return aim;
+		}
+	}
     /// <summary>
     /// Getter and setter for whether or not the Player is able to move
     /// </summary>
@@ -666,11 +691,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				myRenderer.material.color = Color.yellow;
 				state |= PlayerState.UsingReflectCape;
 
-
 				if (!IsOnGround && CanFloat) {
+					CanFloat = false;
 					myRigidBody.velocity = myRigidBody.velocity.XVector();
 					myRigidBody.gravityScale = 0;//0.75f;
-					CanFloat = false;
+					TimerManager.Instance.AddTimer(new Timer(()=>{StopFloat();}, 1.0f));
 				} else {
 					state |= PlayerState.Frozen;
 				}
@@ -685,6 +710,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	void StopFloat() {
+		myRigidBody.gravityScale = 1.5f;
+	}
 	bool CanFloat {
 		get {
 			return (state & PlayerState.CanFloat) > 0;
@@ -724,6 +752,34 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             }
         }
     }
+
+	public bool IsPushedVerticallyByTheWind {
+		get {
+			return (state & PlayerState.PushedByTheWindVert) > 0;
+		}
+
+		set {
+			if (value) {
+				state |= PlayerState.PushedByTheWindVert;
+			} else {
+				state &= ~PlayerState.PushedByTheWindVert;
+			}
+		}
+	}
+
+	public bool IsPushedHorizontallyByTheWind {
+		get {
+			return (state & PlayerState.PushedByTheWindHorz) > 0;
+		}
+
+		set {
+			if (value) {
+				state |= PlayerState.PushedByTheWindHorz;
+			} else {
+				state &= ~PlayerState.PushedByTheWindHorz;
+			}
+		}
+	}
 
     #endregion gets
 
@@ -790,7 +846,9 @@ public enum PlayerState
     Pushing = 8,
     UsingMagnetGloves = 16,
 	UsingReflectCape = 32,
-	CanFloat = 64
+	CanFloat = 64,
+	PushedByTheWindHorz = 128,
+	PushedByTheWindVert = 256
 }
 
 [System.Flags]

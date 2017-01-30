@@ -253,6 +253,16 @@ public static class ExtensionMethods{
 		v.y = dx * sin + dy * cos;
 	}
 
+	public static  Vector2 Rotated(this Vector2 v, float angle) {
+		float sin = Mathf.Sin (angle);
+		float cos = Mathf.Cos (angle);
+		return new Vector2 (v.x * cos - v.y * sin, v.x * sin + v.y * cos);
+	}
+
+	public static float GetAngle(this Vector2 v) {
+		return Mathf.Atan2 (v.y, v.x);
+	}
+
 
     public static string ToXString(this Vector3 v)
 	{

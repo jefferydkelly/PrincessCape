@@ -12,25 +12,44 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	float range = 10;
 	[SerializeField]
 	bool isActive = false;
+	bool isPushingPlayer = false;
 	LineRenderer lineRenderer;
 	// Use this for initialization
 	void Start () {
 		lineRenderer = GetComponent<LineRenderer> ();
-		Vector2 startPos = new Vector2 (transform.position.x + gameObject.HalfWidth (), transform.position.y);
-		lineRenderer.SetPositions(new Vector3[]{startPos, startPos + (fwd * range)});
+		lineRenderer.useWorldSpace = false;
+		lineRenderer.SetPositions(new Vector3[]{Vector2.zero, (fwd * range)});
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
+		bool stillPushingPlayer = false;
 		if (IsActive) {
-			foreach (RaycastHit2D hit in Physics2D.BoxCastAll((Vector2)transform.position + new Vector2(range / 2, 0), new Vector2(range, 1.0f), 0f, fwd)) {
+			foreach (RaycastHit2D hit in Physics2D.BoxCastAll(transform.position, new Vector2(1.0f, 1.0f), 0, fwd, range)) {
 				Rigidbody2D rb = hit.collider.GetComponent<Rigidbody2D> ();
-
+				if (hit.collider.CompareTag ("Player")) {
+					stillPushingPlayer = true;
+					if (fwd.x != 0) {
+						GameManager.Instance.Player.IsPushedHorizontallyByTheWind = true;
+					} else if (fwd.y != 0) {
+						GameManager.Instance.Player.IsPushedVerticallyByTheWind = true;
+					}
+				}
 				if (rb) {
 					rb.AddForce (fwd * force);
 				}
 			}
 		}
+
+		if (!stillPushingPlayer && isPushingPlayer) {
+			if (fwd.x != 0) {
+				GameManager.Instance.Player.IsPushedHorizontallyByTheWind = false;
+			} else if (fwd.y != 0) {
+				GameManager.Instance.Player.IsPushedVerticallyByTheWind = false;
+			}
+		}
+
+		isPushingPlayer = stillPushingPlayer;
 	}
 
 	public void Activate() {
