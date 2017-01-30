@@ -111,7 +111,8 @@ public class Enemy : ResettableObject {
     }
     void Dies()
     {
-        InvokeRepeating("DieALittleMore", 0f, 0.1f);
+        isFrozen = true;
+        InvokeRepeating("DieALittleMore", 1f, 0.1f);
     }
     void Patrol()
     {
@@ -231,10 +232,10 @@ public class Enemy : ResettableObject {
         if (col.gameObject.tag == "Metal")
         {//dies when hit with metal of a high velocity
             Debug.Log("High Speed impact detected: " + col.gameObject.GetComponent<Rigidbody2D>().velocity);
-            if (col.gameObject.GetComponent<Rigidbody2D>().velocity.x > 7){
-                Destroy(gameObject);
+            if (col.gameObject.GetComponent<Rigidbody2D>().velocity.x > 4){
+                Dies();
             }
-            if (col.gameObject.GetComponent<Rigidbody2D>().velocity.y > 7)
+            if (col.gameObject.GetComponent<Rigidbody2D>().velocity.y > 4)
             {
                 Dies();
             }

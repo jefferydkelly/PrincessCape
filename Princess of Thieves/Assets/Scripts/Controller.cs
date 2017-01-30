@@ -64,8 +64,8 @@ public class Controller
             rightItemKey = "c";
             leftItemKey = "x";
 			pauseKey = "p";
-            peerDownKey = "m";
-            peerUpKey = "k";
+            peerDownKey = "a";
+            peerUpKey = "q";
 			submitKey = "enter";
 
         }
