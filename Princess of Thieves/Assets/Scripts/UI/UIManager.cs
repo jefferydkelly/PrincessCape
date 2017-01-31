@@ -37,6 +37,8 @@ public class UIManager : MonoBehaviour
     InteractionBox interactionBox;
 
     GameObject inventoryMenu;
+
+    GameObject directionIndicator;
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
 	 */
@@ -91,6 +93,8 @@ public class UIManager : MonoBehaviour
           
             inventoryMenu = GameObject.Find("InventoryMenu");
             inventoryMenu.SetActive(false);
+
+            directionIndicator = GameObject.Find("DirectionIndicator");
             //stealthMeter = new StealthMeter();
 		}
 	}
