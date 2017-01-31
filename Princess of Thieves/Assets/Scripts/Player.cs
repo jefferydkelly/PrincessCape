@@ -289,8 +289,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 
 	void OnCollisionExit2D(Collision2D col) {
-		if (col.collider.CompareTag ("Rope")) {
-			myRigidBody.gravityScale = 1.5f;
+		if (col.collider.CompareTag ("Rope") && !IsClimbing) {
 			col.collider.isTrigger = true;
 		}
 	}
@@ -313,6 +312,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		if (col.CompareTag ("Rope") && IsClimbing) {
 			IsClimbing = false;
+
+			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
+				Vector3 pos = transform.position;
+				pos.y = col.transform.position.y + col.gameObject.HalfHeight () + HalfHeight;
+				transform.position = pos;
+				myRigidBody.velocity = Vector2.zero;
+				col.isTrigger = false;
+			}
 		}
 	}
 	#endregion

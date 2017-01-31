@@ -36,7 +36,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 	void Update() {
 		if (beingPushed) {
-			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (0.9f, 0.9f), Vector2.down.GetAngle (), Vector2.down, 0.5f, 1 << LayerMask.NameToLayer ("Platforms"));
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.05f, 1.2f), Vector2.down.GetAngle (), Vector2.down, 0.5f, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) {
 				GameManager.Instance.Player.IsPushing = false;
