@@ -129,9 +129,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                         
                     }
 
-                    if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
+					if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
                     {
-                        fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
+						fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
                         myRenderer.flipX = (fwdX == -1);
                     }
 
