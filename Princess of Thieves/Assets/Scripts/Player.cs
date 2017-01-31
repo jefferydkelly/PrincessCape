@@ -86,26 +86,32 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             lastYVel = myRigidBody.velocity.y;
 
             if (!IsFrozen)
-            {
-                myRigidBody.AddForce(new Vector2(controller.Horizontal * 35, 0));
-				myRigidBody.ClampVelocity((IsPushedHorizontallyByTheWind ? maxSpeed * 5: maxSpeed), VelocityType.X);
-				myRigidBody.ClampVelocity(IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
+			{
+				myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
+				myRigidBody.ClampVelocity ((IsPushedHorizontallyByTheWind ? maxSpeed * 5 : maxSpeed), VelocityType.X);
+				if (IsOnGround) {
+					
+					if (IsOnRope) {
+						int v = controller.Vertical;
+						if (v > 0) {
+							myRigidBody.gravityScale = 0f;
+							myRigidBody.AddForce (new Vector2(0, v * 10));
+							Vector2 vel = myRigidBody.velocity;
+							vel.x = 0;
+							myRigidBody.velocity = vel;
+						}
+					}
 
-                if (IsOnGround)
-                {
-                    if (tryingToJump)
-                    {
+					myRigidBody.ClampVelocity (IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
+					if (tryingToJump) {
                         
-                        Jump();
-                    }
-                    else
-                    {
+						Jump ();
+					} else {
                         
-						RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.0f, HalfHeight * 2), 0, Forward, 0.25f, 1 << LayerMask.NameToLayer("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+						RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.0f, HalfHeight * 2), 0, Forward, 0.25f, 1 << LayerMask.NameToLayer ("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
 
-                        if (hit.collider != null)
-                        {
-                            InteractiveObject io = hit.collider.GetComponent<InteractiveObject>();
+						if (hit.collider != null) {
+							InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
 
 							if (io != null) {
 								if (controller.Interact) {
@@ -121,21 +127,34 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 								}
 							}
                             
-                        } else if (highlighted != null)
-                        {
-                            highlighted.Dehighlight();
-                            highlighted = null;
-                        }
+						} else if (highlighted != null) {
+							highlighted.Dehighlight ();
+							highlighted = null;
+						}
                         
-                    }
+					}
 
-                    if (Mathf.Abs(myRigidBody.velocity.x) > float.Epsilon)
-                    {
-                        fwdX = (int)Mathf.Sign(myRigidBody.velocity.x);
-                        myRenderer.flipX = (fwdX == -1);
-                    }
+					if (Mathf.Abs (controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon) {
+						fwdX = (int)Mathf.Sign (controller.Horizontal/*myRigidBody.velocity.x*/);
+						myRenderer.flipX = (fwdX == -1);
+					}
 
-                }
+				} else if (IsOnRope) {
+					Vector2 vel = myRigidBody.velocity;
+					vel.x = 0;
+					myRigidBody.velocity = vel;
+					float vert = controller.Vertical;
+					if (vert != 0) {
+						myRigidBody.AddForce (new Vector2 (0, controller.Vertical * 10));
+						myRigidBody.ClampVelocity (5, VelocityType.Y);
+					} else {
+						myRigidBody.velocity = Vector2.zero;
+					}
+
+					if (IsOnGround) {
+						myRigidBody.gravityScale = 1.5f;
+					}
+				}
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
@@ -270,19 +289,25 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				(leftItem is PullGlove ? leftItem : rightItem).Deactivate();
                 myRigidBody.velocity = Vector2.zero;
             }
-        }
+		}
        
 	}
 
+	void OnCollisionExit2D(Collision2D col) {
+		if (col.collider.CompareTag ("Rope")) {
+			myRigidBody.gravityScale = 1.5f;
+			col.collider.isTrigger = true;
+		}
+	}
+		
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.CompareTag("Rope"))
 		{
-			numRopesTouching++;
-
-			if (numRopesTouching > 0)
-			{
-				myRigidBody.gravityScale = 0;
+			if (BottomCenter.y <= (col.transform.position.y + col.gameObject.HalfHeight () * 0.9f)) {
+				numRopesTouching++;
+			} else {
+				col.isTrigger = false;
 			}
 		} else if (col.CompareTag("Spike"))
         {
@@ -302,8 +327,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (col.CompareTag("Rope"))
 		{
 			numRopesTouching--;
-
-			if (numRopesTouching == 0)
+			if (myRigidBody.gravityScale == 1.5f) {
+				col.isTrigger = true;
+			} else if (numRopesTouching == 0)
 			{
 				myRigidBody.gravityScale = 1.5f;
 			}
@@ -400,6 +426,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	public Vector3 BottomCenter {
+		get {
+			return transform.position - new Vector3 (0, HalfHeight);
+		}
+	}
 	/// <summary>
 	/// Gets the percent of HP the player has.
 	/// </summary>
