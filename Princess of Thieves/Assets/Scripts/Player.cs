@@ -99,6 +99,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						myRigidBody.velocity = Vector2.zero;
 					}
 
+					if (tryingToJump) {
+						IsClimbing = false;
+						Jump ();
+						return;
+					}
 					if (controller.Interact) {
 						IsClimbing = false;
 					}
@@ -310,7 +315,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	void OnTriggerExit2D(Collider2D col)
 	{
-		if (col.CompareTag ("Rope") && IsClimbing) {
+		if (col.CompareTag ("Rope")) {
 			IsClimbing = false;
 
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
