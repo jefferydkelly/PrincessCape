@@ -294,7 +294,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 
 	void OnCollisionExit2D(Collision2D col) {
-		if (col.collider.CompareTag ("Rope") && !IsClimbing) {
+		if (col.collider.CompareTag ("Rope")) {
 			col.collider.isTrigger = true;
 		}
 	}
@@ -309,7 +309,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (IsUsingReflectCape)
             {
                 Reflect(col.gameObject);
-            }
+			}
+		} else if (col.CompareTag("Rope")) {
+			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
+				col.isTrigger = false;
+			} else {
+				col.isTrigger = true;
+			}
 		}
     }
 
