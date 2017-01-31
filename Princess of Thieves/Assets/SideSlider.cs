@@ -38,7 +38,6 @@ public class SideSlider : ResettableObject,ActivateableObject {
 
 		do {
 			transform.position += new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);
-			Debug.Log("Opening");
 			yield return null;
 		} while(transform.position.x < openPos.x);
 		transform.position = openPos;
