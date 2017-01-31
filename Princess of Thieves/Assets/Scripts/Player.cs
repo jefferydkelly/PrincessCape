@@ -28,7 +28,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	public float curMP = 0;
 	public float maxMP = 100;
 
-    private int numRopesTouching = 0;
 	PlayerState state = PlayerState.Normal;
     bool tryingToJump = false;
     public float lightOnPlayer;
@@ -87,59 +86,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
             if (!IsFrozen)
 			{
-				myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
-				myRigidBody.ClampVelocity ((IsPushedHorizontallyByTheWind ? maxSpeed * 5 : maxSpeed), VelocityType.X);
-				if (IsOnGround) {
-					
-					if (IsOnRope) {
-						int v = controller.Vertical;
-						if (v > 0) {
-							myRigidBody.gravityScale = 0f;
-							myRigidBody.AddForce (new Vector2(0, v * 10));
-							Vector2 vel = myRigidBody.velocity;
-							vel.x = 0;
-							myRigidBody.velocity = vel;
-						}
-					}
-
-					myRigidBody.ClampVelocity (IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
-					if (tryingToJump) {
-                        
-						Jump ();
-					} else {
-                        
-						RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.0f, HalfHeight * 2), 0, Forward, 0.25f, 1 << LayerMask.NameToLayer ("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
-
-						if (hit.collider != null) {
-							InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
-
-							if (io != null) {
-								if (controller.Interact) {
-									io.Interact ();
-								} else if (io != highlighted) {
-									if (highlighted != null) {
-										highlighted.Dehighlight ();
-									}
-
-									highlighted = io;
-                               
-									highlighted.Highlight ();
-								}
-							}
-                            
-						} else if (highlighted != null) {
-							highlighted.Dehighlight ();
-							highlighted = null;
-						}
-                        
-					}
-
-					if (Mathf.Abs (controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon) {
-						fwdX = (int)Mathf.Sign (controller.Horizontal/*myRigidBody.velocity.x*/);
-						myRenderer.flipX = (fwdX == -1);
-					}
-
-				} else if (IsOnRope) {
+				
+				if (IsClimbing) {
 					Vector2 vel = myRigidBody.velocity;
 					vel.x = 0;
 					myRigidBody.velocity = vel;
@@ -151,10 +99,53 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						myRigidBody.velocity = Vector2.zero;
 					}
 
-					if (IsOnGround) {
-						myRigidBody.gravityScale = 1.5f;
+					if (controller.Interact) {
+						IsClimbing = false;
 					}
-				}
+				} else  {
+					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
+					myRigidBody.ClampVelocity ((IsPushedHorizontallyByTheWind ? maxSpeed * 5 : maxSpeed), VelocityType.X);
+					myRigidBody.ClampVelocity (IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
+
+					if (IsOnGround) {
+						if (tryingToJump) {
+                        
+							Jump ();
+						} else {
+                        
+							RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.0f, HalfHeight * 2), 0, Forward, 0.25f, 1 << LayerMask.NameToLayer ("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+
+							if (hit.collider != null) {
+								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
+
+								if (io != null) {
+									if (controller.Interact) {
+										io.Interact ();
+									} else if (io != highlighted) {
+										if (highlighted != null) {
+											highlighted.Dehighlight ();
+										}
+
+										highlighted = io;
+                               
+										highlighted.Highlight ();
+									}
+								}
+                            
+							} else if (highlighted != null) {
+								highlighted.Dehighlight ();
+								highlighted = null;
+							}
+                        
+						}
+
+						if (Mathf.Abs (controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon) {
+							fwdX = (int)Mathf.Sign (controller.Horizontal/*myRigidBody.velocity.x*/);
+							myRenderer.flipX = (fwdX == -1);
+						}
+					}
+
+				} 
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
@@ -286,7 +277,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             if (lastYVel < 0)
             {
-				(leftItem is PullGlove ? leftItem : rightItem).Deactivate();
+				if (leftItem && leftItem.IsActive && leftItem is PullGlove) {
+					leftItem.Deactivate ();
+				} else if (rightItem && rightItem.IsActive && rightItem is PullGlove) {
+					rightItem.Deactivate ();
+				}
                 myRigidBody.velocity = Vector2.zero;
             }
 		}
@@ -302,37 +297,22 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.CompareTag("Rope"))
-		{
-			if (BottomCenter.y <= (col.transform.position.y + col.gameObject.HalfHeight () * 0.9f)) {
-				numRopesTouching++;
-			} else {
-				col.isTrigger = false;
-			}
-		} else if (col.CompareTag("Spike"))
+		if (col.CompareTag("Spike"))
         {
             GameManager.Instance.Reset();
-        }
-        if (col.CompareTag("Projectile"))
+        } else if (col.CompareTag("Projectile"))
         {
             if (IsUsingReflectCape)
             {
                 Reflect(col.gameObject);
             }
-        }
+		}
     }
 
 	void OnTriggerExit2D(Collider2D col)
 	{
-		if (col.CompareTag("Rope"))
-		{
-			numRopesTouching--;
-			if (myRigidBody.gravityScale == 1.5f) {
-				col.isTrigger = true;
-			} else if (numRopesTouching == 0)
-			{
-				myRigidBody.gravityScale = 1.5f;
-			}
+		if (col.CompareTag ("Rope") && IsClimbing) {
+			IsClimbing = false;
 		}
 	}
 	#endregion
@@ -376,18 +356,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             
 			return hit.collider != null;
 		} // end Get
-	}
-
-	/// <summary>
-	/// Gets a value indicating whether this <see cref="T:Player"/> is on rope.
-	/// </summary>
-	/// <value><c>true</c> if is on rope; otherwise, <c>false</c>.</value>
-	bool IsOnRope
-	{
-		get
-		{
-			return numRopesTouching > 0;
-		}
 	}
 
 	/// <summary>
@@ -650,6 +618,26 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	public bool IsClimbing {
+		get
+		{
+			return (state & PlayerState.IsClimbing) > 0;
+		}
+		set
+		{
+			if (value)
+			{
+				state |= PlayerState.IsClimbing;
+				myRigidBody.gravityScale = 0;
+				UIManager.Instance.ShowInteraction ("Get Off");
+
+			}else
+			{
+				state &= ~PlayerState.IsClimbing;
+				myRigidBody.gravityScale = 1.5f;
+			}
+		}
+	}
     /// <summary>
     /// Getter and setter for if the player is using the Dash Boots
     /// </summary>
@@ -879,7 +867,8 @@ public enum PlayerState
 	UsingReflectCape = 32,
 	CanFloat = 64,
 	PushedByTheWindHorz = 128,
-	PushedByTheWindVert = 256
+	PushedByTheWindVert = 256,
+	IsClimbing = 512
 }
 
 [System.Flags]
