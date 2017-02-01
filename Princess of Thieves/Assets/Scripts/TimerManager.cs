@@ -21,15 +21,19 @@ public class TimerManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		foreach (Timer t in toAdd) {
+        Debug.Log("TImer is updating");
+        foreach (Timer t in toAdd) {
 			timers.Add (t);
+            Debug.Log(timers);
 		}
 
 		toAdd = new List<Timer> ();
-		float dt = Time.deltaTime;
+		float dt = Time.time;
 		foreach (Timer t in timers) {
-			if (t.Update (dt)) {
-				toRemove.Add (t);
+            Debug.Log("Updating T");
+            if (t.Update2 (dt)) {
+                
+                toRemove.Add (t);
 			}
 		}
 
@@ -52,7 +56,9 @@ public class TimerManager : MonoBehaviour {
 	}
 
 	public void AddTimer(Timer t) {
+        //never gets called?
 		toAdd.Add (t);
+        //toAdd.Remove(t);
 	}
 
 	public void RemoveTimer(Timer t) {
@@ -67,18 +73,23 @@ public class Timer {
 	float runTime;
 	float curTime;
 	WaitDelegate funcToRun;
+    //Creation
 	public Timer(WaitDelegate wd, float time, bool rep = false) {
+        Debug.Log("Timer Created");
 		runTime = time;
 		curTime = time;
 		funcToRun = wd;
 		repeating = rep;
 	}
 
-	public bool Update(float dt) {
-		if (!paused) {
-			curTime -= dt;
+	public bool Update2(float dt) {
+        Debug.Log("Here");
+        if (!paused) {
+           
+            curTime -= dt;
 
 			if (curTime <= 0) {
+              
 				funcToRun ();
 				if (repeating) {
 					curTime += runTime;

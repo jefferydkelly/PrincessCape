@@ -92,10 +92,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					vel.x = 0;
 					myRigidBody.velocity = vel;
 					float vert = controller.Vertical;
-					if (vert != 0) {
+					if (vert != 0)
+                    {
 						myRigidBody.AddForce (new Vector2 (0, controller.Vertical * 10));
 						myRigidBody.ClampVelocity (5, VelocityType.Y);
-					} else {
+					}
+                    else
+                    {
 						myRigidBody.velocity = Vector2.zero;
 					}
 
@@ -107,7 +110,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					if (controller.Interact) {
 						IsClimbing = false;
 					}
-				} else  {
+				}//end climbing
+                else
+                {
 					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
 					myRigidBody.ClampVelocity ((IsPushedHorizontallyByTheWind ? maxSpeed * 5 : maxSpeed), VelocityType.X);
 					myRigidBody.ClampVelocity (IsPushedVerticallyByTheWind ? 20 : 10, VelocityType.Y);
@@ -267,6 +272,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         if (!col.collider.CompareTag("Platform") && IsDashing)
         {
+          //  Debug.Log("Dashing is false");
             IsDashing = false;
         }
 		if (col.collider.CompareTag ("Platform")) {
@@ -667,14 +673,19 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
         set
         {
-            if (value && !IsDashing && !IsFrozen)
+            if (value && !IsDashing && !IsFrozen) //if true, we aren't already dashing, and we aren't frozen
             {
+                Debug.Log("here and going on cooldown");
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
-                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10, 0), ForceMode2D.Impulse);
+
+                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10, 10 * Aiming.y), ForceMode2D.Impulse); //yes we are dashing now
+
+               
             }
             else
             {
+                Debug.Log("here");
                 UsableItem curItem = leftItem is DashBoots ? leftItem : rightItem;
                 curItem.Deactivate();
                 state &= ~PlayerState.Dashing;

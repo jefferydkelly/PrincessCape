@@ -60,6 +60,7 @@ public abstract class UsableItem : MonoBehaviour {
 	protected void CreateCooldownTimer() {
 		cooldownDelegate = () => {
 			onCooldown = false;
+            Debug.Log("I ran");
 		};
 
 		cooldownTimer = new Timer (cooldownDelegate, cooldownTime);
@@ -71,6 +72,7 @@ public abstract class UsableItem : MonoBehaviour {
 	protected void StartCooldown() {
 		onCooldown = true;
 		cooldownTimer.Reset ();
+        Debug.Log("I'm going on cooldown");
 		TimerManager.Instance.AddTimer (cooldownTimer);
 	}
 
