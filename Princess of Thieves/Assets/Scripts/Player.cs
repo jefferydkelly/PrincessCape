@@ -282,7 +282,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         if (!col.collider.CompareTag("Platform") && IsDashing)
         {
-          //  Debug.Log("Dashing is false");
             IsDashing = false;
         }
 		if (col.collider.CompareTag ("Platform")) {
@@ -290,6 +289,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				CanFloat = true;
 				if (IsUsingMagnetGloves) {
 					myRigidBody.velocity = Vector2.zero;
+				}
+			} else if (IsDashing ) {
+				foreach (ContactPoint2D cp in col.contacts) {
+					if (cp.normal.y == 0) {
+						IsDashing = false;
+						break;
+					}
 				}
 			}
 		} else if (col.collider.CompareTag ("Enemy")) {
@@ -710,7 +716,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             if (value && !IsDashing && !IsFrozen) //if true, we aren't already dashing, and we aren't frozen
             {
-                Debug.Log("here and going on cooldown");
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
 
@@ -720,11 +725,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             }
             else
             {
-                Debug.Log("here");
-                UsableItem curItem = leftItem is DashBoots ? leftItem : rightItem;
-                curItem.Deactivate();
                 state &= ~PlayerState.Dashing;
                 state &= ~PlayerState.Frozen;
+				UsableItem curItem = leftItem is DashBoots ? leftItem : rightItem;
+				curItem.Deactivate();
             }
         }
     }

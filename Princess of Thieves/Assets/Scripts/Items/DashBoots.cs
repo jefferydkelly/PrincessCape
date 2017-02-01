@@ -17,8 +17,6 @@ public class DashBoots : UsableItem {
         {
            // Debug.Log("Timer manager name " + TimerManager.Instance.gameObject.name);
             onCooldown = true;
-            Debug.Log("I'm on cooldown");
-            timeIWentOnCooldown = Time.time;
             GameManager.Instance.Player.IsDashing = true;
         }
     }
@@ -28,7 +26,6 @@ public class DashBoots : UsableItem {
        
         if (!GameManager.Instance.Player.IsDashing)
         {
-         
 			StartCooldown ();
         }
     }
@@ -39,12 +36,5 @@ public class DashBoots : UsableItem {
     }
     public  void Update()
     {
-        if (onCooldown)
-        {
-            if(Time.time - timeIWentOnCooldown >= cooldownTime)
-            {
-                onCooldown = false;
-            }
-        }
     }
 }

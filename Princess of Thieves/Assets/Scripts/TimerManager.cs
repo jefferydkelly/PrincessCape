@@ -21,27 +21,26 @@ public class TimerManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log("TImer is updating");
-        foreach (Timer t in toAdd) {
-			timers.Add (t);
-            Debug.Log(timers);
-		}
-
-		toAdd = new List<Timer> ();
-		float dt = Time.time;
-		foreach (Timer t in timers) {
-            Debug.Log("Updating T");
-            if (t.Update2 (dt)) {
-                
-                toRemove.Add (t);
+		if (!GameManager.Instance.IsPaused) {
+			foreach (Timer t in toAdd) {
+				timers.Add (t);
 			}
-		}
 
-		foreach (Timer t in toRemove) {
-			timers.Remove (t);
-		}
+			toAdd.Clear ();
+			float dt = Time.deltaTime;
+			foreach (Timer t in timers) {
+				if (t.Update (dt)) {
+                
+					toRemove.Add (t);
+				}
+			}
 
-		toRemove = new List<Timer> ();
+			foreach (Timer t in toRemove) {
+				timers.Remove (t);
+			}
+
+			toRemove.Clear ();
+		}
 	}
 
 	public static TimerManager Instance {
@@ -75,19 +74,16 @@ public class Timer {
 	WaitDelegate funcToRun;
     //Creation
 	public Timer(WaitDelegate wd, float time, bool rep = false) {
-        Debug.Log("Timer Created");
 		runTime = time;
 		curTime = time;
 		funcToRun = wd;
 		repeating = rep;
 	}
 
-	public bool Update2(float dt) {
-        Debug.Log("Here");
+	public bool Update(float dt) {
         if (!paused) {
            
             curTime -= dt;
-
 			if (curTime <= 0) {
               
 				funcToRun ();
