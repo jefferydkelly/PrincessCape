@@ -11,10 +11,12 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 	[SerializeField]
 	GameObject contents;
 	SpriteRenderer myRenderer;
+	Color startColor;
 
 	private void Start()
 	{
 		myRenderer = GetComponent<SpriteRenderer>();
+		startColor = myRenderer.color;
 	}
 
 	public void Interact()
@@ -23,7 +25,7 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 		{
 			UIManager.Instance.ShowInteraction("");
 			GameManager.Instance.Player.AddItem(contents);
-			myRenderer.color = Color.white;
+			myRenderer.color = startColor;
 			if (openedSprite != null) {
 				myRenderer.sprite = openedSprite;
 			}
@@ -46,7 +48,7 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 		if (!looted)
 		{
 			UIManager.Instance.ShowInteraction("");
-			myRenderer.color = Color.white;
+			myRenderer.color = startColor;
 			//myRenderer.sprite = closedSprite;
 		}
 	}

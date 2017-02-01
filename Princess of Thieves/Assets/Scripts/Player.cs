@@ -413,9 +413,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
 			int finalMask = mask | mask2;
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
-			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (HalfWidth, HalfHeight + 0.1f), 0, down, 1.1f, finalMask); 
-            
-			return hit.collider != null;
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (HalfWidth, HalfHeight + 0.1f), 0, down, 0.5f, finalMask); 
+			return hit.collider != null && hit.normal.y != 0;
 		} // end Get
 	}
 
@@ -607,6 +606,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             GameObject g = Instantiate(go);
             g.transform.SetParent(transform);
             UsableItem ui = g.GetComponent<UsableItem>();
+			if (ui.itemName == "Magic Cape") {
+				jumpImpulse = 10.0f;
+			}
             if (leftItem == null)
             {
                 leftItem = ui;
