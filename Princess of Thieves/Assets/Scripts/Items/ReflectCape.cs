@@ -10,6 +10,8 @@ public class ReflectCape : UsableItem
 	Timer deactivateTimer;
 	[SerializeField]
 	float timeActive = 1.0f;
+	[SerializeField]
+	AudioClip capeFX;
     // Use this for initialization
     void Start () {
 		CreateCooldownTimer ();
@@ -31,6 +33,7 @@ public class ReflectCape : UsableItem
         {
             GameManager.Instance.Player.IsUsingReflectCape = true;
 			itemActive = true;
+			AudioManager.Instance.PlaySound (capeFX);
 			/*
 			deactivateTimer.Reset ();
 			TimerManager.Instance.AddTimer (deactivateTimer);

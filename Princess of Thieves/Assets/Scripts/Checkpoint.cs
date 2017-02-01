@@ -11,6 +11,8 @@ public class Checkpoint : JDMappableObject {
     //List with all checkpoints in the scene
     public static GameObject[] checkpoints;
 
+	[SerializeField]
+	AudioClip activateClip;
 	// Use this for initialization
 	void Awake () {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -23,12 +25,14 @@ public class Checkpoint : JDMappableObject {
 	}
 	void ActivateCheckpoint()
     {
-        foreach(GameObject cp in checkpoints)
-        {
-            cp.GetComponent<Checkpoint>().Activated = false;
-        }
+		if (!Activated) {
+			AudioManager.Instance.PlaySound (activateClip);
+			foreach (GameObject cp in checkpoints) {
+				cp.GetComponent<Checkpoint> ().Activated = false;
+			}
 
-        Activated = true;
+			Activated = true;
+		}
     }
 
     public bool Activated
@@ -41,6 +45,7 @@ public class Checkpoint : JDMappableObject {
         set
         {
             activated = value;
+
             myRenderer.sprite = activated ? activatedSprite : inactiveSprite;
         }
     }

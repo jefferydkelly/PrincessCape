@@ -13,6 +13,8 @@ public class GateController : JDMappableObject, ActivateableObject {
 
     [SerializeField]
     Sprite[] sprites;
+	[SerializeField]
+	AudioClip closeSound;
 	// Use this for initialization
 	void Start () {
 		
@@ -85,12 +87,14 @@ public class GateController : JDMappableObject, ActivateableObject {
 		//	yield return null;
 		//}
 		//transform.position = startPosition;
+
        
 		yield return null;
 	}
 
     protected virtual void OnClose()
     {
+		AudioManager.Instance.PlaySound (closeSound);
         myRenderer.sprite = sprites[0];
         myCollider.isTrigger = false;
     }

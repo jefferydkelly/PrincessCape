@@ -48,6 +48,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
+
+	Timer resetTimer;
+	//Sound Effects
+	[SerializeField]
+	AudioClip jumpClip;
+	[SerializeField]
+	AudioClip spikeDeathClip;
    
     void Awake()
     {
@@ -68,6 +75,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         
         UIManager.Instance.UpdateUI(controller);
         inventory = new List<UsableItem>();
+		resetTimer = new Timer (() => {
+			GameManager.Instance.Reset();
+		}, 0.33f);
       
 	}
 
@@ -256,6 +266,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
         float ji = IsDashing ? jumpImpulse * 1.5f : jumpImpulse;
 		myRigidBody.AddForce(new Vector2(0, ji * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
+		AudioManager.Instance.PlaySound (jumpClip);
 	}
 
 	/// <summary>
@@ -322,7 +333,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		if (col.CompareTag("Spike"))
         {
-            GameManager.Instance.Reset();
+			AudioManager.Instance.PlaySound (spikeDeathClip);
+			resetTimer.Reset ();
+			TimerManager.Instance.AddTimer (resetTimer);
+            //GameManager.Instance.Reset();
         }
         else if (col.CompareTag("Water"))
         {
