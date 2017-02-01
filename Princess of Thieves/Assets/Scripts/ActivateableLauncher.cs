@@ -7,6 +7,8 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	GameObject projectile;
 	bool isActive = false;
+	[SerializeField]
+	bool startActive = false;
 	public float timeToFire = 3f;
 	[SerializeField]
 	Vector3 fwd = new Vector3(1,0);
@@ -19,6 +21,10 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 		};
 
 		fireTimer = new Timer (wd, timeToFire, true);
+
+		if (startActive) {
+			Activate ();
+		}
 
 	}
 
