@@ -47,6 +47,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     List<UsableItem> inventory;
     private bool usedItem;
 
+    private bool inWater = false;
+    private float percInWater = 0f; 
+
     InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
    
@@ -81,13 +84,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         if (!GameManager.Instance.IsPaused)
         {
            
-            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP);
+            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP); //Should this be maxMP?
             lastYVel = myRigidBody.velocity.y;
 
             if (!IsFrozen)
 			{
 				
-				if (IsClimbing) {
+				if (IsClimbing)
+                {
 					Vector2 vel = myRigidBody.velocity;
 					vel.x = 0;
 					myRigidBody.velocity = vel;
@@ -111,6 +115,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						IsClimbing = false;
 					}
 				}//end climbing
+                else if (inWater)
+                {
+                    myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
+                    myRigidBody.ClampVelocity(( maxSpeed * 5  ), VelocityType.X);
+                    myRigidBody.ClampVelocity( 25, VelocityType.Y);
+                }
                 else
                 {
 					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
@@ -303,6 +313,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (col.collider.CompareTag ("Rope")) {
 			col.collider.isTrigger = true;
 		}
+
 	}
 		
 	void OnTriggerEnter2D(Collider2D col)
@@ -310,13 +321,19 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (col.CompareTag("Spike"))
         {
             GameManager.Instance.Reset();
-        } else if (col.CompareTag("Projectile"))
+        }
+        else if (col.CompareTag("Water"))
+        {
+            inWater = true;
+        }
+        else if (col.CompareTag("Projectile"))
         {
             if (IsUsingReflectCape)
             {
                 Reflect(col.gameObject);
 			}
-		} else if (col.CompareTag("Rope")) {
+		}
+        else if (col.CompareTag("Rope")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
 				col.isTrigger = false;
 			} else {
@@ -338,7 +355,25 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				col.isTrigger = false;
 			}
 		}
-	}
+        if (col.CompareTag("Water"))
+        {
+            inWater = false;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        //http://answers.unity3d.com/questions/879712/making-an-object-float-in-water.html
+        if (col.CompareTag("Water"))
+        {
+            //get percentage of collider under water. Apply a force opposite of that upwards. use 50% of the collider
+            if (col.bounds.extents.y <= GetComponent<BoxCollider2D>().bounds.center.y*200)
+            {
+                myRigidBody.AddForce(new Vector2(0, Mathf.Sign(myRigidBody.gravityScale)/8), ForceMode2D.Impulse);
+                Debug.Log("I'm less than halfway in");
+            }
+        }
+    }
 	#endregion
    
     void Reflect(GameObject proj)
