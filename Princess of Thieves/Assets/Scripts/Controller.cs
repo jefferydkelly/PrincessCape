@@ -23,9 +23,6 @@ public class Controller
 	string pauseKey;
 	string submitKey;
 
-    //Axis Check Bools
-    float resetTime = 0.5f;
-    bool spellAxisFrozen = false;
 	Controller360 gamepad;
 
     public Controller()

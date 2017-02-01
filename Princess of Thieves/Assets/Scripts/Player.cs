@@ -12,15 +12,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     private Animator myAnimator;
     public Light myLight;
     private float lightBase = 4;
-    private MagicState mState = MagicState.Stun;
-    private ArmorState aState = ArmorState.Base;
 	private int fwdX = 1;
 	public float maxSpeed = 1;
 	public float sneakSpeed = 0.5f;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
-	private bool onRope = false;
-    private int jumpsInAir;
 
 	private int curHP = 0;
 	public int maxHP = 100;
@@ -937,23 +933,4 @@ public enum PlayerState
 	PushedByTheWindHorz = 128,
 	PushedByTheWindVert = 256,
 	IsClimbing = 512
-}
-
-[System.Flags]
-public enum ArmorState
-{
-    //How many hits it can take I suppose
-    Base = 0,
-    One = 1,
-    Two = 2   
-}
-[System.Flags]
-public enum MagicState
-{
-    NoMagic = 0,
-    Range = 1,
-    WallJump = 2,
-    DJump = 4,
-    Stun = 8,
-    Magnet = 16
 }

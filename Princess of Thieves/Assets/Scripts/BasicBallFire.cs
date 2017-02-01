@@ -7,7 +7,7 @@ public class BasicBallFire : MonoBehaviour {
     [SerializeField]
     GameObject projectile;
 	bool isActive = false;
-    float lastTimeFire = 0f;
+  
     public float timeToFire = 3f;
 	[SerializeField]
 	Vector3 fwd = new Vector3(1,0);
