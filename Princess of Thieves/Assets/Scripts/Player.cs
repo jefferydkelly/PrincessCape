@@ -373,7 +373,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         if (col.CompareTag("Water"))
         {
             //get percentage of collider under water. Apply a force opposite of that upwards. use 50% of the collider
-            if (col.bounds.extents.y <= GetComponent<BoxCollider2D>().bounds.center.y*200)
+            if (col.transform.position.y + col.bounds.extents.y >= transform.position.y /*+GetComponent<BoxCollider2D>().bounds.center.y*/)
             {
                 myRigidBody.AddForce(new Vector2(0, Mathf.Sign(myRigidBody.gravityScale)/8), ForceMode2D.Impulse);
                 Debug.Log("I'm less than halfway in");
