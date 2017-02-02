@@ -17,7 +17,7 @@ public class InventoryMenu : MonoBehaviour {
     private void OnEnable()
     {
 		if (GameManager.Instance.IsInMenu) {
-
+			
 			childImages = GetComponentsInChildren<Image> ();
 			UpdateUI ();
 			UIManager.Instance.ShowInteraction ("Info");
@@ -72,7 +72,7 @@ public class InventoryMenu : MonoBehaviour {
     }
     private void HandleInput()
     {
-        if (GameManager.Instance.IsPaused)
+        if (GameManager.Instance.IsInMenu)
         {
             Image curImg = GetComponentsInChildren<Image>()[curSelected + 1];
             curImg.color = Color.white;
@@ -124,8 +124,10 @@ public class InventoryMenu : MonoBehaviour {
 
     public void UpdateUI()
     {
-        if (GameManager.Instance.IsPaused)
+		Debug.Log (GameManager.Instance.IsPaused);
+		if (GameManager.Instance.IsInMenu)
         {
+			
             List<UsableItem> items = GameManager.Instance.Player.Inventory;
 
             for (int i = 0; i < items.Count; i++)
