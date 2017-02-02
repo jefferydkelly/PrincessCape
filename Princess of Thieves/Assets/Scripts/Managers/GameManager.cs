@@ -118,7 +118,7 @@ public class GameManager {
 
         set
         {
-            UIManager.Instance.ShowMenu = value;
+            
             if (value)
             {
                 state |= GameState.Menu;
@@ -127,6 +127,7 @@ public class GameManager {
             {
                 state &= ~GameState.Menu;
             }
+			UIManager.Instance.ShowMenu = value;
 			AudioManager.Instance.Paused = IsPaused;
         }
     }
