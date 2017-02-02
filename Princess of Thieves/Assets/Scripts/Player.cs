@@ -336,7 +336,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
-			TimerManager.Instance.AddTimer (resetTimer);
+			resetTimer.Start ();
             //GameManager.Instance.Reset();
         }
         else if (col.CompareTag("Water"))

@@ -94,7 +94,9 @@ public class GateController : JDMappableObject, ActivateableObject {
 
     protected virtual void OnClose()
     {
-		AudioManager.Instance.PlaySound (closeSound);
+		if (myRenderer.isVisible) {
+			AudioManager.Instance.PlaySound (closeSound);
+		}
         myRenderer.sprite = sprites[0];
         myCollider.isTrigger = false;
     }
