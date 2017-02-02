@@ -13,9 +13,8 @@ public class DashBoots : UsableItem {
     public override void Activate()
     {
         
-        if (!onCooldown)
+		if (!onCooldown && GameManager.Instance.Player.IsOnGround)
         {
-           // Debug.Log("Timer manager name " + TimerManager.Instance.gameObject.name);
             onCooldown = true;
             GameManager.Instance.Player.IsDashing = true;
         }

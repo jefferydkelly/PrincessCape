@@ -9,7 +9,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	bool isActive = false;
 	[SerializeField]
 	bool startActive = false;
-	public float timeToFire = 3f;
+	public float timeToFire = 1f;
 	[SerializeField]
 	Vector3 fwd = new Vector3(1,0);
 	Timer fireTimer;

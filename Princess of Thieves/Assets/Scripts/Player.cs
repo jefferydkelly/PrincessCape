@@ -420,7 +420,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on ground.
 	/// </summary>
 	/// <value><c>true</c> if is on ground; otherwise, <c>false</c>.</value>
-	bool IsOnGround
+	public bool IsOnGround
 	{
 		get
 		{

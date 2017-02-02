@@ -14,8 +14,8 @@ public class AudioManager:Object {
 	}
 
 	public void PlaySound(AudioClip ac) {
-		//source.clip = ac;
-		source.PlayOneShot(ac, 1.0f);
+		source.clip = ac;
+		source.Play ();
 	}
 
 	public bool Paused {
