@@ -24,11 +24,7 @@ public class AudioManager:Object {
 		}
 
 		set {
-			if (value) {
-				source.Pause ();
-			} else {
-				source.UnPause ();
-			}
+			AudioListener.pause = value;
 		}
 	}
 
