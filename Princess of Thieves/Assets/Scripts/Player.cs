@@ -58,6 +58,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
    
     void Awake()
     {
+       // transform.position = Vector2.zero;
         startPos = transform;
     }
 	// Use this for initialization
