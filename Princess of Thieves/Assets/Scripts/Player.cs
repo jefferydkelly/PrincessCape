@@ -126,7 +126,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 {
                     myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
                     myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
-                    myRigidBody.ClampVelocity( 25, VelocityType.Y);
+                    myRigidBody.ClampVelocity( 5, VelocityType.Y);
                 }
                 else
                 {
