@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 public class InventoryMenu : MonoBehaviour {
 
-    Controller controller;
+    
     int curSelected = 0;
     [SerializeField]
     float waitTime = 0.25f;
@@ -17,9 +17,6 @@ public class InventoryMenu : MonoBehaviour {
     private void OnEnable()
     {
 		if (GameManager.Instance.IsInMenu) {
-			if (controller == null) {
-				controller = GameManager.Instance.Player.Controller;
-			}
 
 			childImages = GetComponentsInChildren<Image> ();
 			UpdateUI ();
@@ -139,4 +136,10 @@ public class InventoryMenu : MonoBehaviour {
             }
         }
     }
+
+	private Controller controller {
+		get {
+			return GameManager.Instance.Player.Controller;
+		}
+	}
 }

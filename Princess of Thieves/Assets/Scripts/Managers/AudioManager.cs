@@ -18,6 +18,20 @@ public class AudioManager:Object {
 		source.Play ();
 	}
 
+	public bool Paused {
+		get {
+			return !source.isPlaying;
+		}
+
+		set {
+			if (value) {
+				source.Pause ();
+			} else {
+				source.UnPause ();
+			}
+		}
+	}
+
 	public static AudioManager Instance {
 		get {
 			if (instance == null) {

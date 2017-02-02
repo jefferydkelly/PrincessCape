@@ -26,9 +26,7 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnDestroy() {
-		if (lifeTimer != null) {
-			TimerManager.Instance.RemoveTimer (lifeTimer);
-		}
+		TimerManager.Instance.RemoveTimer (lifeTimer);
 	}
 
 }

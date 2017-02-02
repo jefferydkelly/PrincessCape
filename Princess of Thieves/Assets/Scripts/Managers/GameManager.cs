@@ -97,6 +97,7 @@ public class GameManager {
 		set
 		{
 			UIManager.Instance.InCutscene = value;
+
 			if (value)
 			{
 				state |= GameState.Cutscene;
@@ -104,6 +105,7 @@ public class GameManager {
 			else {
 				state &= ~GameState.Cutscene;
 			}
+			AudioManager.Instance.Paused = IsPaused;
 		}
 	}
 
@@ -125,6 +127,7 @@ public class GameManager {
             {
                 state &= ~GameState.Menu;
             }
+			AudioManager.Instance.Paused = IsPaused;
         }
     }
 
