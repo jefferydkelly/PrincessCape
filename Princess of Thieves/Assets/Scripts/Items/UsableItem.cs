@@ -71,7 +71,7 @@ public abstract class UsableItem : MonoBehaviour {
 	protected void StartCooldown() {
 		onCooldown = true;
 		cooldownTimer.Reset ();
-		TimerManager.Instance.AddTimer (cooldownTimer);
+		cooldownTimer.Start ();
 	}
 
 	public bool Continuous {

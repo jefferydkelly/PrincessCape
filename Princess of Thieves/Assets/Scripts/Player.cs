@@ -125,7 +125,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 else if (inWater)
                 {
                     myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
-                    myRigidBody.ClampVelocity(( maxSpeed * 5  ), VelocityType.X);
+                    myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
                     myRigidBody.ClampVelocity( 25, VelocityType.Y);
                 }
                 else
@@ -336,7 +336,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
-			TimerManager.Instance.AddTimer (resetTimer);
+			resetTimer.Start ();
             //GameManager.Instance.Reset();
         }
         else if (col.CompareTag("Water"))

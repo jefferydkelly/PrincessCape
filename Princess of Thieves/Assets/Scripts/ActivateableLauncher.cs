@@ -23,14 +23,34 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 		fireTimer = new Timer (wd, timeToFire, true);
 
 		if (startActive) {
-			Activate ();
-		}
+			isActive = true;
 
+			if (GetComponent<SpriteRenderer> ().isVisible) {
+				fireTimer.Start ();
+			}
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+	}
+
+	void OnBecameVisible() {
+		if (isActive) {
+			if (fireTimer.Paused) {
+				fireTimer.Paused = false;
+			} else {
+				fireTimer.Start ();
+			}
+		}
+	}
+
+	void OnBecameInvisible() {
+		
+		if (isActive) {
+			fireTimer.Paused = true;
+		}
 	}
 	void Fire()
 	{
@@ -41,12 +61,12 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 
 	public void Activate() {
 		fireTimer.Reset ();
-		TimerManager.Instance.AddTimer (fireTimer);
+		fireTimer.Start ();
 		isActive = true;
 	}
 
 	public void Deactivate() {
-		TimerManager.Instance.RemoveTimer (fireTimer);
+		fireTimer.Stop ();
 		isActive = false;
 	}
 

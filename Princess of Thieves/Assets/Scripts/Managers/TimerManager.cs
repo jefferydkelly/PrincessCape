@@ -59,9 +59,7 @@ public class TimerManager : MonoBehaviour {
 	}
 
 	public void AddTimer(Timer t) {
-        //never gets called?
 		toAdd.Add (t);
-        //toAdd.Remove(t);
 	}
 
 	public void RemoveTimer(Timer t) {
@@ -103,6 +101,21 @@ public class Timer {
 		}
 
 		return false;
+	}
+
+	public void Start() {
+		paused = false;
+		if (TimerManager.Instance) {
+			TimerManager.Instance.AddTimer (this);
+		}
+	}
+
+	public void Stop() {
+		paused = true;
+		if (TimerManager.Instance) {
+			
+			TimerManager.Instance.RemoveTimer (this);
+		}
 	}
 
 	public bool Paused {

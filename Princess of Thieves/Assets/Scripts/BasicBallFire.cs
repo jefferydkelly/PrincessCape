@@ -20,7 +20,7 @@ public class BasicBallFire : MonoBehaviour {
 		};
 
 		fireTimer = new Timer (wd, timeToFire, true);
-		TimerManager.Instance.AddTimer (fireTimer);
+		fireTimer.Start ();
 
 	}
 	

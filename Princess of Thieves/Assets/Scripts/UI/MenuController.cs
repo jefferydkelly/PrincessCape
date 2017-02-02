@@ -27,7 +27,7 @@ public class MenuController : MonoBehaviour {
 		};
 		inputTimer = new Timer(inputDelegate, 0.25f, true);
 		if (buttons.Count > 0) {
-			TimerManager.Instance.AddTimer (inputTimer);
+			inputTimer.Start ();
 		}
 	}
 		
@@ -43,7 +43,7 @@ public class MenuController : MonoBehaviour {
 
 	}
 	public void ChangeScene(string sceneName) {
-		TimerManager.Instance.RemoveTimer (inputTimer);
+		inputTimer.Stop ();
 		SceneManager.LoadScene(sceneName);
 	}
 

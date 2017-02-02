@@ -11,7 +11,8 @@ public class Projectile : MonoBehaviour {
 		lifeTimer = new Timer (() => {
 			Destroy (gameObject);
 		}, lifeTime);
-		TimerManager.Instance.AddTimer (lifeTimer);
+
+		lifeTimer.Start ();
 	}
 	
 	// Update is called once per frame
@@ -27,7 +28,7 @@ public class Projectile : MonoBehaviour {
 
 	void OnDestroy() {
 		if (TimerManager.Instance) {
-			TimerManager.Instance.RemoveTimer (lifeTimer);
+			lifeTimer.Stop ();
 		}
 	}
 

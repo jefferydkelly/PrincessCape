@@ -9,23 +9,35 @@ public class WaterDrip : MonoBehaviour {
 
 	[SerializeField]
 	AudioClip dripSound;
-    
+
 	Timer dripTimer;
+
+	[SerializeField]
+	float dripTime = 3.0f;
 	// Use this for initialization
 	void Start () {
-		float timeToDrop = Random.Range(1, 5);
-		dripTimer = new Timer (() => {
-			Drip ();
-		}, timeToDrop, true);
-		TimerManager.Instance.AddTimer (dripTimer);
+		dripTimer = new Timer(() =>
+			{
+				Drip();
+			}, dripTime, true);
+	
         //InvokeRepeating("Drip", 1f, timeToDrop);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
 	}
 
+	void OnBecameVisible() {
+		dripTimer.Reset ();
+		dripTimer.Start ();
+	}
+
+    void OnBecameInvisible()
+    {
+		dripTimer.Stop ();
+    }
     void Drip()
     {
 		GameObject temp = Instantiate (waterDroplet, transform.position, transform.rotation);
@@ -34,7 +46,7 @@ public class WaterDrip : MonoBehaviour {
 
 	void OnDestroy() {
 		if (TimerManager.Instance) {
-			TimerManager.Instance.RemoveTimer (dripTimer);
+			dripTimer.Stop ();
 		}
 	}
 }
