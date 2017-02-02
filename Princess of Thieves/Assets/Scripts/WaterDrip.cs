@@ -13,11 +13,7 @@ public class WaterDrip : MonoBehaviour {
 	Timer dripTimer;
 	// Use this for initialization
 	void Start () {
-		float timeToDrop = Random.Range(1, 5);
-		dripTimer = new Timer (() => {
-			Drip ();
-		}, timeToDrop, true);
-		TimerManager.Instance.AddTimer (dripTimer);
+		
         //InvokeRepeating("Drip", 1f, timeToDrop);
 	}
 	
@@ -26,6 +22,26 @@ public class WaterDrip : MonoBehaviour {
 
 	}
 
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.name.Contains("Player"))
+        {
+            float timeToDrop = Random.Range(1, 5);
+            dripTimer = new Timer(() =>
+            {
+                Drip();
+            }, timeToDrop, true);
+            TimerManager.Instance.AddTimer(dripTimer);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.name.Contains("Player"))
+        {
+            TimerManager.Instance.RemoveTimer(dripTimer);
+        }
+    }
     void Drip()
     {
 		GameObject temp = Instantiate (waterDroplet, transform.position, transform.rotation);
@@ -33,6 +49,6 @@ public class WaterDrip : MonoBehaviour {
     }
 
 	void OnDestroy() {
-		//TimerManager.Instance.RemoveTimer (dripTimer);
+		TimerManager.Instance.RemoveTimer (dripTimer);
 	}
 }
