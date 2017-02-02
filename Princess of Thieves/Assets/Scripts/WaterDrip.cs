@@ -33,6 +33,8 @@ public class WaterDrip : MonoBehaviour {
     }
 
 	void OnDestroy() {
-		//TimerManager.Instance.RemoveTimer (dripTimer);
+		if (TimerManager.Instance) {
+			TimerManager.Instance.RemoveTimer (dripTimer);
+		}
 	}
 }

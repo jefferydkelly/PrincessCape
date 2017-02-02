@@ -124,7 +124,6 @@ public class InventoryMenu : MonoBehaviour {
 
     public void UpdateUI()
     {
-		Debug.Log (GameManager.Instance.IsPaused);
 		if (GameManager.Instance.IsInMenu)
         {
 			
