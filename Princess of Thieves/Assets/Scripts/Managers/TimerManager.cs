@@ -7,7 +7,7 @@ public class TimerManager : MonoBehaviour {
 	List<Timer> timers;
 	List<Timer> toAdd;
 	List<Timer> toRemove;
-	bool quitting = false;
+	static bool quitting = false;
 	// Use this for initialization
 	void Awake () {
 		if (instance == null) {
@@ -46,13 +46,13 @@ public class TimerManager : MonoBehaviour {
 
 	public static TimerManager Instance {
 		get {
-			
+			if (quitting) {
+				return null;
+			}
 			if (instance == null) {
 				GameObject gameObj = new GameObject ("Timer Manager");
 				DontDestroyOnLoad (gameObj);
 				instance = gameObj.AddComponent<TimerManager> ();
-			} else if (instance.quitting) {
-				return null;
 			}
 			return instance;
 		}

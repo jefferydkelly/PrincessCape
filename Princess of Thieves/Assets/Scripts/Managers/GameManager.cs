@@ -158,6 +158,20 @@ public class GameManager {
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode ls)
 	{
+		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag ("Checkpoint");
+
+		if (checkpoints.Length > 0) {
+			GameObject startingPoint = null;
+			Vector2 min = new Vector2 (Mathf.Infinity, Mathf.Infinity);
+			foreach (GameObject go in checkpoints) {
+				if (go.transform.position.x < min.x || go.transform.position.x == min.x && go.transform.position.y < min.y) {
+					startingPoint = go;
+					min = go.transform.position;
+				}
+			}
+				
+			Player.transform.position = startingPoint.transform.position;
+		}
 		loadedAreas.Add(scene.name);
 	}
 
