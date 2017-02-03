@@ -12,11 +12,7 @@ public class HeavyArmor : UsableItem {
 	void Start () {
         myRigidBody = GameManager.Instance.Player.gameObject.GetComponent<Rigidbody2D>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
     public override void Deactivate()
     {
 

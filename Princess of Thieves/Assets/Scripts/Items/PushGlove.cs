@@ -46,6 +46,7 @@ public class PushGlove : UsableItem {
 				}
 				player.IsUsingMagnetGloves = true;
 
+
 				if (player.Aiming.y == 1) {
 					direction = PushPullDirection.Up;
 				} else if (player.Aiming.y == -1) {
@@ -61,61 +62,57 @@ public class PushGlove : UsableItem {
 		}
 	}
 
-	public override void Use()
-	{
+	public override void Use() {
 
-		if (player.MP >= manaPerSecondCost * Time.deltaTime) {
-			player.MP -= manaPerSecondCost * Time.deltaTime;
-			if (target != null) {
-				Vector3 distance = player.transform.position - target.transform.position;
-				Vector2 moveDir = Vector3.zero;
+		if (target != null) {
+			Vector2 distance = target.transform.position - player.transform.position;
 
-				if (distance.sqrMagnitude <= range * range) {
-					if (direction == PushPullDirection.Up) {
-						moveDir = Vector2.up;
-					} else if (direction == PushPullDirection.Down) {
-						moveDir = Vector2.down;
-					} else {
-						moveDir = new Vector2 (direction == PushPullDirection.Right ? 1 : -1, 0);
-					}
-					if (pushingOnTarget && (direction == PushPullDirection.Up || direction == PushPullDirection.Down)) {
-						moveDir += player.Aiming.XVector ();
-					}
-
-					moveDir.Normalize ();
-
-					if (pushingOnTarget) {
-						//Heavier object, so the player gets moved
-						moveDir.y *= -1;
-						playerBody.AddForce (
-							moveDir * force,
-							ForceMode2D.Force);
-					} else {
-						targetBody.AddForce (
-							moveDir * force,
-							ForceMode2D.Force);
-						targetBody.ClampVelocity (maxTargetSpeed);
-					}
-
-					lineRenderer.SetPositions (new Vector3[] { player.transform.position, target.transform.position });
+			Vector2 moveDir;
+			if (distance.sqrMagnitude <= range * range) {
+				
+				if (direction == PushPullDirection.Up) {
+					moveDir = Vector2.up;
+				} else if (direction == PushPullDirection.Down) {
+					moveDir = Vector2.down;
+				} else {
+					moveDir = new Vector2 (direction == PushPullDirection.Right ? 1 : -1, 0);
 				}
+				if (pushingOnTarget && (direction == PushPullDirection.Up || direction == PushPullDirection.Down)) {
+					moveDir += player.Aiming.XVector ();
+				}
+
+				 //moveDir = (distance.normalized + player.TrueAim).normalized;
+				moveDir.Normalize();
+				if (pushingOnTarget) {
+					//Heavier object, so the player gets moved
+					moveDir.y *= -1;
+					playerBody.AddForce (
+						moveDir * force,
+						ForceMode2D.Force);
+				} else {
+					targetBody.AddForce (
+						moveDir * force,
+						ForceMode2D.Force);
+					targetBody.ClampVelocity (maxTargetSpeed);
+				}
+
+				lineRenderer.SetPositions (new Vector3[] { player.transform.position, target.transform.position });
 			}
 		}
+		
 	}
 		
 	public override void Deactivate()
 	{
 		if (player.IsUsingMagnetGloves)
 		{
-
 			player.IsUsingMagnetGloves = false;
 			target.GetComponent<SpriteRenderer>().color = Color.white;
-			if (targetBody)
-			{
-				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		
+			if (targetBody != null) {
+				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX;
 				targetBody = null;
 			}
-			target = null;
 			pushingOnTarget = true;
 			lineRenderer.enabled = false;
 			itemActive = false;

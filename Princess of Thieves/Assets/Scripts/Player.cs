@@ -10,8 +10,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
     private Animator myAnimator;
-    public Light myLight;
-    private float lightBase = 4;
+
 	private int fwdX = 1;
 	public float maxSpeed = 1;
 	public float sneakSpeed = 0.5f;
@@ -55,11 +54,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	AudioClip jumpClip;
 	[SerializeField]
 	AudioClip spikeDeathClip;
-   
+
+	SpriteRenderer arrowRenderer;
+	GameManager manager;
     void Awake()
     {
        // transform.position = Vector2.zero;
         startPos = transform;
+		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
+		arrowRenderer.enabled = false;
+		manager = GameManager.Instance;
     }
 	// Use this for initialization
 	void Start()
@@ -77,7 +81,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         UIManager.Instance.UpdateUI(controller);
         inventory = new List<UsableItem>();
 		resetTimer = new Timer (() => {
-			GameManager.Instance.Reset();
+			manager.Reset();
 		}, 0.33f);
       
 	}
@@ -88,7 +92,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     }
 	void FixedUpdate()
 	{
-        if (!GameManager.Instance.IsPaused)
+        if (!manager.IsPaused)
         {
            
             curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP); //Should this be maxMP?
@@ -201,13 +205,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	{
 		if (Controller.Pause)
 		{
-            GameManager.Instance.IsInMenu = !GameManager.Instance.IsInMenu;
+            manager.IsInMenu = !manager.IsInMenu;
 		} else if (Controller.Jump)
         {
             tryingToJump = true;
         }
 
-		if (!GameManager.Instance.IsPaused)
+		if (!manager.IsPaused)
 		{   
 			if (!IsFrozen) {
 				if (controller.Horizontal != 0) {
@@ -258,6 +262,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					}
 				}
             }
+
+			if (ShowAimArrow) {
+				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle () * Mathf.Rad2Deg, Vector3.forward);
+			}
             
 		}
         
@@ -307,7 +315,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				}
 			}
 		} else if (col.collider.CompareTag ("Enemy")) {
-            GameManager.Instance.Reset();
+            manager.Reset();
 		} else if (col.collider.OnLayer("Metal") && IsUsingMagnetGloves)
         {
             if (lastYVel < 0)
@@ -337,7 +345,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
 			resetTimer.Start ();
-            //GameManager.Instance.Reset();
+            //manager.Reset();
         }
         else if (col.CompareTag("Water"))
         {
@@ -406,15 +414,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 		//rb.velocity = new Vector2 (fwdX * 5, 0);
     }
-    void CreateDustParticle(Vector2 posOfParticle)
-    {
-        lastDustPart = Time.time;
-        //Transform tempT = new GameObject().transform; //this doesn't feel right;
-        //tempT.position = posOfParticle;
-        GameObject newPart = (GameObject)Instantiate(dustParticle, transform);
-        newPart.transform.position = posOfParticle;
-        newPart.transform.parent = null;
-    }
+ 
 	#region Gets
 	/// <summary>
 	/// Gets a value indicating whether this <see cref="T:Player"/> is on ground.
@@ -759,7 +759,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
         set
         {
-            if (value && !IsPushing && !IsFrozen)
+			if (value && highlighted != null && !IsPushing && !IsFrozen)
             {
                 UIManager.Instance.ShowInteraction("Stop");
                 state |= PlayerState.Pushing;
@@ -807,6 +807,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				state &= ~PlayerState.Frozen;
 				myRigidBody.gravityScale = 1.5f;
 			}
+			ShowAimArrow = IsUsingReflectCape;
         }
     }
 
@@ -850,6 +851,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 state &= ~PlayerState.UsingMagnetGloves;
                 state &= ~PlayerState.Frozen;
             }
+			ShowAimArrow = IsUsingMagnetGloves;
         }
     }
 
@@ -878,6 +880,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			} else {
 				state &= ~PlayerState.PushedByTheWindHorz;
 			}
+		}
+	}
+
+	public bool ShowAimArrow {
+		get {
+			return arrowRenderer.enabled;
+		}
+
+		set {
+			arrowRenderer.enabled = value;
 		}
 	}
 

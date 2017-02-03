@@ -24,11 +24,6 @@ public class WaterDrip : MonoBehaviour {
         //InvokeRepeating("Drip", 1f, timeToDrop);
 	}
 
-	// Update is called once per frame
-	void Update () {
-
-	}
-
 	void OnBecameVisible() {
 		dripTimer.Reset ();
 		dripTimer.Start ();

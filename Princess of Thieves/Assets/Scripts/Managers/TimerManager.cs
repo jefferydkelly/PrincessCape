@@ -23,11 +23,13 @@ public class TimerManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!GameManager.Instance.IsPaused) {
-			foreach (Timer t in toAdd) {
-				timers.Add (t);
-			}
+			if (!toAdd.IsEmpty ()) {
+				foreach (Timer t in toAdd) {
+					timers.Add (t);
+				}
 
-			toAdd.Clear ();
+				toAdd.Clear ();
+			}
 			float dt = Time.deltaTime;
 			foreach (Timer t in timers) {
 				if (t.Update (dt)) {
@@ -36,11 +38,13 @@ public class TimerManager : MonoBehaviour {
 				}
 			}
 
-			foreach (Timer t in toRemove) {
-				timers.Remove (t);
-			}
+			if (!toRemove.IsEmpty ()) {
+				foreach (Timer t in toRemove) {
+					timers.Remove (t);
+				}
 
-			toRemove.Clear ();
+				toRemove.Clear ();
+			}
 		}
 	}
 
@@ -56,6 +60,10 @@ public class TimerManager : MonoBehaviour {
 			}
 			return instance;
 		}
+	}
+
+	public void Clear() {
+		timers.Clear ();
 	}
 
 	public void AddTimer(Timer t) {

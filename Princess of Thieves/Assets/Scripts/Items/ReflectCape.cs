@@ -19,11 +19,6 @@ public class ReflectCape : UsableItem
 			Deactivate ();
 		}, timeActive); 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     // We assume that projectiles are tagged as such
 
@@ -31,6 +26,7 @@ public class ReflectCape : UsableItem
     {
 		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
         {
+			GameManager.Instance.Player.ShowAimArrow = true;
             GameManager.Instance.Player.IsUsingReflectCape = true;
 			itemActive = true;
 			AudioManager.Instance.PlaySound (capeFX);
@@ -49,6 +45,7 @@ public class ReflectCape : UsableItem
     {
 		
 		if (IsActive) {
+			GameManager.Instance.Player.ShowAimArrow = false;
 			GameManager.Instance.Player.IsUsingReflectCape = false;
 			StartCooldown ();
 		}

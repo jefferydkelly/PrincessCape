@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class GameManager {
+public class GameManager: Object {
 	static GameManager instance = null;
 	GameState state;
 	Player player;
@@ -16,8 +16,6 @@ public class GameManager {
 		loadedAreas = new List<string>();
 		loadedAreas.Add(SceneManager.GetActiveScene().name);
 		SceneManager.sceneLoaded += OnSceneLoaded;
-		SceneManager.sceneUnloaded += OnSceneUnloaded;
-       // MordilManager Minstance = new MordilManager();
     }
 
 	/// <summary>
@@ -150,14 +148,24 @@ public class GameManager {
 	/// <param name="sceneName">Scene name.</param>
 	public void LoadScene(string sceneName)
 	{
-		if (!loadedAreas.Contains(sceneName))
-		{
-			SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-		}
+		SceneManager.LoadSceneAsync(sceneName);
+
 	}
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode ls)
 	{
+		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Player");
+		if (gos.Length > 1) {
+			if (player == null) {
+				player = gos [0].GetComponent<Player>();
+			}
+
+			foreach (GameObject go in gos) {
+				if (go != player.gameObject) {
+					Destroy (go);
+				}
+			}
+		}
 		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag ("Checkpoint");
 
 		if (checkpoints.Length > 0) {
@@ -172,36 +180,7 @@ public class GameManager {
 				
 			Player.transform.position = startingPoint.transform.position;
 		}
-		loadedAreas.Add(scene.name);
-	}
 
-	public IEnumerator SetActiveScene(string sceneName)
-	{
-		while(!loadedAreas.Contains(sceneName))
-		{
-			yield return new WaitForEndOfFrame();
-
-		}
-		Scene s = SceneManager.GetSceneByName(sceneName);
-		SceneManager.MoveGameObjectToScene(player.gameObject, s);
-		SceneManager.SetActiveScene(s);
-	}
-    public void ReloadScene()
-    {
-        Player.ResetBecauseINeed();
-    }
-	public IEnumerator UnloadScene(string sceneName)
-	{
-		if (loadedAreas.Count > 1 && loadedAreas.Contains(sceneName))
-		{
-			yield return new WaitForEndOfFrame();
-
-			//SceneManager.UnloadSceneAsync(sceneName);
-		}
-	}
-	void OnSceneUnloaded(Scene scene)
-	{
-		loadedAreas.Remove(scene.name);
 	}
 
     public void Reset()
@@ -215,6 +194,8 @@ public class GameManager {
 	public void EndGame() {
 		instance = null;
 	}
+
+	public static Vector3 zero = Vector3.zero;
 }
 
 [System.Flags]

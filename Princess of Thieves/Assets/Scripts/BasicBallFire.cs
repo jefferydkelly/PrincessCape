@@ -23,11 +23,7 @@ public class BasicBallFire : MonoBehaviour {
 		fireTimer.Start ();
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
     void Fire()
     {
         GameObject temp = Instantiate(projectile);

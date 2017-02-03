@@ -12,12 +12,17 @@ public class CameraManager : MonoBehaviour {
     public float playerOffsetPercent = 0.08f;
     Vector3 screenSize;
     Vector3 vel = Vector3.zero;
-
+	Vector3 playerPos = new Vector3 ();
+	Vector3 newCamPos = new Vector3();
+	Vector3 posTarget = new Vector3();
     // Use this for initialization
+	static bool isClosing = false;
+	GameManager manager;
     void Awake () {
 		if (instance == null)
 		{
 			instance = this;
+			manager = GameManager.Instance;
 			DontDestroyOnLoad(gameObject);
 
             cam = GetComponent<Camera>();
@@ -47,32 +52,41 @@ public class CameraManager : MonoBehaviour {
 	{
 		get
 		{
-			return instance;
+			if (!isClosing) {
+				return instance;
+			}
+			Debug.Log ("You're trying to access the CameraManager while the Application is closing");
+			return null;
 		}
+	}
+
+	void OnDestroy() {
+		isClosing = true;
 	}
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (!GameManager.Instance.IsPaused)
+		
+		if (!manager.IsPaused)
 		{
 			if (target)
 			{
-                Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
-                float dif = Mathf.Abs(playerPos.x - screenSize.x / 2);
-                Vector3 newCamPos = cam.transform.position;
-                 if (target.Forward.x != fwd && dif >= screenSize.x * playerOffsetPercent * 2)
+                playerPos = cam.WorldToScreenPoint(target.transform.position);
+                newCamPos = cam.transform.position;
+				if (target.Forward.x != fwd && Mathf.Abs(playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent * 2)
                 {
                     fwd *= -1;
-                    vel = Vector3.zero;
+                    //vel = Vector3.zero;
                     
                 }
                 newCamPos.z = -10;
-                Vector3 posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
+                posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
                 posTarget.z = -10;
                 newCamPos = Vector3.SmoothDamp(cam.transform.position, posTarget, ref vel, dampTime);
                 cam.transform.position = newCamPos;
             }
             else
             {
+				Debug.Log ("Finding target");
                 target = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             }
 		}

@@ -25,6 +25,7 @@ public class TresureChestController : JDMappableObject, InteractiveObject {
 			myRenderer.color = Color.white;
             myRenderer.sprite = openedSprite;
             opened = true;
+			enabled = false;
         }
     }
 

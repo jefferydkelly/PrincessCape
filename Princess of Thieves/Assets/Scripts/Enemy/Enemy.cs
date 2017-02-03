@@ -310,7 +310,7 @@ public class Enemy : ResettableObject {
         isFrozen = false;
         curState = EnemyState.Patrol;
         lastTimeSeenPlayer = 0f;
-        playerChaseDest = Vector3.zero;
+		playerChaseDest = Vector3.zero;
         atChaseDest = true;
         patrolDest = new Vector3(transform.position.x + patrolDist, transform.position.y, 0);
         patDestBuffer = new Vector3(0.5f, 0.5f, 0.5f);
