@@ -111,12 +111,12 @@ public class PullGlove : UsableItem {
 
 			player.IsUsingMagnetGloves = false;
 			target.GetComponent<SpriteRenderer>().color = Color.white;
-			if (targetBody)
-			{
-				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-				targetBody = null;
-			}
-			target = null;
+            if (targetBody)
+            {
+                targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                targetBody = null;
+            }
+            target = null;
 			pushingOnTarget = true;
 			lineRenderer.enabled = false;
 			itemActive = false;

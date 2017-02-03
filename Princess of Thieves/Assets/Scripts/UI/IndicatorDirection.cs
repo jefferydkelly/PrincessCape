@@ -35,7 +35,6 @@ public class IndicatorDirection : MonoBehaviour {
         {
             mySprite.sprite = sprites[4];
         }
-
         if (temp == new Vector2(-1, -1))
         {
             mySprite.sprite = sprites[5];
@@ -44,7 +43,6 @@ public class IndicatorDirection : MonoBehaviour {
         {
             mySprite.sprite = sprites[6];
         }
-
         if (temp == new Vector2(-1, 1))
         {
             mySprite.sprite = sprites[7];
