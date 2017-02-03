@@ -6,7 +6,7 @@ public class AudioManager:Object {
 
 	private static AudioManager instance = null;
 	private AudioSource source;
-
+	static bool isClosing = false;
 	private AudioManager() {
 		GameObject amObj = new GameObject ("Audio Manager");
 		DontDestroyOnLoad (amObj);
@@ -28,13 +28,21 @@ public class AudioManager:Object {
 		}
 	}
 
+	void OnDestroy() {
+		isClosing = true;
+	}
+
 	public static AudioManager Instance {
 		get {
-			if (instance == null) {
-				instance = new AudioManager ();
-			}
+			if (!isClosing) {
+				if (instance == null) {
+					instance = new AudioManager ();
+				}
 
-			return instance;
+				return instance;
+			}
+			Debug.Log ("You're trying to reference the audio manager while the game is closing.");
+			return null;
 		}
 	}
 }

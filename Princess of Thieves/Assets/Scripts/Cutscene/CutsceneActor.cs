@@ -14,12 +14,6 @@ public class CutsceneActor : MonoBehaviour
 		mySpriteRenderer = GetComponent<SpriteRenderer>();
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
-
 	public CutsceneCharacter MyInfo
 	{
 		get

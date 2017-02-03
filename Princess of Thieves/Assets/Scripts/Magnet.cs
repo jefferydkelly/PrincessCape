@@ -40,9 +40,9 @@ public class Magnet : MonoBehaviour, ActivateableObject {
 		isActive = false;
 		foreach (Rigidbody2D r in attractedBodies) {
 			r.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
-			r.velocity = Vector2.zero;
+			//r.velocity = Vector2.zero;
 		}
-		attractedBodies = new List<Rigidbody2D> ();
+		attractedBodies.Clear ();
 	}
 
 	public bool IsActive {

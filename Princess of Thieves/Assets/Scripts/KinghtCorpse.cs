@@ -30,6 +30,7 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 				myRenderer.sprite = openedSprite;
 			}
 			looted = true;
+			enabled = false;
 		}
 	}
 

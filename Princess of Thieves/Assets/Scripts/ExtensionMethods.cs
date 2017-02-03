@@ -113,6 +113,10 @@ public static class ExtensionMethods{
 		}
 	}
 
+	public static bool IsEmpty<T>(this List<T> li) {
+		return li.Count == 0;
+	}
+
 	public static void AddExclusive<T>(this List<T> li, T item) {
 		if (!li.Contains (item)) {
 			li.Add (item);

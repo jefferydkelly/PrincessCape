@@ -29,11 +29,7 @@ public class DashBoots : UsableItem {
         }
     }
 
-    public override void Use()
-    {
 
-    }
-    public  void Update()
-    {
-    }
+	public override void Use() {
+	}
 }

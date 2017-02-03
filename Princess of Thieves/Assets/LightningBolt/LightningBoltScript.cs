@@ -95,7 +95,7 @@ namespace DigitalRuby.LightningBolt
 
         private void GetPerpendicularVector(ref Vector3 directionNormalized, out Vector3 side)
         {
-            if (directionNormalized == Vector3.zero)
+			if (directionNormalized == Vector3.zero)
             {
                 side = Vector3.right;
             }

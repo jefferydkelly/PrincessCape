@@ -13,6 +13,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	Vector3 fwd = new Vector3(1,0);
 	Timer fireTimer;
+	SpriteRenderer myRenderer;
 	// Use this for initialization
 	void Start () {
 		WaitDelegate wd;
@@ -29,11 +30,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 				fireTimer.Start ();
 			}
 		}
-	}
-
-	// Update is called once per frame
-	void Update () {
-
+		myRenderer = GetComponent<SpriteRenderer> ();
 	}
 
 	void OnBecameVisible() {
@@ -63,11 +60,13 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 		fireTimer.Reset ();
 		fireTimer.Start ();
 		isActive = true;
+		myRenderer.color = Color.red;
 	}
 
 	public void Deactivate() {
 		fireTimer.Stop ();
 		isActive = false;
+		myRenderer.color = Color.white;
 	}
 
 	public bool IsActive {

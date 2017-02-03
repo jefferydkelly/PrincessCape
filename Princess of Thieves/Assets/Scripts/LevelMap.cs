@@ -14,15 +14,6 @@ public class LevelMap : MonoBehaviour {
 	public GameObject level = null;
 	public GameObject selected;
     public TileBrush brush;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	void OnDrawGizmosSelected()
 	{
