@@ -148,8 +148,17 @@ public class GameManager {
 	public Player Player
 	{
 		get
-		{
-			return player;
+        {
+            if (player == null)
+            {
+                GameObject pObj = GameObject.FindWithTag("Player");
+                if (pObj)
+                {
+                    player = pObj.GetComponent<Player>();
+                }
+            }
+        
+            return player;
 		}
 	}
 
