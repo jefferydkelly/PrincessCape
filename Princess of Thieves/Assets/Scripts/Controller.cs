@@ -304,7 +304,9 @@ public class Controller
                 controls += "Right: " + RightKey + "\n";
                 controls += "Up: " + UpKey + "\n";
                 controls += "Down: " + DownKey + "\n";
-                
+                controls += "Peek Up: " + peerUpKey + "\n";
+                controls += "Peek Down: " + peerDownKey + "\n";
+
             //}
             return controls;
         }
@@ -321,6 +323,7 @@ public class Controller
                 controls += "Interact: " + InteractKey + "\n";
                 controls += "Left Item: " + LeftItemKey + "\n";
                 controls += "Right Item: " + RightItemKey + "\n";
+                controls += "Pause: " + pauseKey + "\n";
             //}
             return controls;
         }

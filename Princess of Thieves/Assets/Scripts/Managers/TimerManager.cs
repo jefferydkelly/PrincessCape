@@ -22,7 +22,7 @@ public class TimerManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!quitting && GameManager.Instance.IsPaused) {
+		if (!quitting && !GameManager.Instance.IsPaused) {
 			if (!toAdd.IsEmpty ()) {
 				foreach (Timer t in toAdd) {
 					timers.Add (t);
