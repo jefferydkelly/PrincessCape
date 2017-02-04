@@ -110,7 +110,7 @@ public class PullGlove : UsableItem {
 			target.GetComponent<SpriteRenderer> ().color = Color.white;
 
 			if (targetBody != null) {
-				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX;
+				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 				targetBody = null;
 			}
 			pushingOnTarget = true;

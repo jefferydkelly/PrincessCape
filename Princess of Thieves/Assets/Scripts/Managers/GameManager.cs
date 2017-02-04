@@ -12,7 +12,10 @@ public class GameManager {
 	private GameManager()
 	{
 		state = GameState.Play;
-		player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        GameObject pObj = GameObject.FindWithTag("Player");
+        if (pObj) {
+            player = pObj.GetComponent<Player>();
+        }
 		loadedAreas = new List<string>();
 		loadedAreas.Add(SceneManager.GetActiveScene().name);
 		SceneManager.sceneLoaded += OnSceneLoaded;

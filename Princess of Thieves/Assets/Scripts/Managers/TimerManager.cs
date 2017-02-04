@@ -22,7 +22,7 @@ public class TimerManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!GameManager.Instance.IsPaused) {
+		if (!quitting && GameManager.Instance.IsPaused) {
 			if (!toAdd.IsEmpty ()) {
 				foreach (Timer t in toAdd) {
 					timers.Add (t);
@@ -78,6 +78,11 @@ public class TimerManager : MonoBehaviour {
 	void OnApplicationQuit() {
 		quitting = true;
 	}
+
+    private void OnDestroy()
+    {
+        instance = null;
+    }
 }
 
 public class Timer {
