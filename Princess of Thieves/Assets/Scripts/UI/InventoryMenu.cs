@@ -16,18 +16,17 @@ public class InventoryMenu : MonoBehaviour {
     bool showingInfo = false;
     private void OnEnable()
     {
-		if (GameManager.Instance.IsInMenu) {
-			
-			childImages = GetComponentsInChildren<Image> ();
-			UpdateUI ();
-			UIManager.Instance.ShowInteraction ("Info");
-			InvokeRepeating ("HandleInput", waitTime, waitTime);
+        childImages = GetComponentsInChildren<Image>();
+        UpdateUI();
+        if (UIManager.Instance) { 
+            UIManager.Instance.ShowInteraction("Info");
+            InvokeRepeating("HandleInput", waitTime, waitTime);
 
-			leftItemDown = false;
-			rightItemDown = false;
-			interactDown = false;
-			showingInfo = false;
-		}
+            leftItemDown = false;
+            rightItemDown = false;
+            interactDown = false;
+            showingInfo = false;
+        }
     }
 
     private void OnDisable()
@@ -72,68 +71,62 @@ public class InventoryMenu : MonoBehaviour {
     }
     private void HandleInput()
     {
-        if (GameManager.Instance.IsInMenu)
+        Image curImg = GetComponentsInChildren<Image>()[curSelected + 1];
+        curImg.color = Color.white;
+        curSelected += controller.Horizontal + controller.Vertical * 2;
+        curSelected += 4;
+        curSelected %= 4;
+        UsableItem item = null;
+        if (curSelected < GameManager.Instance.Player.Inventory.Count)
         {
-            Image curImg = GetComponentsInChildren<Image>()[curSelected + 1];
-            curImg.color = Color.white;
-            curSelected += controller.Horizontal + controller.Vertical * 2;
-            curSelected += 4;
-            curSelected %= 4;
-            UsableItem item = null;
-            if (curSelected < GameManager.Instance.Player.Inventory.Count)
+                item = GameManager.Instance.Player.Inventory[curSelected];
+            if (item)
             {
-                 item = GameManager.Instance.Player.Inventory[curSelected];
+                UIManager.Instance.ShowMessage(item.itemName);
+            }
+        }
+
+        curImg = childImages[curSelected + 1];
+        curImg.color = Color.blue;
+
+        if (leftItemDown)
+        {
+            GameManager.Instance.Player.EquipItem(curSelected, true);
+            leftItemDown = false;
+        }
+        else if (rightItemDown)
+        {
+            GameManager.Instance.Player.EquipItem(curSelected, false);
+            rightItemDown = false;
+        } else if (interactDown)
+        {
+            if (!showingInfo)
+            {
+                    
                 if (item)
                 {
-                    UIManager.Instance.ShowMessage(item.itemName);
+                    showingInfo = true;
+                    UIManager.Instance.ShowDialog(item.info);
                 }
-            }
-
-            curImg = childImages[curSelected + 1];
-            curImg.color = Color.blue;
-
-            if (leftItemDown)
+            } else
             {
-                GameManager.Instance.Player.EquipItem(curSelected, true);
-                leftItemDown = false;
+                showingInfo = false;
+                UIManager.Instance.HideDialogBox();
             }
-            else if (rightItemDown)
-            {
-                GameManager.Instance.Player.EquipItem(curSelected, false);
-                rightItemDown = false;
-            } else if (interactDown)
-            {
-                if (!showingInfo)
-                {
-                    
-                    if (item)
-                    {
-                        showingInfo = true;
-                        UIManager.Instance.ShowDialog(item.info);
-                    }
-                } else
-                {
-                    showingInfo = false;
-                    UIManager.Instance.HideDialogBox();
-                }
-                interactDown = false;
-            }
+            interactDown = false;
         }
 
     }
 
     public void UpdateUI()
     {
-		if (GameManager.Instance.IsInMenu)
+        List<UsableItem> items = GameManager.Instance.Player.Inventory;
+        if (items != null)
         {
-			
-            List<UsableItem> items = GameManager.Instance.Player.Inventory;
-
             for (int i = 0; i < items.Count; i++)
             {
                 UsableItem curItem = items[i];
                 childImages[i + 1].sprite = curItem ? curItem.uiSprite : null;
-                
             }
         }
     }

@@ -23,14 +23,14 @@ public class KinghtCorpse : JDMappableObject, InteractiveObject {
 	{
 		if (!looted)
 		{
-			UIManager.Instance.ShowInteraction("");
+            looted = true;
+            UIManager.Instance.ShowInteraction("");
 			GameManager.Instance.Player.AddItem(contents);
 			myRenderer.color = startColor;
 			if (openedSprite != null) {
 				myRenderer.sprite = openedSprite;
 			}
-			looted = true;
-			enabled = false;
+			
 		}
 	}
 

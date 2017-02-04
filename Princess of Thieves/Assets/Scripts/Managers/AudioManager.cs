@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager:Object {
+public class AudioManager {
 
 	private static AudioManager instance = null;
 	private AudioSource source;
 	static bool isClosing = false;
 	private AudioManager() {
 		GameObject amObj = new GameObject ("Audio Manager");
-		DontDestroyOnLoad (amObj);
 		source = amObj.AddComponent<AudioSource> ();
 	}
 
@@ -29,14 +28,22 @@ public class AudioManager:Object {
 	}
 
 	void OnDestroy() {
-		isClosing = true;
+        isClosing = true;
 	}
+
+    public GameObject AttachedObject
+    {
+        get
+        {
+            return source.gameObject;
+        }
+    }
 
 	public static AudioManager Instance {
 		get {
 			if (!isClosing) {
 				if (instance == null) {
-					instance = new AudioManager ();
+                    instance = new AudioManager();
 				}
 
 				return instance;
