@@ -56,6 +56,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	AudioClip spikeDeathClip;
 
 	SpriteRenderer arrowRenderer;
+	SpriteRenderer rangeRenderer;
 	GameManager manager;
     void Awake()
     {
@@ -63,6 +64,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         startPos = transform;
 		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
 		arrowRenderer.enabled = false;
+		rangeRenderer = GetComponentsInChildren<SpriteRenderer> ()[2];
+		rangeRenderer.enabled = false;
 		manager = GameManager.Instance;
     }
 	// Use this for initialization
@@ -211,6 +214,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (Controller.Pause)
 		{
             manager.IsInMenu = !manager.IsInMenu;
+
 		} else if (Controller.Jump)
         {
             tryingToJump = true;
@@ -345,7 +349,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.CompareTag("Spike"))
+		if (col.CompareTag("Spike") || col.CompareTag("Fire"))
         {
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
@@ -898,17 +902,31 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	public void ShowMagnetRange(Color c) {
+		rangeRenderer.enabled = true;
+		rangeRenderer.color = c;
+	}
+
+	public void HideMagnetRange() {
+		rangeRenderer.enabled = false;
+	}
+
     #endregion gets
 
     void Unfreeze() {
 		IsFrozen = false;
 	}
-   
-	/// <summary>
-	/// Equips the item.
-	/// </summary>
-	/// <param name="itemNum">Item number.</param>
-	/// <param name="left">If set to <c>true</c> left.</param>
+
+    public void Remove()
+    {
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Equips the item.
+    /// </summary>
+    /// <param name="itemNum">Item number.</param>
+    /// <param name="left">If set to <c>true</c> left.</param>
     public void EquipItem(int itemNum, bool left)
     {
         if (itemNum < inventory.Count)

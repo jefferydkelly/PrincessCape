@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class GameManager: Object {
+public class GameManager {
 	static GameManager instance = null;
 	GameState state;
 	Player player;
@@ -12,7 +12,10 @@ public class GameManager: Object {
 	private GameManager()
 	{
 		state = GameState.Play;
-		player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        GameObject pObj = GameObject.FindWithTag("Player");
+        if (pObj) {
+            player = pObj.GetComponent<Player>();
+        }
 		loadedAreas = new List<string>();
 		loadedAreas.Add(SceneManager.GetActiveScene().name);
 		SceneManager.sceneLoaded += OnSceneLoaded;
@@ -130,6 +133,14 @@ public class GameManager: Object {
         }
     }
 
+    public GameState State
+    {
+        get
+        {
+            return state;
+        }
+    }
+
 	/// <summary>
 	/// Gets the player.
 	/// </summary>
@@ -137,8 +148,17 @@ public class GameManager: Object {
 	public Player Player
 	{
 		get
-		{
-			return player;
+        {
+            if (player == null)
+            {
+                GameObject pObj = GameObject.FindWithTag("Player");
+                if (pObj)
+                {
+                    player = pObj.GetComponent<Player>();
+                }
+            }
+        
+            return player;
 		}
 	}
 
@@ -162,7 +182,7 @@ public class GameManager: Object {
 
 			foreach (GameObject go in gos) {
 				if (go != player.gameObject) {
-					Destroy (go);
+                    go.GetComponent<Player>().Remove();
 				}
 			}
 		}
@@ -195,7 +215,7 @@ public class GameManager: Object {
 		instance = null;
 	}
 
-	public static Vector3 zero = Vector3.zero;
+	
 }
 
 [System.Flags]
