@@ -177,7 +177,7 @@ public class Enemy : ResettableObject {
     }
     void FixedUpdate()
     {
-        //LookForward();
+        LookForward();
     }
 
     void LookForward()
