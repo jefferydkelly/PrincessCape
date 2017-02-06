@@ -19,9 +19,21 @@ public class PullGlove : GloveItem {
 
 	public override void Activate()
 	{
+		
 		player.IsUsingMagnetGloves = true;
+
+		if (activeGlove && activeGlove.IsActive) {
+			Debug.Log ("Deactivating");
+			activeGlove.Deactivate ();
+		}
+		activeGlove = this;
+
 		itemActive = true;
 		FindTarget ();
+
+		if (target) {
+			ResetTargetTimer.Stop ();
+		}
 			
 	}
 
@@ -29,6 +41,10 @@ public class PullGlove : GloveItem {
 	{
 		if (target == null) {
 			FindTarget ();
+
+			if (target) {
+				ResetTargetTimer.Stop ();
+			}
 		}
 		if (target != null) {
 			Vector2 distance = target.transform.position - player.transform.position;
@@ -69,22 +85,15 @@ public class PullGlove : GloveItem {
 		
 	public override void Deactivate()
 	{
-		if (player.IsUsingMagnetGloves)
-		{
-			player.IsUsingMagnetGloves = false;
-			if (target) {
-				target.GetComponent<SpriteRenderer> ().color = Color.white;
-			}
-
-			if (targetBody != null) {
-				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-				targetBody = null;
-			}
-			pushingOnTarget = true;
-			lineRenderer.enabled = false;
-			itemActive = false;
-			player.HideMagnetRange ();
+		player.IsUsingMagnetGloves = false;
+		if (target) {
+			target.GetComponent<SpriteRenderer> ().color = Color.white;
 		}
+
+		pushingOnTarget = true;
+		lineRenderer.enabled = false;
+		itemActive = false;
+		player.HideMagnetRange ();
 	}
 
 }
