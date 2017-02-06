@@ -853,12 +853,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (value && !IsUsingMagnetGloves && !IsFrozen)
             {
                 state |= PlayerState.UsingMagnetGloves;
-                state |= PlayerState.Frozen;
+                //state |= PlayerState.Frozen;
             }
             else
             {
                 state &= ~PlayerState.UsingMagnetGloves;
-                state &= ~PlayerState.Frozen;
+                //state &= ~PlayerState.Frozen;
             }
 			ShowAimArrow = IsUsingMagnetGloves;
         }

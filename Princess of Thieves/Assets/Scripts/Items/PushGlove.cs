@@ -23,7 +23,6 @@ public class PushGlove : GloveItem{
 		player.IsUsingMagnetGloves = true;
 
 		if (activeGlove && activeGlove.IsActive) {
-			Debug.Log ("Deactivating");
 			activeGlove.Deactivate ();
 		}
 		activeGlove = this;
@@ -75,8 +74,12 @@ public class PushGlove : GloveItem{
 					moveDir += player.Aiming.XVector ();
 				}*/
 
-				moveDir = (distance.normalized + player.TrueAim).normalized;
-				moveDir.Normalize();
+				moveDir = distance.normalized;
+
+				if (hitNormal.y == 0) {
+					moveDir += player.TrueAim.YVector ();
+				}
+				moveDir.Normalize ();
 				if (pushingOnTarget) {
 					//Heavier object, so the player gets moved
 					moveDir.y *= -1;

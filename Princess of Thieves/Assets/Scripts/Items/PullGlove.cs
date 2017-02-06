@@ -52,20 +52,12 @@ public class PullGlove : GloveItem {
 
 			if (distance.sqrMagnitude <= range * range) {
 
-				/*
-				if (direction == PushPullDirection.Up) {
-					moveDir = Vector2.up;
-				} else if (direction == PushPullDirection.Down) {
-					moveDir = Vector2.down;
-				} else {
-					moveDir = new Vector2 (direction == PushPullDirection.Right ? 1 : -1, 0);
-				}
-				if (pushingOnTarget && (direction == PushPullDirection.Up || direction == PushPullDirection.Down)) {
-					moveDir += player.Aiming.XVector ();
-				}*/
-				moveDir.Normalize ();
-				moveDir = (distance.normalized + player.TrueAim).normalized;
+				moveDir = distance.normalized;
 
+				if (hitNormal.y == 0) {
+					moveDir -= player.TrueAim.YVector ();
+				}
+				moveDir.Normalize ();
 
 				if (pushingOnTarget) {
 					//Heavier object, so the player gets moved
