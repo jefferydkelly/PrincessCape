@@ -206,6 +206,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (Controller.Pause)
 		{
             manager.IsInMenu = !manager.IsInMenu;
+
 		} else if (Controller.Jump)
         {
             tryingToJump = true;
@@ -898,12 +899,17 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     void Unfreeze() {
 		IsFrozen = false;
 	}
-   
-	/// <summary>
-	/// Equips the item.
-	/// </summary>
-	/// <param name="itemNum">Item number.</param>
-	/// <param name="left">If set to <c>true</c> left.</param>
+
+    public void Remove()
+    {
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Equips the item.
+    /// </summary>
+    /// <param name="itemNum">Item number.</param>
+    /// <param name="left">If set to <c>true</c> left.</param>
     public void EquipItem(int itemNum, bool left)
     {
         if (itemNum < inventory.Count)

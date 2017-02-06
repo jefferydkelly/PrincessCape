@@ -104,7 +104,7 @@ public class PushGlove : GloveItem{
 		
 			/*
 			if (targetBody != null) {
-				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX;
+				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 				targetBody = null;
 			}*/
 			targetBody = null;

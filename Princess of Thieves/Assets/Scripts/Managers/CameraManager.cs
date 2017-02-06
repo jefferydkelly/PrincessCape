@@ -27,7 +27,8 @@ public class CameraManager : MonoBehaviour {
 
             cam = GetComponent<Camera>();
             canvas.gameObject.SetActive(true);
-            
+
+            DontDestroyOnLoad(AudioManager.Instance.AttachedObject);
 
             target = GameManager.Instance.Player;
 			Vector3 camPos = target.transform.position;
