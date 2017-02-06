@@ -19,6 +19,7 @@ public class GloveItem : UsableItem {
 	protected LineRenderer lineRenderer;
 
 	protected Color lineColor;
+	protected static GloveItem activeGlove;
 
 	[SerializeField]
 	protected float difWeight = 0.5f;
