@@ -56,6 +56,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	AudioClip spikeDeathClip;
 
 	SpriteRenderer arrowRenderer;
+	SpriteRenderer rangeRenderer;
 	GameManager manager;
     void Awake()
     {
@@ -63,6 +64,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         startPos = transform;
 		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
 		arrowRenderer.enabled = false;
+		rangeRenderer = GetComponentsInChildren<SpriteRenderer> ()[2];
+		rangeRenderer.enabled = false;
 		manager = GameManager.Instance;
     }
 	// Use this for initialization
@@ -892,6 +895,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		set {
 			arrowRenderer.enabled = value;
 		}
+	}
+
+	public void ShowMagnetRange(Color c) {
+		rangeRenderer.enabled = true;
+		rangeRenderer.color = c;
+	}
+
+	public void HideMagnetRange() {
+		rangeRenderer.enabled = false;
 	}
 
     #endregion gets

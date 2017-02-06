@@ -53,7 +53,6 @@ public class PullGlove : GloveItem {
 
 				if (pushingOnTarget) {
 					//Heavier object, so the player gets moved
-					moveDir.x *= -1;
 					playerBody.AddForce (
 						moveDir * force,
 						ForceMode2D.Force);
@@ -84,6 +83,7 @@ public class PullGlove : GloveItem {
 			pushingOnTarget = true;
 			lineRenderer.enabled = false;
 			itemActive = false;
+			player.HideMagnetRange ();
 		}
 	}
 

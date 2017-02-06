@@ -51,6 +51,7 @@ public class GloveItem : UsableItem {
 
 		if (target != null) {
 			targetBody = target.GetComponent<Rigidbody2D> ();
+			pushingOnTarget = true;
 			if (targetBody) {
 				pushingOnTarget = targetBody.mass < playerBody.mass;
 				targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -59,8 +60,12 @@ public class GloveItem : UsableItem {
 			lineRenderer.enabled = true;
 			lineRenderer.SetColors (lineColor, lineColor);
 			lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
+			player.HideMagnetRange ();
 		} else {
 			pushingOnTarget = false;
+			Color circleColor = lineColor;
+			circleColor.a = 0.25f;
+			player.ShowMagnetRange (circleColor);
 		}
 	}
 }

@@ -98,6 +98,7 @@ public class PushGlove : GloveItem{
 			itemActive = false;
 			ResetTargetTimer.Reset ();
 			ResetTargetTimer.Start ();
+			player.HideMagnetRange ();
 		}
 	}
 }
