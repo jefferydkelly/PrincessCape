@@ -2,19 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PushGlove : UsableItem {
+public class PushGlove : GloveItem{
 
-	int range = 10;
-	public float maxTargetSpeed = 10;
-	public float force = 100;
-	// Use this for initialization
-	GameObject target;
-	Rigidbody2D targetBody;
-	Player player;
-	Rigidbody2D playerBody;
 	PushPullDirection direction;
-	bool pushingOnTarget = true;
-	LineRenderer lineRenderer;
 
 	private void Start()
 	{
@@ -27,39 +17,42 @@ public class PushGlove : UsableItem {
 
 	public override void Activate()
 	{
-		if (player.MP >= activationManaCost && !onCooldown) {
-			player.MP -= activationManaCost;
+		if (target == null) {
 			//Shoot a ray fowards
 			RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), player.Aiming.GetAngle (), player.Aiming, range, 1 << LayerMask.NameToLayer ("Metal"));
 			if (hit) {//first hit object has an ObjectWeight
-
 				target = hit.collider.gameObject;
-				Color col = Color.red;
-				target.GetComponent<SpriteRenderer> ().color = col;
-				lineRenderer.enabled = true;
-				lineRenderer.SetColors (col, col);
-				lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
-				targetBody = target.GetComponent<Rigidbody2D> ();
-				if (targetBody) {
-					pushingOnTarget = targetBody.mass < playerBody.mass;
-					targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
-				}
-				player.IsUsingMagnetGloves = true;
-
-
-				if (player.Aiming.y == 1) {
-					direction = PushPullDirection.Up;
-				} else if (player.Aiming.y == -1) {
-					direction = PushPullDirection.Down;
-				} else if (player.Aiming.x == 1) {
-					direction = PushPullDirection.Right;
-				} else {
-					direction = PushPullDirection.Left;
-				}
-				itemActive = true;
 			}
-
 		}
+
+		if (target) {
+			ResetTargetTimer.Stop ();
+			Color col = Color.red;
+			target.GetComponent<SpriteRenderer> ().color = col;
+			lineRenderer.enabled = true;
+			lineRenderer.SetColors (col, col);
+			lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
+			targetBody = target.GetComponent<Rigidbody2D> ();
+			if (targetBody) {
+				pushingOnTarget = targetBody.mass < playerBody.mass;
+				targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+			}
+		
+			player.IsUsingMagnetGloves = true;
+
+			/*
+			if (player.Aiming.y == 1) {
+				direction = PushPullDirection.Up;
+			} else if (player.Aiming.y == -1) {
+				direction = PushPullDirection.Down;
+			} else if (player.Aiming.x == 1) {
+				direction = PushPullDirection.Right;
+			} else {
+				direction = PushPullDirection.Left;
+			}*/
+			itemActive = true;
+		}
+			
 	}
 
 	public override void Use() {
@@ -81,7 +74,7 @@ public class PushGlove : UsableItem {
 					moveDir += player.Aiming.XVector ();
 				}
 
-				 //moveDir = (distance.normalized + player.TrueAim).normalized;
+				moveDir = (distance.normalized + player.TrueAim).normalized;
 				moveDir.Normalize();
 				if (pushingOnTarget) {
 					//Heavier object, so the player gets moved
@@ -109,13 +102,17 @@ public class PushGlove : UsableItem {
 			player.IsUsingMagnetGloves = false;
 			target.GetComponent<SpriteRenderer>().color = Color.white;
 		
+			/*
 			if (targetBody != null) {
 				targetBody.constraints = RigidbodyConstraints2D.FreezePositionX;
 				targetBody = null;
-			}
+			}*/
+			targetBody = null;
 			pushingOnTarget = true;
 			lineRenderer.enabled = false;
 			itemActive = false;
+			ResetTargetTimer.Reset ();
+			ResetTargetTimer.Start ();
 		}
 	}
 }
