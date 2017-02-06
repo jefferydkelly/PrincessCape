@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ae2e22f839d839a4a863cd49c3446147
+timeCreated: 1486148973
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - uiSprite: {fileID: 21300000, guid: b2be5f7de14ddf14d9bea9b928d90183, type: 3}
+  - portalPrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

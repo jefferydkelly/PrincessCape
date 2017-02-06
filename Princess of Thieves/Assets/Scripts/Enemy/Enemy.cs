@@ -20,7 +20,7 @@ public class Enemy : ResettableObject {
     [SerializeField]
     Sprite[] spriteStates;
 
-
+    GameManager gm;
     //AI Things
     public enum EnemyState { Stationary, Patrol, Chase, Charge };
     EnemyState curState = EnemyState.Patrol;
@@ -59,8 +59,8 @@ public class Enemy : ResettableObject {
     #endregion cooldownTimes
     // Use this for initialization
     void Start () {
-       // Dies();
-        
+        // Dies();
+        gm = GameManager.Instance;
         myRigidBody = GetComponent<Rigidbody2D>();
         myRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
@@ -147,13 +147,14 @@ public class Enemy : ResettableObject {
         }
     }
     // Update is called once per frame
-    void Update () {
-        if (!GameManager.Instance.IsPaused)
+    void Update()
+    {
+        if (!gm.IsPaused)
         {
-            if (!isFrozen)
+            if (!isFrozen)//this block is about a 15fps drop
             {
-                //   GetComponent<MaterialPropertyBlock>().SetFloat("slice amount", 1);
-                // Debug.Log(curState);
+ 
+            
                 switch (curState)
                 {
 
@@ -170,6 +171,7 @@ public class Enemy : ResettableObject {
                         }
                         break;
                 }
+
             }
         }
     }

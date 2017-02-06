@@ -56,6 +56,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	AudioClip spikeDeathClip;
 
 	SpriteRenderer arrowRenderer;
+	SpriteRenderer rangeRenderer;
 	GameManager manager;
     void Awake()
     {
@@ -63,6 +64,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         startPos = transform;
 		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
 		arrowRenderer.enabled = false;
+		rangeRenderer = GetComponentsInChildren<SpriteRenderer> ()[2];
+		rangeRenderer.enabled = false;
 		manager = GameManager.Instance;
     }
 	// Use this for initialization
@@ -131,6 +134,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
                     myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
                     myRigidBody.ClampVelocity( 5, VelocityType.Y);
+                    if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
+                    {
+                        fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
+                        myRenderer.flipX = (fwdX == -1);
+                    }
                 }
                 else
                 {
@@ -341,7 +349,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.CompareTag("Spike"))
+		if (col.CompareTag("Spike") || col.CompareTag("Fire"))
         {
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
@@ -733,7 +741,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
 
-                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10, 10 * Aiming.y), ForceMode2D.Impulse); //yes we are dashing now
+                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10,0), ForceMode2D.Impulse); //yes we are dashing now
 
                
             }
@@ -845,12 +853,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (value && !IsUsingMagnetGloves && !IsFrozen)
             {
                 state |= PlayerState.UsingMagnetGloves;
-                state |= PlayerState.Frozen;
+                //state |= PlayerState.Frozen;
             }
             else
             {
                 state &= ~PlayerState.UsingMagnetGloves;
-                state &= ~PlayerState.Frozen;
+                //state &= ~PlayerState.Frozen;
             }
 			ShowAimArrow = IsUsingMagnetGloves;
         }
@@ -892,6 +900,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		set {
 			arrowRenderer.enabled = value;
 		}
+	}
+
+	public void ShowMagnetRange(Color c) {
+		rangeRenderer.enabled = true;
+		rangeRenderer.color = c;
+	}
+
+	public void HideMagnetRange() {
+		rangeRenderer.enabled = false;
 	}
 
     #endregion gets
