@@ -35,7 +35,13 @@ public class AudioManager {
     {
         get
         {
-            return source.gameObject;
+            if (source.gameObject)
+            {
+                return source.gameObject;
+            } else
+            {
+                return null;
+            }
         }
     }
 

@@ -14,7 +14,10 @@ public class LevelEndDoor : MonoBehaviour {
                 Destroy(TimerManager.Instance.gameObject);
                 Destroy(AudioManager.Instance.AttachedObject);
 				Destroy (UIManager.Instance.gameObject);
-				Destroy (CameraManager.Instance.gameObject);
+                if (CameraManager.Instance.gameObject)
+                {
+                    Destroy(CameraManager.Instance.gameObject);
+                }
 				Destroy (GameManager.Instance.Player.gameObject);
 				GameManager.Instance.EndGame ();
 			}
