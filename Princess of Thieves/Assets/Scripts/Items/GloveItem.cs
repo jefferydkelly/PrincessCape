@@ -18,6 +18,8 @@ public class GloveItem : UsableItem {
 	protected bool pushingOnTarget = true;
 	protected LineRenderer lineRenderer;
 
+	protected Color lineColor;
+
 	[SerializeField]
 	protected float difWeight = 0.5f;
 	[SerializeField]
@@ -36,5 +38,29 @@ public class GloveItem : UsableItem {
 	public override void Use ()
 	{
 		
+	}
+
+	protected void FindTarget() {
+		RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), player.Aiming.GetAngle (), player.Aiming, range, 1 << LayerMask.NameToLayer ("Metal"));
+
+		if (hit && hit.collider.gameObject != target) {
+			target = hit.collider.gameObject;
+
+
+		}
+
+		if (target != null) {
+			targetBody = target.GetComponent<Rigidbody2D> ();
+			if (targetBody) {
+				pushingOnTarget = targetBody.mass < playerBody.mass;
+				targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+			}
+			target.GetComponent<SpriteRenderer> ().color = lineColor;
+			lineRenderer.enabled = true;
+			lineRenderer.SetColors (lineColor, lineColor);
+			lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
+		} else {
+			pushingOnTarget = false;
+		}
 	}
 }

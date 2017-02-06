@@ -341,7 +341,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.CompareTag("Spike"))
+		if (col.CompareTag("Spike") || col.CompareTag("Fire"))
         {
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
