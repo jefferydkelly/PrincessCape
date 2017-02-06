@@ -134,6 +134,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                     myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
                     myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
                     myRigidBody.ClampVelocity( 5, VelocityType.Y);
+                    if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
+                    {
+                        fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
+                        myRenderer.flipX = (fwdX == -1);
+                    }
                 }
                 else
                 {
@@ -736,7 +741,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
 
-                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10, 10 * Aiming.y), ForceMode2D.Impulse); //yes we are dashing now
+                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10,0), ForceMode2D.Impulse); //yes we are dashing now
 
                
             }
