@@ -8,7 +8,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	bool ladderBelow;
 	void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
-		CheckForConnections ();
+
 	}
 	public void Interact() {
 		Player player = GameManager.Instance.Player;
@@ -41,7 +41,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 			ladderBelow = hit.collider.CompareTag ("Ladder");
 		}
 
-		hit = Physics2D.Raycast (transform.position, Vector2.up, gameObject.HalfHeight () + float.Epsilon, 1 << LayerMask.NameToLayer ("Interactive"));
+		hit = Physics2D.Raycast (transform.position, Vector2.up, gameObject.HalfHeight () + 0.1f, 1 << LayerMask.NameToLayer ("Interactive"));
 		if (hit.collider != null) {
 			ladderAbove = hit.collider.CompareTag ("Ladder");
 		}

@@ -254,6 +254,9 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator ShowFoundItemMessage(string[] msg)
     {
+		for (int i = 0; i < msg.Length; i++) {
+			msg [i] = msg [i].Replace ("\\n", "\n");
+		}
         GameManager.Instance.IsInCutscene = true;
         dialogBox.Enabled = true;
 		//bars.enabled = true;

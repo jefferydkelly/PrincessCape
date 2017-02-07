@@ -52,11 +52,11 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 		segment.transform.position = transform.position - new Vector3 (0, prefab.HalfHeight() * 2 * (segmentsSpawned + 0.5f));
 		segments [segmentsSpawned] = segment;
 		segmentsSpawned++;
+		segment.name = "Segment " + segmentsSpawned;
 
 		if (segmentsSpawned == numSegments) {
 			foreach (GameObject go in segments) {
-				LadderController lc = go.GetComponent<LadderController> ();
-				lc.CheckForConnections ();
+				go.GetComponent<LadderController> ().CheckForConnections();
 			}
 			spawnTimer.Stop ();
 			isActive = true;
