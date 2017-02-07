@@ -26,7 +26,9 @@ public class ReflectCape : UsableItem
     {
 		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
         {
-			GameManager.Instance.Player.ShowAimArrow = true;
+            GameManager.Instance.Player.GetComponent<Animator>().SetBool("Floating", true);
+
+            GameManager.Instance.Player.ShowAimArrow = true;
             GameManager.Instance.Player.IsUsingReflectCape = true;
 			itemActive = true;
 			AudioManager.Instance.PlaySound (capeFX);
@@ -43,9 +45,10 @@ public class ReflectCape : UsableItem
 
     public override void Deactivate()
     {
-		
-		if (IsActive) {
-			GameManager.Instance.Player.ShowAimArrow = false;
+        GameManager.Instance.Player.GetComponent<Animator>().SetBool("Floating", false);
+        if (IsActive) {
+            
+            GameManager.Instance.Player.ShowAimArrow = false;
 			GameManager.Instance.Player.IsUsingReflectCape = false;
 			StartCooldown ();
 		}
