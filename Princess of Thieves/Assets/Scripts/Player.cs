@@ -27,12 +27,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     bool tryingToJump = false;
     public float lightOnPlayer;
 
-    
-    //Rose Makes Dust-------------------------------***
-    [SerializeField]
-    GameObject dustParticle;
-    private float lastDustPart;
-    //***-------------------------------------------***
     [SerializeField]
     GameObject startItemObject;
     UsableItem leftItem;
@@ -341,7 +335,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 
 	void OnCollisionExit2D(Collision2D col) {
-		if (col.collider.CompareTag ("Rope")) {
+		if (col.collider.CompareTag ("Ladder")) {
 			col.collider.isTrigger = true;
 		}
 
@@ -367,7 +361,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 Reflect(col.gameObject);
 			}
 		}
-        else if (col.CompareTag("Rope")) {
+        else if (col.CompareTag("Ladder")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
 				col.isTrigger = false;
 			} else {
@@ -378,7 +372,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	void OnTriggerExit2D(Collider2D col)
 	{
-		if (col.CompareTag ("Rope")) {
+		if (col.CompareTag ("Ladder")) {
 			IsClimbing = false;
 
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
@@ -435,10 +429,21 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		{
 			LayerMask mask = 1 << LayerMask.NameToLayer("Platforms");
 			LayerMask mask2 = 1 << LayerMask.NameToLayer("Metal");
+
 			int finalMask = mask | mask2;
+			if (!IsClimbing) {
+				finalMask |= (1 << LayerMask.NameToLayer ("Interactive"));
+			}
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
 			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (HalfWidth, HalfHeight + 0.1f), 0, down, 0.5f, finalMask); 
-			return hit.collider != null && hit.normal.y != 0;
+
+			if (hit.collider != null) {
+				if (!hit.collider.OnLayer ("Interactive") || hit.collider.CompareTag("Ladder")) {
+					return hit.normal.y != 0;
+				}
+
+			}
+			return false;
 		} // end Get
 	}
 
@@ -696,6 +701,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             if (value)
             {
+				myAnimator.SetBool ("FWD", false);
                 state |= PlayerState.Frozen;
 				myRigidBody.velocity = new Vector2 (0f, myRigidBody.velocity.y);
             }else
@@ -740,7 +746,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
-
+				myAnimator.SetBool ("FWD", false);
                 myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10,0), ForceMode2D.Impulse); //yes we are dashing now
 
                
@@ -773,6 +779,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 UIManager.Instance.ShowInteraction("Stop");
                 state |= PlayerState.Pushing;
                 state |= PlayerState.Frozen;
+				myAnimator.SetBool ("FWD", false);
                 highlightedBody = (highlighted as BlockController).GetComponent<Rigidbody2D>();
             }
             else
@@ -807,6 +814,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					TimerManager.Instance.AddTimer(new Timer(()=>{StopFloat();}, 1.0f));
 				} else {
 					state |= PlayerState.Frozen;
+					myAnimator.SetBool ("FWD", false);
 				}
 			}
 			else
