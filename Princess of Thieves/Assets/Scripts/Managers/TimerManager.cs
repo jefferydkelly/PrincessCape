@@ -91,12 +91,34 @@ public class Timer {
 	float runTime;
 	float curTime;
 	WaitDelegate funcToRun;
-    //Creation
+	int repeatTimes = 0;
+	int repsRun = 0;
+    
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Timer"/> class.
+	/// </summary>
+	/// <param name="wd">The function to be run when the timer is complete.</param>
+	/// <param name="time">The amount of time until the timer is completed.</param>
+	/// <param name="rep">Whether or not the timer will repeat indefinitely.</param>
 	public Timer(WaitDelegate wd, float time, bool rep = false) {
 		runTime = time;
 		curTime = time;
 		funcToRun = wd;
 		repeating = rep;
+		repeatTimes = 0;
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Timer"/> class.
+	/// </summary>
+	/// <param name="wd">The function to be run when the timer is complete.</param>
+	/// <param name="time">The time until one rep of the timer is complete.</param>
+	/// <param name="numReps">The number of times the timer will run.</param>
+	public Timer(WaitDelegate wd, float time, int numReps) {
+		funcToRun = wd;
+		runTime = time;
+		curTime = time;
+		repeatTimes = numReps;
 	}
 
 	public bool Update(float dt) {
@@ -106,10 +128,11 @@ public class Timer {
 			if (curTime <= 0) {
               
 				funcToRun ();
-				if (repeating) {
+				repsRun++;
+				if (repeating || repsRun < repeatTimes) {
 					curTime += runTime;
-				}
-				return !repeating;
+				} 
+				return !(repeating || repsRun < repeatTimes);
 			}
 		}
 
@@ -131,6 +154,11 @@ public class Timer {
 		}
 	}
 
+	public void Restart() {
+		Reset ();
+		Start ();
+	}
+
 	public bool Paused {
 		get {
 			return paused;
@@ -143,5 +171,6 @@ public class Timer {
 
 	public void Reset() {
 		curTime = runTime;
+		repsRun = 0;
 	}
 }

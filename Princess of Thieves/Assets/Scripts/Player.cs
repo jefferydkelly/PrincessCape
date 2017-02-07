@@ -224,6 +224,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				}
 			}
 
+			/*
             if (controller.PeerDown)
             {
                 Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y-0.5f, Camera.main.transform.position.z));
@@ -236,7 +237,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 //of course this wouldn't work
                 Camera.main.transform.Rotate(new Vector3(0, 0, 0));
-            }
+            }*/
            
             if (leftItem != null)
             {

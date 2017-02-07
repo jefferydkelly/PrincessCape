@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class LadderController : JDMappableObject, InteractiveObject {
 	SpriteRenderer myRenderer;
-
+	bool ladderAbove;
+	bool ladderBelow;
 	void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
+		CheckForConnections ();
 	}
 	public void Interact() {
 		Player player = GameManager.Instance.Player;
@@ -31,5 +33,17 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	public void Dehighlight() {
 		myRenderer.color = Color.white;
 		UIManager.Instance.ShowInteraction ("");
+	}
+
+	public void CheckForConnections() {
+		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gameObject.HalfHeight () + float.Epsilon, 1 << LayerMask.NameToLayer ("Interactive"));
+		if (hit.collider != null) {
+			ladderBelow = hit.collider.CompareTag ("Ladder");
+		}
+
+		hit = Physics2D.Raycast (transform.position, Vector2.up, gameObject.HalfHeight () + float.Epsilon, 1 << LayerMask.NameToLayer ("Interactive"));
+		if (hit.collider != null) {
+			ladderAbove = hit.collider.CompareTag ("Ladder");
+		}
 	}
 }
