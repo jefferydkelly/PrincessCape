@@ -36,7 +36,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	}
 
 	public void CheckForConnections() {
-		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gameObject.HalfHeight () + float.Epsilon, 1 << LayerMask.NameToLayer ("Interactive"));
+		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gameObject.HalfHeight () + 0.1f, 1 << LayerMask.NameToLayer ("Interactive"));
 		if (hit.collider != null) {
 			ladderBelow = hit.collider.CompareTag ("Ladder");
 		}
@@ -44,6 +44,18 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		hit = Physics2D.Raycast (transform.position, Vector2.up, gameObject.HalfHeight () + float.Epsilon, 1 << LayerMask.NameToLayer ("Interactive"));
 		if (hit.collider != null) {
 			ladderAbove = hit.collider.CompareTag ("Ladder");
+		}
+	}
+
+	public bool LadderAbove {
+		get {
+			return ladderAbove;
+		}
+	}
+		
+	public bool LadderBelow {
+		get {
+			return ladderBelow;
 		}
 	}
 }

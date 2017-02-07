@@ -54,6 +54,10 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 		segmentsSpawned++;
 
 		if (segmentsSpawned == numSegments) {
+			foreach (GameObject go in segments) {
+				LadderController lc = go.GetComponent<LadderController> ();
+				lc.CheckForConnections ();
+			}
 			spawnTimer.Stop ();
 			isActive = true;
 		}

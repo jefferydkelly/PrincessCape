@@ -310,7 +310,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				if (IsUsingMagnetGloves) {
 					myRigidBody.velocity = Vector2.zero;
 				}
-			} else if (IsDashing ) {
+			} else if (IsDashing) {
 				foreach (ContactPoint2D cp in col.contacts) {
 					if (cp.normal.y == 0) {
 						IsDashing = false;
@@ -319,18 +319,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				}
 			}
 		} else if (col.collider.CompareTag ("Enemy")) {
-            manager.Reset();
-		} else if (col.collider.OnLayer("Metal") && IsUsingMagnetGloves)
-        {
-            if (lastYVel < 0)
-            {
+			manager.Reset ();
+		} else if (col.collider.OnLayer ("Metal") && IsUsingMagnetGloves) {
+			if (lastYVel < 0) {
 				if (leftItem && leftItem.IsActive && leftItem is PullGlove) {
 					leftItem.Deactivate ();
 				} else if (rightItem && rightItem.IsActive && rightItem is PullGlove) {
 					rightItem.Deactivate ();
 				}
-                myRigidBody.velocity = Vector2.zero;
-            }
+				myRigidBody.velocity = Vector2.zero;
+			}
 		}
        
 	}
@@ -364,7 +362,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
         else if (col.CompareTag("Ladder")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
-				col.isTrigger = false;
+				LadderController lc = col.GetComponent<LadderController> ();
+				col.isTrigger = lc.LadderAbove;
 			} else {
 				col.isTrigger = true;
 			}
@@ -374,14 +373,26 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	void OnTriggerExit2D(Collider2D col)
 	{
 		if (col.CompareTag ("Ladder")) {
-			IsClimbing = false;
-
-			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
-				Vector3 pos = transform.position;
-				pos.y = col.transform.position.y + col.gameObject.HalfHeight () + HalfHeight;
-				transform.position = pos;
-				myRigidBody.velocity = Vector2.zero;
-				col.isTrigger = false;
+			if (IsClimbing) {
+				if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
+					if (!col.GetComponent<LadderController> ().LadderAbove) {
+						IsClimbing = false;
+						Vector3 pos = transform.position;
+						pos.y = col.transform.position.y + col.gameObject.HalfHeight () + HalfHeight;
+						transform.position = pos;
+						myRigidBody.velocity = Vector2.zero;
+						col.isTrigger = false;
+					}
+				} else if (BottomCenter.y <= col.transform.position.y - col.gameObject.HalfHeight () * 0.8f) {
+					if (!col.GetComponent<LadderController> ().LadderBelow) {
+						IsClimbing = false;
+						Vector3 pos = transform.position;
+						pos.y = col.transform.position.y - col.gameObject.HalfHeight () + HalfHeight;
+						transform.position = pos;
+						myRigidBody.velocity = Vector2.zero;
+						col.isTrigger = false;
+					}
+				}
 			}
 		}
         if (col.CompareTag("Water"))
@@ -487,6 +498,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	public Vector3 BottomCenter {
 		get {
 			return transform.position - new Vector3 (0, HalfHeight);
+		}
+	}
+
+	public Vector3 TopCenter {
+		get {
+			return transform.position + new Vector3 (0, HalfHeight);
 		}
 	}
 	/// <summary>
