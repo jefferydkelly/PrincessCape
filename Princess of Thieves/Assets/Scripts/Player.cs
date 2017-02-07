@@ -277,6 +277,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	void Jump()
 	{
+        
         float ji = IsDashing ? jumpImpulse * 1.5f : jumpImpulse;
 		myRigidBody.AddForce(new Vector2(0, ji * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
 		AudioManager.Instance.PlaySound (jumpClip);
