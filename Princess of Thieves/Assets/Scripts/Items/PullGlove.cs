@@ -54,7 +54,7 @@ public class PullGlove : GloveItem {
 
 				moveDir = distance.normalized;
 
-				if (hitNormal.y == 0) {
+				if (Mathf.Abs(hitNormal.y) <= 0.1f) {
 					moveDir -= player.TrueAim.YVector ();
 				}
 				moveDir.Normalize ();
@@ -86,6 +86,8 @@ public class PullGlove : GloveItem {
 		lineRenderer.enabled = false;
 		itemActive = false;
 		player.HideMagnetRange ();
+		ResetTargetTimer.Reset ();
+		ResetTargetTimer.Start ();
 	}
 
 }
