@@ -13,6 +13,9 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	float spawnTime = 1.0f;
 
+	[SerializeField]
+	AudioClip dropSound;
+
 	Timer spawnTimer;
 	Timer destroyTimer;
 
@@ -49,11 +52,11 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 
 	void SpawnSegment() {
 		GameObject segment = Instantiate (prefab);
-		segment.transform.position = transform.position - new Vector3 (0, prefab.HalfHeight() * 2 * (segmentsSpawned + 0.5f));
+		segment.transform.position = transform.position - new Vector3 (0, prefab.HalfHeight() * 2 * (segmentsSpawned + 0.5f), -1);
 		segments [segmentsSpawned] = segment;
 		segmentsSpawned++;
 		segment.name = "Segment " + segmentsSpawned;
-
+		AudioManager.Instance.PlaySound (dropSound);
 		if (segmentsSpawned == numSegments) {
 			foreach (GameObject go in segments) {
 				go.GetComponent<LadderController> ().CheckForConnections();

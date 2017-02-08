@@ -11,6 +11,9 @@ public class PressureSwitch : ActivatorObject {
     public bool triggered = false;
 
     public bool needsHeavy = false;
+
+	[SerializeField]
+	AudioClip activatedSoundEffect;
 	// Use this for initialization
 	void Start () {
 		Initialize ();
@@ -60,12 +63,14 @@ public class PressureSwitch : ActivatorObject {
 			if (value > 0 && numberOfThingsWeighingThisDown == 0)
 			{
                 //
+				AudioManager.Instance.PlaySound(activatedSoundEffect);
 				Activate();
                 triggered = true;
                 GetComponent<SpriteRenderer>().sprite = switchSprites[1];
             }
 			else if (value == 0 && numberOfThingsWeighingThisDown > 0)
 			{
+				AudioManager.Instance.PlaySound(activatedSoundEffect);
 				Deactivate();
                 triggered = false;
                 GetComponent<SpriteRenderer>().sprite = switchSprites[0];

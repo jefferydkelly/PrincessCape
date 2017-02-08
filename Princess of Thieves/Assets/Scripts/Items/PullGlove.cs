@@ -53,18 +53,27 @@ public class PullGlove : GloveItem {
 			if (distance.sqrMagnitude <= range * range) {
 
 				moveDir = distance.normalized;
-
+				/*
 				if (Mathf.Abs(hitNormal.y) <= 0.1f) {
 					moveDir -= player.TrueAim.YVector ();
 				}
 				moveDir.Normalize ();
+				*/
 
 				if (pushingOnTarget) {
 					//Heavier object, so the player gets moved
+					if (Mathf.Abs(hitNormal.y) <= 0.1f) {
+						moveDir += player.TrueAim.YVector ();
+					}
+					moveDir.Normalize ();
 					playerBody.AddForce (
 						moveDir * force,
 						ForceMode2D.Force);
 				} else {
+					if (Mathf.Abs(hitNormal.y) <= 0.1f) {
+						moveDir -= player.TrueAim.YVector ();
+					}
+					moveDir.Normalize ();
 					targetBody.AddForce (
 						moveDir * -force,
 						ForceMode2D.Force);
