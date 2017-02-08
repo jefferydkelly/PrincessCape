@@ -146,7 +146,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 							Jump ();
 						} else {
                         
-							RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.0f, HalfHeight * 2), 0, Forward, 0.25f, 1 << LayerMask.NameToLayer ("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+							RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, HalfHeight * 2), 0, Forward, 1.25f, 1 << LayerMask.NameToLayer ("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
 
 							if (hit.collider != null) {
 								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
