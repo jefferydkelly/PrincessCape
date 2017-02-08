@@ -192,7 +192,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 if (Controller.Interact)
                 {
-                    highlighted.Interact();
+                    highlightedBody.gameObject.GetComponent<InteractiveObject>().Interact();
                 }
                 else
                 {
@@ -818,6 +818,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
 			if (value && highlighted != null && !IsPushing && !IsFrozen)
             {
+
                 UIManager.Instance.ShowInteraction("Stop");
                 state |= PlayerState.Pushing;
                 state |= PlayerState.Frozen;
