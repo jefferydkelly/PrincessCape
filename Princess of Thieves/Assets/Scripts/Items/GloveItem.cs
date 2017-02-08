@@ -43,7 +43,8 @@ public class GloveItem : UsableItem {
 	}
 
 	protected void FindTarget() {
-		RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), player.Aiming.GetAngle (), player.Aiming, range, 1 << LayerMask.NameToLayer ("Metal"));
+		Vector2 aim = player.TrueAim;
+		RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), aim.GetAngle (), aim, range, 1 << LayerMask.NameToLayer ("Metal"));
 
 		if (hit && hit.collider.gameObject != target) {
 			target = hit.collider.gameObject;
