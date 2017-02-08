@@ -41,6 +41,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
+	bool collidingWithHighlighted = false;
 
 	Timer resetTimer;
 	//Sound Effects
@@ -144,17 +145,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						if (tryingToJump) {
                         
 							Jump ();
-						} else {
-                        
-							RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, HalfHeight * 2), 0, Forward, 1.25f, 1 << LayerMask.NameToLayer ("Interactive"));//Physics2D.Raycast(transform.position, Forward, 2.0f, (1 << LayerMask.NameToLayer("Interactive")));
+						} else if (!collidingWithHighlighted) {
+                     
+							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3(0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 0.75f, 1 << LayerMask.NameToLayer ("Interactive"));
 
 							if (hit.collider != null) {
 								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
 
 								if (io != null) {
-									if (controller.Interact) {
-										io.Interact ();
-									} else if (io != highlighted) {
+									if (io != highlighted) {
 										if (highlighted != null) {
 											highlighted.Dehighlight ();
 										}
@@ -172,13 +171,19 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                         
 						}
 
-						if (Mathf.Abs (controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon) {
-							fwdX = (int)Mathf.Sign (controller.Horizontal/*myRigidBody.velocity.x*/);
+						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
+							fwdX = (int)Mathf.Sign (controller.Horizontal);
 							myRenderer.flipX = (fwdX == -1);
 						}
 					}
 
 				} 
+
+				if (highlighted != null) {
+					if (controller.Interact) {
+						highlighted.Interact ();
+					}
+				}
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
@@ -343,30 +348,41 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.CompareTag("Spike") || col.CompareTag("Fire"))
-        {
+		if (col.CompareTag ("Spike") || col.CompareTag ("Fire")) {
 			AudioManager.Instance.PlaySound (spikeDeathClip);
 			resetTimer.Reset ();
 			resetTimer.Start ();
-            //manager.Reset();
-        }
-        else if (col.CompareTag("Water"))
-        {
-            inWater = true;
-        }
-        else if (col.CompareTag("Projectile"))
-        {
-            if (IsUsingReflectCape)
-            {
-                Reflect(col.gameObject);
+			//manager.Reset();
+		} else if (col.CompareTag ("Water")) {
+			inWater = true;
+		} else if (col.CompareTag ("Projectile")) {
+			if (IsUsingReflectCape) {
+				Reflect (col.gameObject);
 			}
-		}
-        else if (col.CompareTag("Ladder")) {
+		} else if (col.CompareTag ("Ladder")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
 				LadderController lc = col.GetComponent<LadderController> ();
 				col.isTrigger = lc.LadderAbove;
 			} else {
 				col.isTrigger = true;
+			}
+		} else if (col.OnLayer ("Interactive")) {
+			InteractiveObject io = col.GetComponent<InteractiveObject> ();
+
+			if (io != null) {
+				if (controller.Interact) {
+					io.Interact ();
+				} else if (io != highlighted) {
+					if (highlighted != null) {
+						highlighted.Dehighlight ();
+					}
+
+					highlighted = io;
+
+					highlighted.Highlight ();
+				}
+
+				collidingWithHighlighted = (io == highlighted);
 			}
 		}
     }
@@ -396,10 +412,17 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				}
 			}
 		}
-        if (col.CompareTag("Water"))
-        {
-            inWater = false;
-        }
+		if (col.CompareTag ("Water")) {
+			inWater = false;
+		} else if (col.OnLayer("Interactive")){
+			InteractiveObject io = col.GetComponent<InteractiveObject> ();
+
+			if (io == highlighted) {
+				highlighted.Dehighlight ();
+				highlighted = null;
+				collidingWithHighlighted = false;
+			}
+		}
     }
 
     void OnTriggerStay2D(Collider2D col)
