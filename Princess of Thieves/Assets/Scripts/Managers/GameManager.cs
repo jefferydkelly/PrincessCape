@@ -197,8 +197,9 @@ public class GameManager {
 					min = go.transform.position;
 				}
 			}
-				
-			Player.transform.position = startingPoint.transform.position;
+			Vector3 pos = startingPoint.transform.position;
+			pos.z = 0;
+			Player.transform.position = pos;
 		}
 
 	}
