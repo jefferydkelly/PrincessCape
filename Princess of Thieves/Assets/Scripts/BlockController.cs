@@ -40,11 +40,9 @@ public class BlockController : ResettableObject, InteractiveObject {
 	void Update() {
 
 		if (beingPushed) {
-            Debug.Log("hello");
             RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2 (0,-1), 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) { // we stop running into things
-                Debug.Log("no more objects");
                 GameManager.Instance.Player.IsPushing = false;
 				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
 				beingPushed = false;

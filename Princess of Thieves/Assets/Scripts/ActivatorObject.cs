@@ -8,11 +8,14 @@ public class ActivatorObject : MonoBehaviour {
 	protected List<ActivateableObject> activators;
 
 	protected void Initialize() {
+		
 		activators = new List<ActivateableObject> ();
-		foreach (GameObject go in connectedObjects) {
-			ActivateableObject ao = go.GetComponent<ActivateableObject> ();
-			if (ao != null) {
-				activators.Add (ao);
+		if (connectedObjects.Count > 0) {
+			foreach (GameObject go in connectedObjects) {
+				ActivateableObject ao = go.GetComponent<ActivateableObject> ();
+				if (ao != null) {
+					activators.Add (ao);
+				}
 			}
 		}
 	}

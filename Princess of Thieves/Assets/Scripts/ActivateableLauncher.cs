@@ -16,6 +16,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	SpriteRenderer myRenderer;
 	// Use this for initialization
 	void Start () {
+		myRenderer = GetComponent<SpriteRenderer> ();
 		WaitDelegate wd;
 		wd = () => {
 			Fire();
@@ -24,13 +25,9 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 		fireTimer = new Timer (wd, timeToFire, true);
 
 		if (startActive) {
-			isActive = true;
-
-			if (GetComponent<SpriteRenderer> ().isVisible) {
-				fireTimer.Start ();
-			}
+			Activate ();
 		}
-		myRenderer = GetComponent<SpriteRenderer> ();
+
 	}
 
 	void OnBecameVisible() {

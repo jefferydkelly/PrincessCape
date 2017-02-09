@@ -69,22 +69,26 @@ public class CameraManager : MonoBehaviour {
 		
 		if (!manager.IsPaused)
 		{
-			if (target)
-			{
-                playerPos = cam.WorldToScreenPoint(target.transform.position);
-                newCamPos = cam.transform.position;
-				if (target.Forward.x != fwd && Mathf.Abs(playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent * 2)
-                {
-                    fwd *= -1;
-                    //vel = Vector3.zero;
-                    
-                }
-                newCamPos.z = -10;
-                posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
-                posTarget.z = -10;
-                newCamPos = Vector3.SmoothDamp(cam.transform.position, posTarget, ref vel, dampTime);
-                cam.transform.position = newCamPos;
-            }
+			if (target) {
+				playerPos = cam.WorldToScreenPoint (target.transform.position);
+				newCamPos = cam.transform.position;
+				newCamPos.z = -10;
+				if (target.Forward.x == fwd) {
+					
+					posTarget = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
+
+				} else if (Mathf.Abs (playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent * 1.25f) {
+					fwd *= -1;
+
+					posTarget = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
+				} else {
+					posTarget = cam.ScreenToWorldPoint (new Vector3 (screenSize.x / 2, playerPos.y + screenSize.y / 6));
+				}
+
+				posTarget.z = -10;
+				newCamPos = Vector3.SmoothDamp (cam.transform.position, posTarget, ref vel, dampTime);
+				cam.transform.position = newCamPos;
+			}
             else
             {
 				Debug.Log ("Finding target");
