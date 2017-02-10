@@ -26,26 +26,18 @@ public class ReflectCape : UsableItem
     {
 		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
         {
-            GameManager.Instance.Player.GetComponent<Animator>().SetBool("Floating", true);
+			GameManager.Instance.Player.Animator.SetBool("Floating", true);
 
             GameManager.Instance.Player.ShowAimArrow = true;
             GameManager.Instance.Player.IsUsingReflectCape = true;
 			itemActive = true;
 			AudioManager.Instance.PlaySound (capeFX);
-			/*
-			deactivateTimer.Reset ();
-			TimerManager.Instance.AddTimer (deactivateTimer);
-			*/
-        }
-        else
-        {
-            Debug.Log("Reflection fizzles");
         }
     }
 
     public override void Deactivate()
     {
-        GameManager.Instance.Player.GetComponent<Animator>().SetBool("Floating", false);
+		GameManager.Instance.Player.Animator.SetBool("Floating", false);
         if (IsActive) {
             
             GameManager.Instance.Player.ShowAimArrow = false;

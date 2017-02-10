@@ -7,6 +7,7 @@ public class SwitchController : ActivatorObject {
     public Sprite activatedSprite;
     public Sprite deactivatedSprite;
     private SpriteRenderer myRenderer;
+	public AudioClip switchSound;
 
     public void Start()
     {
@@ -20,6 +21,10 @@ public class SwitchController : ActivatorObject {
         {
             Destroy(collision.gameObject);
             Activated = !Activated;
+			Vector3 pos = Camera.main.WorldToScreenPoint (transform.position);
+			if (pos.x.Between (-Screen.width / 2, Screen.width * 3 / 2)) {
+				AudioManager.Instance.PlaySound (switchSound);
+			}
             if (activated)
             {
                 Activate();
