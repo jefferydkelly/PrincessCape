@@ -160,15 +160,22 @@ public class UIManager : MonoBehaviour
 
     private IEnumerator RevealMessage(string msg)
     {
+		yield return null;
         done = false;
         int lettersRevealed = 0;
         interactionBox.Interaction = "";
         while (lettersRevealed < msg.Length)
         {
-            yield return new WaitForSeconds(0.02f);
-            lettersRevealed++;
-            dialogBox.Text = msg.Substring(0, lettersRevealed);
+			if (GameManager.Instance.Player.Controller.Interact) {
+				dialogBox.Text = msg;
+				break;
+			} else {
+				yield return new WaitForSeconds (0.01f);
+				lettersRevealed++;
+				dialogBox.Text = msg.Substring (0, lettersRevealed);
+			}
         }
+		yield return null;
         interactionBox.Interaction = "Next";
         while (!GameManager.Instance.Player.Controller.Interact)
         {
