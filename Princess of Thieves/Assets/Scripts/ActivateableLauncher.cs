@@ -30,22 +30,6 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 
 	}
 
-	void OnBecameVisible() {
-		if (isActive) {
-			if (fireTimer.Paused) {
-				fireTimer.Paused = false;
-			} else {
-				fireTimer.Start ();
-			}
-		}
-	}
-
-	void OnBecameInvisible() {
-		
-		if (isActive) {
-			fireTimer.Paused = true;
-		}
-	}
 	void Fire()
 	{
 		GameObject temp = Instantiate(projectile);

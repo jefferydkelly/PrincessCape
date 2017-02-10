@@ -56,7 +56,6 @@ public class CameraManager : MonoBehaviour {
 			if (!isClosing) {
 				return instance;
 			}
-			Debug.Log ("You're trying to access the CameraManager while the Application is closing");
 			return null;
 		}
 	}

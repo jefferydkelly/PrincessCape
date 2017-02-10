@@ -631,6 +631,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 
 	/// <summary>
+	/// Gets the animator.
+	/// </summary>
+	/// <value>The animator.</value>
+	public Animator Animator {
+		get {
+			return myAnimator;
+		}
+	}
+
+	/// <summary>
 	/// Gets the inventory.
 	/// </summary>
 	/// <value>The inventory.</value>
