@@ -335,6 +335,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				}
 				myRigidBody.velocity = Vector2.zero;
 			}
+		} else if (col.collider.CompareTag ("Spike")) {
+			Die ();
 		}
        
 	}
@@ -348,11 +350,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.CompareTag ("Spike") || col.CompareTag ("Fire")) {
-			AudioManager.Instance.PlaySound (spikeDeathClip);
-			resetTimer.Reset ();
-			resetTimer.Start ();
-			//manager.Reset();
+		if (col.CompareTag ("Fire")) {
+			Die ();
 		} else if (col.CompareTag ("Water")) {
 			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
@@ -707,6 +706,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	void Die() {
+		transform.Rotate (Vector3.forward, 90);
+		AudioManager.Instance.PlaySound (spikeDeathClip);
+		resetTimer.Reset ();
+		resetTimer.Start ();
+	}
+
     /// <summary>
     /// Returns the direction the Player is aiming.  If there's no vertical component, it assumes the player is just aiming forward.
     /// </summary>
@@ -1030,6 +1036,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         transform.position = Checkpoint.ActiveCheckpointPosition;
         curHP = maxHP;
         curMP = maxMP;
+		transform.Rotate (Vector3.forward, -90);
     }
 }
 
