@@ -13,6 +13,8 @@ public class Checkpoint : JDMappableObject {
 
 	[SerializeField]
 	AudioClip activateClip;
+	[SerializeField]
+	bool isFirst = false;
 	// Use this for initialization
 	void Awake () {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -76,4 +78,10 @@ public class Checkpoint : JDMappableObject {
             return Vector3.zero;
         }
     }
+
+	public bool IsFirst {
+		get {
+			return isFirst;
+		}
+	}
 }

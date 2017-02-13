@@ -37,6 +37,9 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 		temp.GetComponent<Rigidbody2D>().AddForce(fwd*10,ForceMode2D.Impulse);
 	}
 
+	void OnDestroy() {
+		fireTimer.Stop ();
+	}
 	public void Activate() {
 		fireTimer.Reset ();
 		fireTimer.Start ();

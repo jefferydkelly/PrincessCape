@@ -23,7 +23,6 @@ public class PullGlove : GloveItem {
 		player.IsUsingMagnetGloves = true;
 
 		if (activeGlove && activeGlove.IsActive) {
-			Debug.Log ("Deactivating");
 			activeGlove.Deactivate ();
 		}
 		activeGlove = this;

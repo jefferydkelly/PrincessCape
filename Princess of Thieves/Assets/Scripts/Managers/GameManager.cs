@@ -189,17 +189,15 @@ public class GameManager {
 		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag ("Checkpoint");
 
 		if (checkpoints.Length > 0) {
-			GameObject startingPoint = null;
-			Vector2 min = new Vector2 (Mathf.Infinity, Mathf.Infinity);
 			foreach (GameObject go in checkpoints) {
-				if (go.transform.position.y < min.y || go.transform.position.y == min.y && go.transform.position.x < min.x) {
-					startingPoint = go;
-					min = go.transform.position;
+				if (go.GetComponent<Checkpoint> ().IsFirst) {
+					Vector3 pos = go.transform.position;
+					pos.z = 0;
+					Player.transform.position = pos;
+					break;
 				}
 			}
-			Vector3 pos = startingPoint.transform.position;
-			pos.z = 0;
-			Player.transform.position = pos;
+		
 		}
 
 	}
