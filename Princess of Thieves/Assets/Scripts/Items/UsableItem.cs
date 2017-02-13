@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public abstract class UsableItem : MonoBehaviour {
 
@@ -31,6 +32,8 @@ public abstract class UsableItem : MonoBehaviour {
 	/// </summary>
     protected bool onCooldown = false;
 
+	public ItemBox itemBox;
+
 	[SerializeField]
 	bool continuous = false;
 
@@ -60,6 +63,7 @@ public abstract class UsableItem : MonoBehaviour {
 	protected void CreateCooldownTimer() {
 		cooldownDelegate = () => {
 			onCooldown = false;
+			itemBox.BGColor = Color.white;
 		};
 
 		cooldownTimer = new Timer (cooldownDelegate, cooldownTime);
@@ -72,6 +76,7 @@ public abstract class UsableItem : MonoBehaviour {
 		onCooldown = true;
 		cooldownTimer.Reset ();
 		cooldownTimer.Start ();
+		itemBox.BGColor = Color.gray;
 	}
 
 	public bool Continuous {

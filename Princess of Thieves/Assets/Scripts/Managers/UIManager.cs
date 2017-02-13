@@ -367,6 +367,18 @@ public class UIManager : MonoBehaviour
         interactionBox.Enabled = true;
         interactionBox.Interaction = s;
     }
+
+	public ItemBox LeftItemBox {
+		get {
+			return leftBox;
+		}
+	}
+
+	public ItemBox RightItemBox {
+		get {
+			return rightBox;
+		}
+	}
 }
 
 /*
@@ -421,59 +433,6 @@ public struct ImageTextCombo
 			return txt.text;
 		}
 	}
-}
-
-public struct ItemBox
-{
-    GameObject background;
-    Image itemRenderer;
-    Text keyText;
-
-    public ItemBox(string s)
-    {
-        background = GameObject.Find(s);
-        itemRenderer = background.GetComponentsInChildren<Image>()[1];
-        keyText = background.GetComponentInChildren<Text>();
-    }
-
-    public Sprite ItemSprite
-    {
-        get
-        {
-            return itemRenderer.sprite;
-        }
-
-        set
-        {
-            itemRenderer.sprite = value;
-        }
-    }
-
-    public bool Enabled
-    {
-        get
-        {
-            return background.activeSelf;
-        }
-
-        set
-        {
-            background.SetActive(value);
-        }
-    }
-
-    public string Key
-    {
-        get
-        {
-            return keyText.text;
-        }
-
-        set
-        {
-            keyText.text = value;
-        }
-    }
 }
 
 public struct InteractionBox

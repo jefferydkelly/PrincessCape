@@ -84,10 +84,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
       
 	}
 
-    public void ResetBecauseINeed()
-    {
-        transform.position = startPos.position;
-    }
 	void FixedUpdate()
 	{
         if (!manager.IsPaused)
@@ -336,7 +332,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				myRigidBody.velocity = Vector2.zero;
 			}
 		} else if (col.collider.CompareTag ("Spike")) {
-			Die ();
+			IsDead = true;
 		}
        
 	}
@@ -351,7 +347,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.CompareTag ("Fire")) {
-			Die ();
+			IsDead = true;
 		} else if (col.CompareTag ("Water")) {
 			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
@@ -692,10 +688,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (leftItem == null)
             {
                 leftItem = ui;
+				leftItem.itemBox = UIManager.Instance.LeftItemBox;
                 UIManager.Instance.UpdateUI();
             } else if (rightItem == null)
             {
                 rightItem = ui;
+				rightItem.itemBox = UIManager.Instance.RightItemBox;
                 UIManager.Instance.UpdateUI();
             } else
             {
@@ -959,6 +957,22 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	public bool IsDead {
+		get {
+			return (state & PlayerState.Dead) > 0;
+		}
+
+		private set {
+			if (value && !IsDead) {
+				state = PlayerState.Dead | PlayerState.Frozen;
+				Die ();
+			} else if (!value){
+				state &= ~PlayerState.Dead;
+				state &= ~PlayerState.Frozen;
+			}
+		}
+	}
+
 	public bool ShowAimArrow {
 		get {
 			return arrowRenderer.enabled;
@@ -1005,10 +1019,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 oldItem = leftItem;
                 leftItem = inventory[itemNum];
+				leftItem.itemBox = UIManager.Instance.LeftItemBox;
+				Debug.Log (leftItem.itemBox == null);
             } else
             {
                 oldItem = rightItem;
                 rightItem = inventory[itemNum];
+				rightItem.itemBox = UIManager.Instance.RightItemBox;
             }
 
             inventory[itemNum] = oldItem;
@@ -1032,11 +1049,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		myRigidBody.gravityScale = 1.5f;
 		myRenderer.material.color = Color.white;
 		state = PlayerState.Normal;
+		transform.Rotate (Vector3.forward, -90);
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
         curHP = maxHP;
         curMP = maxMP;
-		transform.Rotate (Vector3.forward, -90);
+
     }
 }
 
@@ -1054,5 +1072,6 @@ public enum PlayerState
 	CanFloat = 64,
 	PushedByTheWindHorz = 128,
 	PushedByTheWindVert = 256,
-	IsClimbing = 512
+	IsClimbing = 512,
+	Dead = 1024
 }

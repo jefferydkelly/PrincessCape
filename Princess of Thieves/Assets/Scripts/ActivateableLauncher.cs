@@ -26,6 +26,8 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 
 		if (startActive) {
 			Activate ();
+		} else {
+			Deactivate ();
 		}
 
 	}
@@ -50,7 +52,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	public void Deactivate() {
 		fireTimer.Stop ();
 		isActive = false;
-		myRenderer.color = Color.white;
+		myRenderer.color = Color.blue;
 	}
 
 	public bool IsActive {
