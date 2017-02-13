@@ -126,7 +126,7 @@ public class CameraManager : MonoBehaviour {
 			transform.position = startPos + pan * timePanning / time;
 			yield return null;
 		}
-
+		transform.position = startPos + pan;
 		GameManager.Instance.Cutscene.NextElement();
 	}
 
