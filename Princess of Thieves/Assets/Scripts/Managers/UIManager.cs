@@ -389,6 +389,18 @@ public class UIManager : MonoBehaviour
 			return rightBox;
 		}
 	}
+
+	public bool ShowBoxes {
+		get {
+			return LeftItemBox.Enabled;
+		}
+
+		set {
+			rightBox.Enabled = value;
+			leftBox.Enabled = value;
+			interactionBox.Enabled = value;
+		}
+	}
 }
 
 /*

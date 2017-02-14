@@ -189,6 +189,7 @@ public class Cutscene
 	public void StartCutscene()
 	{
 		GameManager.Instance.IsInCutscene = true;
+		UIManager.Instance.ShowBoxes = false;
 		NextElement();
 	}
 
@@ -208,7 +209,7 @@ public class Cutscene
 		}
 		else {
 			//End the cutscene
-
+			UIManager.Instance.ShowBoxes = true;
 			GameManager.Instance.IsInCutscene = false;
             UIManager.Instance.StartCoroutine("HideDialog");
     

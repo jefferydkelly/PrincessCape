@@ -33,7 +33,7 @@ move Matthew -5 1.5 0.33
 create Prefabs/Fire -7 1.75 0
 create Prefabs/Fire -8 1.75 0
 move Matthew -3 1.5 0.66
-rotate Matthew 90 0.25
+rotate Matthew -90 0.25
 move Matthew -1.75 1 0.25
 Sir Matthew: I'm....so...sorry!
 fade-out Matthew 0.25
