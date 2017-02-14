@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
 	}
 
     void Update() {
-		if (revealing && done && GameManager.Instance.Player.Controller.Interact)
+		if (revealing && done && Input.anyKeyDown)
 		{
 			StartCoroutine(NextElement());
 		}
@@ -152,7 +152,7 @@ public class UIManager : MonoBehaviour
 		interactionBox.Interaction = "Skip";
 		while (lettersRevealed < msg.Length)
 		{
-			if (GameManager.Instance.Player.Controller.Interact) {
+			if (Input.anyKeyDown) {
 				lettersRevealed = msg.Length;
 				dialogBox.Text = msg.Substring (0, lettersRevealed);
 			} else {
