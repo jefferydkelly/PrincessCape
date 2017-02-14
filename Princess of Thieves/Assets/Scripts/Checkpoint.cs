@@ -20,8 +20,9 @@ public class Checkpoint : JDMappableObject {
 	void Awake () {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
         myRenderer = GetComponent<SpriteRenderer>();
-        if(transform.GetChild(0))
-            childAnimation = transform.GetChild(0).gameObject;
+		if (transform.childCount > 0) {
+			childAnimation = transform.GetChild (0).gameObject;
+		}
 		SceneManager.sceneLoaded += OnLevelLoaded;
 	}
 
@@ -50,10 +51,7 @@ public class Checkpoint : JDMappableObject {
         set
         {
             activated = value;
-            if (value)
-            {
-                childAnimation.SetActive(true);
-            }
+
             myRenderer.sprite = activated ? activatedSprite : inactiveSprite;
         }
     }
