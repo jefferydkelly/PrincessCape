@@ -2,20 +2,22 @@ character Matthew Knights/SirMatthew
 character Flames Sprites/SlagFlames
 character Elwynn Sprites/Elwynn
 pan to Player 0
-pan -7 2 0
+pan -9 2 0
 disable Player
 show Elwynn 0 1.25
 flip-x Elwynn
-Elwynn: Kidnapped again?
+Elwynn: Kidnapped by another dragon?
 move Elwynn -3 1.25 1.5
 Elwynn: How many times do that make it this year?
 flip-x Elwynn
 move Elwynn 0 1.25 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
-Sir Matthew: Princess Elwynn? I'm here to save you from that dragon.
+Sir Matthew: Princess Elwynn?
 show Matthew -18 4.5
 move Matthew -17 1.5 1
 flip-x Elwynn
+activate Gate true
+Sir Matthew: I'm here to save you from that dragon.
 move Matthew -13 1.5 1
 activate SlideDoor true
 Slag: Raaaaaaaaaaaaaaaw!
