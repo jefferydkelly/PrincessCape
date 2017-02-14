@@ -11,6 +11,7 @@ public class Checkpoint : JDMappableObject {
     //List with all checkpoints in the scene
     public static GameObject[] checkpoints;
 
+    private GameObject childAnimation;
 	[SerializeField]
 	AudioClip activateClip;
 	[SerializeField]
@@ -19,6 +20,7 @@ public class Checkpoint : JDMappableObject {
 	void Awake () {
         checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
         myRenderer = GetComponent<SpriteRenderer>();
+        childAnimation = transform.GetChild(0).gameObject;
 		SceneManager.sceneLoaded += OnLevelLoaded;
 	}
 
