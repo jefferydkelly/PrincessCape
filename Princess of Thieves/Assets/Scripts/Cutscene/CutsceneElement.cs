@@ -96,6 +96,52 @@ public class CutsceneAdd: CutsceneElement {
 		GameManager.Instance.Player.AddItem (GameObject.Instantiate (prefab));
 	}
 }
+
+public class CutsceneDisable: CutsceneElement {
+	GameObject hideObject;
+	public CutsceneDisable(GameObject go) {
+		hideObject = go;
+	}
+
+	public void Disable() {
+		hideObject.SetActive (false);
+	}
+}
+
+public class CutsceneEnable: CutsceneElement {
+	GameObject hideObject;
+	public CutsceneEnable(GameObject go) {
+		hideObject = go;
+	}
+
+	public void Enable() {
+		hideObject.SetActive (true);
+	}
+}
+
+public class CutsceneActivate: CutsceneElement {
+	bool activate;
+	ActivateableObject ao;
+
+	public CutsceneActivate(ActivateableObject aObj, bool activated) {
+		ao = aObj;
+		activate = activated;
+	}
+
+	public void Activate() {
+		if (activate) {
+			ao.Activate ();
+		} else {
+			ao.Deactivate ();
+		}
+	}
+
+	public float RunTime {
+		get {
+			return ao.ActivationTime;
+		}
+	}
+}
 public enum EffectType
 {
 	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical, Scale, ScaleX, ScaleY, ScaleXYInd

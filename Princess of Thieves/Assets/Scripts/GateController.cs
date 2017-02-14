@@ -108,4 +108,10 @@ public class GateController : JDMappableObject, ActivateableObject {
 			return isActive;
 		}
 	}
+
+	public float ActivationTime {
+		get {
+			return 0;
+		}
+	}
 }

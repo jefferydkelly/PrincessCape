@@ -1,26 +1,41 @@
 character Matthew Knights/SirMatthew
 character Flames Sprites/SlagFlames
+character Elwynn Sprites/Elwynn
 pan to Player 0
-pan 7 0 0
+pan -7 2 0
+disable Player
+show Elwynn 0 1.25
+flip-x Elwynn
+Elwynn: Kidnapped again?
+move Elwynn -3 1.25 1.5
+Elwynn: How many times do that make it this year?
+flip-x Elwynn
+move Elwynn 0 1.25 1.5
+Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
 Sir Matthew: Princess Elwynn? I'm here to save you from that dragon.
-show Matthew 3 4.5
-move Matthew 2 1.5 1
-move Matthew -2 1.5 1
+show Matthew -18 4.5
+move Matthew -17 1.5 1
+flip-x Elwynn
+move Matthew -13 1.5 1
+activate SlideDoor true
 Slag: Raaaaaaaaaaaaaaaw!
 flip-x Matthew
 Sir Matthew: What was that?
-fade-in Flames 0.25 -1 1.5
+fade-in Flames 0.25 -13 8
 wait 0.5
 fade-out Flames 0.25
+activate SlideDoor false
 Sir Matthew: Help!  I'm on fire!
 flip-x Matthew
 move Matthew -5 1.5 0.33
-create Prefabs/Fire -4 1.75 0
-create Prefabs/Fire -3 1.75 0
-move Matthew -10 1.5 0.66
+create Prefabs/Fire -7 1.75 0
+create Prefabs/Fire -8 1.75 0
+move Matthew -3 1.5 0.66
 rotate Matthew 90 0.25
-move Matthew -10.75 1 0.25
+move Matthew -1.75 1 0.25
 Sir Matthew: I'm....so...sorry!
 fade-out Matthew 0.25
-create Prefabs/MatthewCorpse -10.75 0.75 0.25
+create Prefabs/MatthewCorpse -1.75 0.75 0.25
+hide Elwynn
+enable Player
 wait 2

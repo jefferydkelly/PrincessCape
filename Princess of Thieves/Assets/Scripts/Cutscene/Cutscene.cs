@@ -135,7 +135,33 @@ public class Cutscene
 			} else if (p == "create") {
 				c = new CutsceneCreation (parts [1], parts [2], parts [3], parts [4]);
 			} else if (p == "add") {
-				c = new CutsceneAdd(Resources.Load<GameObject>(parts[1]));
+				c = new CutsceneAdd (Resources.Load<GameObject> (parts [1]));
+			} else if (p == "disable") {
+				GameObject go;
+				CutsceneActor ca = FindActor (parts [1]);
+				if (ca == null) {
+					go = GameObject.Find (parts [1]);
+				} else {
+					go = ca.gameObject;
+				}
+				c = new CutsceneDisable (go);
+			} else if (p == "enable") {
+				GameObject go;
+				CutsceneActor ca = FindActor (parts [1]);
+				if (ca == null) {
+					go = GameObject.Find (parts [1]);
+				} else {
+					go = ca.gameObject;
+				}
+				c = new CutsceneEnable (go);
+			} else if (p == "activate") {
+				GameObject go = GameObject.Find (parts [1]);
+				if (go != null) {
+					ActivateableObject ao = go.GetComponent<ActivateableObject> ();
+					if (ao != null) {
+						c = new CutsceneActivate (ao, parts [2] == "true");
+					}
+				}
 			}
 			else
 			{
@@ -291,6 +317,16 @@ public class Cutscene
 		} else if (currentNode is CutsceneAdd) {
 			(currentNode as CutsceneAdd).Add ();
 			NextElement ();
+		} else if (currentNode is CutsceneDisable) {
+			(currentNode as CutsceneDisable).Disable ();
+			NextElement ();
+		} else if (currentNode is CutsceneEnable) {
+			(currentNode as CutsceneEnable).Enable ();
+			NextElement ();
+		} else if (currentNode is CutsceneActivate) {
+			CutsceneActivate ca = (currentNode as CutsceneActivate);
+			ca.Activate ();
+			UIManager.Instance.WaitFor (ca.RunTime);
 		}
 	}
 

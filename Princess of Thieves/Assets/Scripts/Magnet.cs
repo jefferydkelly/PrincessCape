@@ -50,4 +50,10 @@ public class Magnet : MonoBehaviour, ActivateableObject {
 			return isActive;
 		}
 	}
+
+	public float ActivationTime {
+		get {
+			return 0;
+		}
+	}
 }

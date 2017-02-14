@@ -60,4 +60,10 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 			return isActive;
 		}
 	}
+
+	public float ActivationTime {
+		get {
+			return 0;
+		}
+	}
 }

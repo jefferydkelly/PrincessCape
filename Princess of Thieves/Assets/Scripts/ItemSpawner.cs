@@ -27,4 +27,10 @@ public class ItemSpawner : MonoBehaviour, ActivateableObject {
 			return activated;
 		}
 	}
+
+	public float ActivationTime {
+		get {
+			return 0;
+		}
+	}
 }

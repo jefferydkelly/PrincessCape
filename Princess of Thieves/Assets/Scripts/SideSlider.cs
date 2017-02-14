@@ -77,6 +77,12 @@ public class SideSlider : ResettableObject,ActivateableObject {
 			status = SliderStatus.Closed;
 		}
 	}
+
+	public float ActivationTime {
+		get {
+			return travelTime;
+		}
+	}
 }
 
 public enum SliderStatus {

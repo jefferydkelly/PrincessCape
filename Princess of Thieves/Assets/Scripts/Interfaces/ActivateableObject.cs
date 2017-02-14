@@ -7,4 +7,5 @@ public interface ActivateableObject
 	void Deactivate();
 
 	bool IsActive { get; }
+	float ActivationTime{get;}
 }

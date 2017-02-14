@@ -88,4 +88,10 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
     {
         active = false;
     }
+
+	public float ActivationTime {
+		get {
+			return 0;
+		}
+	}
 }

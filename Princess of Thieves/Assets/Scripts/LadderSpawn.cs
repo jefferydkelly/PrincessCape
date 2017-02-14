@@ -74,5 +74,11 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 			destroyTimer.Stop ();
 		}
 	}
+
+	public float ActivationTime {
+		get {
+			return spawnTime * numSegments;
+		}
+	}
 				
 }
