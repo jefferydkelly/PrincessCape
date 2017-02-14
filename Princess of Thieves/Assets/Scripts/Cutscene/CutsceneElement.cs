@@ -71,6 +71,19 @@ public class CutsceneEffect : CutsceneElement
 	public float y = 0.0f;
 }
 
+public class CutsceneCreation : CutsceneElement {
+	GameObject prefab;
+	Vector3 position;
+	public CutsceneCreation(string name, string dx, string dy, string dz) {
+		prefab = Resources.Load<GameObject> (name);
+		position = new Vector3 (float.Parse (dx), float.Parse (dy), float.Parse (dz));
+	}
+
+	public void Create() {
+		GameObject go = GameObject.Instantiate (prefab);
+		go.transform.position = position;
+	}
+}
 public enum EffectType
 {
 	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical, Scale, ScaleX, ScaleY, ScaleXYInd

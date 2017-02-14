@@ -21,17 +21,6 @@ public class GameManager {
 		SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-	/// <summary>
-	/// Starts the cutscene.
-	/// </summary>
-	/// <param name="cutsceneName">Cutscene name.</param>
-	public void StartCutscene(string cutsceneName)
-	{
-		IsInCutscene = true;
-		cutscene = new Cutscene(cutsceneName);
-		cutscene.StartCutscene();
-	}
-
     /// <summary>
 	/// Starts the cutscene.
 	/// </summary>
