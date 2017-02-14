@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
 	}
 
     void Update() {
-		if (revealing && done && GameManager.Instance.Player.Controller.Jump)
+		if (revealing && done && GameManager.Instance.Player.Controller.Interact)
 		{
 			StartCoroutine(NextElement());
 		}
@@ -149,13 +149,21 @@ public class UIManager : MonoBehaviour
 	{
 		done = false;
 		int lettersRevealed = 0;
+		interactionBox.Interaction = "Skip";
 		while (lettersRevealed < msg.Length)
 		{
-			yield return new WaitForSeconds(0.05f);
-			lettersRevealed++;
-			dialogBox.Text = msg.Substring(0, lettersRevealed);
+			if (GameManager.Instance.Player.Controller.Interact) {
+				lettersRevealed = msg.Length;
+				dialogBox.Text = msg.Substring (0, lettersRevealed);
+			} else {
+				yield return null;
+				lettersRevealed++;
+				dialogBox.Text = msg.Substring (0, lettersRevealed);
+			}
 		}
 		done = true;
+		interactionBox.Interaction = "Next";
+
 	}
 
     private IEnumerator RevealMessage(string msg)
@@ -188,6 +196,7 @@ public class UIManager : MonoBehaviour
 
 	IEnumerator NextElement()
 	{
+		interactionBox.Interaction = "";
 		yield return new WaitForEndOfFrame();
 		revealing = false;
 		GameManager.Instance.Cutscene.NextElement();
@@ -265,6 +274,7 @@ public class UIManager : MonoBehaviour
 			msg [i] = msg [i].Replace ("\\n", "\n");
 		}
         GameManager.Instance.IsInCutscene = true;
+
         dialogBox.Enabled = true;
 		//bars.enabled = true;
         foreach (string s in msg)

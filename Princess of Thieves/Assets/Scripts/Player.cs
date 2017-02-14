@@ -682,9 +682,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             GameObject g = Instantiate(go);
             g.transform.SetParent(transform);
             UsableItem ui = g.GetComponent<UsableItem>();
-			if (ui.itemName == "Magic Cape") {
-				jumpImpulse = 10.0f;
-			}
+
             if (leftItem == null)
             {
                 leftItem = ui;
@@ -699,7 +697,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 inventory.Add(ui);
             }
-            UIManager.Instance.StartCoroutine(UIManager.Instance.ShowFoundItemMessage(ui.description));
+			//UIManager.Instance.StartCoroutine(UIManager.Instance.ShowFoundItemMessage(ui.description));
             
         }
     }

@@ -134,6 +134,8 @@ public class Cutscene
 				c = cw;
 			} else if (p == "create") {
 				c = new CutsceneCreation (parts [1], parts [2], parts [3], parts [4]);
+			} else if (p == "add") {
+				c = new CutsceneAdd(Resources.Load<GameObject>(parts[1]));
 			}
 			else
 			{
@@ -180,6 +182,7 @@ public class Cutscene
 		}
 		else {
 			//End the cutscene
+
 			GameManager.Instance.IsInCutscene = false;
             UIManager.Instance.StartCoroutine("HideDialog");
     
@@ -187,6 +190,7 @@ public class Cutscene
 			{
 				ca.DestroySelf();
 			}
+				
 			return;
 		}
 
@@ -283,6 +287,9 @@ public class Cutscene
 			UIManager.Instance.WaitFor (cw.time);
 		} else if (currentNode is CutsceneCreation) {
 			(currentNode as CutsceneCreation).Create ();
+			NextElement ();
+		} else if (currentNode is CutsceneAdd) {
+			(currentNode as CutsceneAdd).Add ();
 			NextElement ();
 		}
 	}

@@ -84,6 +84,18 @@ public class CutsceneCreation : CutsceneElement {
 		go.transform.position = position;
 	}
 }
+
+public class CutsceneAdd: CutsceneElement {
+	GameObject prefab;
+
+	public CutsceneAdd(GameObject pfab) {
+		prefab = pfab;
+	}
+
+	public void Add() {
+		GameManager.Instance.Player.AddItem (GameObject.Instantiate (prefab));
+	}
+}
 public enum EffectType
 {
 	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical, Scale, ScaleX, ScaleY, ScaleXYInd

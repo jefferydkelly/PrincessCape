@@ -8,7 +8,7 @@ public class GameManager {
 	GameState state;
 	Player player;
 	Cutscene cutscene;
-	List<string> loadedAreas;
+
 	private GameManager()
 	{
 		state = GameState.Play;
@@ -16,8 +16,6 @@ public class GameManager {
         if (pObj) {
             player = pObj.GetComponent<Player>();
         }
-		loadedAreas = new List<string>();
-		loadedAreas.Add(SceneManager.GetActiveScene().name);
 		SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
