@@ -22,6 +22,7 @@ public class Checkpoint : JDMappableObject {
         myRenderer = GetComponent<SpriteRenderer>();
 		if (transform.childCount > 0) {
 			childAnimation = transform.GetChild (0).gameObject;
+            childAnimation.SetActive(false);
 		}
 		SceneManager.sceneLoaded += OnLevelLoaded;
 	}
@@ -32,7 +33,9 @@ public class Checkpoint : JDMappableObject {
 	void ActivateCheckpoint()
     {
 		if (!Activated) {
-			AudioManager.Instance.PlaySound (activateClip);
+            if(childAnimation != null)
+                childAnimation.SetActive(true);
+            AudioManager.Instance.PlaySound (activateClip);
 			foreach (GameObject cp in checkpoints) {
 				cp.GetComponent<Checkpoint> ().Activated = false;
 			}
@@ -58,7 +61,7 @@ public class Checkpoint : JDMappableObject {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.tag.Contains("Player"))
         {
             ActivateCheckpoint();
         }
