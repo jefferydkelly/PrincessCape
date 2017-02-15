@@ -13,16 +13,22 @@ flip-x Elwynn
 move Elwynn 0 1.25 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
 Sir Matthew: Princess Elwynn?
+pan -5 0 2
 show Matthew -18 4.5
 move Matthew -17 1.5 1
+pan 5 0 2
 flip-x Elwynn
 activate Gate true
 Sir Matthew: I'm here to save you from that dragon.
 move Matthew -13 1.5 1
+Sir Matthew: Have at me, foul beast!
 activate SlideDoor true
 Slag: Raaaaaaaaaaaaaaaw!
 flip-x Matthew
 Sir Matthew: What was that?
+fade-in Flames 0 -13 8
+rotate Flames 90 0
+fade-out Flames 0
 fade-in Flames 0.25 -13 8
 wait 0.5
 fade-out Flames 0.25
