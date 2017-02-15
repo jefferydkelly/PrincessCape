@@ -6,6 +6,6 @@ Sir Samuel: I was famous for my ability to attract people to my side but what th
 Sir Samuel: With my magnetic Pull Glove, I could draw enemies towards me and occasionally myself towards them.
 Sir Samuel: I have no more need of it.  Please take it and escape this dragon's lair.
 add Prefabs/PullGlove
-Samuel: You got thew Pull Glove.
-Samuel: Press the Item Key to activate and aim with the Arrow Keys.
-Samuel: You'll pull light items to you but if you pull against immovable objects, you'll be the one pulled.
+You got the Pull Glove.
+Press the Item Key to activate and aim with the Arrow Keys.
+You'll pull light items to you but if you pull against immovable objects, you'll be the one pulled.
