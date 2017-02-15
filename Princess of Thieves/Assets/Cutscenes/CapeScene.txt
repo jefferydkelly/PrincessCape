@@ -6,8 +6,8 @@ Sir Matthew: With my Magic Cape, I was able to fly through the battlefield and r
 Sir Matthew: Take it and in death, maybe I can give you the assistance I couldn't in life.
 fade-out Matthew 0.25
 add Prefabs/ReflectionCape
-Matthew: You took the Magic Cape from Sir Matthew!
-Matthew: Press the Item Key to activate it.
-Matthew: In the air, you'll float for a short time.
-Matthew: On the ground, you'll reflect items away from you.
+You took the Magic Cape from Sir Matthew!
+Press the Item Key to activate it.
+In the air, you'll float for a short time.
+On the ground, you'll reflect items away from you.
 wait 0.5

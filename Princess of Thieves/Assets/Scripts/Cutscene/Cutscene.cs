@@ -167,8 +167,13 @@ public class Cutscene
 			{
 				CutsceneDialog cd = new CutsceneDialog();
 				parts = line.Split(':');
-				cd.speaker = parts[0];
-				cd.dialog = parts[1];
+				if (parts.Length == 2) {
+					cd.speaker = parts [0];
+					cd.dialog = parts [1].Trim();
+				} else {
+					cd.speaker = null;
+					cd.dialog = parts [0].Trim();
+				}
 				c = cd;
 			}
 
@@ -223,8 +228,11 @@ public class Cutscene
 
 		if (currentNode is CutsceneDialog) {
 			CutsceneDialog d = currentNode as CutsceneDialog;
-
-			UIManager.Instance.RevealDialog (d.dialog, d.speaker);
+			if (d.speaker != null) {
+				UIManager.Instance.RevealDialog (d.dialog, d.speaker);
+			} else {
+				UIManager.Instance.RevealDialog (d.dialog);
+			}
 		} else if (currentNode is CutsceneMovement) {
 			CutsceneMovement m = currentNode as CutsceneMovement;
 			//Get the appropriate sprite and move it

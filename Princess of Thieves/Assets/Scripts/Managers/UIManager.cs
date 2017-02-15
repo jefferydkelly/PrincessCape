@@ -118,6 +118,7 @@ public class UIManager : MonoBehaviour
 	{
 		revealing = true;
 		dialogBox.Enabled = true;
+		nameBox.Enabled = false;
 		StartCoroutine(RevealLetters(msg));
 
 	}

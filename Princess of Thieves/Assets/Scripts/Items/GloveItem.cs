@@ -21,6 +21,7 @@ public class GloveItem : UsableItem {
 	protected Color lineColor;
 	protected static GloveItem activeGlove;
 	protected Vector2 hitNormal;
+	protected Vector2 hitPos;
 
 	[SerializeField]
 	protected float difWeight = 0.5f;
@@ -49,6 +50,7 @@ public class GloveItem : UsableItem {
 		if (hit && hit.collider.gameObject != target) {
 			target = hit.collider.gameObject;
 			hitNormal = hit.normal;
+			hitPos = hit.point;
 
 		}
 

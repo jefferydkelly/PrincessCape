@@ -62,6 +62,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		rangeRenderer = GetComponentsInChildren<SpriteRenderer> ()[2];
 		rangeRenderer.enabled = false;
 		manager = GameManager.Instance;
+
+
     }
 	// Use this for initialization
 	void Start()
@@ -78,6 +80,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         
         UIManager.Instance.UpdateUI(controller);
         inventory = new List<UsableItem>();
+
+		if (!startInventory.IsEmpty ()) {
+			foreach (GameObject go in startInventory) {
+				AddItem (go);
+			}
+		}
+
 		resetTimer = new Timer (() => {
 			manager.Reset();
 		}, 0.33f);
