@@ -119,7 +119,9 @@ public class CutsceneDisable: CutsceneElement {
 	}
 
 	public void Disable() {
-		hideObject.SetActive (false);
+		if (hideObject) {
+			hideObject.SetActive (false);
+		}
 	}
 }
 
@@ -130,7 +132,9 @@ public class CutsceneEnable: CutsceneElement {
 	}
 
 	public void Enable() {
-		hideObject.SetActive (true);
+		if (hideObject) {
+			hideObject.SetActive (true);
+		}
 	}
 }
 
