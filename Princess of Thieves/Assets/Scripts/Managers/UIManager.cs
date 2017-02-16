@@ -38,6 +38,8 @@ public class UIManager : MonoBehaviour
 
     GameObject inventoryMenu;
 
+	bool leftAligned = false;
+	int lettersPerLine = 69;
 
 	/*
 	 * If there isn't an instance of UIManager, set it to this and Reload everything.
@@ -150,6 +152,14 @@ public class UIManager : MonoBehaviour
 	{
 		done = false;
 		int lettersRevealed = 0;
+		if (!leftAligned) {
+			string opening = "";
+			for (int i = msg.Length; i < lettersPerLine; i++) {
+				opening += " ";
+			}
+			lettersRevealed += opening.Length;
+			msg = opening + msg;
+		}
 		interactionBox.Interaction = "Skip";
 		while (lettersRevealed < msg.Length)
 		{
@@ -400,6 +410,19 @@ public class UIManager : MonoBehaviour
 			rightBox.Enabled = value;
 			leftBox.Enabled = value;
 			interactionBox.Enabled = value;
+		}
+	}
+
+	public bool LeftAligned {
+		set {
+			leftAligned = value;
+			if (value) {
+				//dialogBox.txt.alignment = TextAnchor.UpperLeft;
+				nameBox.bg.rectTransform.anchoredPosition = new Vector2 (-1190, -420);
+			} else {
+				nameBox.bg.rectTransform.anchoredPosition= new Vector2(1190, -420);
+				//dialogBox.txt.alignment = TextAnchor.UpperRight;
+			}
 		}
 	}
 }

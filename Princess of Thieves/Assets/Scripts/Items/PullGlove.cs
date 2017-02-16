@@ -85,7 +85,11 @@ public class PullGlove : GloveItem {
 						moveDir -= player.TrueAim.YVector ();
 					}
 
-					moveDir = moveDir.normalized * -force;
+					if (Mathf.Abs (hitNormal.x) <= 0.1f) {
+						moveDir -= player.TrueAim.XVector ();
+					}
+
+					moveDir = moveDir.normalized * force;
 					//moveDir.Normalize ();
 					targetBody.AddForce (
 						moveDir,
