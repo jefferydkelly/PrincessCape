@@ -157,7 +157,6 @@ public class UIManager : MonoBehaviour
 			for (int i = msg.Length; i < lettersPerLine; i++) {
 				opening += " ";
 			}
-			Debug.Log ("Adding " + opening.Length);
 			lettersRevealed += opening.Length;
 			msg = opening + msg;
 		}
@@ -419,9 +418,9 @@ public class UIManager : MonoBehaviour
 			leftAligned = value;
 			if (value) {
 				//dialogBox.txt.alignment = TextAnchor.UpperLeft;
-				nameBox.bg.rectTransform.anchoredPosition = new Vector2 (-1190, -420);
+				nameBox.bg.rectTransform.anchoredPosition = new Vector2 (-1190, -600);
 			} else {
-				nameBox.bg.rectTransform.anchoredPosition= new Vector2(1190, -420);
+				nameBox.bg.rectTransform.anchoredPosition= new Vector2(1190, -600);
 				//dialogBox.txt.alignment = TextAnchor.UpperRight;
 			}
 		}

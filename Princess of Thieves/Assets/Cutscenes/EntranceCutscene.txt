@@ -1,7 +1,7 @@
 character Matthew Knights/SirMatthew
 character Elwynn Sprites/Elwynn
 pan to Player 0
-pan -9 2 0
+pan -6 2 0
 disable Player
 align right
 show Elwynn 0 1.25
@@ -15,9 +15,11 @@ Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
 show Matthew -17.25 1.5
 align left
 Sir Matthew: Princess Elwynn?
+pan -4 0 1
+Sir Matthew: I'm here to save you from that dragon.
 activate Gate true
 flip-x Elwynn
-Sir Matthew: I'm here to save you from that dragon.
+pan 2.5 0 1
 move Matthew -13 1.5 1
 activate SlideDoor true
 Slag: Raaaaaaaaaaaaaaaw!
