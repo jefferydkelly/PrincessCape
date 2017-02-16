@@ -134,7 +134,9 @@ public class Cutscene
 				c = cw;
 			} else if (p == "create") {
 				c = new CutsceneCreation (parts [1], parts [2], parts [3], parts [4]);
-			} else if (p == "add") {
+			} else if (p == "destroy") {
+				c = new CutsceneCreation (parts [1]);
+			}else if (p == "add") {
 				c = new CutsceneAdd (Resources.Load<GameObject> (parts [1]));
 			} else if (p == "disable") {
 				GameObject go;

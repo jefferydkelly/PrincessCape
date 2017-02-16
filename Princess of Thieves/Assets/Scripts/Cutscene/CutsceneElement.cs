@@ -74,14 +74,29 @@ public class CutsceneEffect : CutsceneElement
 public class CutsceneCreation : CutsceneElement {
 	GameObject prefab;
 	Vector3 position;
+	string objectName;
+	bool destroy = false;
 	public CutsceneCreation(string name, string dx, string dy, string dz) {
 		prefab = Resources.Load<GameObject> (name);
 		position = new Vector3 (float.Parse (dx), float.Parse (dy), float.Parse (dz));
 	}
 
+	public CutsceneCreation(string name) {
+		objectName = name;
+		destroy = true;
+	}
+
 	public void Create() {
-		GameObject go = GameObject.Instantiate (prefab);
-		go.transform.position = position;
+		if (!destroy) {
+			GameObject go = GameObject.Instantiate (prefab);
+			go.name = prefab.name;
+			go.transform.position = position;
+		} else {
+			GameObject go = GameObject.Find (objectName);
+			if (go) {
+				GameObject.Destroy (go);
+			}
+		}
 	}
 }
 

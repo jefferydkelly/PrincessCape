@@ -1,5 +1,4 @@
 character Matthew Knights/SirMatthew
-character Flames Sprites/SlagFlames
 character Elwynn Sprites/Elwynn
 pan to Player 0
 pan -9 2 0
@@ -26,12 +25,9 @@ activate SlideDoor true
 Slag: Raaaaaaaaaaaaaaaw!
 flip-x Matthew
 Sir Matthew: What was that?
-fade-in Flames 0 -13 8
-rotate Flames 90 0
-fade-out Flames 0
-fade-in Flames 0.25 -13 8
-wait 0.5
-fade-out Flames 0.25
+create Prefabs/DragonsBreath -13 5.5 0
+wait 1
+destroy DragonsBreath
 activate SlideDoor false
 Sir Matthew: Help!  I'm on fire!
 flip-x Matthew
