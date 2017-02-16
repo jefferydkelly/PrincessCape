@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
 
     GameObject inventoryMenu;
 
-	bool leftAligned = false;
+	bool leftAligned = true;
 	int lettersPerLine = 69;
 
 	/*
@@ -418,9 +418,9 @@ public class UIManager : MonoBehaviour
 			leftAligned = value;
 			if (value) {
 				//dialogBox.txt.alignment = TextAnchor.UpperLeft;
-				nameBox.bg.rectTransform.anchoredPosition = new Vector2 (-1190, -420);
+				nameBox.bg.rectTransform.anchoredPosition = new Vector2 (-1190, -600);
 			} else {
-				nameBox.bg.rectTransform.anchoredPosition= new Vector2(1190, -420);
+				nameBox.bg.rectTransform.anchoredPosition= new Vector2(1190, -600);
 				//dialogBox.txt.alignment = TextAnchor.UpperRight;
 			}
 		}

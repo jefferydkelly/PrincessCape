@@ -46,7 +46,7 @@ public class PullGlove : GloveItem {
 			}
 		}
 		if (target != null) {
-			Vector2 distance = hitPos - (Vector2)player.transform.position;//target.transform.position - player.transform.position;
+			Vector2 distance = target.transform.position - player.transform.position;
 			Vector2 moveDir = Vector3.zero;
 
 			if (distance.sqrMagnitude <= range * range) {
@@ -80,19 +80,13 @@ public class PullGlove : GloveItem {
 						moveDir * force,
 						ForceMode2D.Force);
 				} else {
-					
 					if (Mathf.Abs (hitNormal.y) <= 0.1f) {
 						moveDir -= player.TrueAim.YVector ();
 					}
-
-					if (Mathf.Abs (hitNormal.x) <= 0.1f) {
-						moveDir -= player.TrueAim.XVector ();
-					}
-
-					moveDir = moveDir.normalized * force;
-					//moveDir.Normalize ();
+						
+					moveDir.Normalize ();
 					targetBody.AddForce (
-						moveDir,
+						moveDir * -force,
 						ForceMode2D.Force);
 					targetBody.ClampVelocity (maxTargetSpeed);
 				}
