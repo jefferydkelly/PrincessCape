@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
 
     GameObject inventoryMenu;
 
-	bool leftAligned = false;
+	bool leftAligned = true;
 	int lettersPerLine = 69;
 
 	/*
@@ -157,6 +157,7 @@ public class UIManager : MonoBehaviour
 			for (int i = msg.Length; i < lettersPerLine; i++) {
 				opening += " ";
 			}
+			Debug.Log ("Adding " + opening.Length);
 			lettersRevealed += opening.Length;
 			msg = opening + msg;
 		}
