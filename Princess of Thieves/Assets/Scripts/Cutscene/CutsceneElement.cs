@@ -157,6 +157,18 @@ public class CutsceneActivate: CutsceneElement {
 		}
 	}
 }
+
+public class CutsceneAlign: CutsceneElement {
+	bool left;
+
+	public CutsceneAlign(bool l) {
+		left = l;
+	}
+
+	public void Activate() {
+		UIManager.Instance.LeftAligned = left;
+	}
+}
 public enum EffectType
 {
 	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical, Scale, ScaleX, ScaleY, ScaleXYInd

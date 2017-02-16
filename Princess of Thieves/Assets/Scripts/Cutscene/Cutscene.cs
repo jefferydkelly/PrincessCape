@@ -136,7 +136,7 @@ public class Cutscene
 				c = new CutsceneCreation (parts [1], parts [2], parts [3], parts [4]);
 			} else if (p == "destroy") {
 				c = new CutsceneCreation (parts [1]);
-			}else if (p == "add") {
+			} else if (p == "add") {
 				c = new CutsceneAdd (Resources.Load<GameObject> (parts [1]));
 			} else if (p == "disable") {
 				GameObject go;
@@ -164,6 +164,8 @@ public class Cutscene
 						c = new CutsceneActivate (ao, parts [2] == "true");
 					}
 				}
+			} else if (p == "align") {
+				c = new CutsceneAlign (parts [1] == "left");
 			}
 			else
 			{
@@ -338,6 +340,9 @@ public class Cutscene
 			CutsceneActivate ca = (currentNode as CutsceneActivate);
 			ca.Activate ();
 			UIManager.Instance.WaitFor (ca.RunTime);
+		} else if (currentNode is CutsceneAlign) {
+			(currentNode as CutsceneAlign).Activate ();
+			NextElement ();
 		}
 	}
 

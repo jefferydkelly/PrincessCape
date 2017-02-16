@@ -3,6 +3,7 @@ character Elwynn Sprites/Elwynn
 pan to Player 0
 pan -9 2 0
 disable Player
+align right
 show Elwynn 0 1.25
 flip-x Elwynn
 Elwynn: Kidnapped by another dragon?
@@ -11,30 +12,31 @@ Elwynn: How many times do that make it this year?
 flip-x Elwynn
 move Elwynn 0 1.25 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
+show Matthew -17.25 1.5
+align left
 Sir Matthew: Princess Elwynn?
-pan -5 0 2
-show Matthew -18 4.5
-move Matthew -17 1.5 1
-pan 5 0 2
-flip-x Elwynn
 activate Gate true
+flip-x Elwynn
 Sir Matthew: I'm here to save you from that dragon.
 move Matthew -13 1.5 1
-Sir Matthew: Have at me, foul beast!
 activate SlideDoor true
 Slag: Raaaaaaaaaaaaaaaw!
+Sir Matthew: There you are!
 flip-x Matthew
-Sir Matthew: What was that?
+Sir Matthew: Have at me, foul beast!
 create Prefabs/DragonsBreath -13 5.5 0
 wait 1
 destroy DragonsBreath
 activate SlideDoor false
 Sir Matthew: Help!  I'm on fire!
 flip-x Matthew
-move Matthew -5 1.5 0.33
+move Matthew -3 1.5 2.0
+Sir Matthew: Hot!
+move Matthew -13 1.5 2.0
+move Matthew -5 1.5 1
 create Prefabs/Fire -7 1.75 0
 create Prefabs/Fire -8 1.75 0
-move Matthew -3 1.5 0.66
+move Matthew -3 1.5 0.25
 rotate Matthew -90 0.25
 move Matthew -1.75 1 0.25
 Sir Matthew: I'm....so...sorry!
