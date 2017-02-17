@@ -13,6 +13,9 @@ public class AudioManager {
 	}
 
 	public void PlaySound(AudioClip ac) {
+		if (GameManager.Instance.IsInCutscene) {
+			AudioListener.pause = false;
+		}
 		source.clip = ac;
 		source.Play ();
 	}
@@ -54,7 +57,6 @@ public class AudioManager {
 
 				return instance;
 			}
-			Debug.Log ("You're trying to reference the audio manager while the game is closing.");
 			return null;
 		}
 	}

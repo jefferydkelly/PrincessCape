@@ -22,12 +22,14 @@ flip-x Elwynn
 pan 2.5 0 1
 move Matthew -13 1.5 1
 activate SlideDoor true
+play dragon-roar
 Slag: Raaaaaaaaaaaaaaaw!
 Sir Matthew: There you are!
 flip-x Matthew
 Sir Matthew: Have at me, foul beast!
+play dragon-fire
 create Prefabs/DragonsBreath -13 5.5 0
-wait 1
+wait 2
 destroy DragonsBreath
 activate SlideDoor false
 Sir Matthew: Help!  I'm on fire!
