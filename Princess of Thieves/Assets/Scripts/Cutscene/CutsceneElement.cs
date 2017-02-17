@@ -238,7 +238,6 @@ public class CutsceneCreation : CutsceneElement {
 	string objectName;
 	bool destroy = false;
 	public CutsceneCreation(string name, string dx, string dy, string dz) {
-		name = name.Replace ('/', Path.DirectorySeparatorChar);
 		prefab = Resources.Load<GameObject> (name);
 		position = new Vector3 (float.Parse (dx), float.Parse (dy), float.Parse (dz));
 		autoAdvance = true;
@@ -338,7 +337,7 @@ public class CutsceneAlign: CutsceneElement {
 public class CutscenePlay: CutsceneElement {
 	AudioClip soundEffect;
 	public CutscenePlay(string s) {
-		soundEffect = Resources.Load<AudioClip> ("Sounds" + Path.DirectorySeparatorChar + s);
+		soundEffect = Resources.Load<AudioClip> ("Sounds/" + s);
 		autoAdvance = true;
 	}
 
