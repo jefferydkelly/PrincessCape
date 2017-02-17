@@ -68,7 +68,8 @@ public class Cutscene
 			} else if (p == "destroy") {
 				c = new CutsceneCreation (parts [1]);
 			} else if (p == "add") {
-				c = new CutsceneAdd (Resources.Load<GameObject> (parts [1]));
+				string path = parts [1].Replace ('/', Path.DirectorySeparatorChar);
+				c = new CutsceneAdd (Resources.Load<GameObject> (path));
 			} else if (p == "disable") {
 				GameObject go;
 				CutsceneActor ca = FindActor (parts [1]);
@@ -182,7 +183,8 @@ public class Cutscene
 
 	public void CreateCharacter(string charName, string spriteName)
 	{
-		Sprite s = Resources.Load<Sprite>(spriteName);
+		string path = spriteName.Replace ('/', Path.DirectorySeparatorChar);
+		Sprite s = Resources.Load<Sprite>(path);
 		if (s)
 		{
 			CutsceneCharacter cc = new CutsceneCharacter(charName, s);
