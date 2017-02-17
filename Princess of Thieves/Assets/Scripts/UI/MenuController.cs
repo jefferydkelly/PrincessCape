@@ -16,8 +16,8 @@ public class MenuController : MonoBehaviour {
 	protected WaitDelegate inputDelegate;
 	protected Timer inputTimer;
 
-	void Start() {
-		current = this;
+    void Start() {
+        current = this;
 		GameObject curSelected = EventSystem.current.firstSelectedGameObject;
 		if (curSelected) {
 			selected = curSelected.GetComponent<Button> ();
