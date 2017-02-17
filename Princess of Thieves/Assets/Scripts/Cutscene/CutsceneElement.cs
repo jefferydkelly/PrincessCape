@@ -174,21 +174,24 @@ public class CutsceneEffect : CutsceneElement
 	{
 		Cutscene cutscene = GameManager.Instance.Cutscene;
 		CutsceneActor myActor = cutscene.FindActor (affected);
-		if (type == EffectType.Show || type == EffectType.FadeIn) {
-			if (myActor == null) {
-				CutsceneCharacter myCharacter = cutscene.FindCharacter (affected);
-				if (myCharacter.characterName == affected) {
-					GameObject go = new GameObject (myCharacter.characterName);
-					go.AddComponent<SpriteRenderer> ();
-					myActor = go.AddComponent<CutsceneActor> ();
-					myActor.MyInfo = myCharacter;
-					myActor.parentCutscene = cutscene;
-					cutscene.AddActorToStage(myActor);
-					//myActor.transform.parent;// = UIManager.Instance.transform;
-				}
-			}
+        
+        if (type == EffectType.Show || type == EffectType.FadeIn) {
 
-			if (myActor && myActor.IsHidden) {
+            if (myActor == null)
+            {
+                CutsceneCharacter myCharacter = cutscene.FindCharacter(affected);
+                if (myCharacter.characterName == affected)
+                {
+                    GameObject go = new GameObject(myCharacter.characterName);
+                    go.AddComponent<SpriteRenderer>();
+                    myActor = go.AddComponent<CutsceneActor>();
+                    myActor.MyInfo = myCharacter;
+                    myActor.parentCutscene = cutscene;
+                    cutscene.AddActorToStage(myActor);
+                    //myActor.transform.parent;// = UIManager.Instance.transform;
+                }
+            }
+            if (myActor && myActor.IsHidden) {
 
 				Vector3 aPosition = new Vector3 (x, y);
 
@@ -363,7 +366,7 @@ public class CutsceneSpriteChange : CutsceneElement
 
 	public CutsceneSpriteChange(string target, string spriteName) {
 		affected = target;
-		newSprite = spriteName.Replace('/', Path.DirectorySeparatorChar);
+        newSprite = spriteName.Trim();
 		autoAdvance = true;
 	}
 

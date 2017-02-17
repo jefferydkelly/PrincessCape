@@ -47,9 +47,9 @@ public class Cutscene
 				c = new CutsceneMovement (parts [1], MoveTypes.XY, float.Parse (parts [2]), float.Parse (parts [3]), parts.Length == 5 ? float.Parse (parts [4]) : 0);
 			} else if (p == "character") {
 				if (parts.Length == 2) {
-					CreateCharacter (parts [1]);
+					CreateCharacter (parts [1].Trim());
 				} else {
-					CreateCharacter (parts [1], parts [2]);
+					CreateCharacter (parts [1].Trim(), parts [2]);
 				}
 				continue;
 			} else if (p == "swap-sprite") {
@@ -66,39 +66,39 @@ public class Cutscene
 			} else if (p == "create") {
 				c = new CutsceneCreation (parts [1], parts [2], parts [3], parts [4]);
 			} else if (p == "destroy") {
-				c = new CutsceneCreation (parts [1]);
+				c = new CutsceneCreation (parts [1].Trim());
 			} else if (p == "add") {
-				c = new CutsceneAdd (Resources.Load<GameObject> (parts[1]));
+				c = new CutsceneAdd (Resources.Load<GameObject> (parts[1].Trim()));
 			} else if (p == "disable") {
 				GameObject go;
-				CutsceneActor ca = FindActor (parts [1]);
+				CutsceneActor ca = FindActor (parts [1].Trim());
 				if (ca == null) {
-					go = GameObject.Find (parts [1]);
+					go = GameObject.Find (parts [1].Trim());
 				} else {
 					go = ca.gameObject;
 				}
 				c = new CutsceneEnable (go, false);
 			} else if (p == "enable") {
 				GameObject go;
-				CutsceneActor ca = FindActor (parts [1]);
+				CutsceneActor ca = FindActor (parts [1].Trim());
 				if (ca == null) {
-					go = GameObject.Find (parts [1]);
+					go = GameObject.Find (parts [1].Trim());
 				} else {
 					go = ca.gameObject;
 				}
 				c = new CutsceneEnable (go, true);
 			} else if (p == "activate") {
-				GameObject go = GameObject.Find (parts [1]);
+                GameObject go = GameObject.Find(parts[1].Trim());
 				if (go != null) {
 					ActivateableObject ao = go.GetComponent<ActivateableObject> ();
 					if (ao != null) {
-						c = new CutsceneActivate (ao, parts [2] == "true");
+						c = new CutsceneActivate (ao, parts [2].Trim() == "true");
 					}
 				}
 			} else if (p == "align") {
-				c = new CutsceneAlign (parts [1] == "left");
+				c = new CutsceneAlign (parts [1].Trim() == "left");
 			} else if (p == "play") {
-				c = new CutscenePlay (parts [1]);
+				c = new CutscenePlay (parts [1].Trim());
 			}
 			else
 			{
@@ -182,7 +182,7 @@ public class Cutscene
 
 	public void CreateCharacter(string charName, string spriteName)
 	{
-		Sprite s = Resources.LoadAll<Sprite>(spriteName)[0];
+        Sprite s = Resources.Load<Sprite>(spriteName.Trim());
 		if (s)
 		{
 			CutsceneCharacter cc = new CutsceneCharacter(charName, s);
@@ -200,7 +200,7 @@ public class Cutscene
 	{
 		foreach (CutsceneActor ca in charactersOnStage)
 		{
-			if (ca.CharacterName == actorName)
+			if (ca.CharacterName.Trim().Equals(actorName.Trim()))
 			{
 				return ca;
 			}
