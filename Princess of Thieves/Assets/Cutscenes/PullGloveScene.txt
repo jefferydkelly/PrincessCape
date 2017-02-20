@@ -9,5 +9,5 @@ add Prefabs/PullGlove
 You got the Pull Glove.
 Press the Item Key to activate and aim with the Arrow Keys to pull against metal objects.
 You'll pull light items to you but if you pull against immovable objects, you'll be the one pulled.
-The gloves will stay attuned to a target for a brief period after releasing the key.
+The gloves will stay attuned to a target for a brief period after releasing the key so you can tap the key to make precise movements.
 destroy SamuelCorpse
