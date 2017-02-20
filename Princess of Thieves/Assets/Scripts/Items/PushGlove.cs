@@ -43,6 +43,7 @@ public class PushGlove : GloveItem{
 				direction = PushPullDirection.Left;
 			}*/
 
+			player.IsFrozen = !pushingOnTarget;
 		}
 			
 	}
@@ -56,7 +57,11 @@ public class PushGlove : GloveItem{
 				ResetTargetTimer.Stop ();
 			}
 		}
+
+
+
 		if (target) {
+			player.IsFrozen = !pushingOnTarget;
 			Vector2 distance = target.transform.position - player.transform.position;
 
 			Vector2 moveDir;
