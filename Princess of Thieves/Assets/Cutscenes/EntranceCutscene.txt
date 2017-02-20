@@ -1,4 +1,4 @@
-character Matthew Knights/Temp
+character Matthew Knights/SirMatthew
 character Elwynn Sprites/Elwynn
 pan to Player 0
 pan -6 2 0
@@ -12,20 +12,19 @@ Elwynn: How many times does that make it this year?
 flip-x Elwynn
 move Elwynn 0 1.25 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
-show Matthew -17.25 1.25
-scalex Matthew 0.15 0.1
-scaley Matthew 0.15 0.1
+show Matthew -18 2.5
+pan -4 0 1
+move Matthew -17.25 1.5 0.5
 align left
 Sir Matthew: Princess Elwynn?
-pan -4 0 1
 Sir Matthew: I'm here to save you from that dragon.
 activate Gate true
 flip-x Elwynn
-move Matthew -13 1.25 1
+move Matthew -13 1.5 1
 pan 2.5 0 1
 activate SlideDoor true
 play dragon-roar
-create Prefabs/DragonClosed -13 12 0
+create Prefabs/DragonClosed -13 9 0
 Slag: Raaaaaaaaaaaaaaaw!
 Sir Matthew: There you are!
 flip-x Matthew
@@ -38,12 +37,12 @@ destroy DragonClosed
 activate SlideDoor false
 Sir Matthew: Help!  I'm on fire!
 flip-x Matthew
-move Matthew -3 1.25 2.0
+move Matthew -3 1.5 2.0
 Sir Matthew: Hot!
-move Matthew -13 1.25 2.0
-move Matthew -5 1.25 1
-create Prefabs/NewFire -6 1.75 0
-create Prefabs/NewFire -9 1.75 0
+move Matthew -13 1.5 2.0
+move Matthew -5 1.5 1
+create Prefabs/Fire -7 1.75 0
+create Prefabs/Fire -8 1.75 0
 move Matthew -3 1.5 0.25
 rotate Matthew -90 0.25
 move Matthew -1.75 1 0.25
