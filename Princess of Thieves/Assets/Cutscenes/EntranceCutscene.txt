@@ -19,8 +19,8 @@ pan -4 0 1
 Sir Matthew: I'm here to save you from that dragon.
 activate Gate true
 flip-x Elwynn
-pan 2.5 0 1
 move Matthew -13 1.5 1
+pan 2.5 0 1
 activate SlideDoor true
 play dragon-roar
 create Prefabs/DragonClosed -13 9 0
