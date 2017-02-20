@@ -23,14 +23,16 @@ pan 2.5 0 1
 move Matthew -13 1.5 1
 activate SlideDoor true
 play dragon-roar
+create Prefabs/DragonClosed -13 9 0
 Slag: Raaaaaaaaaaaaaaaw!
 Sir Matthew: There you are!
 flip-x Matthew
 Sir Matthew: Have at me, foul beast!
 play dragon-fire
-create Prefabs/DragonsBreath -13 5.5 0
+create Prefabs/DragonsBreath -12.5 3 0
 wait 2
 destroy DragonsBreath
+destroy DragonClosed
 activate SlideDoor false
 Sir Matthew: Help!  I'm on fire!
 flip-x Matthew
