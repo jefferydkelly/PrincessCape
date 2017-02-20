@@ -12,10 +12,11 @@ Elwynn: How many times does that make it this year?
 flip-x Elwynn
 move Elwynn 0 1.25 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
-show Matthew -17.25 1.5
+show Matthew -18 2.5
+pan -4 0 1
+move Matthew -17.25 1.5 0.5
 align left
 Sir Matthew: Princess Elwynn?
-pan -4 0 1
 Sir Matthew: I'm here to save you from that dragon.
 activate Gate true
 flip-x Elwynn
