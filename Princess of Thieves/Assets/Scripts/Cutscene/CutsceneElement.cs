@@ -34,7 +34,7 @@ public class CutsceneDialog : CutsceneElement
 	/// <param name="dia">Dia.</param>
 	public CutsceneDialog(string spk, string dia) {
 		speaker = spk;
-		dialog = dia;
+		dialog = dia.Replace ("\\n", "\n").Trim();
 	}
 
 	/// <summary>
@@ -43,7 +43,7 @@ public class CutsceneDialog : CutsceneElement
 	/// <param name="dia">Dia.</param>
 	public CutsceneDialog(string dia) {
 		speaker = null;
-		dialog = dia;
+		dialog = dia.Replace ("\\n", "\n").Trim();
 	}
 
 	public override void Run ()

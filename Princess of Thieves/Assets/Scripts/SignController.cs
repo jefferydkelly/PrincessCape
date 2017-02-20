@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class SignController : MonoBehaviour, InteractiveObject {
 	[SerializeField]
-	string[] message;
+	TextAsset sourceFile;
 	SpriteRenderer myRenderer;
 	public void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
 	}
 	public void Interact() {
-		StartCoroutine(UIManager.Instance.ShowFoundItemMessage (message));
+		GameManager.Instance.StartCutscene (sourceFile);
 	}
 
 	public void Highlight() {

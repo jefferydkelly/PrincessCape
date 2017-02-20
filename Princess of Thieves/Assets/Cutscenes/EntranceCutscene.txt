@@ -8,7 +8,7 @@ show Elwynn 0 1.25
 flip-x Elwynn
 Elwynn: Kidnapped by another dragon?
 move Elwynn -3 1.25 1.5
-Elwynn: How many times do that make it this year?
+Elwynn: How many times does that make it this year?
 flip-x Elwynn
 move Elwynn 0 1.25 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
