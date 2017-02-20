@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class KnightCorpse : JDMappableObject, InteractiveObject {
 
-	bool looted = false;
-	[SerializeField]
-	GameObject contents;
 	SpriteRenderer myRenderer;
 	Color startColor;
 	[SerializeField]
@@ -20,36 +17,26 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 
 	public void Interact()
 	{
-		if (!looted)
-		{
-			myRenderer.color = startColor;
-			looted = true;
-			UIManager.Instance.ShowInteraction("");
-			GameManager.Instance.StartCutscene (cutsceneFile);
-		}
-	}
-
-	void GiveItem() {
-		GameManager.Instance.Player.AddItem(contents);
+		myRenderer.color = startColor;
+		UIManager.Instance.ShowInteraction("");
+		GameManager.Instance.StartCutscene (cutsceneFile);
 	}
 
 	public void Highlight()
 	{
-		if (!looted)
-		{
-			UIManager.Instance.ShowInteraction("Loot");
-			myRenderer.color = Color.blue;
-			//myRenderer.sprite = highlightedSprite;
-		}
+		UIManager.Instance.ShowInteraction("Loot");
+		myRenderer.color = Color.blue;
+		//myRenderer.sprite = highlightedSprite;
 	}
 
 	public void Dehighlight()
 	{
-		if (!looted)
-		{
-			UIManager.Instance.ShowInteraction("");
-			myRenderer.color = startColor;
-			//myRenderer.sprite = closedSprite;
-		}
+		UIManager.Instance.ShowInteraction("");
+		myRenderer.color = startColor;
+		//myRenderer.sprite = closedSprite;
+	}
+
+	void OnDestroy() {
+		GameManager.Instance.Player.HighlightedDestroyed (this);
 	}
 }

@@ -152,7 +152,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 							Jump ();
 						} else if (!collidingWithHighlighted) {
                      
-							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3(0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 0.75f, 1 << LayerMask.NameToLayer ("Interactive"));
+							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3 (0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 1, 1 << LayerMask.NameToLayer ("Interactive"));
 
 							if (hit.collider != null) {
 								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
@@ -376,9 +376,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			} else {
 				col.isTrigger = true;
 			}
-		} else if (col.OnLayer ("Interactive")) {
-			InteractiveObject io = col.GetComponent<InteractiveObject> ();
+		} 
 
+		if (col.OnLayer ("Interactive") && !IsClimbing) {
+			InteractiveObject io = col.GetComponent<InteractiveObject> ();
 			if (io != null) {
 				if (controller.Interact) {
 					io.Interact ();
@@ -388,11 +389,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					}
 
 					highlighted = io;
-
+					highlightedBody = col.GetComponent<Rigidbody2D> ();
 					highlighted.Highlight ();
 				}
-
-				collidingWithHighlighted = (io == highlighted);
+				collidingWithHighlighted = true;
 			}
 		}
     }
@@ -424,7 +424,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 		if (col.CompareTag ("Water")) {
 			inWater = false;
-		} else if (col.OnLayer("Interactive")){
+		} 
+
+		if (col.OnLayer("Interactive")){
 			InteractiveObject io = col.GetComponent<InteractiveObject> ();
 
 			if (io == highlighted) {
@@ -789,7 +791,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		{
 			if (value)
 			{
-				state |= PlayerState.IsClimbing;
+				if (leftItem && leftItem.IsActive) {
+					leftItem.Deactivate ();
+				}
+
+				if (rightItem && rightItem.IsActive) {
+					rightItem.Deactivate ();
+				}
+				state = PlayerState.IsClimbing;
 				myRigidBody.gravityScale = 0;
 				UIManager.Instance.ShowInteraction ("Get Off");
 
@@ -996,6 +1005,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	public void HighlightedDestroyed(InteractiveObject io) {
+		if (io == highlighted) {
+			highlighted = null;
+			highlightedBody = null;
+		}
+	}
+
 	public void ShowMagnetRange(Color c) {
 		rangeRenderer.enabled = true;
 		rangeRenderer.color = c;
@@ -1033,7 +1049,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 oldItem = leftItem;
                 leftItem = inventory[itemNum];
 				leftItem.itemBox = UIManager.Instance.LeftItemBox;
-				Debug.Log (leftItem.itemBox == null);
             } else
             {
                 oldItem = rightItem;
