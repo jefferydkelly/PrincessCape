@@ -323,7 +323,7 @@ public class Controller
                 controls += "Interact: " + InteractKey + "\n";
                 controls += "Left Item: " + LeftItemKey + "\n";
                 controls += "Right Item: " + RightItemKey + "\n";
-                controls += "Pause: " + pauseKey + "\n";
+                controls += "Pause/Inventory: " + pauseKey + "\n";
             //}
             return controls;
         }
