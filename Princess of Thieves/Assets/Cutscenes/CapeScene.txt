@@ -9,6 +9,6 @@ add Prefabs/ReflectionCape
 You took the Magic Cape from Sir Matthew!
 Press the Item Key to activate it.
 In the air, you'll float for a short time.
-On the ground, you'll reflect items away from you.
+On the ground, aim with the Arrow Keys and you'll reflect anything that hits you in that direction.
 destroy MatthewCorpse
 wait 0.5
