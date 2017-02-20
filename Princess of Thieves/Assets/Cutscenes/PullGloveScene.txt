@@ -1,5 +1,5 @@
 character Samuel Knights/SamuelGhost
-fade-in Samuel 0.25 5.4 1.5
+fade-in Samuel 0.25 5.4 2.5
 Sir Samuel: Princess Elwynn?  All the gods and goddesses bless you!  You're alive.
 Sir Samuel: In life, I was known as Sir Samuel of House Acaba, the Bard Knight.
 Sir Samuel: I was famous for my ability to attract people to my side but what they didn't know was my secret item.
@@ -8,6 +8,7 @@ Sir Samuel: I have no more need of it.  Please take it and escape this dragon's 
 add Prefabs/PullGlove
 You got the Pull Glove.
 Press the Item Key to activate and aim with the Arrow Keys to pull against metal objects.
-You'll pull light items to you but if you pull against immovable objects, you'll be the one pulled.
+When you target movable objects, you'll bring them towards you and can move it with the Arrow Keys.
+If you pull against immovable objects, you'll be the one pulled and can move around.
 The gloves will stay attuned to a target for a brief period after releasing the key so you can tap the key to make precise movements.
 destroy SamuelCorpse
