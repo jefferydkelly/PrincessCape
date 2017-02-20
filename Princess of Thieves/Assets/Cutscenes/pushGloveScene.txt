@@ -9,3 +9,6 @@ add Prefabs/PushGlove
 You got the Push Glove.
 Press the Item Key to activate and aim with the Arrow Keys.
 You'll push light items to you but if you push against immovable objects, you'll be the one pushed.
+Press P to open the Inventory Menu and use X or C to assign it to an Item Slot.
+Press P again to close the menu.
+destroy LiamCorpse

@@ -19,16 +19,28 @@ public class CutsceneElement
 	}
 }
 
+/// <summary>
+/// A container for cutscene dialog
+/// </summary>
 public class CutsceneDialog : CutsceneElement
 {
 	string speaker = "Character";
 	string dialog = "Hi, I'm a character";
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="CutsceneDialog"/> class with a speaker and a line.
+	/// </summary>
+	/// <param name="spk">Spk.</param>
+	/// <param name="dia">Dia.</param>
 	public CutsceneDialog(string spk, string dia) {
 		speaker = spk;
 		dialog = dia;
 	}
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="CutsceneDialog"/> class for duration.
+	/// </summary>
+	/// <param name="dia">Dia.</param>
 	public CutsceneDialog(string dia) {
 		speaker = null;
 		dialog = dia;
@@ -44,6 +56,9 @@ public class CutsceneDialog : CutsceneElement
 	}
 }
 
+/// <summary>
+/// Camera pan.
+/// </summary>
 public class CameraPan : CutsceneElement
 {
 	Vector2 panDistance = Vector2.zero;
@@ -51,6 +66,11 @@ public class CameraPan : CutsceneElement
 	Vector3 panEnding;
 	bool panTo;
 
+	/// <summary>
+	/// Initializes a new <see cref="CameraPan"/>.
+	/// </summary>
+	/// <param name="pd">The distance which the Camera will be panned.</param>
+	/// <param name="t">The duration of the pan.</param>
 	public CameraPan(Vector2 pd, float t)
 	{
 		panDistance = pd;
@@ -58,6 +78,11 @@ public class CameraPan : CutsceneElement
 		panTo = false;
 	}
 
+	/// <summary>
+	/// Initializes a new <see cref="CameraPan"/> to the given location.
+	/// </summary>
+	/// <param name="pd">The ending of the pan</param>
+	/// <param name="t">The duration of the pan</param>
 	public CameraPan(Vector3 pd, float t)
 	{
 		panEnding = pd;
@@ -75,10 +100,17 @@ public class CameraPan : CutsceneElement
 	}
 }
 
+/// <summary>
+/// Cutscene wait.
+/// </summary>
 public class CutsceneWait : CutsceneElement
 {
 	float time;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="CutsceneWait"/> class.
+	/// </summary>
+	/// <param name="dt">The duration of the wait.</param>
 	public CutsceneWait(float dt) {
 		time = dt;
 	}

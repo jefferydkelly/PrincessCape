@@ -7,6 +7,7 @@ Sir Samuel: With my magnetic Pull Glove, I could draw enemies towards me and occ
 Sir Samuel: I have no more need of it.  Please take it and escape this dragon's lair.
 add Prefabs/PullGlove
 You got the Pull Glove.
-Press the Item Key to activate and aim with the Arrow Keys.
+Press the Item Key to activate and aim with the Arrow Keys to pull against metal objects.
 You'll pull light items to you but if you pull against immovable objects, you'll be the one pulled.
+The gloves will stay attuned to a target for a brief period after releasing the key.
 destroy SamuelCorpse
