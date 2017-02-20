@@ -219,9 +219,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		{
             manager.IsInMenu = !manager.IsInMenu;
 
-		} else if (Controller.Jump)
+		}
+        else if (Controller.Jump)
         {
             tryingToJump = true;
+        }
+        else if (Controller.ResetKey)
+        {
+           // IsDead = true;
+            GameManager.Instance.Reset();
         }
 
 		if (!manager.IsPaused)
@@ -1056,7 +1062,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		myRigidBody.gravityScale = 1.5f;
 		myRenderer.material.color = Color.white;
 		state = PlayerState.Normal;
-		transform.Rotate (Vector3.forward, -90);
+		transform.rotation = Quaternion.Euler(0, 0, 0);// (Vector3.forward, -90);
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
         curHP = maxHP;

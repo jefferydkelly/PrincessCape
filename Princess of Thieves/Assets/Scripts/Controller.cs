@@ -23,6 +23,8 @@ public class Controller
 	string pauseKey;
 	string submitKey;
 
+    string resetKey;
+
 	Controller360 gamepad;
 
     public Controller()
@@ -64,6 +66,7 @@ public class Controller
             peerDownKey = "a";
             peerUpKey = "q";
 			submitKey = "enter";
+            resetKey = "escape";
 
         }
         else
@@ -173,6 +176,14 @@ public class Controller
         get
         {
             return Input.GetKeyDown(interactKey);
+        }
+
+    }
+    public bool ResetKey
+    {
+        get
+        {
+            return Input.GetKeyDown(resetKey);
         }
     }
 
@@ -324,6 +335,7 @@ public class Controller
                 controls += "Left Item: " + LeftItemKey + "\n";
                 controls += "Right Item: " + RightItemKey + "\n";
                 controls += "Pause/Inventory: " + pauseKey + "\n";
+                controls += "Reset: " + resetKey + "\n";
             //}
             return controls;
         }
