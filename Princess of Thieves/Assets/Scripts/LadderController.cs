@@ -6,6 +6,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	SpriteRenderer myRenderer;
 	bool ladderAbove;
 	bool ladderBelow;
+	bool collidingWithPlayer;
 	void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
 
@@ -49,6 +50,28 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		}
 	}
 
+	void OnDestroy() {
+
+		if (myRenderer.color == Color.blue) {
+			GameManager.Instance.Player.HighlightedDestroyed (this);
+		}
+		if (collidingWithPlayer && GameManager.Instance.Player.IsClimbing) {
+			GameManager.Instance.Player.IsClimbing = false;
+			GameManager.Instance.Player.HighlightedDestroyed (this);
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D col) {
+		if (col.CompareTag ("Player")) {
+			collidingWithPlayer = true;
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col) {
+		if (col.CompareTag ("Player")) {
+			collidingWithPlayer = false;
+		}
+	}
 	public bool LadderAbove {
 		get {
 			return ladderAbove;

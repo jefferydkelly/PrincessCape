@@ -29,8 +29,6 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 		destroyTimer = new Timer (() => {
 			DestroySegment();
 		}, spawnTime, numSegments);
-
-		segments = new GameObject[numSegments];
 	}
 	
 	public void Activate() {
@@ -52,14 +50,16 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 
 	void SpawnSegment() {
 		GameObject segment = Instantiate (prefab);
-		segment.transform.position = transform.position - new Vector3 (0, prefab.HalfHeight() * 2 * (segmentsSpawned + 0.5f), -1);
-		segments [segmentsSpawned] = segment;
-		segmentsSpawned++;
-		segment.name = "Segment " + segmentsSpawned;
+		segment.transform.parent = transform;
+		segment.transform.localPosition = -new Vector3 (0, prefab.HalfHeight() * 2 * (transform.childCount - 0.5f), -1);
+
+
+	
+		segment.name = "Segment " + transform.childCount;
 		AudioManager.Instance.PlaySound (dropSound);
-		if (segmentsSpawned == numSegments) {
-			foreach (GameObject go in segments) {
-				go.GetComponent<LadderController> ().CheckForConnections();
+		if (transform.childCount == numSegments) {
+			foreach (LadderController lc in GetComponentsInChildren<LadderController>()) {
+				lc.CheckForConnections();
 			}
 			spawnTimer.Stop ();
 			isActive = true;
@@ -67,10 +67,9 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 	}
 
 	void DestroySegment() {
-		segmentsSpawned--;
-		Destroy (segments[segmentsSpawned]);
-
-		if (segmentsSpawned == 0) {
+		if (transform.childCount > 0) {
+			Destroy (transform.GetChild(transform.childCount - 1).gameObject);
+		} else {
 			destroyTimer.Stop ();
 		}
 	}

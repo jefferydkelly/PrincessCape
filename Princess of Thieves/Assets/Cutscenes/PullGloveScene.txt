@@ -9,3 +9,4 @@ add Prefabs/PullGlove
 You got the Pull Glove.
 Press the Item Key to activate and aim with the Arrow Keys.
 You'll pull light items to you but if you pull against immovable objects, you'll be the one pulled.
+destroy SamuelCorpse

@@ -25,7 +25,7 @@ public class TimerManager : MonoBehaviour {
 		if (!quitting && !GameManager.Instance.IsPaused) {
 			if (!toAdd.IsEmpty ()) {
 				foreach (Timer t in toAdd) {
-					timers.Add (t);
+					timers.AddExclusive (t);
 				}
 
 				toAdd.Clear ();
