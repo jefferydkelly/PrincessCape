@@ -1,4 +1,5 @@
 character Liam Knights/LiamGhost
+show Liam 0 2
 fade-in Liam 0.25 -0.25 2.5
 Sir Liam: By the night's sky, you are alive.
 Sir Liam: In life, I was known as Sir Liam of House Brien, the Sneak Knight.
