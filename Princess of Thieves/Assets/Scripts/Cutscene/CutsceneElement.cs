@@ -187,12 +187,8 @@ public class CutsceneEffect : CutsceneElement
 		affected = target;
 		type = et;
 		x = dx;
-		if (et == EffectType.Scale || et == EffectType.ScaleX || et == EffectType.ScaleY) {
-			time = dy;
-		} else {
-			y = dy;
-			autoAdvance = true;
-		}
+		y = dy;
+		autoAdvance = true;
 	}
 
 	public CutsceneEffect(string target, EffectType et, float dx, float dy, float dt) {
@@ -255,18 +251,45 @@ public class CutsceneEffect : CutsceneElement
 		} else if (type == EffectType.FlipVertical) {
 			myActor.FlipY ();
 			//NextElement ();
-		} else if (type == EffectType.Scale) {
-			myActor.StartScale (x, time);
-		} else if (type == EffectType.ScaleX) {
-			myActor.StartScaleX (x, time);
-		} else if (type == EffectType.ScaleY) {
-			myActor.StartScaleY (x, time);
-		} else if (type == EffectType.ScaleXYInd) {
-			myActor.StartScaleXY (new Vector3 (x, y, 1), time);
 		}
 	}
 }
 
+public class CutsceneScale : CutsceneElement {
+	ScaleType type;
+	float scale = 1.0f;
+	float scale2 = 1.0f;
+	float time = 0;
+	CutsceneActor actor;
+	public CutsceneScale(ScaleType st, string act, float sc, float dt) {
+		actor = GameManager.Instance.Cutscene.FindActor (act);
+		type = st;
+		scale = sc;
+		time = dt;
+	}
+
+	public CutsceneScale(string act, float sc1, float sc2, float dt) {
+		actor = GameManager.Instance.Cutscene.FindActor (act);
+		type = ScaleType.Ind;
+		scale = sc1;
+		scale2 = sc2;
+		time = dt;
+	}
+
+	public override void Run() {
+		if (type == ScaleType.All) {
+			actor.StartScale (scale, time);
+		} else if (type == ScaleType.X) {
+			actor.StartScaleX (scale, time);
+		} else if (type == ScaleType.Y) {
+			actor.StartScaleY (scale, time);
+		} else if (type == ScaleType.Ind) {
+			actor.StartScaleXY (new Vector3 (scale, scale2, 1), time);
+		}
+	}
+
+
+}
 public class CutsceneCreation : CutsceneElement {
 	GameObject prefab;
 	Vector3 position;
@@ -382,7 +405,11 @@ public class CutscenePlay: CutsceneElement {
 }
 public enum EffectType
 {
-	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical, Scale, ScaleX, ScaleY, ScaleXYInd
+	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical
+}
+
+public enum ScaleType {
+	All, X, Y, Ind
 }
 
 public enum CutsceneElements

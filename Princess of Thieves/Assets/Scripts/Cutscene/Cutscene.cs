@@ -34,13 +34,13 @@ public class Cutscene
 			} else if (p == "flip-y") {
 				c = new CutsceneEffect (parts [1], EffectType.FlipVertical);
 			} else if (p == "scale") {
-				c = new CutsceneEffect (parts [1], EffectType.Scale, float.Parse (parts [2]), float.Parse (parts [3])); 
+				c = new CutsceneScale (ScaleType.All, parts [1], float.Parse (parts [2]), float.Parse (parts [3]));
 			} else if (p == "scalex") {
-				c = new CutsceneEffect (parts [1], EffectType.ScaleX, float.Parse (parts [2]), float.Parse (parts [3])); 
+				c = new CutsceneScale (ScaleType.X, parts [1], float.Parse (parts [2]), float.Parse (parts [3]));
 			} else if (p == "scaley") {
-				c = new CutsceneEffect (parts [1], EffectType.ScaleY, float.Parse (parts [2]), float.Parse (parts [3])); 
+				c = new CutsceneScale (ScaleType.Y, parts [1], float.Parse (parts [2]), float.Parse (parts [3]));
 			} else if (p == "scalexy") {
-				c = new CutsceneEffect (parts [1], EffectType.Scale, float.Parse (parts [2]), float.Parse (parts [3]), float.Parse(parts[4])); 
+				c = new CutsceneScale (parts [1], float.Parse (parts [2]), float.Parse (parts [3]), float.Parse (parts [4]));
 			} else if (p == "rotate") {
 				c = new CutsceneMovement (parts [1], MoveTypes.Rotate, float.Parse (parts [2]), parts.Length == 4 ? float.Parse (parts [3]) : 0);
 			} else if (p == "move") {
