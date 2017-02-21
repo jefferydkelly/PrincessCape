@@ -203,7 +203,7 @@ public class CutsceneEffect : CutsceneElement
 		Cutscene cutscene = GameManager.Instance.Cutscene;
 		CutsceneActor myActor = cutscene.FindActor (affected);
         
-        if (type == EffectType.Show || type == EffectType.FadeIn) {
+        if (type == EffectType.Show) {
 
             if (myActor == null)
             {
@@ -224,13 +224,8 @@ public class CutsceneEffect : CutsceneElement
 				Vector3 aPosition = new Vector3 (x, y);
 
 				myActor.Position = aPosition;
+				myActor.IsHidden = false;
 
-				if (type == EffectType.Show) {
-					myActor.IsHidden = false;
-					//auto advance
-				} else {
-					myActor.StartFadeIn (time);
-				}
 			}
 		} else if (type == EffectType.Hide) {
 			myActor = cutscene.FindActor (affected);
@@ -239,12 +234,6 @@ public class CutsceneEffect : CutsceneElement
 				myActor.IsHidden = true;
 			}
 			//auto advance
-		} else if (type == EffectType.FadeOut) {
-			myActor = cutscene.FindActor (affected);
-
-			if (myActor && !myActor.IsHidden) {
-				myActor.StartFadeOut (time);
-			}
 		} else if (type == EffectType.FlipHorizontal) {
 			myActor.FlipX ();
 			//NextElement ();
@@ -260,16 +249,16 @@ public class CutsceneScale : CutsceneElement {
 	float scale = 1.0f;
 	float scale2 = 1.0f;
 	float time = 0;
-	CutsceneActor actor;
-	public CutsceneScale(ScaleType st, string act, float sc, float dt) {
-		actor = GameManager.Instance.Cutscene.FindActor (act);
+	string actorName;
+	public CutsceneScale(ScaleType st, string actor, float sc, float dt) {
+		actorName = actor;
 		type = st;
 		scale = sc;
 		time = dt;
 	}
 
-	public CutsceneScale(string act, float sc1, float sc2, float dt) {
-		actor = GameManager.Instance.Cutscene.FindActor (act);
+	public CutsceneScale(string actor, float sc1, float sc2, float dt) {
+		actorName = actor;
 		type = ScaleType.Ind;
 		scale = sc1;
 		scale2 = sc2;
@@ -277,6 +266,7 @@ public class CutsceneScale : CutsceneElement {
 	}
 
 	public override void Run() {
+		CutsceneActor actor = GameManager.Instance.Cutscene.FindActor (actorName);
 		if (type == ScaleType.All) {
 			actor.StartScale (scale, time);
 		} else if (type == ScaleType.X) {
@@ -287,8 +277,25 @@ public class CutsceneScale : CutsceneElement {
 			actor.StartScaleXY (new Vector3 (scale, scale2, 1), time);
 		}
 	}
+}
 
+public class CutsceneFade: CutsceneElement {
+	string actorName;
+	float alpha;
+	float time;
+	public CutsceneFade(string actor, float toAlpha, float dt) {
+		actorName = actor;
+		alpha = toAlpha;
+		time = dt;
+	}
 
+	public override void Run ()
+	{
+		CutsceneActor actor = GameManager.Instance.Cutscene.FindActor (actorName);
+		if (actor) {
+			actor.StartCoroutine (actor.Fade (alpha, time));
+		}
+	}
 }
 public class CutsceneCreation : CutsceneElement {
 	GameObject prefab;
@@ -405,7 +412,7 @@ public class CutscenePlay: CutsceneElement {
 }
 public enum EffectType
 {
-	FadeIn, FadeOut, Show, Hide, FlipHorizontal, FlipVertical
+	Show, Hide, FlipHorizontal, FlipVertical
 }
 
 public enum ScaleType {

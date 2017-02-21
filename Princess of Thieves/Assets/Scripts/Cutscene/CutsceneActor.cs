@@ -74,6 +74,31 @@ public class CutsceneActor : MonoBehaviour
 		yield return null;
 	}
 
+	public void StartFade(float finalAlpha, float fadeTime) {
+		
+	}
+
+	public IEnumerator Fade(float fa, float time) {
+		Color col = mySpriteRenderer.color;
+		float startAlpha = col.a;
+		float alphaDelta = fa - col.a;
+		float curTime = 0.0f;
+
+		do {
+			curTime += Time.deltaTime;
+			col.a = startAlpha + alphaDelta * curTime / time;
+			mySpriteRenderer.color = col;
+			yield return null;
+		} while (curTime < time);
+
+		col.a = fa;
+		mySpriteRenderer.color = col;
+		isHidden = (col.a == 0);
+		parentCutscene.NextElement ();
+		yield return null;
+
+	}
+
 	public void MoveTo(Vector2 p, float time)
 	{
 		Vector2 dif = p - (Vector2)(transform.position);

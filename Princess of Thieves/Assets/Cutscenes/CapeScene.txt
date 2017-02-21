@@ -1,10 +1,12 @@
 character Matthew Knights/Temp
-fade-in Matthew 0.25 -1.75 2.5
+show Matthew -1.75 2.5
+alpha Matthew 0
+fade Matthew 0.5 0.5
 Sir Matthew: Princess?  Oh what a joy it is to behold your beautiful visage again.
 Sir Matthew: In life, I was known as Sir Matthew of House Ray.
 Sir Matthew: With my Magic Cape, I was able to fly through the battlefield and reflect the attacks of my enemies.
 Sir Matthew: Take it and in death, maybe I can give you the assistance I couldn't in life.
-fade-out Matthew 0.25
+fade-out Matthew 0.5
 add Prefabs/ReflectionCape
 You took the Magic Cape from Sir Matthew!
 Press the Item Key to activate it.

@@ -26,9 +26,14 @@ public class Cutscene
 			} else if (p == "hide") {
 				c = new CutsceneEffect (parts [1], EffectType.Hide);
 			} else if (p == "fade-in") {
-				c = new CutsceneEffect (parts [1], EffectType.FadeIn, float.Parse (parts [3]), float.Parse (parts [4]), float.Parse (parts [2]));
+				c = new CutsceneFade (parts [1], 1.0f, float.Parse (parts [2]));
 			} else if (p == "fade-out") {
-				c = new CutsceneEffect (parts [1], EffectType.FadeOut, float.Parse (parts [2]));
+				//c = new CutsceneEffect (parts [1], EffectType.FadeOut, float.Parse (parts [2]));
+				c = new CutsceneFade (parts [1], 0.0f, float.Parse (parts [2]));
+			} else if (p == "fade") {
+				c = new CutsceneFade (parts [1], float.Parse (parts [2]), float.Parse (parts [3]));
+			} else if (p == "alpha") {
+				c = new CutsceneFade (parts [1], float.Parse (parts [2]), 0);
 			} else if (p == "flip-x") {
 				c = new CutsceneEffect (parts [1], EffectType.FlipHorizontal);
 			} else if (p == "flip-y") {
