@@ -1,4 +1,4 @@
-character Matthew Knights/MatthewGhost
+character Matthew Knights/Temp
 fade-in Matthew 0.25 -1.75 2.5
 Sir Matthew: Princess?  Oh what a joy it is to behold your beautiful visage again.
 Sir Matthew: In life, I was known as Sir Matthew of House Ray.
