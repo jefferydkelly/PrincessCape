@@ -1,4 +1,7 @@
-character Samuel Knights/SamuelGhost
+character Samuel Knights/NewSirLiam
+show Samuel 5.5 2
+scalex Samuel 0.25 0.01
+scaley Samuel 0.15 0.01
 fade-in Samuel 0.25 5.4 2.5
 Sir Samuel: Princess Elwynn?  All the gods and goddesses bless you!  You're alive.
 Sir Samuel: In life, I was known as Sir Samuel of House Acaba, the Bard Knight.
