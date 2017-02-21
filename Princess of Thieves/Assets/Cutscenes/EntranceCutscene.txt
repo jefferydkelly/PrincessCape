@@ -1,4 +1,4 @@
-character Matthew Knights/SirMatthew
+character Matthew Knights/Temp
 character Elwynn Sprites/Elwynn
 pan to Player 0
 pan -6 2 0
