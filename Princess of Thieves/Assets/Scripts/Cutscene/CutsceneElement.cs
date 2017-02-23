@@ -44,6 +44,10 @@ public class CutsceneDialog : CutsceneElement
 	public CutsceneDialog(string dia) {
 		speaker = null;
 		dialog = dia.Replace ("\\n", "\n").Trim();
+		dialog = dialog.Replace ("[[PauseKey]]", GameManager.Instance.Player.Controller.PauseKey);
+		dialog = dialog.Replace ("[[LeftItemKey]]", GameManager.Instance.Player.Controller.LeftItemKey);
+		dialog = dialog.Replace ("[[RightItemKey]]", GameManager.Instance.Player.Controller.RightItemKey);
+		dialog = dialog.Replace ("[[AimKeys]]", GameManager.Instance.Player.Controller.AimKeys);
 	}
 
 	public override void Run ()

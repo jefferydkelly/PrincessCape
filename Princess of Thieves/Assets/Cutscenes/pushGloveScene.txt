@@ -1,6 +1,10 @@
-character Liam Knights/LiamGhost
-show Liam 0 2
-fade-in Liam 0.25 -0.25 2.5
+character Liam Knights/NewSirLiam-1
+show Liam -0.5 2.5
+flip-x Liam
+scalex Liam 0.25 0
+scaley Liam 0.15 0
+fade Liam 0 0
+fade Liam 0.5 0.5
 Sir Liam: By the night's sky, you are alive.
 Sir Liam: In life, I was known as Sir Liam of House Brien, the Sneak Knight.
 Sir Liam: Thanks to my magic item, I was known for being wherever my enemies least suspected me.
@@ -8,8 +12,8 @@ Sir Liam: With my magnetic Push Glove, I would push myself and my enemies around
 Sir Liam: I have no more need of it.  Please take it and escape this dragon's lair.
 add Prefabs/PushGlove
 You got the Push Glove.
-Press the Item Key to activate and aim with the Arrow Keys.
+Press [[PauseKey]] to open the Inventory Menu and use [[LeftItemKey]] or [[RightItemKey]] to assign it to an Item Slot.
+Press [[PauseKey]] again to close the menu.
+Press the Item Key to activate and aim with the [[AimKeys]].
 You'll push light items to you but if you push against immovable objects, you'll be the one pushed.
-Press P to open the Inventory Menu and use X or C to assign it to an Item Slot.
-Press P again to close the menu.
 destroy LiamCorpse

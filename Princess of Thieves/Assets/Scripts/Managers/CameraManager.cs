@@ -90,7 +90,6 @@ public class CameraManager : MonoBehaviour {
 			}
             else
             {
-				Debug.Log ("Finding target");
                 target = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             }
 		}
