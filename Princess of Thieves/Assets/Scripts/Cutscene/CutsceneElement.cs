@@ -348,15 +348,29 @@ public class CutsceneAdd: CutsceneElement {
 public class CutsceneEnable: CutsceneElement {
 	GameObject hideObject;
 	bool enable = true;
+    bool move = false;
+    Vector2 pos;
 	public CutsceneEnable(GameObject go, bool en) {
 		hideObject = go;
 		enable = en;
 		autoAdvance = true;
 	}
 
+    public CutsceneEnable(GameObject go, float x, float y):this(go, true)
+    {
+        move = true;
+        pos = new Vector2(x, y);
+    }
+
 	public override void Run() {
 		if (hideObject) {
 			hideObject.SetActive (enable);
+
+            if (move)
+            {
+                hideObject.transform.position = pos;
+            }
+
 		}
 	}
 }

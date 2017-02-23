@@ -91,7 +91,14 @@ public class Cutscene
 				} else {
 					go = ca.gameObject;
 				}
-				c = new CutsceneEnable (go, true);
+                if (parts.Length == 4)
+                {
+                    c = new CutsceneEnable(go, float.Parse(parts[2]), float.Parse(parts[3]));
+                }
+                else
+                {
+                    c = new CutsceneEnable(go, true);
+                }
 			} else if (p == "activate") {
                 GameObject go = GameObject.Find(parts[1].Trim());
 				if (go != null) {
