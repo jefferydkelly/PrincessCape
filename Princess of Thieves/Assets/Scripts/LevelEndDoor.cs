@@ -15,7 +15,7 @@ public class LevelEndDoor : MonoBehaviour {
             if (endOfGame)
             {
                 Destroy(TimerManager.Instance.gameObject);
-                Destroy(AudioManager.Instance.AttachedObject);
+                AudioManager.Instance.Destroy();
                 Destroy(UIManager.Instance.gameObject);
                 if (CameraManager.Instance)
                 {
