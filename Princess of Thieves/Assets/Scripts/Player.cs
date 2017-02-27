@@ -224,7 +224,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             tryingToJump = true;
         }
-        else if (Controller.ResetKey)
+        else if (Controller.Reset)
         {
            // IsDead = true;
             GameManager.Instance.Reset();

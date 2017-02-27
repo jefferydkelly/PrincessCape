@@ -1,7 +1,7 @@
 character Matthew Knights/GhostMAtthew
 show Matthew -1.75 2.5
-scalex Matthew 0.25 0.01
-scaley Matthew 0.15 0.01
+scalex Matthew 0.25 0
+scaley Matthew 0.15 0
 alpha Matthew 0
 fade Matthew 0.5 0.5
 Sir Matthew: Princess?  Oh what a joy it is to behold your beautiful visage again.
@@ -11,8 +11,8 @@ Sir Matthew: Take it and in death, maybe I can give you the assistance I couldn'
 fade-out Matthew 0.5
 add Prefabs/ReflectionCape
 You took the Magic Cape from Sir Matthew!
-Press the Item Key to activate it.
+Press [[LeftItemKey]] to activate it.
 In the air, you'll float for a short time.
-On the ground, aim with the Arrow Keys and you'll reflect anything that hits you in that direction.
+On the ground, aim with the [[AimKeys]] and you'll reflect anything that hits you in that direction.
 destroy MatthewCorpse
 wait 0.5

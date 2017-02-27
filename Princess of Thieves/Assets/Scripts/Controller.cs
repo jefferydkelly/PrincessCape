@@ -17,8 +17,6 @@ public class Controller
     string rightItemKey;
     string interactKey;
 
-    string peerDownKey;
-    string peerUpKey;
 	//Menu Keys
 	string pauseKey;
 	string submitKey;
@@ -63,8 +61,6 @@ public class Controller
             rightItemKey = "c";
             leftItemKey = "x";
 			pauseKey = "p";
-            peerDownKey = "a";
-            peerUpKey = "q";
 			submitKey = "enter";
             resetKey = "escape";
 
@@ -82,8 +78,7 @@ public class Controller
 			leftItemKey = gamepad.leftItemKey;
 			rightItemKey = gamepad.rightItemKey;
 			pauseKey = gamepad.pauseKey;
-			peerUpKey = gamepad.peerUpKey;
-			peerDownKey = gamepad.peerDownKey;
+			resetKey = gamepad.resetKey;
 
         }
     }
@@ -179,7 +174,7 @@ public class Controller
         }
 
     }
-    public bool ResetKey
+    public bool Reset
     {
         get
         {
@@ -202,28 +197,6 @@ public class Controller
 			return Input.GetKey (submitKey);
 		}
 	}
-
-    public bool PeerUp
-    {
-        get
-        {
-			if (controllerType == ControllerType.GamepadWindows) {
-				return Input.GetAxis (peerUpKey) > 0.9f;
-			}
-            return Input.GetKey(peerUpKey);
-        }
-    }
-
-    public bool PeerDown
-    {
-        get
-        {
-			if (controllerType == ControllerType.GamepadWindows) {
-				return Input.GetAxis (peerUpKey) < -0.9f;
-			}
-            return Input.GetKey(peerDownKey);
-        }
-    }
 
     public string LeftKey
     {
@@ -277,7 +250,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? leftItemKey : gamepad.Translate(leftItemKey);
+			return IsKeyboard ? leftItemKey.ToUpper() : gamepad.Translate(leftItemKey);
         }
     }
 
@@ -285,9 +258,27 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? rightItemKey : gamepad.Translate(rightItemKey);
+			return IsKeyboard ? rightItemKey.ToUpper() : gamepad.Translate(rightItemKey);
         }
     }
+
+	public string PauseKey {
+		get {
+			return IsKeyboard ? pauseKey.ToUpper() : gamepad.Translate (pauseKey);
+		}
+	}
+
+	public string ResetKey {
+		get {
+			return IsKeyboard ? resetKey.ToUpper () : gamepad.Translate (pauseKey);
+		}
+	}
+
+	public string AimKeys {
+		get {
+			return IsKeyboard ? "Arrow Keys" : "Left Stick";
+		}
+	}
 	public bool Pause
 	{
 		get
@@ -315,9 +306,6 @@ public class Controller
                 controls += "Right: " + RightKey + "\n";
                 controls += "Up: " + UpKey + "\n";
                 controls += "Down: " + DownKey + "\n";
-                controls += "Peek Up: " + peerUpKey + "\n";
-                controls += "Peek Down: " + peerDownKey + "\n";
-
             //}
             return controls;
         }
@@ -334,8 +322,8 @@ public class Controller
                 controls += "Interact: " + InteractKey + "\n";
                 controls += "Left Item: " + LeftItemKey + "\n";
                 controls += "Right Item: " + RightItemKey + "\n";
-                controls += "Pause/Inventory: " + pauseKey + "\n";
-                controls += "Reset: " + resetKey + "\n";
+                controls += "Pause/Inventory: " + PauseKey + "\n";
+                controls += "Reset: " + ResetKey + "\n";
             //}
             return controls;
         }
@@ -361,8 +349,7 @@ public struct Controller360
 	public string leftItemKey;
 	public string rightItemKey;
 	public string pauseKey;
-	public string peerDownKey;
-	public string peerUpKey;
+	public string resetKey;
 
 	public Controller360(ControllerType c)
 	{
@@ -377,8 +364,7 @@ public struct Controller360
 			leftItemKey = "joystick button 19";
 			rightItemKey = "joystick button 17";
 			pauseKey = "joystick button 9";
-			peerUpKey = "joystick button 5";
-			peerDownKey = "joystick button 6";
+			resetKey = "joystick button 10";
 		}
 		else
 		{
@@ -387,8 +373,7 @@ public struct Controller360
 			leftItemKey = "joystick button 3";
 			rightItemKey = "joystick button 1";
 			pauseKey = "joystick button 7";
-			peerUpKey = "DPadYWindows";
-			peerDownKey = "DPadYWindows";
+			resetKey = "joystick button 6";
 		}
 	}
 

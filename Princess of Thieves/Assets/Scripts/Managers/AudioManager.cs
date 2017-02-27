@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager {
 
@@ -30,8 +31,10 @@ public class AudioManager {
 		}
 	}
 
-	void OnDestroy() {
+	public void Destroy() {
+        GameObject.Destroy(source.gameObject);
         isClosing = true;
+        instance = null;
 	}
 
     public GameObject AttachedObject
@@ -50,7 +53,7 @@ public class AudioManager {
 
 	public static AudioManager Instance {
 		get {
-			if (!isClosing) {
+			if (GameManager.Instance != null) {
 				if (instance == null) {
                     instance = new AudioManager();
 				}

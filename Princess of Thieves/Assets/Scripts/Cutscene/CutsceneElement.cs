@@ -44,6 +44,10 @@ public class CutsceneDialog : CutsceneElement
 	public CutsceneDialog(string dia) {
 		speaker = null;
 		dialog = dia.Replace ("\\n", "\n").Trim();
+		dialog = dialog.Replace ("[[PauseKey]]", GameManager.Instance.Player.Controller.PauseKey);
+		dialog = dialog.Replace ("[[LeftItemKey]]", GameManager.Instance.Player.Controller.LeftItemKey);
+		dialog = dialog.Replace ("[[RightItemKey]]", GameManager.Instance.Player.Controller.RightItemKey);
+		dialog = dialog.Replace ("[[AimKeys]]", GameManager.Instance.Player.Controller.AimKeys);
 	}
 
 	public override void Run ()
@@ -344,15 +348,29 @@ public class CutsceneAdd: CutsceneElement {
 public class CutsceneEnable: CutsceneElement {
 	GameObject hideObject;
 	bool enable = true;
+    bool move = false;
+    Vector2 pos;
 	public CutsceneEnable(GameObject go, bool en) {
 		hideObject = go;
 		enable = en;
 		autoAdvance = true;
 	}
 
+    public CutsceneEnable(GameObject go, float x, float y):this(go, true)
+    {
+        move = true;
+        pos = new Vector2(x, y);
+    }
+
 	public override void Run() {
 		if (hideObject) {
 			hideObject.SetActive (enable);
+
+            if (move)
+            {
+                hideObject.transform.position = pos;
+            }
+
 		}
 	}
 }

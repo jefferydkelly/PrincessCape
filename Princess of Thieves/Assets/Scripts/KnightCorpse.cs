@@ -37,6 +37,10 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 	}
 
 	void OnDestroy() {
-		GameManager.Instance.Player.HighlightedDestroyed (this);
+        Player p = GameManager.Instance.Player;
+        if (p != null)
+        {
+            p.HighlightedDestroyed(this);
+        }
 	}
 }

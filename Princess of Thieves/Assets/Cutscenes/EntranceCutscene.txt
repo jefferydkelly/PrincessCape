@@ -51,5 +51,5 @@ Sir Matthew: I'm....so...sorry!
 fade-out Matthew 0.5
 create Prefabs/MatthewCorpse -1.75 0.75 0.25
 hide Elwynn
-enable Player
+enable Player 0 1.25
 wait 2

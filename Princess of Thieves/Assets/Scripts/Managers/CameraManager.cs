@@ -19,7 +19,8 @@ public class CameraManager : MonoBehaviour {
 	static bool isClosing = false;
 	GameManager manager;
     void Awake () {
-		if (instance == null)
+        isClosing = false;
+        if (instance == null)
 		{
 			instance = this;
 			manager = GameManager.Instance;
@@ -34,7 +35,7 @@ public class CameraManager : MonoBehaviour {
 			Vector3 camPos = target.transform.position;
 			camPos.z = -10;
 			transform.position = camPos;
-			
+            
            
             screenSize = new Vector2(Screen.width, Screen.height);
             Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
@@ -90,8 +91,10 @@ public class CameraManager : MonoBehaviour {
 			}
             else
             {
-				Debug.Log ("Finding target");
-                target = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                GameObject go = GameObject.FindGameObjectWithTag("Player");
+                if (go) {
+                    target = go.GetComponent<Player>();
+                }
             }
 		}
     }
