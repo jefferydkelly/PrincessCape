@@ -373,12 +373,12 @@ public class UIManager : MonoBehaviour
         {
             leftBox.ItemSprite = p.LeftItem;
         }
-        leftBox.Key = c.LeftItemKey.ToUpper();
+        leftBox.Key = c.LeftItemKey;
         if (p.RightItem != null)
         {
             rightBox.ItemSprite = p.RightItem;
         }
-        rightBox.Key = c.RightItemKey.ToUpper();
+        rightBox.Key = c.RightItemKey;
         interactionBox.Key = c.InteractKey.ToUpper();
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
     }

@@ -18,8 +18,6 @@ public class PushGlove : GloveItem{
 
 	public override void Activate()
 	{
-		
-
 		player.IsUsingMagnetGloves = true;
 
 		if (activeGlove && activeGlove.IsActive) {
@@ -43,7 +41,6 @@ public class PushGlove : GloveItem{
 				direction = PushPullDirection.Left;
 			}*/
 
-			player.IsFrozen = !pushingOnTarget;
 		}
 			
 	}

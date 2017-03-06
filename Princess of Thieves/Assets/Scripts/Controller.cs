@@ -45,21 +45,20 @@ public class Controller
         }
 
         LoadController();
-
     }
 
     void LoadController()
     {
         if (IsKeyboard)
         {
-            leftKey = "left";
-            rightKey = "right";
-            upKey = "up";
-            downKey = "down";
+            leftKey = "a";
+            rightKey = "d";
+            upKey = "w";
+            downKey = "s";
             jumpKey = "space";
             interactKey = "z";
-            rightItemKey = "c";
-            leftItemKey = "x";
+            rightItemKey = "mouse 1";
+			leftItemKey = "mouse 0";
 			pauseKey = "p";
 			submitKey = "enter";
             resetKey = "escape";
@@ -186,7 +185,7 @@ public class Controller
     {
         get
         {
-            return Input.GetKeyDown(jumpKey);
+			return Input.GetKeyDown(jumpKey) || Input.GetKeyDown(upKey);
         }
     }
 
@@ -198,11 +197,39 @@ public class Controller
 		}
 	}
 
+	string Translate(string key, bool leftOrUp = false) {
+		if (IsKeyboard) {
+			if (key.StartsWith ("mouse")) {
+				string mouseKey = "";
+				if (key.EndsWith ("0")) {
+					mouseKey = "Left";
+				} else if (key.EndsWith ("1")) {
+					mouseKey = "Right";
+				} else if (key.EndsWith ("2")) {
+					mouseKey = "Middle";
+				}
+
+				if (leftOrUp) {
+					mouseKey += " Mouse";
+				}
+				return mouseKey;
+			} else if (key.Length > 1) {
+				return key.Substring (0, 1).ToUpper () + key.Substring (1);
+			} else {
+				return key.ToUpper ();
+			}
+
+			return key;
+		} else {
+			return gamepad.Translate (key, leftOrUp);
+		}
+	}
+
     public string LeftKey
     {
         get
         {
-			return IsKeyboard ? leftKey : gamepad.Translate(leftKey, true);
+			return Translate(leftKey, true);
         }
     }
 
@@ -210,7 +237,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? rightKey : gamepad.Translate(rightKey, false);
+			return Translate(rightKey, false);
         }
     }
 
@@ -218,7 +245,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? upKey : gamepad.Translate(upKey, true);
+			return Translate(upKey, true);
         }
     }
 
@@ -226,7 +253,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? downKey : gamepad.Translate(downKey, false);
+			return Translate(downKey, false);
         }
     }
 
@@ -234,7 +261,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? jumpKey : gamepad.Translate(jumpKey);
+			return Translate(jumpKey);
         }
     }
 
@@ -242,7 +269,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? interactKey : gamepad.Translate(interactKey);
+			return Translate(interactKey, false);
         }
     }
 
@@ -250,7 +277,7 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? leftItemKey.ToUpper() : gamepad.Translate(leftItemKey);
+			return Translate(leftItemKey, false);
         }
     }
 
@@ -258,25 +285,25 @@ public class Controller
     {
         get
         {
-			return IsKeyboard ? rightItemKey.ToUpper() : gamepad.Translate(rightItemKey);
+			return Translate(rightItemKey);
         }
     }
 
 	public string PauseKey {
 		get {
-			return IsKeyboard ? pauseKey.ToUpper() : gamepad.Translate (pauseKey);
+			return Translate (pauseKey);
 		}
 	}
 
 	public string ResetKey {
 		get {
-			return IsKeyboard ? resetKey.ToUpper () : gamepad.Translate (pauseKey);
+			return Translate (pauseKey);
 		}
 	}
 
 	public string AimKeys {
 		get {
-			return IsKeyboard ? "Arrow Keys" : "Left Stick";
+			return IsKeyboard ? "WASD Keys" : "Left Stick";
 		}
 	}
 	public bool Pause
@@ -320,8 +347,8 @@ public class Controller
            // {
                 controls += "Jump: " + JumpKey + "\n";
                 controls += "Interact: " + InteractKey + "\n";
-                controls += "Left Item: " + LeftItemKey + "\n";
-                controls += "Right Item: " + RightItemKey + "\n";
+				controls += "Left Item: " + Translate(leftKey, true) + "\n";
+				controls += "Right Item: " + Translate(rightKey, true) + "\n";
                 controls += "Pause/Inventory: " + PauseKey + "\n";
                 controls += "Reset: " + ResetKey + "\n";
             //}
@@ -379,9 +406,9 @@ public struct Controller360
 
 	public string Translate(string s, bool upLeft = false) {
 		if (s == "Horizontal") {
-			return "L. Joystick " + (upLeft ? "Up" : "Down");
-		} else if (s == "Vertical") {
 			return "L. Joystick " + (upLeft ? "Left" : "Right");
+		} else if (s == "Vertical") {
+			return "L. Joystick " + (upLeft ? "Up" : "Down");
 		} else if (s == "DPadYWindows") {
 			return upLeft ? "D-Pad Up" : "D-Pad Down";
 		} else if (s == "DPadXWindows") { 

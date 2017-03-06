@@ -120,11 +120,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						myRigidBody.velocity = Vector2.zero;
 					}
 
+					/*
 					if (tryingToJump) {
 						IsClimbing = false;
 						Jump ();
 						return;
-					}
+					}*/
 					if (controller.Interact) {
 						IsClimbing = false;
 					}
@@ -938,12 +939,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             if (value && !IsUsingMagnetGloves && !IsFrozen)
             {
                 state |= PlayerState.UsingMagnetGloves;
-                //state |= PlayerState.Frozen;
+                state |= PlayerState.Frozen;
             }
             else
             {
                 state &= ~PlayerState.UsingMagnetGloves;
-                //state &= ~PlayerState.Frozen;
+                state &= ~PlayerState.Frozen;
             }
 			ShowAimArrow = IsUsingMagnetGloves;
         }
@@ -1013,12 +1014,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	public void ShowMagnetRange(Color c) {
 		rangeRenderer.enabled = true;
 		rangeRenderer.color = c;
-		IsFrozen = true;
 	}
 
 	public void HideMagnetRange() {
 		rangeRenderer.enabled = false;
-		IsFrozen = false;
 	}
 
     #endregion gets

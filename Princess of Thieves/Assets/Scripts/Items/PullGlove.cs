@@ -71,13 +71,13 @@ public class PullGlove : GloveItem {
 						Vector2 xv = player.TrueAim.XVector ();
 
 						if (Vector2.Dot (moveDir, xv) >= 0) {
-							moveDir += xv;
+							moveDir += xv * 5;
 						}
 					}
 
 					moveDir.Normalize ();
 					playerBody.AddForce (
-						moveDir * force,
+						moveDir * force * 0.75f,
 						ForceMode2D.Force);
 				} else {
 					if (Mathf.Abs (hitNormal.y) <= 0.1f) {
