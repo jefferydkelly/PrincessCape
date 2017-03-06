@@ -15,8 +15,12 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		Player player = GameManager.Instance.Player;
 		if (!player.IsClimbing) {
 			player.IsClimbing = true;
-			Vector3 pos = transform.position - new Vector3 (0, gameObject.HalfHeight () - player.HalfHeight);
-			pos.z = 0;
+            Vector3 pos;
+            if (GameManager.Instance.Player.transform.position.y < gameObject.transform.position.y)
+			    pos = transform.position - new Vector3 (0, gameObject.HalfHeight () - player.HalfHeight);
+            else
+                pos = transform.position + new Vector3(0, gameObject.HalfHeight() - player.HalfHeight);
+            pos.z = 0;
 			player.transform.position = pos;
 			myRenderer.color = Color.white;
 		} else {
