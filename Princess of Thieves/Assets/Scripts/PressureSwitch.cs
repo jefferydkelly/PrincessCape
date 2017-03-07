@@ -15,8 +15,10 @@ public class PressureSwitch : ActivatorObject {
 	[SerializeField]
 	AudioClip activatedSoundEffect;
 	// Use this for initialization
+	Animator anim;
 	void Start () {
 		Initialize ();
+		anim = GetComponent<Animator> ();
         if (triggered)
         {
             GetComponent<SpriteRenderer>().sprite = switchSprites[1];
@@ -60,22 +62,14 @@ public class PressureSwitch : ActivatorObject {
 	{
 		set
 		{
-			if (value > 0 && numberOfThingsWeighingThisDown == 0)
-			{
-                //
-				AudioManager.Instance.PlaySound(activatedSoundEffect);
-				Activate();
-                triggered = true;
-                GetComponent<SpriteRenderer>().sprite = switchSprites[1];
-            }
-			else if (value == 0 && numberOfThingsWeighingThisDown > 0)
-			{
-				AudioManager.Instance.PlaySound(activatedSoundEffect);
-				Deactivate();
-                triggered = false;
-                GetComponent<SpriteRenderer>().sprite = switchSprites[0];
-            }
-			numberOfThingsWeighingThisDown = value;
+			anim.SetInteger ("ItemsOnTop", value);
+
+			if (value == 0 && numberOfThingsWeighingThisDown > 0) {
+				Deactivate ();
+			} else if (numberOfThingsWeighingThisDown == 0 && value > 0) {
+				Activate ();
+			}
+			numberOfThingsWeighingThisDown = Mathf.Max(value, 0);
 		}
 
 		get
