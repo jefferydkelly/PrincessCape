@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
 public class InventoryMenu : MonoBehaviour {
 
     
     int curSelected = 0;
     [SerializeField]
     float waitTime = 0.25f;
-    Image[] childImages;
+	List<InventoryItem> childImages;
 
     bool leftItemDown = false;
     bool rightItemDown = false;
@@ -16,16 +17,18 @@ public class InventoryMenu : MonoBehaviour {
     bool showingInfo = false;
     private void OnEnable()
     {
-        childImages = GetComponentsInChildren<Image>();
+		childImages = GetComponentsInChildren<InventoryItem>().ToList();
         UpdateUI();
         if (UIManager.Instance) { 
             UIManager.Instance.ShowInteraction("Info");
+			/*
             InvokeRepeating("HandleInput", waitTime, waitTime);
 
             leftItemDown = false;
             rightItemDown = false;
             interactDown = false;
             showingInfo = false;
+            */
         }
     }
 
@@ -39,6 +42,7 @@ public class InventoryMenu : MonoBehaviour {
     {
         if (GameManager.Instance.IsPaused)
         {
+			/*
             if (controller.ActivateLeftItem)
             {
                 leftItemDown = true;
@@ -66,7 +70,7 @@ public class InventoryMenu : MonoBehaviour {
                 interactDown = true;
                 leftItemDown = false;
                 rightItemDown = false;
-            }
+            }*/
         }
     }
     private void HandleInput()
@@ -86,7 +90,7 @@ public class InventoryMenu : MonoBehaviour {
             }
         }
 
-        curImg = childImages[curSelected + 1];
+		curImg = childImages[curSelected + 1].Image;
         curImg.color = Color.blue;
 
         if (leftItemDown)
@@ -126,10 +130,14 @@ public class InventoryMenu : MonoBehaviour {
             for (int i = 0; i < items.Count; i++)
             {
                 UsableItem curItem = items[i];
-                childImages[i + 1].sprite = curItem ? curItem.uiSprite : null;
+                childImages[i].Sprite = curItem ? curItem.uiSprite : null;
             }
         }
     }
+
+	public void EquipItem(InventoryItem i, bool left) {
+		GameManager.Instance.Player.EquipItem(childImages.IndexOf (i), left);
+	}
 
 	private Controller controller {
 		get {
