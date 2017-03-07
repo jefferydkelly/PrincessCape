@@ -35,20 +35,25 @@ wait 2
 destroy DragonsBreath
 destroy DragonClosed
 activate SlideDoor false
-Sir Matthew: Help!  I'm on fire!
-move Matthew -3 1.5 2.0
-flip-x Matthew
-Sir Matthew: Hot!
-move Matthew -13 1.5 2.0
-flip-x Matthew
-move Matthew -5 1.5 1
+destroy Matthew 0.5
+character Matthew2 Knights/MatthewFire
+show Matthew2 -13 1.5 1
+scalex Matthew2 0.15 0.01
+scaley Matthew2 0.15 0.01
+Sir Matthew2: Help!  I'm on fire!
+move Matthew2 -3 1.5 2.0
+flip-x Matthew2
+Sir Matthew2: Hot!
+move Matthew2 -13 1.5 2.0
+flip-x Matthew2
+move Matthew2 -5 1.5 1
 create Prefabs/Fire -7 1.75 0
 create Prefabs/Fire -9 1.75 0
-move Matthew -3 1.5 0.25
-rotate Matthew -90 0.25
-move Matthew -1.75 0.5 0.25
-Sir Matthew: I'm....so...sorry!
-fade-out Matthew 0.5
+move Matthew2 -3 1.5 0.25
+rotate Matthew2 -90 0.25
+move Matthew2 -1.75 0.5 0.25
+Sir Matthew2: I'm....so...sorry!
+fade-out Matthew2 0.5
 create Prefabs/MatthewCorpse -1.75 0.75 0.25
 hide Elwynn
 enable Player 0 1.25
