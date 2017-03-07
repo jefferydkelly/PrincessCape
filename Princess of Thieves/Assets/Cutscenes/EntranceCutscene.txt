@@ -26,7 +26,7 @@ pan 2.5 0 1
 activate SlideDoor true
 play dragon-roar
 create Prefabs/DragonClosed -13 11 0
-Slag: Raaaaaaaaaaaaaaaw!
+Slog: Raaaaaaaaaaaaaaaw!
 Sir Matthew: There you are!
 Sir Matthew: Have at me, foul beast!
 play dragon-fire
