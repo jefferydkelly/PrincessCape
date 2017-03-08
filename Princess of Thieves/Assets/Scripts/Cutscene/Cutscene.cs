@@ -50,6 +50,10 @@ public class Cutscene
 				c = new CutsceneMovement (parts [1], MoveTypes.Rotate, float.Parse (parts [2]), parts.Length == 4 ? float.Parse (parts [3]) : 0);
 			} else if (p == "move") {
 				c = new CutsceneMovement (parts [1], MoveTypes.XY, float.Parse (parts [2]), float.Parse (parts [3]), parts.Length == 5 ? float.Parse (parts [4]) : 0);
+			} else if (p == "move-x") {
+				c = new CutsceneMovement (parts [1], MoveTypes.X, float.Parse (parts [2]), parts.Length == 4 ? float.Parse (parts [3]) : 0);
+			} else if (p == "move-y") {
+				c = new CutsceneMovement (parts [1], MoveTypes.Y, float.Parse (parts [2]), parts.Length == 4 ? float.Parse (parts [3]) : 0);
 			} else if (p == "character") {
 				if (parts.Length == 2) {
 					CreateCharacter (parts [1].Trim());
