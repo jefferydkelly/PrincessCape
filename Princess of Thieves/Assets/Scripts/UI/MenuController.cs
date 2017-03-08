@@ -100,4 +100,10 @@ public class MenuController : MonoBehaviour {
 			Selected = buttons [index];
 		}
 	}
+
+    public void Level1Load()
+    {
+        Debug.Log("Hello");
+        SceneManager.LoadScene("JDCapeTestScene");
+    }
 }
