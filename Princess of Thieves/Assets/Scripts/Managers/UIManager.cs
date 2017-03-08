@@ -32,8 +32,8 @@ public class UIManager : MonoBehaviour
 	bool revealing = false;
 	bool done = false;
 
-    ItemBox rightBox;
-    ItemBox leftBox;
+	ItemBox rightBox;
+    ComboBox leftBox;
     InteractionBox interactionBox;
 
     GameObject inventoryMenu;
@@ -86,12 +86,12 @@ public class UIManager : MonoBehaviour
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
 
-            leftBox = new ItemBox("LeftBox");
+            leftBox = new ComboBox("LeftBox");
 			leftBox.Enabled = true;
             rightBox = new ItemBox("RightBox");
 			rightBox.Enabled = true;
             interactionBox = new InteractionBox("InteractBox");
-			interactionBox.Enabled = true;
+			interactionBox.Enabled = false;
             
           
             inventoryMenu = GameObject.Find("InventoryMenu");
@@ -160,7 +160,7 @@ public class UIManager : MonoBehaviour
 			lettersRevealed += opening.Length;
 			msg = opening + msg;
 		}
-		interactionBox.Interaction = "Skip";
+		//interactionBox.Interaction = "Skip";
 		while (lettersRevealed < msg.Length)
 		{
 			if (Input.anyKeyDown) {
@@ -173,7 +173,7 @@ public class UIManager : MonoBehaviour
 			}
 		}
 		done = true;
-		interactionBox.Interaction = "Next";
+		//interactionBox.Interaction = "Next";
 
 	}
 
@@ -182,7 +182,7 @@ public class UIManager : MonoBehaviour
 		yield return null;
         done = false;
         int lettersRevealed = 0;
-        interactionBox.Interaction = "";
+        //interactionBox.Interaction = "";
         while (lettersRevealed < msg.Length)
         {
 			if (GameManager.Instance.Player.Controller.Interact) {
@@ -195,19 +195,19 @@ public class UIManager : MonoBehaviour
 			}
         }
 		yield return null;
-        interactionBox.Interaction = "Next";
+        //interactionBox.Interaction = "Next";
         while (!GameManager.Instance.Player.Controller.Interact)
         {
             
             yield return null;
         }
-        interactionBox.Interaction = "";
+        //interactionBox.Interaction = "";
         done = true;
     }
 
 	IEnumerator NextElement()
 	{
-		interactionBox.Interaction = "";
+		//interactionBox.Interaction = "";
 		yield return new WaitForEndOfFrame();
 		revealing = false;
 		GameManager.Instance.Cutscene.NextElement();
@@ -379,15 +379,26 @@ public class UIManager : MonoBehaviour
             rightBox.ItemSprite = p.RightItem;
         }
         rightBox.Key = c.RightItemKey;
-        interactionBox.Key = c.InteractKey.ToUpper();
+        //interactionBox.Key = c.InteractKey.ToUpper();
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
     }
 
     public void ShowInteraction(string s)
     {
+		if (s.Length > 0) {
+			leftBox.ShowInteraction (s);
+		} else {
+			leftBox.HideInteraction ();
+		}
+		/*
         interactionBox.Enabled = true;
         interactionBox.Interaction = s;
+        */
     }
+
+	public void HideInteraction() {
+		leftBox.HideInteraction ();
+	}
 
 	public ItemBox LeftItemBox {
 		get {
@@ -409,7 +420,7 @@ public class UIManager : MonoBehaviour
 		set {
 			rightBox.Enabled = value;
 			leftBox.Enabled = value;
-			interactionBox.Enabled = value;
+			//interactionBox.Enabled = value;
 		}
 	}
 

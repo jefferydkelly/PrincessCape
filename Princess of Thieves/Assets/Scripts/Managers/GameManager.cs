@@ -203,6 +203,14 @@ public class GameManager {
 		instance = null;
 	}
 
+	public float DistanceToPlayer(GameObject go) {
+		return Vector3.Distance (go.transform.position, player.transform.position);
+	}
+
+	public bool InPlayerInteractRange(GameObject go) {
+		return Vector3.Distance (go.transform.position, player.transform.position) <= player.InteractDistance;
+	}
+
 	
 }
 

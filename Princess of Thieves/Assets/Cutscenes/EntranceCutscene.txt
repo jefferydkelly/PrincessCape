@@ -30,11 +30,12 @@ Sir Matthew: There you are!
 Sir Matthew: Have at me, foul beast!
 play dragon-fire
 create Prefabs/DragonsBreath -6.25 3.5 0
-wait 2
+wait 1
+swap-sprite Matthew Knights/MatthewFire
+wait 1
 destroy DragonsBreath
 destroy DragonClosed
 activate SlideDoor false
-swap-sprite Matthew Knights/MatthewFire
 Sir Matthew: Help!  I'm on fire!
 move-x Matthew -3 2.0
 flip-x Matthew
@@ -42,8 +43,6 @@ Sir Matthew: Hot!
 move-x Matthew -13 2.0
 flip-x Matthew
 move-x Matthew -5 1
-create Prefabs/Fire -7 1.75 0
-create Prefabs/Fire -9 1.75 0
 move-x Matthew -3 0.25
 rotate Matthew -90 0.25
 move Matthew -1.75 0.5 0.25

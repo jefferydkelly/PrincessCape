@@ -87,4 +87,31 @@ public class LadderController : JDMappableObject, InteractiveObject {
 			return ladderBelow;
 		}
 	}
+
+	bool Highlighted {
+		get {
+			return myRenderer.color == Color.blue;
+		}
+	}
+
+	void OnMouseEnter() {
+		Highlight ();
+	}
+
+	void OnMouseExit() {
+		Dehighlight ();
+	}
+
+	void OnMouseOver() {
+		if (Highlighted) {
+			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
+				if (Input.GetMouseButtonDown (0)) {
+					Interact ();
+					Input.ResetInputAxes ();
+				}
+			} else {
+				Dehighlight ();
+			}
+		}
+	}
 }

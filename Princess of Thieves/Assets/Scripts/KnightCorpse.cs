@@ -43,4 +43,31 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
             p.HighlightedDestroyed(this);
         }
 	}
+
+	bool Highlighted {
+		get {
+			return myRenderer.color == Color.blue;
+		}
+	}
+
+	void OnMouseEnter() {
+		Highlight ();
+	}
+
+	void OnMouseExit() {
+		Dehighlight ();
+	}
+
+	void OnMouseOver() {
+		if (Highlighted) {
+			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
+				if (Input.GetMouseButtonDown (0)) {
+					Interact ();
+					Input.ResetInputAxes ();
+				}
+			} else {
+				Dehighlight ();
+			}
+		}
+	}
 }

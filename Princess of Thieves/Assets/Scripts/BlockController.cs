@@ -7,26 +7,56 @@ using System;
 //Blocks don't move anymore ? / Can't pull or push them
 public class BlockController : ResettableObject, InteractiveObject {
 	bool beingPushed = false;
+	SpriteRenderer myRenderer;
     public void Dehighlight()
     {
         UIManager.Instance.ShowInteraction("");
+		myRenderer.color = Color.white;
     }
 
     public void Highlight()
     {
-        UIManager.Instance.ShowInteraction("Push");
+        UIManager.Instance.ShowInteraction("Move");
+		myRenderer.color = Color.blue;
     }
+
+	void OnMouseEnter() {
+		Highlight ();
+	}
+
+	void OnMouseExit() {
+		if (!beingPushed) {
+			Dehighlight ();
+		}
+	}
+
+	void OnMouseOver() {
+		if (Highlighted) {
+			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
+				if (Input.GetMouseButtonDown (0)) {
+					Interact ();
+					Input.ResetInputAxes ();
+				}
+			} else if (!beingPushed) {
+				Dehighlight ();
+			}
+		}
+	}
 
     public void Interact()
     {
-        GameManager.Instance.Player.IsPushing = !GameManager.Instance.Player.IsPushing;
+		UIManager.Instance.ShowInteraction("Let Go");
+		myRenderer.color = Color.white;
+        
 
-        if (GameManager.Instance.Player.IsPushing) //if we are pushing
+        if (!GameManager.Instance.Player.IsPushing) //if we are pushing
         {
 			beingPushed = true;
             GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+			GameManager.Instance.Player.Push (this);
         } else
         {
+			GameManager.Instance.Player.IsPushing = false;
 			beingPushed = false;
             GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
         }
@@ -35,6 +65,7 @@ public class BlockController : ResettableObject, InteractiveObject {
     // Use this for initialization
     void Start () {
         startPosition = transform.position;
+		myRenderer = GetComponent<SpriteRenderer> ();
 	}
 
 	void Update() {
@@ -43,11 +74,22 @@ public class BlockController : ResettableObject, InteractiveObject {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2 (0,-1), 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) { // we stop running into things
-                GameManager.Instance.Player.IsPushing = false;
-				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
-				beingPushed = false;
-
+				LetGo();
+			} else if (Input.GetMouseButtonDown (0)) {
+				LetGo ();
+				Input.ResetInputAxes ();
 			}
+		}
+	}
+
+	void LetGo() {
+		GameManager.Instance.Player.IsPushing = false;
+		GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+		beingPushed = false;
+	}
+	bool Highlighted {
+		get {
+			return myRenderer.color == Color.blue;
 		}
 	}
 }

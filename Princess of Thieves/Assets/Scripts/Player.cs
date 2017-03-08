@@ -39,9 +39,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     private bool inWater = false;
     private float percInWater = 0f; 
 
-    InteractiveObject highlighted;
+
+    //InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
-	bool collidingWithHighlighted = false;
+	//bool collidingWithHighlighted = false;
+
+	float interactDistance = 2.0f;
 
 	Timer resetTimer;
 	//Sound Effects
@@ -151,7 +154,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						if (tryingToJump) {
                         
 							Jump ();
-						} else if (!collidingWithHighlighted) {
+						} /*else if (!collidingWithHighlighted) {
                      
 							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3 (0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 1, 1 << LayerMask.NameToLayer ("Interactive"));
 
@@ -175,7 +178,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 								highlighted = null;
 							}
                         
-						}
+						}*/
 
 						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
 							fwdX = (int)Mathf.Sign (controller.Horizontal);
@@ -184,28 +187,27 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					}
 
 				} 
-
+				/*
 				if (highlighted != null) {
 					if (controller.Interact) {
 						highlighted.Interact ();
 					}
-				}
+				}*/
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
             } else if (IsPushing && highlightedBody)
             {
+				/*
                 if (Controller.Interact)
                 {
                     highlightedBody.gameObject.GetComponent<InteractiveObject>().Interact();
-                }
-                else
-                {
-                    Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
-                    highlightedBody.Translate(blockMove);
-                    myRigidBody.Translate(blockMove);
-                }
+                }*/
+
+                Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
+                highlightedBody.Translate(blockMove);
+                myRigidBody.Translate(blockMove);
             }
             
         }
@@ -379,6 +381,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			}
 		} 
 
+		/*
 		if (col.OnLayer ("Interactive") && !IsClimbing) {
 			InteractiveObject io = col.GetComponent<InteractiveObject> ();
 			if (io != null) {
@@ -395,7 +398,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				}
 				collidingWithHighlighted = true;
 			}
-		}
+		}*/
     }
 
 	void OnTriggerExit2D(Collider2D col)
@@ -427,6 +430,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			inWater = false;
 		} 
 
+		/*
 		if (col.OnLayer("Interactive")){
 			InteractiveObject io = col.GetComponent<InteractiveObject> ();
 
@@ -435,7 +439,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				highlighted = null;
 				collidingWithHighlighted = false;
 			}
-		}
+		}*/
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -665,6 +669,12 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	public float InteractDistance {
+		get {
+			return interactDistance;
+		}
+	}
+
 	/// <summary>
 	/// Gets the sprite for the left item.
 	/// </summary>
@@ -840,6 +850,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	public void Push(BlockController bc) {
+		highlightedBody = bc.GetComponent<Rigidbody2D>();
+		IsPushing = true;
+	}
 	/// <summary>
 	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is pushing.
 	/// </summary>
@@ -853,14 +867,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
         set
         {
-			if (value && highlighted != null && !IsPushing && !IsFrozen)
+			if (value /*&& highlighted != null*/ && !IsPushing && !IsFrozen)
             {
 
-                UIManager.Instance.ShowInteraction("Stop");
+                UIManager.Instance.ShowInteraction("Let Go");
                 state |= PlayerState.Pushing;
                 state |= PlayerState.Frozen;
 				myAnimator.SetBool ("FWD", false);
-                highlightedBody = (highlighted as BlockController).GetComponent<Rigidbody2D>();
             }
             else
             {
@@ -1005,10 +1018,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	}
 
 	public void HighlightedDestroyed(InteractiveObject io) {
+		/*
 		if (io == highlighted) {
 			highlighted = null;
 			highlightedBody = null;
-		}
+		}*/
 	}
 
 	public void ShowMagnetRange(Color c) {
