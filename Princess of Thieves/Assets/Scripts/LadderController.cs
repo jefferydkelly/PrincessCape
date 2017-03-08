@@ -29,17 +29,13 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	}
 
 	public void Highlight() {
-		if (!GameManager.Instance.Player.IsClimbing) {
-			myRenderer.color = Color.blue;
-			UIManager.Instance.ShowInteraction ("Climb");
-		} else {
-			UIManager.Instance.ShowInteraction ("Get Off");
-		}
+		myRenderer.color = Color.blue;
+		UIManager.Instance.ShowInteraction ("Climb");
 	}
 
 	public void Dehighlight() {
 		myRenderer.color = Color.white;
-		UIManager.Instance.ShowInteraction ("");
+		UIManager.Instance.HideInteraction ();
 	}
 
 	public void CheckForConnections() {

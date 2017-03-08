@@ -208,7 +208,13 @@ public class GameManager {
 	}
 
 	public bool InPlayerInteractRange(GameObject go) {
-		return Vector3.Distance (go.transform.position, player.transform.position) <= player.InteractDistance;
+		Vector3 difference = (go.transform.position - player.Position).normalized;
+		foreach(RaycastHit2D hit in Physics2D.RaycastAll(player.Position, difference, player.InteractDistance, 1 << LayerMask.NameToLayer("Interactive"))) {
+			if (hit.collider.gameObject == go) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	
