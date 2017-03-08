@@ -19,7 +19,11 @@ public class MenuController : MonoBehaviour {
     [SerializeField]
     protected List<GameObject> items;
     void Start() {
-        current = this;
+		Setup ();
+	}
+
+	protected void Setup() {
+		current = this;
 		GameObject curSelected = EventSystem.current.firstSelectedGameObject;
 		if (curSelected) {
 			selected = curSelected.GetComponent<Button> ();
@@ -32,7 +36,6 @@ public class MenuController : MonoBehaviour {
 			inputTimer.Start ();
 		}
 	}
-		
 	protected void CheckInput() {
 		if (TheController.Submit) {
 			Selected.onClick.Invoke ();
@@ -102,18 +105,4 @@ public class MenuController : MonoBehaviour {
 			Selected = buttons [index];
 		}
 	}
-
-    public void Level1Load()
-    {
-       // Debug.Log("Hello");
-        SceneManager.LoadScene("JDCapeTestScene");
-    }
-    public void Level2Load()
-    {
-        // Debug.Log("Hello");
-        //create a player
-        //GameObject player = Instantiate(items[2]); // GameManager.Instance.Player.gameObject;
-        GameManager.Instance.Player.AddItem(items[0]);
-        SceneManager.LoadScene("JDGloveTestScene");
-    }
 }

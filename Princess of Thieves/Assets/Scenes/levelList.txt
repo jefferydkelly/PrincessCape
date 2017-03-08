@@ -1,0 +1,4 @@
+JDCapeTestScene, The Princess Escapes
+JDGloveTestScene, The Alchemy Labs
+JDPullCapeScene, Challenge: Cape + Glove
+JDPushGloveTestScene, By Your Bootstraps
