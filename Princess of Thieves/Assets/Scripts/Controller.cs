@@ -21,6 +21,7 @@ public class Controller
 	string pauseKey;
 	string submitKey;
 
+    string restartKey;
     string resetKey;
 
 	Controller360 gamepad;
@@ -62,6 +63,7 @@ public class Controller
 			pauseKey = "p";
 			submitKey = "enter";
             resetKey = "escape";
+            restartKey = "1";
 
         }
         else
@@ -180,7 +182,13 @@ public class Controller
             return Input.GetKeyDown(resetKey);
         }
     }
-
+    public bool Restart
+    {
+        get
+        {
+            return Input.GetKeyDown(restartKey);
+        }
+    }
     public bool Jump
     {
         get
