@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -229,11 +229,15 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
         else if (Controller.Reset)
         {
-           // IsDead = true;
+            // IsDead = true;
+            SceneManager.LoadScene("TitleScreen");
+        }
+        else if (Controller.Restart)
+        {
+            // IsDead = true;
             GameManager.Instance.Reset();
         }
-
-		if (!manager.IsPaused)
+        if (!manager.IsPaused)
 		{   
 			if (!IsFrozen) {
 				if (controller.Horizontal != 0) {

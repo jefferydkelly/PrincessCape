@@ -16,6 +16,8 @@ public class MenuController : MonoBehaviour {
 	protected WaitDelegate inputDelegate;
 	protected Timer inputTimer;
 
+    [SerializeField]
+    protected List<GameObject> items;
     void Start() {
         current = this;
 		GameObject curSelected = EventSystem.current.firstSelectedGameObject;
@@ -103,7 +105,15 @@ public class MenuController : MonoBehaviour {
 
     public void Level1Load()
     {
-        Debug.Log("Hello");
+       // Debug.Log("Hello");
         SceneManager.LoadScene("JDCapeTestScene");
+    }
+    public void Level2Load()
+    {
+        // Debug.Log("Hello");
+        //create a player
+        //GameObject player = Instantiate(items[2]); // GameManager.Instance.Player.gameObject;
+        GameManager.Instance.Player.AddItem(items[0]);
+        SceneManager.LoadScene("JDGloveTestScene");
     }
 }
