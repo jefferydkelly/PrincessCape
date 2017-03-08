@@ -39,7 +39,7 @@ public class Cutscene
 			} else if (p == "flip-y") {
 				c = new CutsceneEffect (parts [1], EffectType.FlipVertical);
 			} else if (p == "scale") {
-				c = new CutsceneScale (ScaleType.All, parts [1], float.Parse (parts [2]), float.Parse (parts [3]));
+				c = new CutsceneScale (ScaleType.All, parts [1], float.Parse (parts [2]), parts.Length == 4 ? float.Parse (parts [3]) : 0);
 			} else if (p == "scalex") {
 				c = new CutsceneScale (ScaleType.X, parts [1], float.Parse (parts [2]), float.Parse (parts [3]));
 			} else if (p == "scaley") {
@@ -211,7 +211,7 @@ public class Cutscene
 	public CutsceneActor FindActor(string actorName)
 	{
 		foreach (CutsceneActor ca in charactersOnStage)
-		{
+		{ 
 			if (ca.CharacterName.Trim().Equals(actorName.Trim()))
 			{
 				return ca;
