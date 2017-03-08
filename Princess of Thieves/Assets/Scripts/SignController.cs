@@ -19,7 +19,7 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	}
 
 	public void Dehighlight() {
-		UIManager.Instance.ShowInteraction ("");
+		UIManager.Instance.HideInteraction ();
 		myRenderer.material.color = Color.white;
 	}
 

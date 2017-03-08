@@ -20,7 +20,6 @@ public class InventoryMenu : MonoBehaviour {
 		childImages = GetComponentsInChildren<InventoryItem>().ToList();
         UpdateUI();
         if (UIManager.Instance) { 
-            UIManager.Instance.ShowInteraction("Info");
 			/*
             InvokeRepeating("HandleInput", waitTime, waitTime);
 

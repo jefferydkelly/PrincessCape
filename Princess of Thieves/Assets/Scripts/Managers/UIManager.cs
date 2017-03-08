@@ -247,9 +247,7 @@ public class UIManager : MonoBehaviour
         //stealthMeter.Enabled = false;
 
         messageBox.Enabled = true;
-        messageBox.Text = msg;
-        
-        ShowInteraction("Close");
+		messageBox.Text = msg;
 	}
 
     public void ShowDialog(string msg)

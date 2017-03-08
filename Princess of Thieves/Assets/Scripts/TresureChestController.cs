@@ -20,7 +20,7 @@ public class TresureChestController : JDMappableObject, InteractiveObject {
     {
         if (!opened)
         {
-            UIManager.Instance.ShowInteraction("");
+			UIManager.Instance.HideInteraction ();
             GameManager.Instance.Player.AddItem(contents);
 			myRenderer.color = Color.white;
             myRenderer.sprite = openedSprite;
@@ -42,7 +42,7 @@ public class TresureChestController : JDMappableObject, InteractiveObject {
     {
         if (!opened)
         {
-            UIManager.Instance.ShowInteraction("");
+			UIManager.Instance.HideInteraction ();
 			myRenderer.color = Color.white;
         }
     }

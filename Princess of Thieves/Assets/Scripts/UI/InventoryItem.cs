@@ -64,7 +64,9 @@ public class InventoryItem : MonoBehaviour {
 		}
 
 		set {
-			myImage.sprite = value;
+			if (myImage) {
+				myImage.sprite = value;
+			}
 		}
 	}
 }
