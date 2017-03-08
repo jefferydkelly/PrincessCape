@@ -7,50 +7,55 @@ align right
 show Elwynn 0 1.25
 flip-x Elwynn
 Elwynn: Kidnapped by another dragon?
-move Elwynn -3 1.25 1.5
+move-x Elwynn -3 1.5
 Elwynn: How many times does that make it this year?
 flip-x Elwynn
-move Elwynn 0 1.25 1.5
+move-x Elwynn 0 1.5
 Elwynn: No matter.  I'm sure Father will send some brave knights to rescue me.
 show Matthew -18 2.5
 scalex Matthew 1.5 0.1
 pan -4 0 1
 move Matthew -17.25 1.5 0.5
 align left
-Sir Matthew: Princess Elwynn?
-Sir Matthew: I'm here to save you from that dragon.
+Sir Matthew: Princess Elwynn, I'm here to save you from that dragon.
 activate Gate true
 flip-x Elwynn
-move Matthew -13 1.5 1
+move-x Matthew -12 1
 pan 2.5 0 1
 activate SlideDoor true
 play dragon-roar
-create Prefabs/DragonClosed -13 11 0
+create Prefabs/DragonClosed 2 5.5 0
 Slog: Raaaaaaaaaaaaaaaw!
 Sir Matthew: There you are!
 Sir Matthew: Have at me, foul beast!
 play dragon-fire
-create Prefabs/DragonsBreath -12.5 3 0
+create Prefabs/DragonsBreath -6.25 3.5 0
 wait 2
 destroy DragonsBreath
 destroy DragonClosed
 activate SlideDoor false
 swap-sprite Matthew Knights/MatthewFire
 Sir Matthew: Help!  I'm on fire!
-move Matthew -3 1.5 2.0
+move-x Matthew -3 2.0
 flip-x Matthew
 Sir Matthew: Hot!
-move Matthew -13 1.5 2.0
+move-x Matthew -13 2.0
 flip-x Matthew
-move Matthew -5 1.5 1
+move-x Matthew -5 1
 create Prefabs/Fire -7 1.75 0
 create Prefabs/Fire -9 1.75 0
-move Matthew -3 1.5 0.25
+move-x Matthew -3 0.25
 rotate Matthew -90 0.25
 move Matthew -1.75 0.5 0.25
 Sir Matthew: I'm....so...sorry!
 fade-out Matthew 0.5
 create Prefabs/MatthewCorpse -1.75 0.75 0.25
+Elwynn: What do I do now?
+move-x Elwynn -2 0.5
+Elwynn: What is that?  His cape is still intact.
+flip-x Elwynn
+move-x Elwynn -1 0.5
+Elwynn: If I take that, I just might be able to escape.
 hide Elwynn
-enable Player 0 1.25
+enable Player -1 1.25
 wait 2

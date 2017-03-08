@@ -126,7 +126,7 @@ public class CutsceneWait : CutsceneElement
 
 public enum MoveTypes
 {
-	XY, Rotate
+	X, Y, XY, Rotate
 }
 
 public class CutsceneMovement : CutsceneElement
@@ -149,7 +149,14 @@ public class CutsceneMovement : CutsceneElement
 	public CutsceneMovement(string target, MoveTypes mt, float angle, float dt) {
 		mover = target;
 		moveType = mt;
-		ang = angle;
+		if (mt == MoveTypes.Rotate) {
+			ang = angle;
+		} else if (mt == MoveTypes.X) {
+			x = angle;
+		} else if (mt == MoveTypes.Y) {
+			y = angle;
+		}
+
 		time = dt;
 	}
 
@@ -158,11 +165,16 @@ public class CutsceneMovement : CutsceneElement
 		CutsceneActor myActor = GameManager.Instance.Cutscene.FindActor (mover);
 
 		if (myActor != null) {
-			if (moveType == MoveTypes.XY) {
-				myActor.MoveTo (new Vector2 (x, y), time);
-			} else if (moveType == MoveTypes.Rotate) {
+			if (moveType == MoveTypes.Rotate) {
 				myActor.StartRotation (ang, time);
-			}
+			} else {
+				if (moveType == MoveTypes.X) {
+					y = myActor.transform.position.y;
+				} else if (moveType == MoveTypes.Y) {
+					x = myActor.transform.position.x;
+				}
+				myActor.MoveTo (new Vector2 (x, y), time);
+			} 
 		}
 	}
 }

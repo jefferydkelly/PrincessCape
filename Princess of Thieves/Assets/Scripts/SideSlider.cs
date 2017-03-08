@@ -8,6 +8,8 @@ public class SideSlider : ResettableObject,ActivateableObject {
 	bool startOpen = false;
 	[SerializeField]
 	float travelTime = 1.0f;
+	[SerializeField]
+	bool openHorizontally = true;
 
 	Vector3 openPos;
 	Vector3 closePos;
@@ -17,11 +19,19 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		startPosition = transform.position;
 		if (startOpen) {
 			openPos = transform.position;
-			closePos = openPos - new Vector3 (gameObject.HalfWidth () * 2, 0);
+			if (openHorizontally) {
+				closePos = openPos - new Vector3 (gameObject.HalfWidth () * 2, 0);
+			} else {
+				closePos = openPos - new Vector3 (0, gameObject.HalfHeight () * 2);
+			}
 			status = SliderStatus.Open;
 		} else {
 			closePos = transform.position;
-			openPos = closePos + new Vector3 (gameObject.HalfWidth () * 2, 0);
+			if (openHorizontally) {
+				openPos = closePos + new Vector3 (gameObject.HalfWidth () * 2, 0);
+			} else {
+				openPos = closePos + new Vector3 (0, gameObject.HalfHeight () * 2);
+			}
 			status = SliderStatus.Closed;
 		}
 	}
