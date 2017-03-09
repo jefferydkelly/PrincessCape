@@ -475,3 +475,28 @@ public class CutsceneSpriteChange : CutsceneElement
 		}
 	}
 }
+
+public class CutsceneFontEffect : CutsceneElement {
+	bool enact;
+	FontEffects effect;
+
+	public CutsceneFontEffect(FontEffects fe, bool act) {
+		effect = fe;
+		enact = act;
+		autoAdvance = true;
+	}
+
+	public override void Run ()
+	{
+		if (effect == FontEffects.Bold) {
+			UIManager.Instance.Bolded = enact;
+		} else if (effect == FontEffects.Italics) {
+			UIManager.Instance.Italicized = enact;
+		}
+	}
+}
+
+public enum FontEffects {
+	Bold,
+	Italics
+}

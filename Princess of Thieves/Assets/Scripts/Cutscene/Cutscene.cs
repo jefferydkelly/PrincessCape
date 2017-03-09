@@ -56,13 +56,13 @@ public class Cutscene
 				c = new CutsceneMovement (parts [1], MoveTypes.Y, float.Parse (parts [2]), parts.Length == 4 ? float.Parse (parts [3]) : 0);
 			} else if (p == "character") {
 				if (parts.Length == 2) {
-					CreateCharacter (parts [1].Trim());
+					CreateCharacter (parts [1].Trim ());
 				} else {
-					CreateCharacter (parts [1].Trim(), parts [2]);
+					CreateCharacter (parts [1].Trim (), parts [2]);
 				}
 				continue;
 			} else if (p == "swap-sprite") {
-				c = new CutsceneSpriteChange (parts[1], parts[2]);
+				c = new CutsceneSpriteChange (parts [1], parts [2]);
 			} else if (p == "pan") {
 				if (parts [1] == "to") {
 					GameObject go = GameObject.Find (parts [2]);
@@ -75,46 +75,47 @@ public class Cutscene
 			} else if (p == "create") {
 				c = new CutsceneCreation (parts [1], parts [2], parts [3], parts [4]);
 			} else if (p == "destroy") {
-				c = new CutsceneCreation (parts [1].Trim());
+				c = new CutsceneCreation (parts [1].Trim ());
 			} else if (p == "add") {
-				c = new CutsceneAdd (Resources.Load<GameObject> (parts[1].Trim()));
+				c = new CutsceneAdd (Resources.Load<GameObject> (parts [1].Trim ()));
 			} else if (p == "disable") {
 				GameObject go;
-				CutsceneActor ca = FindActor (parts [1].Trim());
+				CutsceneActor ca = FindActor (parts [1].Trim ());
 				if (ca == null) {
-					go = GameObject.Find (parts [1].Trim());
+					go = GameObject.Find (parts [1].Trim ());
 				} else {
 					go = ca.gameObject;
 				}
 				c = new CutsceneEnable (go, false);
 			} else if (p == "enable") {
 				GameObject go;
-				CutsceneActor ca = FindActor (parts [1].Trim());
+				CutsceneActor ca = FindActor (parts [1].Trim ());
 				if (ca == null) {
-					go = GameObject.Find (parts [1].Trim());
+					go = GameObject.Find (parts [1].Trim ());
 				} else {
 					go = ca.gameObject;
 				}
-                if (parts.Length == 4)
-                {
-                    c = new CutsceneEnable(go, float.Parse(parts[2]), float.Parse(parts[3]));
-                }
-                else
-                {
-                    c = new CutsceneEnable(go, true);
-                }
+				if (parts.Length == 4) {
+					c = new CutsceneEnable (go, float.Parse (parts [2]), float.Parse (parts [3]));
+				} else {
+					c = new CutsceneEnable (go, true);
+				}
 			} else if (p == "activate") {
-                GameObject go = GameObject.Find(parts[1].Trim());
+				GameObject go = GameObject.Find (parts [1].Trim ());
 				if (go != null) {
 					ActivateableObject ao = go.GetComponent<ActivateableObject> ();
 					if (ao != null) {
-						c = new CutsceneActivate (ao, parts [2].Trim() == "true");
+						c = new CutsceneActivate (ao, parts [2].Trim () == "true");
 					}
 				}
 			} else if (p == "align") {
-				c = new CutsceneAlign (parts [1].Trim() == "left");
+				c = new CutsceneAlign (parts [1].Trim () == "left");
 			} else if (p == "play") {
-				c = new CutscenePlay (parts [1].Trim());
+				c = new CutscenePlay (parts [1].Trim ());
+			} else if (p == "bold") {
+				c = new CutsceneFontEffect (FontEffects.Bold, parts [1].Trim () == "true");
+			} else if (p == "italics") {
+				c = new CutsceneFontEffect (FontEffects.Italics, parts [1].Trim () == "true");
 			}
 			else
 			{

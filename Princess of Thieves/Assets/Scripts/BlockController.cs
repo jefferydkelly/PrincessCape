@@ -10,56 +10,60 @@ public class BlockController : ResettableObject, InteractiveObject {
 	SpriteRenderer myRenderer;
     public void Dehighlight()
     {
-        UIManager.Instance.ShowInteraction("");
+		UIManager.Instance.ShowInteraction ("");
 		myRenderer.color = Color.white;
     }
 
     public void Highlight()
     {
-        UIManager.Instance.ShowInteraction("Move");
+		UIManager.Instance.ShowInteraction ("Move");
 		myRenderer.color = Color.blue;
     }
 
 	void OnMouseEnter() {
-		Highlight ();
+		if (!GameManager.Instance.IsPaused) {
+			Highlight ();
+		}
 	}
 
 	void OnMouseExit() {
-		if (!beingPushed) {
+		if (!GameManager.Instance.IsPaused && !beingPushed) {
 			Dehighlight ();
 		}
 	}
 
 	void OnMouseOver() {
-		if (Highlighted) {
-			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-				if (Input.GetMouseButtonDown (0)) {
-					Interact ();
-					Input.ResetInputAxes ();
+		if (!GameManager.Instance.IsPaused) {
+			if (Highlighted) {
+				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
+					if (Input.GetMouseButtonDown (0)) {
+						Interact ();
+						Input.ResetInputAxes ();
+					}
+				} else if (!beingPushed) {
+					Dehighlight ();
 				}
-			} else if (!beingPushed) {
-				Dehighlight ();
 			}
 		}
 	}
 
     public void Interact()
     {
-		UIManager.Instance.ShowInteraction("Let Go");
-		myRenderer.color = Color.white;
+		if (!GameManager.Instance.IsPaused) {
+			UIManager.Instance.ShowInteraction ("Let Go");
+			myRenderer.color = Color.white;
         
 
-        if (!GameManager.Instance.Player.IsPushing) //if we are pushing
-        {
-			beingPushed = true;
-            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-			GameManager.Instance.Player.Push (this);
-        } else
-        {
-			GameManager.Instance.Player.IsPushing = false;
-			beingPushed = false;
-            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
-        }
+			if (!GameManager.Instance.Player.IsPushing) { //if we are pushing
+				beingPushed = true;
+				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation;
+				GameManager.Instance.Player.Push (this);
+			} else {
+				GameManager.Instance.Player.IsPushing = false;
+				beingPushed = false;
+				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+			}
+		}
     }
 
     // Use this for initialization

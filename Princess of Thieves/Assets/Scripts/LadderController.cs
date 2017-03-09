@@ -91,22 +91,28 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	}
 
 	void OnMouseEnter() {
-		Highlight ();
+		if (!GameManager.Instance.IsPaused) {
+			Highlight ();
+		}
 	}
 
 	void OnMouseExit() {
-		Dehighlight ();
+		if (!GameManager.Instance.IsPaused) {
+			Dehighlight ();
+		}
 	}
 
 	void OnMouseOver() {
-		if (Highlighted) {
-			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-				if (Input.GetMouseButtonDown (0)) {
-					Interact ();
-					Input.ResetInputAxes ();
+		if (!GameManager.Instance.IsPaused) {
+			if (Highlighted) {
+				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
+					if (Input.GetMouseButtonDown (0)) {
+						Interact ();
+						Input.ResetInputAxes ();
+					}
+				} else {
+					Dehighlight ();
 				}
-			} else {
-				Dehighlight ();
 			}
 		}
 	}
