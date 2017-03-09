@@ -48,23 +48,29 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 		}
 	}
 
-	void SpawnSegment() {
-		GameObject segment = Instantiate (prefab);
-		segment.transform.parent = transform;
-		segment.transform.localPosition = -new Vector3 (0, prefab.HalfHeight() * 2 * (transform.childCount - 0.5f), -1);
+    void SpawnSegment()
+    {
+        if (transform.childCount < numSegments)
+        {
+            GameObject segment = Instantiate(prefab);
+            segment.transform.parent = transform;
+            segment.transform.localPosition = -new Vector3(0, prefab.HalfHeight() * 2 * (transform.childCount - 0.5f), -1);
 
 
-	
-		segment.name = "Segment " + transform.childCount;
-		AudioManager.Instance.PlaySound (dropSound);
-		if (transform.childCount == numSegments) {
-			foreach (LadderController lc in GetComponentsInChildren<LadderController>()) {
-				lc.CheckForConnections();
-			}
-			spawnTimer.Stop ();
-			isActive = true;
-		}
-	}
+
+            segment.name = "Segment " + transform.childCount;
+            AudioManager.Instance.PlaySound(dropSound);
+            if (transform.childCount >= numSegments)
+            {
+                foreach (LadderController lc in GetComponentsInChildren<LadderController>())
+                {
+                    lc.CheckForConnections();
+                }
+                spawnTimer.Stop();
+                isActive = true;
+            }
+        }
+    }
 
 	void DestroySegment() {
 		if (transform.childCount > 0) {
