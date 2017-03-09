@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class LadderController : JDMappableObject, InteractiveObject {
 	SpriteRenderer myRenderer;
+	Collider2D myCollider;
 	bool ladderAbove;
 	bool ladderBelow;
 	bool collidingWithPlayer;
 	void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
+		CheckForConnections ();
+		myCollider = GetComponent<Collider2D> ();
 
 	}
 	public void Interact() {
@@ -16,16 +19,20 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		if (!player.IsClimbing) {
 			player.IsClimbing = true;
             Vector3 pos;
-            if (GameManager.Instance.Player.transform.position.y < gameObject.transform.position.y)
-			    pos = transform.position - new Vector3 (0, gameObject.HalfHeight () - player.HalfHeight);
-            else
-                pos = transform.position + new Vector3(0, gameObject.HalfHeight() - player.HalfHeight);
+			pos = player.transform.position;
+			pos.x = transform.position.x;
+		
+			if (pos.y >= gameObject.transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 0.01f) {
+				myCollider.isTrigger = true;
+				pos.y = gameObject.transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 1f;
+			}
             pos.z = 0;
 			player.transform.position = pos;
 			myRenderer.color = Color.white;
 		} else {
 			player.IsClimbing = false;
 		}
+		Input.ResetInputAxes ();
 	}
 
 	public void Highlight() {
@@ -42,11 +49,17 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.down, gameObject.HalfHeight () + 0.1f, 1 << LayerMask.NameToLayer ("Interactive"));
 		if (hit.collider != null) {
 			ladderBelow = hit.collider.CompareTag ("Ladder");
+			if (ladderBelow) {
+				hit.collider.GetComponent<LadderController> ().LinkLadder (true);
+			}
 		}
 
 		hit = Physics2D.Raycast (transform.position, Vector2.up, gameObject.HalfHeight () + 0.1f, 1 << LayerMask.NameToLayer ("Interactive"));
 		if (hit.collider != null) {
 			ladderAbove = hit.collider.CompareTag ("Ladder");
+			if (ladderAbove) {
+				hit.collider.GetComponent<LadderController> ().LinkLadder (false);
+			}
 		}
 	}
 
@@ -69,6 +82,13 @@ public class LadderController : JDMappableObject, InteractiveObject {
 
 	void OnTriggerExit2D(Collider2D col) {
 		if (col.CompareTag ("Player")) {
+			Player player = GameManager.Instance.Player;
+
+			if (player.Position.y >= transform.position.y) {
+				Vector3 pos = player.Position;
+				pos.y = gameObject.transform.position.y + gameObject.HalfHeight () + player.HalfHeight + 0.01f;
+				player.transform.position = pos;
+			}
 			collidingWithPlayer = false;
 		}
 	}
@@ -102,6 +122,13 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		}
 	}
 
+	void LinkLadder(bool above) {
+		if (above) {
+			ladderAbove = true;
+		} else {
+			ladderBelow = true;
+		}
+	}
 	void OnMouseOver() {
 		if (!GameManager.Instance.IsPaused) {
 			if (Highlighted) {
