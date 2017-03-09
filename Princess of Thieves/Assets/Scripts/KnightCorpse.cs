@@ -51,17 +51,21 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 	}
 
 	void OnMouseEnter() {
-		Highlight ();
+		if (!GameManager.Instance.IsPaused) {
+			Highlight ();
+		}
 	}
 
 	void OnMouseExit() {
-		Dehighlight ();
+		if (!GameManager.Instance.IsPaused) {
+			Dehighlight ();
+		}
 	}
 
 	void OnMouseOver() {
 		if (Highlighted) {
 			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-				if (Input.GetMouseButtonDown (0)) {
+				if (GameManager.Instance.Player.Controller.Interact) {
 					Interact ();
 					Input.ResetInputAxes ();
 				}

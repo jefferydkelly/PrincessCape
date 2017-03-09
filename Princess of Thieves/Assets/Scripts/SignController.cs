@@ -6,10 +6,12 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	[SerializeField]
 	TextAsset sourceFile;
 	SpriteRenderer myRenderer;
+
 	public void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
 	}
 	public void Interact() {
+		myRenderer.material.color = Color.white;
 		GameManager.Instance.StartCutscene (sourceFile);
 	}
 
@@ -41,7 +43,7 @@ public class SignController : MonoBehaviour, InteractiveObject {
 		if (!GameManager.Instance.IsPaused) {
 			if (Highlighted) {
 				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-					if (Input.GetMouseButtonDown (0)) {
+					if (GameManager.Instance.Player.Controller.Interact) {
 						Interact ();
 						Input.ResetInputAxes ();
 					}

@@ -17,6 +17,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	public void Interact() {
 		Player player = GameManager.Instance.Player;
 		if (!player.IsClimbing) {
+			myRenderer.color = Color.white;
 			player.IsClimbing = true;
             Vector3 pos;
 			pos = player.transform.position;
@@ -29,20 +30,24 @@ public class LadderController : JDMappableObject, InteractiveObject {
             pos.z = 0;
 			player.transform.position = pos;
 			myRenderer.color = Color.white;
-		} else {
-			player.IsClimbing = false;
+			UIManager.Instance.ShowInteraction ("Get Off");
+			Input.ResetInputAxes ();
 		}
-		Input.ResetInputAxes ();
+
 	}
 
 	public void Highlight() {
-		myRenderer.color = Color.blue;
-		UIManager.Instance.ShowInteraction ("Climb");
+		if (!GameManager.Instance.Player.IsClimbing) {
+			myRenderer.color = Color.blue;
+			UIManager.Instance.ShowInteraction ("Climb");
+		}
 	}
 
 	public void Dehighlight() {
 		myRenderer.color = Color.white;
-		UIManager.Instance.HideInteraction ();
+		if (!GameManager.Instance.Player.IsClimbing) {
+			UIManager.Instance.HideInteraction ();
+		}
 	}
 
 	public void CheckForConnections() {
@@ -133,7 +138,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		if (!GameManager.Instance.IsPaused) {
 			if (Highlighted) {
 				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-					if (Input.GetMouseButtonDown (0)) {
+					if (GameManager.Instance.Player.Controller.Interact) {
 						Interact ();
 						Input.ResetInputAxes ();
 					}

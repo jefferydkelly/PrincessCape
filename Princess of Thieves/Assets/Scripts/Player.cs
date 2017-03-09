@@ -25,6 +25,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	PlayerState state = PlayerState.Normal;
     bool tryingToJump = false;
+	bool tryingToInteract = false;
     public float lightOnPlayer;
 
     [SerializeField]
@@ -123,14 +124,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						myRigidBody.velocity = Vector2.zero;
 					}
 
-					/*
-					if (tryingToJump) {
+
+					if (controller.AltJump) {
 						IsClimbing = false;
 						Jump ();
 						return;
-					}*/
-					if (controller.Interact) {
+					}
+					if (tryingToInteract) {
+						Debug.Log ("Let it go");
 						IsClimbing = false;
+						Input.ResetInputAxes ();
 					}
 				}//end climbing
                 else if (inWater)
@@ -213,6 +216,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
 
         tryingToJump = false;
+		tryingToInteract = false;
         
 	}
 	// Update is called once per frame
@@ -223,7 +227,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             manager.IsInMenu = !manager.IsInMenu;
 
 		}
-        else if (Controller.Jump)
+		else if (Controller.Jump)
         {
             tryingToJump = true;
         }
@@ -237,8 +241,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             // IsDead = true;
             GameManager.Instance.Reset();
         }
-        if (!manager.IsPaused)
-		{   
+		if (!manager.IsPaused) {
+			tryingToInteract = controller.Interact;
 			if (!IsFrozen) {
 				if (controller.Horizontal != 0) {
 					myAnimator.SetBool ("FWD", true);
@@ -264,14 +268,16 @@ public class Player : ResettableObject, DamageableObject, CasterObject
            
             if (leftItem != null)
             {
-				if (controller.ActivateLeftItem) {
+				if (!IsClimbing) {
+					if (controller.ActivateLeftItem) {
 
-					leftItem.Activate ();
-				} else if (leftItem.Continuous && leftItem.IsActive) {
-					if (controller.LeftItemDown) {
-						leftItem.Use ();
-					} else if (controller.DeactivateLeftItem) {
-						leftItem.Deactivate ();
+						leftItem.Activate ();
+					} else if (leftItem.Continuous && leftItem.IsActive) {
+						if (controller.LeftItemDown) {
+							leftItem.Use ();
+						} else if (controller.DeactivateLeftItem) {
+							leftItem.Deactivate ();
+						}
 					}
 				}
             }
@@ -827,7 +833,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			}else
 			{
 				state &= ~PlayerState.IsClimbing;
-				myRigidBody.gravityScale = 1.5f;
+				if (myRigidBody) {
+					myRigidBody.gravityScale = 1.5f;
+				}
 			}
 		}
 	}

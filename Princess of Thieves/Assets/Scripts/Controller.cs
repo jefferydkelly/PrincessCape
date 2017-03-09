@@ -57,7 +57,7 @@ public class Controller
             upKey = "w";
             downKey = "s";
             jumpKey = "space";
-            interactKey = "z";
+            interactKey = "mouse 0";
             rightItemKey = "mouse 1";
 			leftItemKey = "mouse 0";
 			pauseKey = "p";
@@ -196,6 +196,12 @@ public class Controller
 			return Input.GetKeyDown(jumpKey) || Input.GetKeyDown(upKey);
         }
     }
+
+	public bool AltJump {
+		get {
+			return Input.GetKeyDown (jumpKey);
+		}
+	}
 
 	public bool Submit {
 		get {
