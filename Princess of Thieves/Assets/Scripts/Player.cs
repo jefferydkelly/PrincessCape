@@ -355,6 +355,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			}
 		} else if (col.collider.CompareTag ("Spike")) {
 			IsDead = true;
+		} else if (col.collider.CompareTag ("Ladder")) {
+			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
+				LadderController lc = col.collider.GetComponent<LadderController> ();
+				col.collider.isTrigger = lc.LadderAbove;
+			} else {
+				col.collider.isTrigger = true;
+			}
 		}
        
 	}
