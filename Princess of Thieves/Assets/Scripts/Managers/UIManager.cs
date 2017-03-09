@@ -434,6 +434,34 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
+
+	public bool Italicized {
+		get {
+			return (dialogBox.txt.fontStyle & FontStyle.Italic) > 0;
+		}
+
+		set {
+			if (value) {
+				dialogBox.txt.fontStyle |= FontStyle.Italic;
+			} else {
+				dialogBox.txt.fontStyle &= ~FontStyle.Italic;
+			}
+		}
+	}
+
+	public bool Bolded {
+		get {
+			return (dialogBox.txt.fontStyle & FontStyle.Bold) > 0;
+		}
+
+		set {
+			if (value) {
+				dialogBox.txt.fontStyle |= FontStyle.Bold;
+			} else {
+				dialogBox.txt.fontStyle &= ~FontStyle.Bold;
+			}
+		}
+	}
 }
 
 /*

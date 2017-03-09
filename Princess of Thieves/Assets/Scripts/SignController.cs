@@ -24,7 +24,7 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	}
 
 	void OnMouseEnter() {
-		if (!GameManager.Instance.IsInCutscene) {
+		if (!GameManager.Instance.IsPaused) {
 			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
 				Highlight ();
 			}
@@ -32,13 +32,13 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	}
 
 	void OnMouseExit() {
-		if (!GameManager.Instance.IsInCutscene) {
+		if (!GameManager.Instance.IsPaused) {
 			Dehighlight ();
 		}
 	}
 
 	void OnMouseOver() {
-		if (!GameManager.Instance.IsInCutscene) {
+		if (!GameManager.Instance.IsPaused) {
 			if (Highlighted) {
 				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
 					if (Input.GetMouseButtonDown (0)) {
