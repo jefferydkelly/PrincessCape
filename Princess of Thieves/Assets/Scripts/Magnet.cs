@@ -12,6 +12,8 @@ public class Magnet : MonoBehaviour, ActivateableObject {
 	Vector2 fwd = new Vector2(0, 0);
 	public float range = 10;
 	List<Rigidbody2D> attractedBodies;
+	[SerializeField]
+	bool isActivationInverted = false;
 	// Use this for initialization
 	void Start () {
 		attractedBodies = new List<Rigidbody2D> ();
@@ -54,6 +56,12 @@ public class Magnet : MonoBehaviour, ActivateableObject {
 	public float ActivationTime {
 		get {
 			return 0;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 }

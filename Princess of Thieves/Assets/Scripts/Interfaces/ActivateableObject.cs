@@ -8,4 +8,5 @@ public interface ActivateableObject
 
 	bool IsActive { get; }
 	float ActivationTime{get;}
+	bool IsInverted{get;}
 }

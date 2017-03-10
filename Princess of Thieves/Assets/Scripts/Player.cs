@@ -131,7 +131,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 						return;
 					}
 					if (tryingToInteract) {
-						Debug.Log ("Let it go");
 						IsClimbing = false;
 						Input.ResetInputAxes ();
 					}
@@ -424,7 +423,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			if (IsClimbing) {
 				if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
 					if (!col.GetComponent<LadderController> ().LadderAbove) {
+						
 						IsClimbing = false;
+
 						Vector3 pos = transform.position;
 						pos.y = col.transform.position.y + col.gameObject.HalfHeight () + HalfHeight;
 						transform.position = pos;
@@ -833,6 +834,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			}else
 			{
 				state &= ~PlayerState.IsClimbing;
+				UIManager.Instance.HideInteraction ();
 				if (myRigidBody) {
 					myRigidBody.gravityScale = 1.5f;
 				}
@@ -871,6 +873,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
 	public void Push(BlockController bc) {
 		highlightedBody = bc.GetComponent<Rigidbody2D>();
+		float dx = Mathf.Sign ((highlightedBody.transform.position - transform.position).x);
+		transform.position = highlightedBody.transform.position - dx * new Vector3(HalfWidth + bc.gameObject.HalfWidth (), 0);
 		IsPushing = true;
 	}
 	/// <summary>
@@ -896,6 +900,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             }
             else
             {
+				UIManager.Instance.HideInteraction ();
                 state &= ~PlayerState.Pushing;
                 state &= ~PlayerState.Frozen;
             }

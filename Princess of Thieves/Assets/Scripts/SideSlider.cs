@@ -14,6 +14,9 @@ public class SideSlider : ResettableObject,ActivateableObject {
 	Vector3 openPos;
 	Vector3 closePos;
 
+	[SerializeField]
+	bool isActivationInverted = false;
+
 	// Use this for initialization
 	void Start () {
 		startPosition = transform.position;
@@ -91,6 +94,12 @@ public class SideSlider : ResettableObject,ActivateableObject {
 	public float ActivationTime {
 		get {
 			return travelTime;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 }

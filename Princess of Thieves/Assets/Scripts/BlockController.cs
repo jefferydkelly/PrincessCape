@@ -10,7 +10,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 	SpriteRenderer myRenderer;
     public void Dehighlight()
     {
-		UIManager.Instance.ShowInteraction ("");
+		UIManager.Instance.HideInteraction ();
 		myRenderer.color = Color.white;
     }
 
@@ -21,7 +21,7 @@ public class BlockController : ResettableObject, InteractiveObject {
     }
 
 	void OnMouseEnter() {
-		if (!GameManager.Instance.IsPaused) {
+		if (!GameManager.Instance.IsPaused && !beingPushed) {
 			Highlight ();
 		}
 	}
@@ -36,7 +36,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 		if (!GameManager.Instance.IsPaused) {
 			if (Highlighted) {
 				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-					if (Input.GetMouseButtonDown (0)) {
+					if (GameManager.Instance.Player.Controller.Interact) {
 						Interact ();
 						Input.ResetInputAxes ();
 					}

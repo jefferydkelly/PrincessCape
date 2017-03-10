@@ -13,6 +13,8 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	bool isActive = false;
 	bool isPushingPlayer = false;
+	[SerializeField]
+	bool isActivationInverted = false;
 	LineRenderer lineRenderer;
 	// Use this for initialization
 	void Start () {
@@ -74,6 +76,12 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	public float ActivationTime {
 		get {
 			return 0;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 }

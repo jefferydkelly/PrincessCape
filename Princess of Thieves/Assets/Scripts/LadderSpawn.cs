@@ -20,6 +20,8 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 	Timer destroyTimer;
 
 	bool isActive = false;
+	[SerializeField]
+	bool isActivationInverted = false;
 	// Use this for initialization
 	void Start () {
 		spawnTimer = new Timer (() => {
@@ -83,6 +85,12 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 	public float ActivationTime {
 		get {
 			return spawnTime * numSegments;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 				

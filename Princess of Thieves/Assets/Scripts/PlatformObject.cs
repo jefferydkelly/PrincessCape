@@ -12,6 +12,8 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
     public bool moveUp = false;
     public float moveDist = 0f;
     Vector3 startingloc, endingLoc;
+	[SerializeField]
+	bool isActivationInverted = false;
 
     public bool IsActive
     {
@@ -92,6 +94,12 @@ public class PlatformObject: JDMappableObject, ActivateableObject{
 	public float ActivationTime {
 		get {
 			return 0;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 }

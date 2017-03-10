@@ -23,7 +23,11 @@ public class ActivatorObject : MonoBehaviour {
 	{
 		foreach (ActivateableObject a in activators)
 		{
-			a.Activate();
+			if (a.IsInverted) {
+				a.Deactivate ();
+			} else {
+				a.Activate ();
+			}
 		}
 	}
 
@@ -31,7 +35,11 @@ public class ActivatorObject : MonoBehaviour {
 	{
 		foreach (ActivateableObject a in activators)
 		{
-			a.Deactivate();
+			if (a.IsInverted) {
+				a.Activate ();
+			} else {
+				a.Deactivate ();
+			}
 		}
 	}
 }

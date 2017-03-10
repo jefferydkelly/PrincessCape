@@ -40,7 +40,6 @@ public class PressureSwitch : ActivatorObject {
         {
             if(rb && rb.gravityScale >= 4)
             {
-                Debug.Log(" Heavy Triggered");
                 NumberOfThingsWeighingThisDown++;
             }
         }

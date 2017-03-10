@@ -15,6 +15,8 @@ public class GateController : JDMappableObject, ActivateableObject {
     Sprite[] sprites;
 	[SerializeField]
 	AudioClip closeSound;
+	[SerializeField]
+	bool isActivationInverted = false;
 	// Use this for initialization
 	void Start () {
 		
@@ -112,6 +114,12 @@ public class GateController : JDMappableObject, ActivateableObject {
 	public float ActivationTime {
 		get {
 			return 0;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 }

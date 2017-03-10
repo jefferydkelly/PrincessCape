@@ -14,6 +14,8 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	Vector3 fwd = new Vector3(1,0);
 	Timer fireTimer;
 	SpriteRenderer myRenderer;
+	[SerializeField]
+	bool isActivationInverted = false;
 	// Use this for initialization
 	void Start () {
 		myRenderer = GetComponent<SpriteRenderer> ();
@@ -64,6 +66,12 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	public float ActivationTime {
 		get {
 			return 0;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return isActivationInverted;
 		}
 	}
 }
