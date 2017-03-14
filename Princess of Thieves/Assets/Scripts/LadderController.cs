@@ -23,9 +23,9 @@ public class LadderController : JDMappableObject, InteractiveObject {
 			pos = player.transform.position;
 			pos.x = transform.position.x;
 		
-			if (pos.y >= gameObject.transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 0.01f) {
+			if (pos.y >= transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 0.15f) {
 				myCollider.isTrigger = true;
-				pos.y = gameObject.transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 1f;
+				pos.y = transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 1f;
 			}
             pos.z = 0;
 			player.transform.position = pos;

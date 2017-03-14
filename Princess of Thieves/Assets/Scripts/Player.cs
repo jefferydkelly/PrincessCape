@@ -338,6 +338,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				CanFloat = true;
 				if (IsUsingMagnetGloves) {
 					myRigidBody.velocity = Vector2.zero;
+				} else if (IsClimbing) {
+					IsClimbing = false;
 				}
 			} else if (IsDashing) {
 				foreach (ContactPoint2D cp in col.contacts) {
