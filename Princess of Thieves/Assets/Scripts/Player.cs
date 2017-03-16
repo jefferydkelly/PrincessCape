@@ -511,7 +511,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (HalfWidth, HalfHeight + 0.1f), 0, down, 0.5f, finalMask); 
 
 			if (hit.collider != null) {
-				if (!hit.collider.OnLayer ("Interactive") || hit.collider.CompareTag("Ladder")) {
+				if (!hit.collider.OnLayer ("Interactive") || (hit.collider.CompareTag("Ladder") || hit.collider.CompareTag("Block"))) {
 					return hit.normal.y != 0;
 				}
 
