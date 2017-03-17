@@ -21,24 +21,25 @@ public class BlockController : ResettableObject, InteractiveObject {
     }
 
 	void OnMouseEnter() {
-		if (!GameManager.Instance.IsPaused && !beingPushed) {
+		if (GameManager.Instance.Player.CanInteract) {
 			Highlight ();
 		}
 	}
 
 	void OnMouseExit() {
-		if (!GameManager.Instance.IsPaused && !beingPushed) {
+		if (GameManager.Instance.Player.CanInteract) {
 			Dehighlight ();
 		}
 	}
 
 	void OnMouseOver() {
-		if (!GameManager.Instance.IsPaused) {
+		if (GameManager.Instance.Player.CanInteract) {
 			if (Highlighted) {
 				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
 					if (GameManager.Instance.Player.Controller.Interact) {
-						Interact ();
 						Input.ResetInputAxes ();
+						Interact ();
+
 					}
 				} else if (!beingPushed) {
 					Dehighlight ();
@@ -59,9 +60,11 @@ public class BlockController : ResettableObject, InteractiveObject {
 				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation;
 				GameManager.Instance.Player.Push (this);
 			} else {
-				GameManager.Instance.Player.IsPushing = false;
+				
 				beingPushed = false;
 				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+				GameManager.Instance.Player.IsPushing = false;
+				//GameManager.Instance.Player.Freeze (0.1f);
 			}
 		}
     }
@@ -75,7 +78,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 	void Update() {
 
 		if (beingPushed) {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2 (0,-1), 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1, 1), 0, new Vector2 (0, -1), 1, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) { // we stop running into things
 				LetGo();

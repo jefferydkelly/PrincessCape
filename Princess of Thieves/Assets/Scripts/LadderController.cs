@@ -37,15 +37,13 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	}
 
 	public void Highlight() {
-		if (!GameManager.Instance.Player.IsClimbing) {
-			myRenderer.color = Color.blue;
-			UIManager.Instance.ShowInteraction ("Climb");
-		}
+		myRenderer.color = Color.blue;
+		UIManager.Instance.ShowInteraction ("Climb");
 	}
 
 	public void Dehighlight() {
 		myRenderer.color = Color.white;
-		if (!GameManager.Instance.Player.IsClimbing) {
+		if (GameManager.Instance.Player.CanInteract) {
 			UIManager.Instance.HideInteraction ();
 		}
 	}
@@ -89,7 +87,7 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		if (col.CompareTag ("Player")) {
 			Player player = GameManager.Instance.Player;
 
-			if (player.Position.y >= transform.position.y) {
+			if (player.IsClimbing && player.Position.y >= transform.position.y) {
 				Vector3 pos = player.Position;
 				pos.y = gameObject.transform.position.y + gameObject.HalfHeight () + player.HalfHeight + 0.01f;
 				player.transform.position = pos;
@@ -116,13 +114,13 @@ public class LadderController : JDMappableObject, InteractiveObject {
 	}
 
 	void OnMouseEnter() {
-		if (!GameManager.Instance.IsPaused) {
+		if (GameManager.Instance.Player.CanInteract) {
 			Highlight ();
 		}
 	}
 
 	void OnMouseExit() {
-		if (!GameManager.Instance.IsPaused) {
+		if (GameManager.Instance.Player.CanInteract || GameManager.Instance.Player.IsClimbing) {
 			Dehighlight ();
 		}
 	}

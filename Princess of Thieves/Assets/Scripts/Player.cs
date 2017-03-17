@@ -267,7 +267,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
            
             if (leftItem != null)
             {
-				if (!IsClimbing) {
+				if (!UIManager.Instance.IsShowingInteraction) {
 					if (controller.ActivateLeftItem) {
 
 						leftItem.Activate ();
@@ -689,9 +689,19 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Gets the interact distance.
+	/// </summary>
+	/// <value>The interact distance.</value>
 	public float InteractDistance {
 		get {
 			return interactDistance;
+		}
+	}
+
+	public bool CanInteract {
+		get {
+			return (state == PlayerState.Normal || state == PlayerState.CanFloat) && !GameManager.Instance.IsPaused;
 		}
 	}
 
@@ -1062,6 +1072,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 
     #endregion gets
 
+	public void Freeze(float time) {
+		IsFrozen = true;
+		Timer t = new Timer (() => {
+			IsFrozen = false;
+		}, time);
+		t.Start ();
+	}
     void Unfreeze() {
 		IsFrozen = false;
 	}
@@ -1128,15 +1145,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 public enum PlayerState
 {
 	Normal = 0,
-	InCover = 1,
-	Dashing = 2,
-	Frozen = 4,
-    Pushing = 8,
-    UsingMagnetGloves = 16,
-	UsingReflectCape = 32,
-	CanFloat = 64,
-	PushedByTheWindHorz = 128,
-	PushedByTheWindVert = 256,
-	IsClimbing = 512,
-	Dead = 1024
+	Dashing = 1,
+	Frozen = 2,
+    Pushing = 4,
+    UsingMagnetGloves = 8,
+	UsingReflectCape = 16,
+	CanFloat = 32,
+	PushedByTheWindHorz = 64,
+	PushedByTheWindVert = 128,
+	IsClimbing = 256,
+	Dead = 512
 }

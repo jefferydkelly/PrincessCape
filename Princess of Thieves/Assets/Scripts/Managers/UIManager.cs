@@ -111,6 +111,12 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
+	public bool IsShowingInteraction {
+		get {
+			return leftBox.IsShowingInteraction;
+		}
+	}
+
 	/*
 	 * Reveals the passed in message as dialog
 	 * 
