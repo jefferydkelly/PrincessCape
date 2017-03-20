@@ -53,10 +53,15 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		StopCoroutine ("Close");
 		status = SliderStatus.Opening;
 		do {
-			transform.position += new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);
-			foreach (Rigidbody2D rb in attachedBodies) {
-				rb.AddForce(new Vector2(frictionForce, 0));
+			if (openHorizontally) {
+				transform.position += new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);
+				foreach (Rigidbody2D rb in attachedBodies) {
+					rb.AddForce(new Vector2(frictionForce, 0));
+				}
+			} else {
+				transform.position += new Vector3(0, gameObject.HalfHeight() * 2.0f * Time.deltaTime / travelTime);
 			}
+
 			yield return null;
 		} while(transform.position.x < openPos.x);
 		transform.position = openPos;
@@ -68,10 +73,14 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		status = SliderStatus.Closing;
 
 		do {
-			transform.position -= new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);;
+			if (openHorizontally) {
+				transform.position -= new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);;
 
-			foreach (Rigidbody2D rb in attachedBodies) {
-				rb.AddForce(new Vector2(-frictionForce, 0));
+				foreach (Rigidbody2D rb in attachedBodies) {
+					rb.AddForce(new Vector2(-frictionForce, 0));
+				}
+			} else {
+				transform.position -= new Vector3(0, gameObject.HalfHeight() * 2.0f * Time.deltaTime / travelTime);
 			}
 			yield return null;
 		} while(transform.position.x > closePos.x);
