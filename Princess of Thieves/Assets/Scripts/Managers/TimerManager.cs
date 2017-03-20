@@ -93,6 +93,7 @@ public class Timer {
 	WaitDelegate funcToRun;
 	int repeatTimes = 0;
 	int repsRun = 0;
+	TimerState state = TimerState.Unactivated;
     
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Timer"/> class.
@@ -140,37 +141,76 @@ public class Timer {
 	}
 
 	public void Start() {
-		paused = false;
-		if (TimerManager.Instance) {
+		
+		if (state == TimerState.Unactivated && TimerManager.Instance) {
+			state = TimerState.Running;
 			TimerManager.Instance.AddTimer (this);
 		}
 	}
 
 	public void Stop() {
-		paused = true;
+		state &= ~TimerState.Running;
+		state |= TimerState.Stopped;
 		if (TimerManager.Instance) {
 			
 			TimerManager.Instance.RemoveTimer (this);
 		}
 	}
 
+	public float RunPercent {
+		get {
+			return curTime / runTime;
+		}
+	}
+
+	public float RunPercentWithRepeats {
+		get {
+			if (repeatTimes == 0 || repeating) {
+				return RunPercent;
+			} else {
+				return ((repsRun * runTime) + runTime) / ((repeatTimes + 1) * curTime);
+			}
+		}
+	}
+
 	public void Restart() {
 		Reset ();
+
 		Start ();
 	}
 
 	public bool Paused {
 		get {
-			return paused;
+			return (state & (TimerState.Paused | TimerState.Unactivated)) > 0;
 		}
 
 		set {
-			paused = value;
+			if (value) {
+				state |= TimerState.Paused;
+			} else {
+				state &= ~TimerState.Paused;
+			}
+		}
+	}
+
+	public bool Activated {
+		get {
+			return (state & TimerState.Unactivated) == 0;
 		}
 	}
 
 	public void Reset() {
 		curTime = runTime;
 		repsRun = 0;
+		state = TimerState.Unactivated;
 	}
+}
+
+[System.Flags]
+public enum TimerState {
+	Default = 0,
+	Unactivated = 1,
+	Running = 2,
+	Paused = 4,
+	Stopped = 8
 }
