@@ -37,6 +37,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 			Activate ();
 		} else {
 			Deactivate ();
+			myRenderer.color = Color.blue;
 		}
 
 	}
