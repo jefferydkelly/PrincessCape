@@ -267,6 +267,9 @@ public static class ExtensionMethods{
 		return Mathf.Atan2 (v.y, v.x);
 	}
 
+	public static float Dot(this Vector2 v1, Vector2 v2) {
+		return v1.x * v2.x + v1.y * v2.y;
+	}
 
     public static string ToXString(this Vector3 v)
 	{

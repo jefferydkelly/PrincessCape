@@ -8,7 +8,7 @@ using System;
 public class BlockController : ResettableObject, InteractiveObject {
 	bool beingPushed = false;
 	SpriteRenderer myRenderer;
-	Rigidbody2D myRigidbody;
+	protected Rigidbody2D myRigidbody;
 
 	void Awake() {
 		myRigidbody = GetComponent<Rigidbody2D> ();
@@ -83,7 +83,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 	void Update() {
 
 		if (beingPushed) {
-			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.05f, 1.2f), 0, new Vector2 (0, -1), 1, 1 << LayerMask.NameToLayer ("Platforms"));
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, 1.5f), 0, new Vector2 (0, -1), 1, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) { // we stop running into things
 				LetGo();

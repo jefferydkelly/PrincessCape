@@ -406,25 +406,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 				col.isTrigger = true;
 			}
 		} 
-
-		/*
-		if (col.OnLayer ("Interactive") && !IsClimbing) {
-			InteractiveObject io = col.GetComponent<InteractiveObject> ();
-			if (io != null) {
-				if (controller.Interact) {
-					io.Interact ();
-				} else if (io != highlighted) {
-					if (highlighted != null) {
-						highlighted.Dehighlight ();
-					}
-
-					highlighted = io;
-					highlightedBody = col.GetComponent<Rigidbody2D> ();
-					highlighted.Highlight ();
-				}
-				collidingWithHighlighted = true;
-			}
-		}*/
     }
 
 	void OnTriggerExit2D(Collider2D col)

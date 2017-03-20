@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D col) {
-		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (!col.CompareTag("Player") && !(col.OnLayer ("Background") || col.OnLayer ("Interactive")))) {
+		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (!col.CompareTag("Player") && !(col.OnLayer ("Background") || col.OnLayer ("Interactive") || col.CompareTag("Reflective")))) {
 			Destroy (gameObject);
 		}
 	}
