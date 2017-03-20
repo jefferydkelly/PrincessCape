@@ -65,7 +65,7 @@ public class CameraManager : MonoBehaviour {
 		isClosing = true;
 	}
 	// Update is called once per frame
-	void FixedUpdate () {
+	void LateUpdate () {
 		
 		if (!manager.IsPaused)
 		{

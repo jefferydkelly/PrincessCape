@@ -208,8 +208,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 }*/
 
                 Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
-                highlightedBody.Translate(blockMove);
+                //highlightedBody.Translate(blockMove);
                 myRigidBody.Translate(blockMove);
+				Vector2 pos = highlightedBody.position;
+				pos.x = transform.position.x + fwdX * (HalfWidth + highlightedBody.gameObject.HalfWidth ());
+				highlightedBody.position = pos;
+				Vector2 vel = highlightedBody.velocity;
+				vel.x = 0;
+				highlightedBody.velocity = vel;
             }
             
         }
@@ -218,6 +224,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		tryingToInteract = false;
         
 	}
+		
 	// Update is called once per frame
 	void Update()
 	{
@@ -1027,6 +1034,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	public bool IsOnMovingPlatform {
+		get {
+			return (state & PlayerState.OnMovingPlatform) > 0;
+		}
+
+		set {
+			if (value) {
+				state |= PlayerState.OnMovingPlatform;
+			} else {
+				state &= ~PlayerState.OnMovingPlatform;
+			}
+		}
+	}
+
 	public bool IsDead {
 		get {
 			return (state & PlayerState.Dead) > 0;
@@ -1154,5 +1175,6 @@ public enum PlayerState
 	PushedByTheWindHorz = 64,
 	PushedByTheWindVert = 128,
 	IsClimbing = 256,
-	Dead = 512
+	OnMovingPlatform = 512,
+	Dead = 1024
 }

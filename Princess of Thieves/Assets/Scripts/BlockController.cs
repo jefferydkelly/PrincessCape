@@ -8,6 +8,11 @@ using System;
 public class BlockController : ResettableObject, InteractiveObject {
 	bool beingPushed = false;
 	SpriteRenderer myRenderer;
+	Rigidbody2D myRigidbody;
+
+	void Awake() {
+		myRigidbody = GetComponent<Rigidbody2D> ();
+	}
     public void Dehighlight()
     {
 		UIManager.Instance.HideInteraction ();
@@ -57,12 +62,12 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 			if (!GameManager.Instance.Player.IsPushing) { //if we are pushing
 				beingPushed = true;
-				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation;
+				myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
 				GameManager.Instance.Player.Push (this);
 			} else {
 				
 				beingPushed = false;
-				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+				myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 				GameManager.Instance.Player.IsPushing = false;
 				//GameManager.Instance.Player.Freeze (0.1f);
 			}
@@ -78,7 +83,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 	void Update() {
 
 		if (beingPushed) {
-			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1, 1), 0, new Vector2 (0, -1), 1, 1 << LayerMask.NameToLayer ("Platforms"));
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1.05f, 1.2f), 0, new Vector2 (0, -1), 1, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) { // we stop running into things
 				LetGo();
@@ -91,12 +96,24 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 	void LetGo() {
 		GameManager.Instance.Player.IsPushing = false;
-		GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+		myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 		beingPushed = false;
 	}
 	bool Highlighted {
 		get {
 			return myRenderer.color == Color.blue;
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D collision) {
+		if (collision.collider.CompareTag ("Slider") && !beingPushed) {
+			myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
+		}
+	}
+
+	void OnCollisionExit2D(Collision2D collision) {
+		if (collision.collider.CompareTag ("Slider") && !beingPushed) {
+			myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 		}
 	}
 }

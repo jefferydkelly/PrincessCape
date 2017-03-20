@@ -7,7 +7,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 	[SerializeField]
 	bool startOpen = false;
 	[SerializeField]
-	float travelTime = 1.0f;
+	float travelTime = 0.5f;
 	[SerializeField]
 	bool openHorizontally = true;
 
@@ -16,7 +16,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 
 	List<Rigidbody2D> attachedBodies;
 	[SerializeField]
-	float frictionForce = 100;
+	float frictionForce = 0.025f;
 	[SerializeField]
 	bool isActivationInverted = false;
 
@@ -68,13 +68,16 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		status = SliderStatus.Closing;
 
 		do {
-			transform.position -= new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);
+			transform.position -= new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);;
 
 			foreach (Rigidbody2D rb in attachedBodies) {
 				rb.AddForce(new Vector2(-frictionForce, 0));
 			}
 			yield return null;
 		} while(transform.position.x > closePos.x);
+		foreach (Rigidbody2D rb in attachedBodies) {
+			rb.velocity = Vector2.zero;
+		}
 		transform.position = closePos;
 		status = SliderStatus.Closed;
 	}
