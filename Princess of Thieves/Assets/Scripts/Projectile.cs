@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour {
 
 	public float lifeTime = 5.0f;
+	bool reflected = false;
 	Timer lifeTimer;
 	// Use this for initialization
 	void Start () {
@@ -29,6 +30,16 @@ public class Projectile : MonoBehaviour {
 	void OnDestroy() {
 		if (TimerManager.Instance) {
 			lifeTimer.Stop ();
+		}
+	}
+
+	public bool Reflected {
+		get {
+			return reflected;
+		}
+
+		set {
+			reflected = value;
 		}
 	}
 

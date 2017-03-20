@@ -395,7 +395,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
 			if (IsUsingReflectCape) {
-				Reflect (col.gameObject);
+				Projectile p = col.GetComponent<Projectile> ();
+				if (!p.Reflected && !Reflect (p)) {
+					Die ();
+				}
 			}
 		} else if (col.CompareTag ("Ladder")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
@@ -484,18 +487,33 @@ public class Player : ResettableObject, DamageableObject, CasterObject
     }
 	#endregion
    
-    void Reflect(GameObject proj)
+	bool Reflect(Projectile proj)
     {
 		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
-		//rb.AddForce (new Vector2 (fwdX * 5, 0), ForceMode2D.Impulse);
-		Vector2 vel = rb.velocity;
-		vel = vel.Rotated (-vel.GetAngle ());
+		float ang = rb.velocity.GetAngle () * Mathf.Rad2Deg;
 
-		rb.velocity = vel.Rotated (TrueAim.GetAngle ());
+		if (ang < 0) {
+			ang += 360;
+		}
+		float aim = TrueAim.GetAngle () * Mathf.Rad2Deg;
+		if (aim < 0) {
+			aim += 360;
+		}
 
-		proj.transform.position = transform.position + (Vector3)(TrueAim.normalized * (HalfWidth + 1));
+		if ((aim - ang).Between (90, 270)) {
+			
+			Vector2 vel = rb.velocity;
+			vel = vel.Rotated (-vel.GetAngle ());
 
-		//rb.velocity = new Vector2 (fwdX * 5, 0);
+
+			rb.velocity = vel.Rotated (TrueAim.GetAngle ());
+
+			proj.transform.position = transform.position + (Vector3)(TrueAim.normalized * (HalfWidth + 1));
+			proj.transform.RotateAround (proj.transform.position, Vector3.fwd, aim - ang);
+			proj.Reflected = true;
+			return true;
+		}
+		return false;
     }
  
 	#region Gets

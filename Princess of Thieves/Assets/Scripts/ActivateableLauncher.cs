@@ -75,9 +75,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	}
 
 	public void Deactivate() {
-		//fireTimer.Stop ();
 		isActive = false;
-		//myRenderer.color = Color.blue;
 	}
 
 	public bool IsActive {
