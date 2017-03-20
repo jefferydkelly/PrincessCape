@@ -394,11 +394,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		} else if (col.CompareTag ("Water")) {
 			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
-			if (IsUsingReflectCape) {
-				Projectile p = col.GetComponent<Projectile> ();
-				if (!p.Reflected && !Reflect (p)) {
-					Die ();
-				}
+			Projectile p = col.GetComponent<Projectile> ();
+			if (!IsUsingReflectCape || (!p.Reflected && !Reflect (p))) {
+				Die ();
 			}
 		} else if (col.CompareTag ("Ladder")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
