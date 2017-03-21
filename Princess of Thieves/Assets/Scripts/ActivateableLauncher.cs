@@ -43,10 +43,11 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	}
 
 	void Update() {
+		float time = 1 - fireTimer.RunPercent;
 		if (IsActive && myRenderer.color != Color.red) {
-			myRenderer.color = Color.Lerp (Color.gray, Color.red, 1 - fireTimer.RunPercent);
+			myRenderer.color = Color.Lerp (Color.gray, Color.red, time * time);
 		} else if (!IsActive && myRenderer.color != Color.blue) {
-			myRenderer.color = Color.Lerp (Color.gray, Color.blue, 1 - fireTimer.RunPercent);
+			myRenderer.color = Color.Lerp (Color.gray, Color.blue, time * time);
 		}
 	}
 
