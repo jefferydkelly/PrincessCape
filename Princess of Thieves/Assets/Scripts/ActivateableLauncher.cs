@@ -54,7 +54,9 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	void Fire()
 	{
 		GameObject temp = Instantiate(projectile);
-		temp.transform.position = transform.position + fwd * (gameObject.HalfWidth () + temp.HalfWidth () + 0.25f);
+        Vector3 pos = transform.position;
+        pos.z += 1;
+        temp.transform.position = pos;// transform.position;// + fwd * (gameObject.HalfWidth () + temp.HalfWidth () + 0.25f);
 		temp.transform.RotateAround (temp.transform.position, Vector3.forward, Mathf.Atan2 (fwd.y, fwd.x) * Mathf.Rad2Deg);
 		temp.GetComponent<Rigidbody2D>().AddForce(fwd*10,ForceMode2D.Impulse);
 		myRenderer.color = Color.gray;

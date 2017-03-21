@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 5c4410076781144a5b255ced08e4827b
-timeCreated: 1490036426
+guid: 6f0e60bbf423456478697251d0662ebc
+timeCreated: 1490113107
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: ReflectStand_0
-    21300002: ReflectStand_1
-    21300004: ReflectStand_2
-    21300006: ReflectStand_3
+    21300000: ReflectStand1_0
+    21300002: ReflectStand1_1
+    21300004: ReflectStand1_2
+    21300006: ReflectStand1_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -70,14 +70,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   - buildTarget: WebGL
     maxTextureSize: 2048
     textureFormat: -1
@@ -90,7 +82,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ReflectStand_0
+      name: ReflectStand1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -103,7 +95,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ReflectStand_1
+      name: ReflectStand1_1
       rect:
         serializedVersion: 2
         x: 64
@@ -116,7 +108,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ReflectStand_2
+      name: ReflectStand1_2
       rect:
         serializedVersion: 2
         x: 0
@@ -129,7 +121,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ReflectStand_3
+      name: ReflectStand1_3
       rect:
         serializedVersion: 2
         x: 64

@@ -9,6 +9,10 @@ public class BlockController : ResettableObject, InteractiveObject {
 	bool beingPushed = false;
 	SpriteRenderer myRenderer;
 	protected Rigidbody2D myRigidbody;
+    [SerializeField]
+    protected Color regularColor = Color.white;
+    [SerializeField]
+    protected Color highlightedColor = Color.blue;
 
 	void Awake() {
 		myRigidbody = GetComponent<Rigidbody2D> ();
@@ -16,13 +20,13 @@ public class BlockController : ResettableObject, InteractiveObject {
     public void Dehighlight()
     {
 		UIManager.Instance.HideInteraction ();
-		myRenderer.color = Color.white;
+		myRenderer.color = regularColor;
     }
 
     public void Highlight()
     {
 		UIManager.Instance.ShowInteraction ("Move");
-		myRenderer.color = Color.blue;
+		myRenderer.color = highlightedColor;
     }
 
 	void OnMouseEnter() {
@@ -57,7 +61,7 @@ public class BlockController : ResettableObject, InteractiveObject {
     {
 		if (!GameManager.Instance.IsPaused) {
 			UIManager.Instance.ShowInteraction ("Let Go");
-			myRenderer.color = Color.white;
+			myRenderer.color = regularColor;
         
 
 			if (!GameManager.Instance.Player.IsPushing) { //if we are pushing
@@ -78,14 +82,20 @@ public class BlockController : ResettableObject, InteractiveObject {
     void Start () {
         startPosition = transform.position;
 		myRenderer = GetComponent<SpriteRenderer> ();
+        myRenderer.color = regularColor;
 	}
 
 	void Update() {
 
 		if (beingPushed) {
-			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, 1.5f), 0, new Vector2 (0, -1), 1, 1 << LayerMask.NameToLayer ("Platforms"));
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, 1f), 0, Vector2.down, 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
 
+            if (hit.collider != null)
+            {
+                Debug.Log(hit.collider.gameObject.name);
+            }
 			if (hit.collider == null) { // we stop running into things
+                Debug.Log("Let it go");
 				LetGo();
 			} else if (Input.GetMouseButtonDown (0)) {
 				LetGo ();
@@ -101,7 +111,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 	}
 	bool Highlighted {
 		get {
-			return myRenderer.color == Color.blue;
+			return myRenderer.color == highlightedColor;
 		}
 	}
 

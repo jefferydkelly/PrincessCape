@@ -229,6 +229,16 @@ public static class ExtensionMethods{
 		return f >= min && f <= max;
 	}
 
+    public static float ToRadians(this float f)
+    {
+        return f * Mathf.Deg2Rad;
+    }
+
+    public static float ToDegrees(this float f)
+    {
+        return f * Mathf.Rad2Deg;
+    }
+
 	public static string ToXString(this Vector2 v)
 	{
 		return v.x + "x" + v.y;
@@ -264,7 +274,12 @@ public static class ExtensionMethods{
 	}
 
 	public static float GetAngle(this Vector2 v) {
-		return Mathf.Atan2 (v.y, v.x);
+		float ang = Mathf.Atan2 (v.y, v.x);
+        while(ang < 0)
+        {
+            ang += Mathf.PI * 2;
+        }
+        return ang;
 	}
 
 	public static float Dot(this Vector2 v1, Vector2 v2) {

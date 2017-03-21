@@ -303,7 +303,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             }
 
 			if (ShowAimArrow) {
-				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle () * Mathf.Rad2Deg, Vector3.forward);
+				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle ().ToDegrees(), Vector3.forward);
 			}
             
 		}
@@ -395,9 +395,13 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
 			Projectile p = col.GetComponent<Projectile> ();
-			if (!IsUsingReflectCape || (!p.Reflected && !Reflect (p))) {
-				Die ();
-			}
+			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(TrueAim.normalized))
+            {
+                Die();
+            } else if (!p.Reflected)
+            {
+                p.Reflected = true;
+            }
 		} else if (col.CompareTag ("Ladder")) {
 			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
 				LadderController lc = col.GetComponent<LadderController> ();
@@ -465,35 +469,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 	#endregion
-   
-	bool Reflect(Projectile proj)
-    {
-		Rigidbody2D rb = proj.GetComponent<Rigidbody2D> ();
-		float ang = rb.velocity.GetAngle () * Mathf.Rad2Deg;
-
-		if (ang < 0) {
-			ang += 360;
-		}
-		float aim = TrueAim.GetAngle () * Mathf.Rad2Deg;
-		if (aim < 0) {
-			aim += 360;
-		}
-
-		if ((aim - ang).Between (90, 270)) {
-			
-			Vector2 vel = rb.velocity;
-			vel = vel.Rotated (-vel.GetAngle ());
-
-
-			rb.velocity = vel.Rotated (TrueAim.GetAngle ());
-
-			proj.transform.position = transform.position + (Vector3)(TrueAim.normalized * (HalfWidth + 1));
-			proj.transform.RotateAround (proj.transform.position, Vector3.fwd, aim - ang);
-			proj.Reflected = true;
-			return true;
-		}
-		return false;
-    }
  
 	#region Gets
 	/// <summary>
