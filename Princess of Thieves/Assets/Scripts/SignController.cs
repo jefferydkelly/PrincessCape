@@ -12,6 +12,7 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	}
 	public void Interact() {
 		myRenderer.material.color = Color.white;
+        UIManager.Instance.HideMessage();
 		GameManager.Instance.StartCutscene (sourceFile);
 	}
 

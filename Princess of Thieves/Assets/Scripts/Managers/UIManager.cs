@@ -297,6 +297,7 @@ public class UIManager : MonoBehaviour
             yield return StartCoroutine(RevealMessage(s)); 
         }
         dialogBox.Enabled = false;
+        HideInteraction();
         GameManager.Instance.IsInCutscene = false;
     }
 
@@ -307,6 +308,7 @@ public class UIManager : MonoBehaviour
         //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
+        HideInteraction();
         GameManager.Instance.IsInCutscene = false;
     }
 
