@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour {
 	Timer lifeTimer;
     Rigidbody2D myRigidbody;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		lifeTimer = new Timer (() => {
 			Destroy (gameObject);
 		}, lifeTime);
@@ -24,7 +24,7 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D col) {
-		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (!col.CompareTag("Player") && !(col.OnLayer ("Background") || col.OnLayer ("Interactive") || col.CompareTag("Reflective")))) {
+		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (!col.CompareTag("Player") && !(col.OnLayer ("Background") || (col.OnLayer ("Interactive") && !col.CompareTag("Block")) || col.CompareTag("Reflective")))) {
 			Destroy (gameObject);
 		}
 	}

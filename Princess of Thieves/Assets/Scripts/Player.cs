@@ -208,12 +208,19 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 }*/
 
                 Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
+                
                 //highlightedBody.Translate(blockMove);
-                myRigidBody.Translate(blockMove);
-				Vector2 pos = highlightedBody.position;
+                //myRigidBody.Translate(blockMove);
+                Vector3 move = highlightedBody.GetComponent<BlockController>().Move(blockMove);
+                move.x -= fwdX *(HalfWidth + highlightedBody.gameObject.HalfWidth());
+                move.y = transform.position.y;
+                transform.position = move;
+                /*
+                Vector2 pos = highlightedBody.position;
 				pos.x = transform.position.x + fwdX * (HalfWidth + highlightedBody.gameObject.HalfWidth ());
 				highlightedBody.position = pos;
-				Vector2 vel = highlightedBody.velocity;
+                */
+                Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;
 				highlightedBody.velocity = vel;
             }

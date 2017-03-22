@@ -16,6 +16,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 	void Awake() {
 		myRigidbody = GetComponent<Rigidbody2D> ();
+        Debug.Log(gameObject.HalfWidth());
 	}
     public void Dehighlight()
     {
@@ -111,7 +112,8 @@ public class BlockController : ResettableObject, InteractiveObject {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
-		if (collision.collider.CompareTag ("Slider") && !beingPushed) {
+        Collider2D col = collision.collider;
+		if (col.CompareTag ("Slider") && !beingPushed) {
 			myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
 		}
 	}
@@ -121,4 +123,18 @@ public class BlockController : ResettableObject, InteractiveObject {
 			myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 		}
 	}
+
+    public Vector3 Move(Vector3 movement)
+    {
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(1.0f, 1.0f), 0, movement, movement.magnitude, 1 << (LayerMask.NameToLayer("Platforms") | LayerMask.NameToLayer("Interactive") | LayerMask.NameToLayer("Background")));
+        if (hit && (hit.collider.OnLayer("Platforms") || hit.collider.CompareTag("Launcher") || hit.collider.CompareTag("Block")))
+        {
+            transform.position = hit.point - Mathf.Sign(movement.x) * new Vector2(0.5f, 0);
+        } else
+        {
+            transform.position += movement;
+        }
+
+        return transform.position;
+    }
 }
