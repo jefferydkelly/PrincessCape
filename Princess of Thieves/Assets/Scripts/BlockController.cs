@@ -90,12 +90,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 		if (beingPushed) {
 			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, 1f), 0, Vector2.down, 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
 
-            if (hit.collider != null)
-            {
-                Debug.Log(hit.collider.gameObject.name);
-            }
 			if (hit.collider == null) { // we stop running into things
-                Debug.Log("Let it go");
 				LetGo();
 			} else if (Input.GetMouseButtonDown (0)) {
 				LetGo ();

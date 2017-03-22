@@ -39,7 +39,9 @@ public class CameraManager : MonoBehaviour {
            
             screenSize = new Vector2(Screen.width, Screen.height);
             Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
-            cam.transform.position = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
+            camPos = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
+            camPos.z = -10;
+            cam.transform.position = camPos;
 
         }
 		else {
@@ -129,8 +131,9 @@ public class CameraManager : MonoBehaviour {
 			transform.position = startPos + pan * timePanning / time;
 			yield return null;
 		}
+        
 		transform.position = startPos + pan;
-		GameManager.Instance.Cutscene.NextElement();
+        GameManager.Instance.Cutscene.NextElement();
 	}
 
 	public void Zoom(float zoomLevel, float time)
