@@ -7,7 +7,7 @@ using System;
 //Blocks don't move anymore ? / Can't pull or push them
 public class BlockController : ResettableObject, InteractiveObject {
 	bool beingPushed = false;
-	SpriteRenderer myRenderer;
+	protected SpriteRenderer myRenderer;
 	protected Rigidbody2D myRigidbody;
     [SerializeField]
     protected Color regularColor = Color.white;
@@ -16,7 +16,6 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 	void Awake() {
 		myRigidbody = GetComponent<Rigidbody2D> ();
-        Debug.Log(gameObject.HalfWidth());
 	}
     public void Dehighlight()
     {

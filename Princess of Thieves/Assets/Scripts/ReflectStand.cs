@@ -6,8 +6,14 @@ public class ReflectStand : BlockController {
     [SerializeField]
     ReflectDirection direction;
     Vector2 reflectionForward = new Vector2(1, 0);
+    static Sprite[] sprites;
 
 	void Awake() {
+        if (sprites == null)
+        {
+            sprites = Resources.LoadAll<Sprite>("Sprites/ReflectStand");
+        }
+        
         float sqrtHalf = 1.0f / Mathf.Sqrt(2);
 		switch (direction)
         {
@@ -38,6 +44,8 @@ public class ReflectStand : BlockController {
         }
 
 		myRigidbody = GetComponent<Rigidbody2D> ();
+        myRenderer = GetComponent<SpriteRenderer>();
+        myRenderer.sprite = sprites[(int)direction];
 	}
 	void OnTriggerEnter2D(Collider2D col) {
 		if (col.CompareTag ("Projectile")) {

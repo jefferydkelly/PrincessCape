@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 6f0e60bbf423456478697251d0662ebc
-timeCreated: 1490113107
+timeCreated: 1490207277
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,14 @@ TextureImporter:
     21300002: ReflectStand1_1
     21300004: ReflectStand1_2
     21300006: ReflectStand1_3
+    21300008: ReflectStand_0
+    21300010: ReflectStand_1
+    21300012: ReflectStand_2
+    21300014: ReflectStand_3
+    21300016: ReflectStand_4
+    21300018: ReflectStand_5
+    21300020: ReflectStand_6
+    21300022: ReflectStand_7
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -82,7 +90,46 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ReflectStand1_0
+      name: ReflectStand_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ReflectStand_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ReflectStand_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ReflectStand_3
       rect:
         serializedVersion: 2
         x: 0
@@ -95,7 +142,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ReflectStand1_1
+      name: ReflectStand_4
       rect:
         serializedVersion: 2
         x: 64
@@ -108,7 +155,20 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ReflectStand1_2
+      name: ReflectStand_5
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ReflectStand_6
       rect:
         serializedVersion: 2
         x: 0
@@ -121,7 +181,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: ReflectStand1_3
+      name: ReflectStand_7
       rect:
         serializedVersion: 2
         x: 64
