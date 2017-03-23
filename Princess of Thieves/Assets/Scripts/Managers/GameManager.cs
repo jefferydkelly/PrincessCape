@@ -208,12 +208,21 @@ public class GameManager {
 
 	public bool InPlayerInteractRange(GameObject go) {
 		Vector3 difference = (go.transform.position - player.Position).normalized;
-		foreach(RaycastHit2D hit in Physics2D.RaycastAll(player.Position, difference, player.InteractDistance, 1 << LayerMask.NameToLayer("Interactive"))) {
+        RaycastHit2D hit = Physics2D.Raycast(player.transform.position, difference, player.InteractDistance, 1 << LayerMask.NameToLayer("Interactive") | 1 << LayerMask.NameToLayer("Platforms"));
+        /*
+		foreach(RaycastHit2D hit in Physics2D.RaycastAll(player.Position, difference, player.InteractDistance, 1 << (LayerMask.NameToLayer("Interactive") | LayerMask.NameToLayer("Platforms")))) {
 			if (hit.collider.gameObject == go) {
 				return true;
 			}
-		}
-		return false;
+		}*/
+        if (hit)
+        {
+            Debug.Log(hit.collider.gameObject.name);
+        } else
+        {
+            Debug.Log("No Hit");
+        }
+        return hit && hit.collider.gameObject == go;//false;
 	}
 
 	
