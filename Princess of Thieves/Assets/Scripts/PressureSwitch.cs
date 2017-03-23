@@ -76,4 +76,10 @@ public class PressureSwitch : ActivatorObject {
 			return numberOfThingsWeighingThisDown;
 		}
 	}
+
+    public override void Reset()
+    {
+        base.Deactivate();
+        anim.SetInteger("ItemsOnTop", 0);
+    }
 }

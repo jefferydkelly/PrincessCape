@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour {
 	bool reflected = false;
 	Timer lifeTimer;
     Rigidbody2D myRigidbody;
+    bool immuneToLauncher = true;
 	// Use this for initialization
 	void Awake () {
 		lifeTimer = new Timer (() => {
@@ -18,18 +19,21 @@ public class Projectile : MonoBehaviour {
         myRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	void OnTriggerEnter2D(Collider2D col) {
-		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (!col.CompareTag("Player") && !(col.OnLayer ("Background") || (col.OnLayer ("Interactive") && !col.CompareTag("Block")) || col.CompareTag("Reflective")))) {
+		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (col.CompareTag("Launcher") && !immuneToLauncher)|| (!col.CompareTag("Player") && !(col.OnLayer ("Background") || (col.OnLayer ("Interactive") && !col.CompareTag("Block")) || col.CompareTag("Reflective")))) {
 			Destroy (gameObject);
 		}
 	}
 
-	void OnDestroy() {
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Launcher"))
+        {
+            immuneToLauncher = false;
+        }
+    }
+
+    void OnDestroy() {
 		if (TimerManager.Instance) {
 			lifeTimer.Stop ();
 		}
