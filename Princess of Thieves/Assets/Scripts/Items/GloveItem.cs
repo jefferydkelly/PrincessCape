@@ -9,7 +9,8 @@ public class GloveItem : UsableItem {
 			GloveItem.target.GetComponent<SpriteRenderer> ().color = Color.white;
 			GloveItem.target = null;
 		}}, 1.0f);
-	protected int range = 10;
+	protected static int range = 10;
+    protected static MetalBlock highlighted;
 	public float maxTargetSpeed = 10;
 	public float force = 100;
 	protected Rigidbody2D targetBody;
@@ -44,21 +45,28 @@ public class GloveItem : UsableItem {
 	}
 
 	protected void FindTarget() {
-		Vector2 aim = player.TrueAim;
-		RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), aim.GetAngle (), aim, range, 1 << LayerMask.NameToLayer ("Metal"));
+        if (highlighted == null)
+        {
+            Vector2 aim = player.TrueAim;
+            RaycastHit2D hit = Physics2D.BoxCast(player.transform.position, new Vector2(1, 1), aim.GetAngle(), aim, range, 1 << LayerMask.NameToLayer("Metal"));
 
-		if (hit && hit.collider.gameObject != target) {
-			target = hit.collider.gameObject;
-			hitNormal = hit.normal;
-			hitPos = hit.point;
+            if (hit && hit.collider.gameObject != target)
+            {
+                target = hit.collider.gameObject;
+                hitNormal = hit.normal;
+                hitPos = hit.point;
 
-		}
+            }
+        } else
+        {
+            target = highlighted.gameObject;
+        }
 
 		if (target != null) {
 			targetBody = target.GetComponent<Rigidbody2D> ();
 			pushingOnTarget = true;
 			if (targetBody) {
-				pushingOnTarget = targetBody.mass < playerBody.mass;
+				pushingOnTarget = targetBody.mass > playerBody.mass;
 				targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 			}
 			target.GetComponent<SpriteRenderer> ().color = lineColor;
@@ -73,4 +81,22 @@ public class GloveItem : UsableItem {
 			player.ShowMagnetRange (circleColor);
 		}
 	}
+
+    public static bool InRange(GameObject go)
+    {
+        return GameManager.Instance.DistanceToPlayer(go) <= range;
+    }
+
+    public static MetalBlock Highlighted
+    {
+        get
+        {
+            return highlighted;
+        }
+
+        set
+        {
+            highlighted = value;
+        }
+    }
 }

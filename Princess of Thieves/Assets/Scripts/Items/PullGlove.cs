@@ -25,6 +25,14 @@ public class PullGlove : GloveItem {
 		if (activeGlove && activeGlove.IsActive) {
 			activeGlove.Deactivate ();
 		}
+        if (!pushingOnTarget)
+        {
+            print("Pushing");
+            playerBody.constraints |= RigidbodyConstraints2D.FreezePosition;
+        } else
+        {
+            print("Not pushing");
+        }
 		activeGlove = this;
 
 		itemActive = true;
@@ -101,7 +109,7 @@ public class PullGlove : GloveItem {
 		if (target) {
 			target.GetComponent<SpriteRenderer> ().color = Color.white;
 		}
-
+        playerBody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
 		pushingOnTarget = true;
 		lineRenderer.enabled = false;
 		itemActive = false;
