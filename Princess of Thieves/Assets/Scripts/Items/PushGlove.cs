@@ -58,7 +58,7 @@ public class PushGlove : GloveItem{
 
 
 		if (target) {
-			player.IsFrozen = !pushingOnTarget;
+			player.IsFrozen = !targetIsHeavier;
 			Vector2 distance = target.transform.position - player.transform.position;
 
 			Vector2 moveDir;
@@ -82,7 +82,7 @@ public class PushGlove : GloveItem{
 					moveDir += player.TrueAim.YVector ();
 				}
 				moveDir.Normalize ();
-				if (pushingOnTarget) {
+				if (targetIsHeavier) {
 					//Heavier object, so the player gets moved
 					moveDir.y *= -1;
 					playerBody.AddForce (
@@ -92,7 +92,7 @@ public class PushGlove : GloveItem{
 					targetBody.AddForce (
 						moveDir * force,
 						ForceMode2D.Force);
-					targetBody.ClampVelocity (maxTargetSpeed);
+					//targetBody.ClampVelocity (maxTargetSpeed);
 				}
 
 				lineRenderer.SetPositions (new Vector3[] { player.transform.position, target.transform.position });
@@ -110,7 +110,7 @@ public class PushGlove : GloveItem{
 		}
 	
 		targetBody = null;
-		pushingOnTarget = true;
+		targetIsHeavier = true;
 		lineRenderer.enabled = false;
 		itemActive = false;
 		ResetTargetTimer.Reset ();

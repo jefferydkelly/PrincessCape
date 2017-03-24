@@ -12,8 +12,8 @@ Sir Samuel: With my magnetic Pull Glove, I could draw enemies towards me and occ
 Sir Samuel: I have no more need of it.  Please take it and escape this dragon's lair.
 add Prefabs/PullGlove
 italics true
-You got the Pull Glove.
-Press [[RightItemKey]] to activate and aim with the [[AimKeys]] to pull against metal objects.
+You got the Pull Glove!
+Put the Mouse Cursor over a metal block and press [[RightItemKey]] to pull against metal objects.
 When you target movable objects, you'll bring them towards you and can move it with the Arrow Keys.
 If you pull against immovable objects, you'll be the one pulled and can move around.
 The gloves will stay attuned to a target for a brief period after releasing the key so you can tap the key to make precise movements.
