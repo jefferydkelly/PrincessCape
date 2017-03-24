@@ -107,7 +107,6 @@ public class GloveItem : UsableItem {
         {
             if (targetIsHeavier)
             {
-                print(playerBody.velocity.magnitude);
                 playerBody.ClampVelocity(maxTargetSpeed);
             } else if (targetBody)
             {

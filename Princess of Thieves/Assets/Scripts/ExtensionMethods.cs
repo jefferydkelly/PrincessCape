@@ -144,7 +144,6 @@ public static class ExtensionMethods{
 		{
 			if (rb.velocity.sqrMagnitude > maxSpeed * maxSpeed)
 			{
-                Debug.Log("Clamping " + rb.gameObject.name + " to " + maxSpeed);
 				rb.velocity = rb.velocity.normalized * maxSpeed;
 			}
 		}
@@ -174,51 +173,6 @@ public static class ExtensionMethods{
     {
         rb.MovePosition((Vector2)rb.transform.position + v);
     }
-
-    public static IEnumerator RunAfter(this GameObject go, WaitDelegate w, float time)
-	{
-		float dt = 0;
-		Debug.Log (dt);
-		while (dt < time)
-		{
-			if (!GameManager.Instance.IsPaused)
-			{
-				dt += Time.deltaTime;
-			}
-			yield return null;
-
-		}
-		w();
-	}
-		
-	public static IEnumerator RunAfterRepeating(this GameObject go, WaitDelegate w, float time) {
-		float dt = 0;
-		while(true) {
-			do {
-				if (!GameManager.Instance.IsPaused) {
-					dt += Time.deltaTime;
-				}
-				yield return null;
-
-			} while(dt < time);
-			w();
-			dt = 0;
-		}
-	}
-
-	public static IEnumerator RunAfterRepeatingUI(this GameObject go, WaitDelegate w, float time) {
-		float dt = 0;
-		while(true) {
-			do {
-				
-				dt += Time.deltaTime;
-				yield return null;
-
-			} while(dt < time);
-			w();
-			dt = 0;
-		}
-	}
 
 	public static bool BetweenEx(this float f, float min, float max)
 	{
