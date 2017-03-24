@@ -144,6 +144,7 @@ public static class ExtensionMethods{
 		{
 			if (rb.velocity.sqrMagnitude > maxSpeed * maxSpeed)
 			{
+                Debug.Log("Clamping " + rb.gameObject.name + " to " + maxSpeed);
 				rb.velocity = rb.velocity.normalized * maxSpeed;
 			}
 		}

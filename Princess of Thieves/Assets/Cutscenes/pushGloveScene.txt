@@ -13,9 +13,8 @@ Sir Liam: I have no more need of it.  Please take it and escape this dragon's la
 add Prefabs/PushGlove
 italics true
 You got the Push Glove.
-Press [[PauseKey]] to open the Inventory Menu and use [[LeftItemKey]] or [[RightItemKey]] to assign it to an Item Slot.
-Press [[PauseKey]] again to close the menu.
-Press the Item Key to activate and aim with the [[AimKeys]].
-You'll push light items to you but if you push against immovable objects, you'll be the one pushed.
+Press [[PauseKey]] to open the Inventory Menu and use [[LeftItemKey]] or [[RightItemKey]] to assign it to an Item Slot.  Press [[PauseKey]] again to close the menu.
+Put the Mouse Cursor over a metal block and press the ItemKey to activate.
+You'll push light items away from you but if you push against immovable objects, you'll be the one pushed.
 destroy LiamCorpse
 italics false
