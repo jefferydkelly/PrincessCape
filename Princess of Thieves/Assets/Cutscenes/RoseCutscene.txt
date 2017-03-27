@@ -1,9 +1,10 @@
 character Elwynn Sprites/Elwynn
 pan 3	 0 0
 create Prefabs/DoorTemp 4 3.5 0
-wait 1
+wait 0.5
 create Prefabs/DragonClosed 2 3.5 0
 wait 0.5
-Dragon: Please stay with me?
+Dragon: Please stay with me? Just go back to your room please.
 add Prefabs/PushGlove
 add Prefabs/PullGlove
+create Prefabs/TriggerZone -7 1 0
