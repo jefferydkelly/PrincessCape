@@ -25,10 +25,7 @@ public class PullGlove : GloveItem {
 		if (activeGlove && activeGlove.IsActive) {
 			activeGlove.Deactivate ();
 		}
-        if (!targetIsHeavier)
-        {
-            playerBody.constraints |= RigidbodyConstraints2D.FreezePosition;
-        }
+        
 		activeGlove = this;
 
 		itemActive = true;
@@ -36,6 +33,16 @@ public class PullGlove : GloveItem {
 
 		if (target) {
 			ResetTargetTimer.Stop ();
+
+			if (!targetIsHeavier)
+			{
+				if (!Physics2D.BoxCast (target.transform.position, Vector2.one, 0, Vector2.up, 1.0f, 1 << LayerMask.NameToLayer ("Player"))) {
+					playerBody.constraints |= RigidbodyConstraints2D.FreezePositionX;
+					if (player.IsOnGround) {
+						playerBody.constraints |= RigidbodyConstraints2D.FreezePositionY;
+					}
+				}
+			}
 		}
 			
 	}
