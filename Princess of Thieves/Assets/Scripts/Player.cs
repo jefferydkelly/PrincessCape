@@ -238,7 +238,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (Controller.Pause)
 		{
             manager.IsInMenu = !manager.IsInMenu;
-
 		}
 		else if (Controller.Jump)
         {
