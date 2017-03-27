@@ -28,39 +28,41 @@ public class CameraManager : MonoBehaviour {
 	}
 
 	void DetermineCameraInstance(Scene scene, LoadSceneMode lsm) {
-		if (scene.name.StartsWith ("JD")) {
-			if (instance == null || isClosing) {
-				if (isClosing) {
-					Debug.Log ("I'm the instance now");
+		if (instance != this) {
+			if (scene.name.StartsWith ("JD")) {
+				if (instance == null || isClosing) {
+					if (isClosing) {
+						Debug.Log ("I'm the instance now");
+					}
+					isClosing = false;
+					instance = this;
+					manager = GameManager.Instance;
+					DontDestroyOnLoad (gameObject);
+
+					cam = GetComponent<Camera> ();
+					canvas.gameObject.SetActive (true);
+
+					DontDestroyOnLoad (AudioManager.Instance.AttachedObject);
+
+					target = GameManager.Instance.Player;
+					Vector3 camPos = target.transform.position;
+					camPos.z = -10;
+					transform.position = camPos;
+
+
+					screenSize = new Vector2 (Screen.width, Screen.height);
+					Vector3 playerPos = cam.WorldToScreenPoint (target.transform.position);
+					camPos = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
+					camPos.z = -10;
+					cam.transform.position = camPos;
+
+				} else {
+					Destroy (gameObject);
 				}
-				isClosing = false;
-				instance = this;
-				manager = GameManager.Instance;
-				DontDestroyOnLoad (gameObject);
-
-				cam = GetComponent<Camera> ();
-				canvas.gameObject.SetActive (true);
-
-				DontDestroyOnLoad (AudioManager.Instance.AttachedObject);
-
-				target = GameManager.Instance.Player;
-				Vector3 camPos = target.transform.position;
-				camPos.z = -10;
-				transform.position = camPos;
-
-
-				screenSize = new Vector2 (Screen.width, Screen.height);
-				Vector3 playerPos = cam.WorldToScreenPoint (target.transform.position);
-				camPos = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
-				camPos.z = -10;
-				cam.transform.position = camPos;
-
 			} else {
-				Destroy (gameObject);
+				isClosing = true;
+				instance = null;
 			}
-		} else {
-			isClosing = true;
-			instance = null;
 		}
 	}
 		

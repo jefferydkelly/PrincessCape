@@ -871,6 +871,8 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	public void Push(BlockController bc) {
 		highlightedBody = bc.GetComponent<Rigidbody2D>();
 		float dx = Mathf.Sign ((highlightedBody.transform.position - transform.position).x);
+		fwdX = (int)dx;
+		myRenderer.flipX = (fwdX == -1);
 		transform.position = highlightedBody.transform.position - dx * new Vector3(HalfWidth + bc.gameObject.HalfWidth (), 0);
 		IsPushing = true;
 	}

@@ -417,7 +417,7 @@ public class CutsceneActivate: CutsceneElement {
 		ao = aObj;
 		activate = activated;
 		autoAdvance = (RunTime == 0);
-		canSkip = true;
+		canSkip = false;
 	}
 
 	public override void Run() {
@@ -427,7 +427,7 @@ public class CutsceneActivate: CutsceneElement {
 			ao.Deactivate ();
 		}
 
-		if (RunTime > 0) {
+		if (RunTime > 0 && !GameManager.Instance.Cutscene.IsBeingSkipped) {
 			UIManager.Instance.WaitFor (RunTime);
 		}
 	}
