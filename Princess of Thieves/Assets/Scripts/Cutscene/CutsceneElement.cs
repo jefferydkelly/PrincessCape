@@ -99,7 +99,6 @@ public class CameraPan : CutsceneElement
 		{
 			panDistance = panEnding - Camera.main.transform.position;
 		}
-
 		CameraManager.Instance.Pan (panDistance, time);
 	}
 }

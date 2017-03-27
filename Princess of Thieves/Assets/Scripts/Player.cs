@@ -247,7 +247,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         else if (Controller.Reset)
         {
             // IsDead = true;
-            SceneManager.LoadScene("TitleScreen");
+			SceneManager.LoadScene("TitleScreen");
         }
         else if (Controller.Restart)
         {
