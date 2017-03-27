@@ -1,10 +1,11 @@
 character Matthew Knights/Temp
 character Elwynn Sprites/Elwynn
+activate BrazierCheckpoint true
 pan to Player 0
 pan -6 2 0
 disable Player
 align right
-show Elwynn 0 1.25
+show Elwynn -1 1.25
 flip-x Elwynn
 Elwynn: Kidnapped by another dragon?
 move-x Elwynn -3 1.5

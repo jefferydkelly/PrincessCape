@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CameraManager : MonoBehaviour {
 	static CameraManager instance = null;
@@ -17,37 +18,54 @@ public class CameraManager : MonoBehaviour {
 	Vector3 posTarget = new Vector3();
     // Use this for initialization
 	static bool isClosing = false;
+	static bool addedFunction = false;
 	GameManager manager;
-    void Awake () {
-        isClosing = false;
-        if (instance == null)
-		{
-			instance = this;
-			manager = GameManager.Instance;
-			DontDestroyOnLoad(gameObject);
 
-            cam = GetComponent<Camera>();
-            canvas.gameObject.SetActive(true);
-
-            DontDestroyOnLoad(AudioManager.Instance.AttachedObject);
-
-            target = GameManager.Instance.Player;
-			Vector3 camPos = target.transform.position;
-			camPos.z = -10;
-			transform.position = camPos;
-            
-           
-            screenSize = new Vector2(Screen.width, Screen.height);
-            Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
-            camPos = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
-            camPos.z = -10;
-            cam.transform.position = camPos;
-
-        }
-		else {
-			Destroy(gameObject);
+	void Awake() {
+		if (!addedFunction) {
+			SceneManager.sceneLoaded += DetermineCameraInstance;
 		}
 	}
+
+	void DetermineCameraInstance(Scene scene, LoadSceneMode lsm) {
+		if (instance != this) {
+			if (scene.name.StartsWith ("JD")) {
+				if (instance == null || isClosing) {
+					if (isClosing) {
+						Debug.Log ("I'm the instance now");
+					}
+					isClosing = false;
+					instance = this;
+					manager = GameManager.Instance;
+					DontDestroyOnLoad (gameObject);
+
+					cam = GetComponent<Camera> ();
+					canvas.gameObject.SetActive (true);
+
+					DontDestroyOnLoad (AudioManager.Instance.AttachedObject);
+
+					target = GameManager.Instance.Player;
+					Vector3 camPos = target.transform.position;
+					camPos.z = -10;
+					transform.position = camPos;
+
+
+					screenSize = new Vector2 (Screen.width, Screen.height);
+					Vector3 playerPos = cam.WorldToScreenPoint (target.transform.position);
+					camPos = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
+					camPos.z = -10;
+					cam.transform.position = camPos;
+
+				} else {
+					Destroy (gameObject);
+				}
+			} else {
+				isClosing = true;
+				instance = null;
+			}
+		}
+	}
+		
 	/// <summary>
 	/// Gets the instance.
 	/// </summary>
@@ -59,13 +77,11 @@ public class CameraManager : MonoBehaviour {
 			if (!isClosing) {
 				return instance;
 			}
+
 			return null;
 		}
 	}
-
-	void OnDestroy() {
-		isClosing = true;
-	}
+		
 	// Update is called once per frame
 	void LateUpdate () {
 		

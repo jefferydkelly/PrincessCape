@@ -30,16 +30,15 @@ public class PushGlove : GloveItem{
 
 		if (target) {
 			ResetTargetTimer.Stop ();
-			/*
-			if (player.Aiming.y == 1) {
-				direction = PushPullDirection.Up;
-			} else if (player.Aiming.y == -1) {
-				direction = PushPullDirection.Down;
-			} else if (player.Aiming.x == 1) {
-				direction = PushPullDirection.Right;
-			} else {
-				direction = PushPullDirection.Left;
-			}*/
+			if (!targetIsHeavier)
+			{
+				if (!Physics2D.BoxCast (target.transform.position, Vector2.one, 0, Vector2.up, 1.0f, 1 << LayerMask.NameToLayer ("Player"))) {
+					playerBody.constraints |= RigidbodyConstraints2D.FreezePositionX;
+					if (player.IsOnGround) {
+						playerBody.constraints |= RigidbodyConstraints2D.FreezePositionY;
+					}
+				}
+			}
 
 		}
 			
