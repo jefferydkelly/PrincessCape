@@ -51,6 +51,8 @@ public class SignController : MonoBehaviour, InteractiveObject {
 				} else {
 					Dehighlight ();
 				}
+			} else {
+				Highlight ();
 			}
 		}
 	}
