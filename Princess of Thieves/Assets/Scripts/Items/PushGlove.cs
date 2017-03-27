@@ -115,6 +115,6 @@ public class PushGlove : GloveItem{
 		ResetTargetTimer.Reset ();
 		ResetTargetTimer.Start ();
 		player.HideMagnetRange ();
-
-	}
+        playerBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
 }
