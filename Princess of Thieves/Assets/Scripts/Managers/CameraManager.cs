@@ -27,9 +27,9 @@ public class CameraManager : MonoBehaviour {
 		}
 	}
 
-	void DetermineCameraInstance(Scene scene, LoadSceneMode lsm) {
-		if (instance != this) {
-			if (scene.name.StartsWith ("JD")) {
+    void DetermineCameraInstance(Scene scene, LoadSceneMode lsm) {
+        if (instance != this) {
+            if (scene.name.StartsWith("JD") || (scene.name.StartsWith("Rose"))) {
 				if (instance == null || isClosing) {
 					if (isClosing) {
 						Debug.Log ("I'm the instance now");
