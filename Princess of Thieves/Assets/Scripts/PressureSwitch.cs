@@ -25,6 +25,7 @@ public class PressureSwitch : ActivatorObject {
         }
 	}
 
+
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
