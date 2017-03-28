@@ -5,6 +5,7 @@ using UnityEngine;
 public class FanController : MonoBehaviour, ActivateableObject {
 
 	[SerializeField]
+	AimDirection direction;
 	Vector2 fwd = new Vector2(1, 0);
 	[SerializeField]
 	float force = 10;
@@ -16,18 +17,54 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	bool isActivationInverted = false;
 	LineRenderer lineRenderer;
+	FanBlast blast;
 	// Use this for initialization
 	void Start () {
-		lineRenderer = GetComponent<LineRenderer> ();
-		lineRenderer.useWorldSpace = false;
-		Vector3 endVec = fwd * range;
-		endVec.z = 1;
-		lineRenderer.SetPositions(new Vector3[]{new Vector3(fwd.x * gameObject.HalfWidth(), fwd.y * gameObject.HalfHeight(), 1), endVec});
-		lineRenderer.enabled = isActive;
+		float sqrtHalf = 1 / Mathf.Sqrt (2);
+		switch (direction)
+		{
+		case AimDirection.Right:
+			fwd = new Vector2(1, 0);
+			break;
+		case AimDirection.UpRight:
+			fwd = new Vector2 (sqrtHalf, sqrtHalf);
+			transform.Rotate (Vector3.fwd, -45);
+			break;
+		case AimDirection.Up:
+			fwd = new Vector2(0, 1);
+			break;
+		case AimDirection.UpLeft:
+			fwd = new Vector2(-sqrtHalf, sqrtHalf);
+			transform.Rotate (Vector3.fwd, 45);
+			break;
+		case AimDirection.Left:
+			fwd = new Vector2(-1, 0);
+			break;
+		case AimDirection.DownLeft:
+			fwd = new Vector2(-sqrtHalf, -sqrtHalf);
+			transform.Rotate (Vector3.fwd, 45);
+			break;
+		case AimDirection.Down:
+			fwd = new Vector2(0, -1);
+			transform.Rotate (Vector3.fwd, 90);
+			break;
+		case AimDirection.DownRight:
+			fwd = new Vector2(sqrtHalf, -sqrtHalf);
+			transform.Rotate (Vector3.fwd, -45);
+			break;
+		}
+		blast = GetComponentInChildren<FanBlast> ();
+		blast.transform.localScale = new Vector3 (1, range, 1);
+		blast.transform.localPosition = new Vector3 (0, (range + 1) / 2f, 0);
+		blast.Forward = fwd;
+		blast.Force = force;
+
+		blast.gameObject.SetActive (isActive);
 	}
 
 	// Update is called once per frame
 	void Update () {
+		/*
 		bool stillPushingPlayer = false;
 		if (IsActive) {
 			foreach (RaycastHit2D hit in Physics2D.BoxCastAll(transform.position, new Vector2(1.0f, 1.0f), 0, fwd, range)) {
@@ -55,15 +92,17 @@ public class FanController : MonoBehaviour, ActivateableObject {
 		}
 
 		isPushingPlayer = stillPushingPlayer;
+		*/
 	}
 
 	public void Activate() {
 		isActive = true;
-		lineRenderer.enabled = true;
+		blast.gameObject.SetActive (true);
 	}
 
 	public void Deactivate() {
 		isActive = false;
+		blast.gameObject.SetActive (false);
 		lineRenderer.enabled = false;
 	}
 
