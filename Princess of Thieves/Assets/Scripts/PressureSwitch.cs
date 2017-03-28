@@ -25,6 +25,7 @@ public class PressureSwitch : ActivatorObject {
         }
 	}
 
+
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
@@ -80,6 +81,6 @@ public class PressureSwitch : ActivatorObject {
     public override void Reset()
     {
         base.Deactivate();
-        anim.SetInteger("ItemsOnTop", 0);
+		NumberOfThingsWeighingThisDown = 0;
     }
 }

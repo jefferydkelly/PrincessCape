@@ -10,6 +10,7 @@ public class Cutscene
 	public GameObject characterPrefab;
 	CutsceneElement head = null;
 	CutsceneElement currentNode = null;
+	bool isBeingSkipped = false;
    
 	// Use this for initialization
     public Cutscene(TextAsset text)
@@ -154,35 +155,39 @@ public class Cutscene
 	/// </summary>
 	public void NextElement()
 	{
-		if (currentNode == null)
-		{
-			currentNode = head;
+		if (!isBeingSkipped) {
+			isBeingSkipped = Input.GetKey (KeyCode.Escape);
 		}
-		else if (currentNode.nextElement != null)
-		{
-			currentNode = currentNode.nextElement;
-		}
-		else {
-			//End the cutscene
-			UIManager.Instance.ShowBoxes = true;
-			GameManager.Instance.IsInCutscene = false;
-            UIManager.Instance.StartCoroutine("HideDialog");
-    
-			foreach (CutsceneActor ca in charactersOnStage)
-			{
-				ca.DestroySelf();
+		if (!isBeingSkipped) {
+			if (currentNode == null) {
+				currentNode = head;
+			} else if (currentNode.nextElement != null) {
+				currentNode = currentNode.nextElement;
+			} else {
+				EndCutscene ();
+				return;
 			}
-				
-			return;
-		}
 			
-		currentNode.Run ();
+			currentNode.Run ();
 
-		if (currentNode.AutoAdvance) {
-			NextElement ();
+			if (currentNode.AutoAdvance) {
+				NextElement ();
+			}
+		} else {
+			SkipCutscene ();
 		}
 	}
 
+	void EndCutscene() {
+		//End the cutscene
+		UIManager.Instance.ShowBoxes = true;
+		GameManager.Instance.IsInCutscene = false;
+		UIManager.Instance.StartCoroutine ("HideDialog");
+
+		foreach (CutsceneActor ca in charactersOnStage) {
+			ca.DestroySelf ();
+		}
+	}
 	/// <summary>
 	/// Creates a character dynamically from the sprite in Resources with the same name.
 	/// </summary>
@@ -197,6 +202,11 @@ public class Cutscene
 		}
 	}
 
+	/// <summary>
+	/// Creates the character.
+	/// </summary>
+	/// <param name="charName">Char name.</param>
+	/// <param name="spriteName">Sprite name.</param>
 	public void CreateCharacter(string charName, string spriteName)
 	{
         Sprite s = Resources.Load<Sprite>(spriteName.Trim());
@@ -248,6 +258,29 @@ public class Cutscene
 	/// <param name="actor">Actor.</param>
 	public void AddActorToStage(CutsceneActor actor) {
 		charactersOnStage.Add (actor);
+	}
+
+	/// <summary>
+	/// Skips the cutscene.
+	/// </summary>
+	public void SkipCutscene() {
+		while (currentNode != null) {
+			if (!currentNode.CanSkip) {
+				currentNode.Run ();
+			}
+			currentNode = currentNode.nextElement;
+		}
+		EndCutscene ();
+	}
+
+	/// <summary>
+	/// Gets a value indicating whether this instance is being skipped.
+	/// </summary>
+	/// <value><c>true</c> if this instance is being skipped; otherwise, <c>false</c>.</value>
+	public bool IsBeingSkipped {
+		get {
+			return isBeingSkipped;
+		}
 	}
 }
 

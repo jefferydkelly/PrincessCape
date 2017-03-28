@@ -9,8 +9,11 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	bool isActive = false;
 	[SerializeField]
 	bool startActive = false;
+	[SerializeField]
+	float launchForce = 10f;
 	public float timeToFire = 1f;
 	[SerializeField]
+	AimDirection direction;
 	Vector3 fwd = new Vector3(1,0);
 	Timer fireTimer;
 	SpriteRenderer myRenderer;
@@ -40,6 +43,44 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 			myRenderer.color = Color.blue;
 		}
 
+		float sqrtHalf = 1.0f / Mathf.Sqrt(2);
+		switch (direction)
+		{
+		case AimDirection.Right:
+			fwd = new Vector2(1, 0);
+			myRenderer.flipX = true;
+			break;
+		case AimDirection.UpRight:
+			fwd = new Vector2 (sqrtHalf, sqrtHalf);
+			myRenderer.flipX = true;
+			transform.Rotate (Vector3.fwd, 45);
+			break;
+		case AimDirection.Up:
+			fwd = new Vector2(0, 1);
+			transform.Rotate (Vector3.fwd, -90);
+			break;
+		case AimDirection.UpLeft:
+			fwd = new Vector2(-sqrtHalf, sqrtHalf);
+			transform.Rotate (Vector3.fwd, -45);
+			break;
+		case AimDirection.Left:
+			fwd = new Vector2(-1, 0);
+			break;
+		case AimDirection.DownLeft:
+			fwd = new Vector2(-sqrtHalf, -sqrtHalf);
+			transform.Rotate (Vector3.fwd, 45);
+			break;
+		case AimDirection.Down:
+			fwd = new Vector2(0, -1);
+			transform.Rotate (Vector3.fwd, 90);
+			break;
+		case AimDirection.DownRight:
+			fwd = new Vector2(sqrtHalf, -sqrtHalf);
+			myRenderer.flipX = true;
+			transform.Rotate (Vector3.fwd, -45);
+			break;
+		}
+
 	}
 
 	void Update() {
@@ -58,7 +99,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
         pos.z += 1;
         temp.transform.position = pos;// transform.position;// + fwd * (gameObject.HalfWidth () + temp.HalfWidth () + 0.25f);
 		temp.transform.RotateAround (temp.transform.position, Vector3.forward, Mathf.Atan2 (fwd.y, fwd.x) * Mathf.Rad2Deg);
-		temp.GetComponent<Rigidbody2D>().AddForce(fwd*10,ForceMode2D.Impulse);
+		temp.GetComponent<Rigidbody2D>().AddForce(fwd*launchForce,ForceMode2D.Impulse);
 		myRenderer.color = Color.gray;
 	}
 

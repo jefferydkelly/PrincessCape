@@ -143,6 +143,8 @@ public class LadderController : JDMappableObject, InteractiveObject {
 				} else {
 					Dehighlight ();
 				}
+			} else {
+				Highlight ();
 			}
 		}
 	}

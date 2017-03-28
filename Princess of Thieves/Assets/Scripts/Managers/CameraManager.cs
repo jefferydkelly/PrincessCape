@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CameraManager : MonoBehaviour {
 	static CameraManager instance = null;
@@ -17,37 +18,55 @@ public class CameraManager : MonoBehaviour {
 	Vector3 posTarget = new Vector3();
     // Use this for initialization
 	static bool isClosing = false;
+	static bool addedFunction = false;
 	GameManager manager;
-    void Awake () {
-        isClosing = false;
-        if (instance == null)
-		{
-			instance = this;
-			manager = GameManager.Instance;
-			DontDestroyOnLoad(gameObject);
 
-            cam = GetComponent<Camera>();
-            canvas.gameObject.SetActive(true);
-
-            DontDestroyOnLoad(AudioManager.Instance.AttachedObject);
-
-            target = GameManager.Instance.Player;
-			Vector3 camPos = target.transform.position;
-			camPos.z = -10;
-			transform.position = camPos;
-            
-           
-            screenSize = new Vector2(Screen.width, Screen.height);
-            Vector3 playerPos = cam.WorldToScreenPoint(target.transform.position);
-            camPos = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
-            camPos.z = -10;
-            cam.transform.position = camPos;
-
-        }
-		else {
-			Destroy(gameObject);
+	void Awake() {
+		if (!addedFunction) {
+			SceneManager.sceneLoaded += DetermineCameraInstance;
 		}
 	}
+
+    void DetermineCameraInstance(Scene scene, LoadSceneMode lsm) {
+		if (instance != this) {
+			if (scene.name.StartsWith ("JD") || (scene.name.StartsWith ("Rose"))) {
+				if (instance == null || isClosing) {
+					isClosing = false;
+					instance = this;
+					manager = GameManager.Instance;
+					DontDestroyOnLoad (gameObject);
+
+					cam = GetComponent<Camera> ();
+					canvas.gameObject.SetActive (true);
+
+					DontDestroyOnLoad (AudioManager.Instance.AttachedObject);
+
+					CenterCamera ();
+
+				} else {
+					Destroy (gameObject);
+				}
+			} else {
+				isClosing = true;
+				instance = null;
+			}
+		} else {
+			CenterCamera ();
+		}
+	}
+	void CenterCamera() {
+		target = GameManager.Instance.Player;
+		Vector3 camPos = target.transform.position;
+		camPos.z = -10;
+		transform.position = camPos;
+
+
+		screenSize = new Vector2 (Screen.width, Screen.height);
+		Vector3 playerPos = cam.WorldToScreenPoint (target.transform.position);
+		camPos = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
+		camPos.z = -10;
+		cam.transform.position = camPos;
+	}	
 	/// <summary>
 	/// Gets the instance.
 	/// </summary>
@@ -59,18 +78,15 @@ public class CameraManager : MonoBehaviour {
 			if (!isClosing) {
 				return instance;
 			}
+
 			return null;
 		}
 	}
-
-	void OnDestroy() {
-		isClosing = true;
-	}
+		
 	// Update is called once per frame
 	void LateUpdate () {
-		
-		if (!manager.IsPaused)
-		{
+
+		if (manager != null && !manager.IsPaused) {
 			if (target) {
 				playerPos = cam.WorldToScreenPoint (target.transform.position);
 				newCamPos = cam.transform.position;
@@ -90,14 +106,16 @@ public class CameraManager : MonoBehaviour {
 				posTarget.z = -10;
 				newCamPos = Vector3.SmoothDamp (cam.transform.position, posTarget, ref vel, dampTime);
 				cam.transform.position = newCamPos;
+			} else {
+				GameObject go = GameObject.FindGameObjectWithTag ("Player");
+				if (go) {
+					target = go.GetComponent<Player> ();
+				}
 			}
-            else
-            {
-                GameObject go = GameObject.FindGameObjectWithTag("Player");
-                if (go) {
-                    target = go.GetComponent<Player>();
-                }
-            }
+		} else if (manager == null) {
+			manager = GameManager.Instance;
+			target = manager.Player;
+			cam = GetComponent<Camera> ();
 		}
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ReflectStand : BlockController {
     [SerializeField]
-    ReflectDirection direction;
+    AimDirection direction;
     Vector2 reflectionForward = new Vector2(1, 0);
     static Sprite[] sprites;
 
@@ -17,28 +17,28 @@ public class ReflectStand : BlockController {
         float sqrtHalf = 1.0f / Mathf.Sqrt(2);
 		switch (direction)
         {
-            case ReflectDirection.Right:
+            case AimDirection.Right:
                 reflectionForward = new Vector2(1, 0);
                 break;
-            case ReflectDirection.UpRight:
+            case AimDirection.UpRight:
                 reflectionForward = new Vector2(sqrtHalf, sqrtHalf);
                 break;
-            case ReflectDirection.Up:
+            case AimDirection.Up:
                 reflectionForward = new Vector2(0, 1);
                 break;
-            case ReflectDirection.UpLeft:
+            case AimDirection.UpLeft:
                 reflectionForward = new Vector2(-sqrtHalf, sqrtHalf);
                 break;
-            case ReflectDirection.Left:
+            case AimDirection.Left:
                 reflectionForward = new Vector2(-1, 0);
                 break;
-            case ReflectDirection.DownLeft:
+            case AimDirection.DownLeft:
                 reflectionForward = new Vector2(-sqrtHalf, -sqrtHalf);
                 break;
-            case ReflectDirection.Down:
+            case AimDirection.Down:
                 reflectionForward = new Vector2(0, -1);
                 break;
-            case ReflectDirection.DownRight:
+            case AimDirection.DownRight:
                 reflectionForward = new Vector2(sqrtHalf, -sqrtHalf);
                 break;
         }
@@ -54,7 +54,7 @@ public class ReflectStand : BlockController {
 	}
 }
 
-public enum ReflectDirection
+public enum AimDirection
 {
     Right,
     UpRight,

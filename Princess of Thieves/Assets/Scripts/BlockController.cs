@@ -53,6 +53,8 @@ public class BlockController : ResettableObject, InteractiveObject {
 				} else if (!beingPushed) {
 					Dehighlight ();
 				}
+			} else {
+				Highlight ();
 			}
 		}
 	}
