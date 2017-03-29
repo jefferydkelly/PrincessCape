@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public class Player : ResettableObject, DamageableObject, CasterObject
+public class Player : ResettableObject, DamageableObject, ReflectiveObject
 {
     private Transform startPos;
 	private Controller controller;
@@ -942,9 +942,17 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Stops the float.
+	/// </summary>
 	void StopFloat() {
 		myRigidBody.gravityScale = 1.5f;
 	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether this instance can float.
+	/// </summary>
+	/// <value><c>true</c> if this instance can float; otherwise, <c>false</c>.</value>
 	bool CanFloat {
 		get {
 			return (state & PlayerState.CanFloat) > 0;
@@ -986,6 +994,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         }
     }
 
+	/// <summary>
+	/// Gets or sets a value indicating whether this instance is pushed vertically by the wind.
+	/// </summary>
+	/// <value><c>true</c> if this instance is pushed vertically by the wind; otherwise, <c>false</c>.</value>
 	public bool IsPushedVerticallyByTheWind {
 		get {
 			return (state & PlayerState.PushedByTheWindVert) > 0;
@@ -1000,6 +1012,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets or sets a value indicating whether this instance is pushed horizontally by the wind.
+	/// </summary>
+	/// <value><c>true</c> if this instance is pushed horizontally by the wind; otherwise, <c>false</c>.</value>
 	public bool IsPushedHorizontallyByTheWind {
 		get {
 			return (state & PlayerState.PushedByTheWindHorz) > 0;
@@ -1014,6 +1030,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets or sets a value indicating whether this instance is on moving platform.
+	/// </summary>
+	/// <value><c>true</c> if this instance is on moving platform; otherwise, <c>false</c>.</value>
 	public bool IsOnMovingPlatform {
 		get {
 			return (state & PlayerState.OnMovingPlatform) > 0;
@@ -1028,6 +1048,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets a value indicating whether this instance is dead.
+	/// </summary>
+	/// <value><c>true</c> if this instance is dead; otherwise, <c>false</c>.</value>
 	public bool IsDead {
 		get {
 			return (state & PlayerState.Dead) > 0;
@@ -1044,6 +1068,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
+	/// <summary>
+	/// Gets or sets a value indicating whether this <see cref="Player"/> show aim arrow.
+	/// </summary>
+	/// <value><c>true</c> if show aim arrow; otherwise, <c>false</c>.</value>
 	public bool ShowAimArrow {
 		get {
 			return arrowRenderer.enabled;
@@ -1054,23 +1082,35 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		}
 	}
 
-	public void HighlightedDestroyed(InteractiveObject io) {
-		/*
-		if (io == highlighted) {
-			highlighted = null;
-			highlightedBody = null;
-		}*/
-	}
-
+	/// <summary>
+	/// Shows the magnet range.
+	/// </summary>
+	/// <param name="c">C.</param>
 	public void ShowMagnetRange(Color c) {
 		rangeRenderer.enabled = true;
 		rangeRenderer.color = c;
 	}
 
+	/// <summary>
+	/// Hides the magnet range.
+	/// </summary>
 	public void HideMagnetRange() {
 		rangeRenderer.enabled = false;
 	}
 
+	/// <summary>
+	/// Gets the surface forward.
+	/// </summary>
+	/// <value>The surface forward.</value>
+	public Vector2 SurfaceForward {
+		get {
+			if (IsUsingReflectCape) {
+				return TrueAim.normalized;
+			}
+
+			return Vector2.zero;
+		}
+	}
     #endregion gets
 
 	public void Freeze(float time) {

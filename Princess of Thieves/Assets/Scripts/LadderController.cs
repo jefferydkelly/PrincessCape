@@ -68,12 +68,8 @@ public class LadderController : JDMappableObject, InteractiveObject {
 
 	void OnDestroy() {
 
-		if (myRenderer.color == Color.blue) {
-			GameManager.Instance.Player.HighlightedDestroyed (this);
-		}
 		if (collidingWithPlayer && GameManager.Instance.Player.IsClimbing) {
 			GameManager.Instance.Player.IsClimbing = false;
-			GameManager.Instance.Player.HighlightedDestroyed (this);
 		}
 	}
 

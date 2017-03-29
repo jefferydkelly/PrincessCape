@@ -62,39 +62,6 @@ public class FanController : MonoBehaviour, ActivateableObject {
 		blast.gameObject.SetActive (isActive);
 	}
 
-	// Update is called once per frame
-	void Update () {
-		/*
-		bool stillPushingPlayer = false;
-		if (IsActive) {
-			foreach (RaycastHit2D hit in Physics2D.BoxCastAll(transform.position, new Vector2(1.0f, 1.0f), 0, fwd, range)) {
-				Rigidbody2D rb = hit.collider.GetComponent<Rigidbody2D> ();
-				if (hit.collider.CompareTag ("Player")) {
-					stillPushingPlayer = true;
-					if (fwd.x != 0) {
-						GameManager.Instance.Player.IsPushedHorizontallyByTheWind = true;
-					} else if (fwd.y != 0) {
-						GameManager.Instance.Player.IsPushedVerticallyByTheWind = true;
-					}
-				}
-				if (rb) {
-					rb.AddForce (fwd * force);
-				}
-			}
-		}
-
-		if (!stillPushingPlayer && isPushingPlayer) {
-			if (fwd.x != 0) {
-				GameManager.Instance.Player.IsPushedHorizontallyByTheWind = false;
-			} else if (fwd.y != 0) {
-				GameManager.Instance.Player.IsPushedVerticallyByTheWind = false;
-			}
-		}
-
-		isPushingPlayer = stillPushingPlayer;
-		*/
-	}
-
 	public void Activate() {
 		isActive = true;
 		blast.gameObject.SetActive (true);

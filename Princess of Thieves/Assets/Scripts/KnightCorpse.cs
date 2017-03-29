@@ -36,14 +36,6 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 		//myRenderer.sprite = closedSprite;
 	}
 
-	void OnDestroy() {
-        Player p = GameManager.Instance.Player;
-        if (p != null)
-        {
-            p.HighlightedDestroyed(this);
-        }
-	}
-
 	bool Highlighted {
 		get {
 			return myRenderer.color == Color.blue;

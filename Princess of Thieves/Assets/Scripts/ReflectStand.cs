@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReflectStand : BlockController {
+public class ReflectStand : BlockController, ReflectiveObject {
     [SerializeField]
     AimDirection direction;
     Vector2 reflectionForward = new Vector2(1, 0);
@@ -50,6 +50,12 @@ public class ReflectStand : BlockController {
 	void OnTriggerEnter2D(Collider2D col) {
 		if (col.CompareTag ("Projectile")) {
             col.GetComponent<Projectile>().Reflect(reflectionForward);
+		}
+	}
+
+	public Vector2 SurfaceForward {
+		get {
+			return reflectionForward;
 		}
 	}
 }
