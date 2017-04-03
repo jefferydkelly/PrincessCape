@@ -9,7 +9,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-    private Animator myAnimator;
+   // private Animator myAnimator;
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
@@ -84,7 +84,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
-        myAnimator = GetComponent<Animator>();
+        //myAnimator = GetComponent<Animator>();
 		curHP = maxHP;
 		curMP = maxMP;
 		DontDestroyOnLoad(gameObject);
@@ -869,11 +869,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	/// Gets the animator.
 	/// </summary>
 	/// <value>The animator.</value>
-	public Animator Animator {
-		get {
-			return myAnimator;
-		}
-	}
+	//public Animator Animator {
+	//	get {
+	//		return myAnimator;
+	//	}
+	//}
 
 	/// <summary>
 	/// Gets the inventory.
@@ -1011,7 +1011,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         {
             if (value)
             {
-				myAnimator.SetBool ("FWD", false);
+				//myAnimator.SetBool ("FWD", false);
                 state |= PlayerState.Frozen;
 				myRigidBody.velocity = new Vector2 (0f, myRigidBody.velocity.y);
             }else
@@ -1066,7 +1066,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
             {
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
-				myAnimator.SetBool ("FWD", false);
+				//myAnimator.SetBool ("FWD", false);
                 myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10,0), ForceMode2D.Impulse); //yes we are dashing now
 
                
@@ -1108,7 +1108,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
                 UIManager.Instance.ShowInteraction("Let Go");
                 state |= PlayerState.Pushing;
                 state |= PlayerState.Frozen;
-				myAnimator.SetBool ("FWD", false);
+				//myAnimator.SetBool ("FWD", false);
             }
             else
             {
@@ -1142,7 +1142,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 					TimerManager.Instance.AddTimer(new Timer(()=>{StopFloat();}, 1.0f));
 				} else {
 					state |= PlayerState.Frozen;
-					myAnimator.SetBool ("FWD", false);
+				//	myAnimator.SetBool ("FWD", false);
 				}
 			}
 			else
