@@ -37,10 +37,12 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
                 childAnimation.SetActive(true);
             AudioManager.Instance.PlaySound (activateClip);
 			foreach (GameObject cp in checkpoints) {
+                
 				cp.GetComponent<Checkpoint> ().Deactivate ();
 			}
 			myRenderer.sprite = activatedSprite;
 		}
+        activated = true;
     }
 
 	public void Deactivate() {

@@ -18,7 +18,8 @@ public class PushGlove : GloveItem{
 
 	public override void Activate()
 	{
-		player.IsUsingMagnetGloves = true;
+        player.IsUsingPushGloves = true;
+       // player.IsUsingMagnetGloves = true;
 
 		if (activeGlove && activeGlove.IsActive) {
 			activeGlove.Deactivate ();
@@ -102,8 +103,8 @@ public class PushGlove : GloveItem{
 		
 	public override void Deactivate()
 	{
-		
-		player.IsUsingMagnetGloves = false;
+        player.IsUsingPushGloves = false;
+        //player.IsUsingMagnetGloves = false;
 		if (target) {
 			target.GetComponent<SpriteRenderer> ().color = Color.white;
 		}

@@ -54,7 +54,14 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	[SerializeField]
 	AudioClip spikeDeathClip;
 
-	SpriteRenderer arrowRenderer;
+    Sprite basicSprite;
+    [SerializeField]
+    Sprite[] capeSprites;
+    [SerializeField]
+    Sprite[] magPushGloves;
+    [SerializeField]
+    Sprite[] magPullGloves;
+    SpriteRenderer arrowRenderer;
 	SpriteRenderer rangeRenderer;
 	GameManager manager;
     void Awake()
@@ -72,7 +79,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 	// Use this for initialization
 	void Start()
 	{
-
+        
         startPos = transform;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
@@ -81,7 +88,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		curHP = maxHP;
 		curMP = maxMP;
 		DontDestroyOnLoad(gameObject);
-        
+        basicSprite = myRenderer.sprite;
         UIManager.Instance.UpdateUI(controller);
         inventory = new List<UsableItem>();
 
@@ -256,11 +263,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 		if (!manager.IsPaused) {
 			tryingToInteract = controller.Interact;
 			if (!IsFrozen) {
-				if (controller.Horizontal != 0) {
-					myAnimator.SetBool ("FWD", true);
+				if (controller.Horizontal < 0) {
+                    myRenderer.flipX = false;
 				} else {
-					myAnimator.SetBool ("FWD", false);
-				}
+                    myRenderer.flipX = true;
+                }
 			}
 
 			/*
@@ -316,6 +323,212 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         
 	}
 
+    void LateUpdate()
+    {
+        //Awful code, but it works
+        if (IsUsingMagnetGloves)
+        {
+            switch ((int)TrueAim.x)
+            {
+                case 0:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPullGloves[2];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPullGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPullGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPullGloves[6];
+                            break;
+                    }//end of internal Switch
+                    break; // end of x = 0
+                case 1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPullGloves[3];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPullGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPullGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPullGloves[5];
+                            break;
+                    }//end of internal Switch
+                    break;
+                case -1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPullGloves[1];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPullGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPullGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPullGloves[7];
+                            break;
+                    }//end of internal Switch
+                    break;
+            }// end of External Switch
+        }
+        else if (IsUsingPushGloves)
+        {
+            switch ((int)TrueAim.x)
+            {
+                case 0:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPushGloves[2];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPushGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPushGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPushGloves[6];
+                            break;
+                    }//end of internal Switch
+                    break; // end of x = 0
+                case 1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPushGloves[3];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPushGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPushGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPushGloves[5];
+                            break;
+                    }//end of internal Switch
+                    break;
+                case -1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPushGloves[1];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPushGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPushGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPushGloves[7];
+                            break;
+                    }//end of internal Switch
+                    break;
+            }
+        }
+        else if (IsUsingReflectCape)
+        {
+            switch ((int)TrueAim.x)
+            {
+                case 0:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = capeSprites[2];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = capeSprites[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = capeSprites[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = capeSprites[2];
+                            break;
+                    }//end of internal Switch
+                    break; // end of x = 0
+                case 1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = capeSprites[3];
+                            break;
+                        case 0: //forward
+                                myRenderer.sprite = capeSprites[4];
+
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = capeSprites[1];
+                            break;
+                    }//end of internal Switch
+                    break;
+                case -1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = capeSprites[1];
+                            break;
+                        case 0: //forward
+                            myRenderer.sprite = capeSprites[0];
+
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = capeSprites[0];
+                            break;
+                    }//end of internal Switch
+                    break;
+            }// end of External Switch
+        }
+        else
+        {
+            myRenderer.sprite = basicSprite;
+        }
+
+
+
+    }
 	void Jump()
 	{
         
@@ -985,8 +1198,29 @@ public class Player : ResettableObject, DamageableObject, CasterObject
 			ShowAimArrow = IsUsingMagnetGloves;
         }
     }
+    public bool IsUsingPushGloves
+    {
+        get
+        {
+            return (state & PlayerState.UsingPushGloves) > 0;
+        }
 
-	public bool IsPushedVerticallyByTheWind {
+        set
+        {
+            if (value && !IsUsingPushGloves && !IsFrozen)
+            {
+                state |= PlayerState.UsingPushGloves;
+                state |= PlayerState.Frozen;
+            }
+            else
+            {
+                state &= ~PlayerState.UsingPushGloves;
+                state &= ~PlayerState.Frozen;
+            }
+            ShowAimArrow = IsUsingPushGloves;
+        }
+    }
+    public bool IsPushedVerticallyByTheWind {
 		get {
 			return (state & PlayerState.PushedByTheWindVert) > 0;
 		}
@@ -1156,5 +1390,6 @@ public enum PlayerState
 	PushedByTheWindVert = 128,
 	IsClimbing = 256,
 	OnMovingPlatform = 512,
-	Dead = 1024
+	Dead = 1024,
+    UsingPushGloves = 2048
 }
