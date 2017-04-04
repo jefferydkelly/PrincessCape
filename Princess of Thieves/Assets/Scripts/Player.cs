@@ -263,7 +263,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 		if (!manager.IsPaused) {
 			tryingToInteract = controller.Interact;
 			if (!IsFrozen) {
-				if (controller.Horizontal < 0) {
+				if (fwdX < 0) {
                     myRenderer.flipX = false;
 				} else {
                     myRenderer.flipX = true;
@@ -339,11 +339,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
@@ -360,11 +360,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
@@ -381,11 +381,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
@@ -408,11 +408,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myRenderer.sprite = magPushGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myRenderer.sprite = magPushGloves[0];
                             }
                             break;
                         case -1: //down
@@ -429,11 +429,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myRenderer.sprite = magPushGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myRenderer.sprite = magPushGloves[0];
                             }
                             break;
                         case -1: //down
@@ -450,11 +450,11 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myRenderer.sprite = magPushGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myRenderer.sprite = magPushGloves[0];
                             }
                             break;
                         case -1: //down
@@ -500,7 +500,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[1];
+                            myRenderer.sprite = capeSprites[0];
                             break;
                     }//end of internal Switch
                     break;
