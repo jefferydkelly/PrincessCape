@@ -3,13 +3,13 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public class Player : ResettableObject, DamageableObject, ReflectiveObject
+public class Player : ResettableObject, DamageableObject, CasterObject
 {
     private Transform startPos;
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-    private Animator myAnimator;
+   // private Animator myAnimator;
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
@@ -37,7 +37,13 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
     List<UsableItem> inventory;
     private bool usedItem;
 
+    private bool inWater = false;
+    private float percInWater = 0f; 
+
+
+    //InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
+	//bool collidingWithHighlighted = false;
 
 	float interactDistance = 2.0f;
 
@@ -48,7 +54,14 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 	[SerializeField]
 	AudioClip spikeDeathClip;
 
-	SpriteRenderer arrowRenderer;
+    Sprite basicSprite;
+    [SerializeField]
+    Sprite[] capeSprites;
+    [SerializeField]
+    Sprite[] magPushGloves;
+    [SerializeField]
+    Sprite[] magPullGloves;
+    SpriteRenderer arrowRenderer;
 	SpriteRenderer rangeRenderer;
 	GameManager manager;
     void Awake()
@@ -66,16 +79,16 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 	// Use this for initialization
 	void Start()
 	{
-
+        
         startPos = transform;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
-        myAnimator = GetComponent<Animator>();
+        //myAnimator = GetComponent<Animator>();
 		curHP = maxHP;
 		curMP = maxMP;
 		DontDestroyOnLoad(gameObject);
-        
+        basicSprite = myRenderer.sprite;
         UIManager.Instance.UpdateUI(controller);
         inventory = new List<UsableItem>();
 
@@ -129,6 +142,17 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 						Input.ResetInputAxes ();
 					}
 				}//end climbing
+                else if (inWater)
+                {
+                    myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
+                    myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
+                    myRigidBody.ClampVelocity( 5, VelocityType.Y);
+                    if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
+                    {
+                        fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
+                        myRenderer.flipX = (fwdX == -1);
+                    }
+                }
                 else
                 {
 					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
@@ -139,7 +163,31 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 						if (tryingToJump) {
                         
 							Jump ();
-						} 
+						} /*else if (!collidingWithHighlighted) {
+                     
+							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3 (0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 1, 1 << LayerMask.NameToLayer ("Interactive"));
+
+							if (hit.collider != null) {
+								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
+
+								if (io != null) {
+									if (io != highlighted) {
+										if (highlighted != null) {
+											highlighted.Dehighlight ();
+										}
+
+										highlighted = io;
+                               
+										highlighted.Highlight ();
+									}
+								}
+                            
+							} else if (highlighted != null) {
+								highlighted.Dehighlight ();
+								highlighted = null;
+							}
+                        
+						}*/
 
 						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
 							fwdX = (int)Mathf.Sign (controller.Horizontal);
@@ -148,20 +196,37 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 					}
 
 				} 
+				/*
+				if (highlighted != null) {
+					if (controller.Interact) {
+						highlighted.Interact ();
+					}
+				}*/
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
             } else if (IsPushing && highlightedBody)
             {
+				/*
+                if (Controller.Interact)
+                {
+                    highlightedBody.gameObject.GetComponent<InteractiveObject>().Interact();
+                }*/
 
                 Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
                 
+                //highlightedBody.Translate(blockMove);
+                //myRigidBody.Translate(blockMove);
                 Vector3 move = highlightedBody.GetComponent<BlockController>().Move(blockMove);
                 move.x -= fwdX *(HalfWidth + highlightedBody.gameObject.HalfWidth());
                 move.y = transform.position.y;
                 transform.position = move;
-               
+                /*
+                Vector2 pos = highlightedBody.position;
+				pos.x = transform.position.x + fwdX * (HalfWidth + highlightedBody.gameObject.HalfWidth ());
+				highlightedBody.position = pos;
+                */
                 Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;
 				highlightedBody.velocity = vel;
@@ -198,11 +263,11 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 		if (!manager.IsPaused) {
 			tryingToInteract = controller.Interact;
 			if (!IsFrozen) {
-				if (controller.Horizontal != 0) {
-					myAnimator.SetBool ("FWD", true);
+				if (controller.Horizontal < 0) {
+                    myRenderer.flipX = false;
 				} else {
-					myAnimator.SetBool ("FWD", false);
-				}
+                    myRenderer.flipX = true;
+                }
 			}
 
 			/*
@@ -251,13 +316,219 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
             }
 
 			if (ShowAimArrow) {
-				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle().ToDegrees(), Vector3.forward);
+				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle ().ToDegrees(), Vector3.forward);
 			}
             
 		}
         
 	}
 
+    void LateUpdate()
+    {
+        //Awful code, but it works
+        if (IsUsingMagnetGloves)
+        {
+            switch ((int)TrueAim.x)
+            {
+                case 0:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPullGloves[2];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPullGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPullGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPullGloves[6];
+                            break;
+                    }//end of internal Switch
+                    break; // end of x = 0
+                case 1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPullGloves[3];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPullGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPullGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPullGloves[5];
+                            break;
+                    }//end of internal Switch
+                    break;
+                case -1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPullGloves[1];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPullGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPullGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPullGloves[7];
+                            break;
+                    }//end of internal Switch
+                    break;
+            }// end of External Switch
+        }
+        else if (IsUsingPushGloves)
+        {
+            switch ((int)TrueAim.x)
+            {
+                case 0:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPushGloves[2];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPushGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPushGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPushGloves[6];
+                            break;
+                    }//end of internal Switch
+                    break; // end of x = 0
+                case 1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPushGloves[3];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPushGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPushGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPushGloves[5];
+                            break;
+                    }//end of internal Switch
+                    break;
+                case -1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = magPushGloves[1];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = magPushGloves[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = magPushGloves[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = magPushGloves[7];
+                            break;
+                    }//end of internal Switch
+                    break;
+            }
+        }
+        else if (IsUsingReflectCape)
+        {
+            switch ((int)TrueAim.x)
+            {
+                case 0:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = capeSprites[2];
+                            break;
+                        case 0: //forward
+                            if (fwdX == 1)
+                            {
+                                myRenderer.sprite = capeSprites[0];
+                            }
+                            else
+                            {
+                                myRenderer.sprite = capeSprites[4];
+                            }
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = capeSprites[2];
+                            break;
+                    }//end of internal Switch
+                    break; // end of x = 0
+                case 1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = capeSprites[3];
+                            break;
+                        case 0: //forward
+                                myRenderer.sprite = capeSprites[4];
+
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = capeSprites[1];
+                            break;
+                    }//end of internal Switch
+                    break;
+                case -1:
+                    switch ((int)TrueAim.y)
+                    {
+                        case 1: //up
+                            myRenderer.sprite = capeSprites[1];
+                            break;
+                        case 0: //forward
+                            myRenderer.sprite = capeSprites[0];
+
+                            break;
+                        case -1: //down
+                            myRenderer.sprite = capeSprites[0];
+                            break;
+                    }//end of internal Switch
+                    break;
+            }// end of External Switch
+        }
+        else
+        {
+            myRenderer.sprite = basicSprite;
+        }
+
+
+
+    }
 	void Jump()
 	{
         
@@ -339,6 +610,8 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 	{
 		if (col.CompareTag ("Fire")) {
 			IsDead = true;
+		} else if (col.CompareTag ("Water")) {
+			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
 			Projectile p = col.GetComponent<Projectile> ();
 			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(TrueAim.normalized))
@@ -385,6 +658,20 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 				}
 			}
 		}
+		if (col.CompareTag ("Water")) {
+			inWater = false;
+		} 
+
+		/*
+		if (col.OnLayer("Interactive")){
+			InteractiveObject io = col.GetComponent<InteractiveObject> ();
+
+			if (io == highlighted) {
+				highlighted.Dehighlight ();
+				highlighted = null;
+				collidingWithHighlighted = false;
+			}
+		}*/
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -582,11 +869,11 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 	/// Gets the animator.
 	/// </summary>
 	/// <value>The animator.</value>
-	public Animator Animator {
-		get {
-			return myAnimator;
-		}
-	}
+	//public Animator Animator {
+	//	get {
+	//		return myAnimator;
+	//	}
+	//}
 
 	/// <summary>
 	/// Gets the inventory.
@@ -685,7 +972,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
     {
         get
         {
-			int vert = (int)controller.Vertical;
+            int vert = controller.Vertical;
 
             if (vert == 0)
             {
@@ -724,7 +1011,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
         {
             if (value)
             {
-				myAnimator.SetBool ("FWD", false);
+				//myAnimator.SetBool ("FWD", false);
                 state |= PlayerState.Frozen;
 				myRigidBody.velocity = new Vector2 (0f, myRigidBody.velocity.y);
             }else
@@ -779,7 +1066,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
             {
                 state |= PlayerState.Dashing;
                 state |= PlayerState.Frozen;
-				myAnimator.SetBool ("FWD", false);
+				//myAnimator.SetBool ("FWD", false);
                 myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10,0), ForceMode2D.Impulse); //yes we are dashing now
 
                
@@ -821,7 +1108,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
                 UIManager.Instance.ShowInteraction("Let Go");
                 state |= PlayerState.Pushing;
                 state |= PlayerState.Frozen;
-				myAnimator.SetBool ("FWD", false);
+				//myAnimator.SetBool ("FWD", false);
             }
             else
             {
@@ -855,7 +1142,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 					TimerManager.Instance.AddTimer(new Timer(()=>{StopFloat();}, 1.0f));
 				} else {
 					state |= PlayerState.Frozen;
-					myAnimator.SetBool ("FWD", false);
+				//	myAnimator.SetBool ("FWD", false);
 				}
 			}
 			else
@@ -868,17 +1155,9 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
         }
     }
 
-	/// <summary>
-	/// Stops the float.
-	/// </summary>
 	void StopFloat() {
 		myRigidBody.gravityScale = 1.5f;
 	}
-
-	/// <summary>
-	/// Gets or sets a value indicating whether this instance can float.
-	/// </summary>
-	/// <value><c>true</c> if this instance can float; otherwise, <c>false</c>.</value>
 	bool CanFloat {
 		get {
 			return (state & PlayerState.CanFloat) > 0;
@@ -919,12 +1198,29 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 			ShowAimArrow = IsUsingMagnetGloves;
         }
     }
+    public bool IsUsingPushGloves
+    {
+        get
+        {
+            return (state & PlayerState.UsingPushGloves) > 0;
+        }
 
-	/// <summary>
-	/// Gets or sets a value indicating whether this instance is pushed vertically by the wind.
-	/// </summary>
-	/// <value><c>true</c> if this instance is pushed vertically by the wind; otherwise, <c>false</c>.</value>
-	public bool IsPushedVerticallyByTheWind {
+        set
+        {
+            if (value && !IsUsingPushGloves && !IsFrozen)
+            {
+                state |= PlayerState.UsingPushGloves;
+                state |= PlayerState.Frozen;
+            }
+            else
+            {
+                state &= ~PlayerState.UsingPushGloves;
+                state &= ~PlayerState.Frozen;
+            }
+            ShowAimArrow = IsUsingPushGloves;
+        }
+    }
+    public bool IsPushedVerticallyByTheWind {
 		get {
 			return (state & PlayerState.PushedByTheWindVert) > 0;
 		}
@@ -938,10 +1234,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 		}
 	}
 
-	/// <summary>
-	/// Gets or sets a value indicating whether this instance is pushed horizontally by the wind.
-	/// </summary>
-	/// <value><c>true</c> if this instance is pushed horizontally by the wind; otherwise, <c>false</c>.</value>
 	public bool IsPushedHorizontallyByTheWind {
 		get {
 			return (state & PlayerState.PushedByTheWindHorz) > 0;
@@ -956,10 +1248,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 		}
 	}
 
-	/// <summary>
-	/// Gets or sets a value indicating whether this instance is on moving platform.
-	/// </summary>
-	/// <value><c>true</c> if this instance is on moving platform; otherwise, <c>false</c>.</value>
 	public bool IsOnMovingPlatform {
 		get {
 			return (state & PlayerState.OnMovingPlatform) > 0;
@@ -974,10 +1262,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 		}
 	}
 
-	/// <summary>
-	/// Gets a value indicating whether this instance is dead.
-	/// </summary>
-	/// <value><c>true</c> if this instance is dead; otherwise, <c>false</c>.</value>
 	public bool IsDead {
 		get {
 			return (state & PlayerState.Dead) > 0;
@@ -994,10 +1278,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 		}
 	}
 
-	/// <summary>
-	/// Gets or sets a value indicating whether this <see cref="Player"/> show aim arrow.
-	/// </summary>
-	/// <value><c>true</c> if show aim arrow; otherwise, <c>false</c>.</value>
 	public bool ShowAimArrow {
 		get {
 			return arrowRenderer.enabled;
@@ -1008,42 +1288,23 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 		}
 	}
 
-	/// <summary>
-	/// Shows the magnet range.
-	/// </summary>
-	/// <param name="c">C.</param>
+	public void HighlightedDestroyed(InteractiveObject io) {
+		/*
+		if (io == highlighted) {
+			highlighted = null;
+			highlightedBody = null;
+		}*/
+	}
+
 	public void ShowMagnetRange(Color c) {
 		rangeRenderer.enabled = true;
 		rangeRenderer.color = c;
 	}
 
-	/// <summary>
-	/// Hides the magnet range.
-	/// </summary>
 	public void HideMagnetRange() {
 		rangeRenderer.enabled = false;
 	}
 
-	/// <summary>
-	/// Gets the surface forward.
-	/// </summary>
-	/// <value>The surface forward.</value>
-	public Vector2 SurfaceForward {
-		get {
-			if (IsUsingReflectCape) {
-				return TrueAim.normalized;
-			}
-
-			return Vector2.zero;
-		}
-	}
-
-	public bool IsReflecting {
-		get {
-			return IsUsingReflectCape;
-		}
-	}
-		
     #endregion gets
 
 	public void Freeze(float time) {
@@ -1129,5 +1390,6 @@ public enum PlayerState
 	PushedByTheWindVert = 128,
 	IsClimbing = 256,
 	OnMovingPlatform = 512,
-	Dead = 1024
+	Dead = 1024,
+    UsingPushGloves = 2048
 }
