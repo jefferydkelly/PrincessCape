@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public class Player : ResettableObject, DamageableObject, CasterObject
+public class Player : ResettableObject, DamageableObject, CasterObject, ReflectiveObject
 {
     private Transform startPos;
 	private Controller controller;
@@ -1373,6 +1373,18 @@ public class Player : ResettableObject, DamageableObject, CasterObject
         curMP = maxMP;
 
     }
+
+	public bool IsReflecting {
+		get {
+			return IsUsingReflectCape;
+		}
+	}
+
+	public Vector2 SurfaceForward {
+		get {
+			return TrueAim;
+		}
+	}
 }
 
 
