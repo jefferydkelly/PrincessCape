@@ -20,12 +20,11 @@ public class SwitchController : ActivatorObject {
 		if (collision.CompareTag("Seed") || collision.CompareTag("Projectile"))
         {
             Destroy(collision.gameObject);
-            Activated = !Activated;
 			Vector3 pos = Camera.main.WorldToScreenPoint (transform.position);
 			if (pos.x.Between (-Screen.width / 2, Screen.width * 3 / 2)) {
 				AudioManager.Instance.PlaySound (switchSound);
 			}
-            if (activated)
+            if (!activated)
             {
                 Activate();
             }
@@ -38,6 +37,19 @@ public class SwitchController : ActivatorObject {
         }
     }
 
+	protected override void Activate ()
+	{
+		base.Activate ();
+		myRenderer.sprite = activatedSprite;
+		activated = true;
+	}
+
+	protected override void Deactivate ()
+	{
+		base.Deactivate ();
+		myRenderer.sprite = deactivatedSprite;
+		activated = false;
+	}
     private bool Activated
     {
         get
@@ -48,7 +60,6 @@ public class SwitchController : ActivatorObject {
         set
         {
             activated = value;
-            myRenderer.sprite = activated ? activatedSprite : deactivatedSprite;
         }
     }
 }

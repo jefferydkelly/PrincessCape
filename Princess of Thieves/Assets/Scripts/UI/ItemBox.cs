@@ -86,4 +86,10 @@ public class ComboBox : ItemBox {
 		interactText.enabled = false;
 		itemRenderer.enabled = true;
 	}
+
+	public bool IsShowingInteraction {
+		get {
+			return interactText.enabled;
+		}
+	}
 }

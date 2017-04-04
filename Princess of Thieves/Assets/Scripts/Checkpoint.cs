@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class Checkpoint : JDMappableObject {
+public class Checkpoint : JDMappableObject, ActivateableObject {
     //Whether or not this checkpoint has been activated
     bool activated = false;
     SpriteRenderer myRenderer;
@@ -30,32 +30,32 @@ public class Checkpoint : JDMappableObject {
 	void OnLevelLoaded(Scene scene, LoadSceneMode lsm) {
 		activated = false;
 	}
-	void ActivateCheckpoint()
+	public void Activate()
     {
-		if (!Activated) {
+		if (!IsActive) {
             if(childAnimation != null)
                 childAnimation.SetActive(true);
             AudioManager.Instance.PlaySound (activateClip);
 			foreach (GameObject cp in checkpoints) {
-				cp.GetComponent<Checkpoint> ().Activated = false;
+                
+				cp.GetComponent<Checkpoint> ().Deactivate ();
 			}
-
-			Activated = true;
+			activated = true;
+			myRenderer.sprite = activatedSprite;
 		}
+        activated = true;
     }
 
-    public bool Activated
+	public void Deactivate() {
+		myRenderer.sprite = inactiveSprite;
+		activated = false;
+	}
+
+    public bool IsActive
     {
         get
         {
             return activated;
-        }
-
-        set
-        {
-            activated = value;
-
-            myRenderer.sprite = activated ? activatedSprite : inactiveSprite;
         }
     }
 
@@ -63,7 +63,7 @@ public class Checkpoint : JDMappableObject {
     {
         if (collision.tag.Contains("Player"))
         {
-            ActivateCheckpoint();
+            Activate();
         }
     }
 
@@ -89,6 +89,18 @@ public class Checkpoint : JDMappableObject {
 	public bool IsFirst {
 		get {
 			return isFirst;
+		}
+	}
+
+	public float ActivationTime {
+		get {
+			return 0;
+		}
+	}
+
+	public bool IsInverted {
+		get {
+			return false;
 		}
 	}
 }

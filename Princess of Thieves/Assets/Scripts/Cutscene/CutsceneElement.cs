@@ -6,12 +6,19 @@ public class CutsceneElement
 {
 	public CutsceneElement nextElement = null;
 	public CutsceneElement prevElement = null;
+	protected bool canSkip = false;
 
 	protected bool autoAdvance = false;
 
 	public bool AutoAdvance {
 		get {
 			return autoAdvance;
+		}
+	}
+
+	public bool CanSkip {
+		get {
+			return canSkip;
 		}
 	}
 
@@ -35,6 +42,7 @@ public class CutsceneDialog : CutsceneElement
 	public CutsceneDialog(string spk, string dia) {
 		speaker = spk;
 		dialog = dia.Replace ("\\n", "\n").Trim();
+		canSkip = true;
 	}
 
 	/// <summary>
@@ -80,6 +88,7 @@ public class CameraPan : CutsceneElement
 		panDistance = pd;
 		time = t;
 		panTo = false;
+		canSkip = true;
 	}
 
 	/// <summary>
@@ -92,6 +101,7 @@ public class CameraPan : CutsceneElement
 		panEnding = pd;
 		time = t;
 		panTo = true;
+		canSkip = true;
 	}
 
 	public override void Run() {
@@ -99,7 +109,6 @@ public class CameraPan : CutsceneElement
 		{
 			panDistance = panEnding - Camera.main.transform.position;
 		}
-
 		CameraManager.Instance.Pan (panDistance, time);
 	}
 }
@@ -117,6 +126,7 @@ public class CutsceneWait : CutsceneElement
 	/// <param name="dt">The duration of the wait.</param>
 	public CutsceneWait(float dt) {
 		time = dt;
+		canSkip = true;
 	}
 	public override void Run ()
 	{
@@ -144,6 +154,7 @@ public class CutsceneMovement : CutsceneElement
 		x = dx;
 		y = dy;
 		time = dt;
+		canSkip = true;
 	}
 
 	public CutsceneMovement(string target, MoveTypes mt, float angle, float dt) {
@@ -191,12 +202,14 @@ public class CutsceneEffect : CutsceneElement
 		affected = target;
 		type = et;
 		autoAdvance = true;
+		canSkip = true;
 	}
 
 	public CutsceneEffect(string target, EffectType et, float dt) {
 		affected = target;
 		type = et;
 		time = dt;
+		canSkip = true;
 	}
 
 	public CutsceneEffect(string target, EffectType et, float dx, float dy) {
@@ -205,6 +218,7 @@ public class CutsceneEffect : CutsceneElement
 		x = dx;
 		y = dy;
 		autoAdvance = true;
+		canSkip = true;
 	}
 
 	public CutsceneEffect(string target, EffectType et, float dx, float dy, float dt) {
@@ -213,6 +227,7 @@ public class CutsceneEffect : CutsceneElement
 		x = dx;
 		y = dy;
 		time = dt;
+		canSkip = true;
 	}
 	public override void Run ()
 	{
@@ -271,6 +286,7 @@ public class CutsceneScale : CutsceneElement {
 		type = st;
 		scale = sc;
 		time = dt;
+		canSkip = true;
 	}
 
 	public CutsceneScale(string actor, float sc1, float sc2, float dt) {
@@ -279,6 +295,7 @@ public class CutsceneScale : CutsceneElement {
 		scale = sc1;
 		scale2 = sc2;
 		time = dt;
+		canSkip = true;
 	}
 
 	public override void Run() {
@@ -303,6 +320,7 @@ public class CutsceneFade: CutsceneElement {
 		actorName = actor;
 		alpha = toAlpha;
 		time = dt;
+		canSkip = true;
 	}
 
 	public override void Run ()
@@ -322,12 +340,14 @@ public class CutsceneCreation : CutsceneElement {
 		prefab = Resources.Load<GameObject> (name);
 		position = new Vector3 (float.Parse (dx), float.Parse (dy), float.Parse (dz));
 		autoAdvance = true;
+		canSkip = false;
 	}
 
 	public CutsceneCreation(string name) {
 		objectName = name;
 		destroy = true;
 		autoAdvance = true;
+		canSkip = false;
 	}
 
 	public override void Run() {
@@ -350,6 +370,7 @@ public class CutsceneAdd: CutsceneElement {
 	public CutsceneAdd(GameObject pfab) {
 		prefab = pfab;
 		autoAdvance = true;
+		canSkip = false;
 	}
 
 	public override void Run() {
@@ -366,6 +387,7 @@ public class CutsceneEnable: CutsceneElement {
 		hideObject = go;
 		enable = en;
 		autoAdvance = true;
+		canSkip = false;
 	}
 
     public CutsceneEnable(GameObject go, float x, float y):this(go, true)
@@ -395,6 +417,7 @@ public class CutsceneActivate: CutsceneElement {
 		ao = aObj;
 		activate = activated;
 		autoAdvance = (RunTime == 0);
+		canSkip = false;
 	}
 
 	public override void Run() {
@@ -404,7 +427,7 @@ public class CutsceneActivate: CutsceneElement {
 			ao.Deactivate ();
 		}
 
-		if (RunTime > 0) {
+		if (RunTime > 0 && !GameManager.Instance.Cutscene.IsBeingSkipped) {
 			UIManager.Instance.WaitFor (RunTime);
 		}
 	}
@@ -422,6 +445,7 @@ public class CutsceneAlign: CutsceneElement {
 	public CutsceneAlign(bool l) {
 		left = l;
 		autoAdvance = true;
+		canSkip = true;
 	}
 
 	public override void Run() {
@@ -434,6 +458,7 @@ public class CutscenePlay: CutsceneElement {
 	public CutscenePlay(string s) {
 		soundEffect = Resources.Load<AudioClip> ("Sounds/" + s);
 		autoAdvance = true;
+		canSkip = true;
 	}
 
 	public override void Run() {

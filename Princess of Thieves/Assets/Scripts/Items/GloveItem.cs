@@ -8,14 +8,15 @@ public class GloveItem : UsableItem {
 		if (GloveItem.target) {
 			GloveItem.target.GetComponent<SpriteRenderer> ().color = Color.white;
 			GloveItem.target = null;
-		}}, 1.0f);
-	protected int range = 10;
-	public float maxTargetSpeed = 10;
+		}}, 0.5f);
+	protected static int range = 10;
+    protected static MetalBlock highlighted;
+	public float maxTargetSpeed = 60f;
 	public float force = 100;
 	protected Rigidbody2D targetBody;
 	protected Player player;
 	protected Rigidbody2D playerBody;
-	protected bool pushingOnTarget = true;
+	protected bool targetIsHeavier = true;
 	protected LineRenderer lineRenderer;
 
 	protected Color lineColor;
@@ -44,33 +45,85 @@ public class GloveItem : UsableItem {
 	}
 
 	protected void FindTarget() {
-		Vector2 aim = player.TrueAim;
-		RaycastHit2D hit = Physics2D.BoxCast (player.transform.position, new Vector2 (1, 1), aim.GetAngle (), aim, range, 1 << LayerMask.NameToLayer ("Metal"));
+        /*
+        if (highlighted == null)
+        {
+            Vector2 aim = player.TrueAim;
+            RaycastHit2D hit = Physics2D.BoxCast(player.transform.position, new Vector2(1, 1), aim.GetAngle(), aim, range, 1 << LayerMask.NameToLayer("Metal"));
 
-		if (hit && hit.collider.gameObject != target) {
-			target = hit.collider.gameObject;
-			hitNormal = hit.normal;
-			hitPos = hit.point;
+            if (hit && hit.collider.gameObject != target)
+            {
+                target = hit.collider.gameObject;
+                hitNormal = hit.normal;
+                hitPos = hit.point;
 
-		}
+            }
+        } else
+        {
+            target = highlighted.gameObject;
+            Vector3 dif = highlighted.transform.position - player.transform.position;
+            if (Mathf.Abs(dif.x) >= Mathf.Abs(dif.y)) {
+                hitNormal = new Vector2(Mathf.Sign(dif.x), 0);
+            } else
+            {
+                hitNormal = new Vector2(0, Mathf.Sign(dif.y));
+            }
+        }*/
 
+        if (highlighted != null)
+        {
+            target = highlighted.gameObject;
+            highlighted = null;
+        }
 		if (target != null) {
 			targetBody = target.GetComponent<Rigidbody2D> ();
-			pushingOnTarget = true;
+			targetIsHeavier = true;
 			if (targetBody) {
-				pushingOnTarget = targetBody.mass < playerBody.mass;
+				targetIsHeavier = targetBody.mass > playerBody.mass;
 				targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 			}
 			target.GetComponent<SpriteRenderer> ().color = lineColor;
 			lineRenderer.enabled = true;
-			lineRenderer.SetColors (lineColor, lineColor);
+            lineRenderer.startColor = lineColor;
+            lineRenderer.endColor = lineColor;
 			lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
 			player.HideMagnetRange ();
 		} else {
-			pushingOnTarget = false;
+			targetIsHeavier = false;
 			Color circleColor = lineColor;
 			circleColor.a = 0.25f;
 			player.ShowMagnetRange (circleColor);
 		}
 	}
+
+    public static bool InRange(GameObject go)
+    {
+        return GameManager.Instance.DistanceToPlayer(go) <= range;
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsActive)
+        {
+            if (targetIsHeavier)
+            {
+                playerBody.ClampVelocity(maxTargetSpeed);
+            } else if (targetBody)
+            {
+                targetBody.ClampVelocity(maxTargetSpeed);
+            }
+        }
+    }
+    public static MetalBlock Highlighted
+    {
+        get
+        {
+            return highlighted;
+        }
+
+        set
+        {
+            highlighted = value;
+        }
+    }
 }

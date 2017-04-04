@@ -76,7 +76,7 @@ public class InventoryMenu : MonoBehaviour {
     {
         Image curImg = GetComponentsInChildren<Image>()[curSelected + 1];
         curImg.color = Color.white;
-        curSelected += controller.Horizontal + controller.Vertical * 2;
+		curSelected += (int)controller.Horizontal + (int)controller.Vertical * 2;
         curSelected += 4;
         curSelected %= 4;
         UsableItem item = null;

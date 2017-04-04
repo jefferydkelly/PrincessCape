@@ -16,5 +16,9 @@ public abstract class TriggerBase : MonoBehaviour {
 		{
 			Trigger();
 		}
+        else if (col.CompareTag("Dragon"))
+        {
+            Trigger();
+        }
 	}
 }

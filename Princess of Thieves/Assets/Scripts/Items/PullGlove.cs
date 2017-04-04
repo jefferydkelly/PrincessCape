@@ -25,6 +25,7 @@ public class PullGlove : GloveItem {
 		if (activeGlove && activeGlove.IsActive) {
 			activeGlove.Deactivate ();
 		}
+        
 		activeGlove = this;
 
 		itemActive = true;
@@ -32,6 +33,16 @@ public class PullGlove : GloveItem {
 
 		if (target) {
 			ResetTargetTimer.Stop ();
+
+			if (!targetIsHeavier)
+			{
+				if (!Physics2D.BoxCast (target.transform.position, Vector2.one, 0, Vector2.up, 1.0f, 1 << LayerMask.NameToLayer ("Player"))) {
+					playerBody.constraints |= RigidbodyConstraints2D.FreezePositionX;
+					if (player.IsOnGround) {
+						playerBody.constraints |= RigidbodyConstraints2D.FreezePositionY;
+					}
+				}
+			}
 		}
 			
 	}
@@ -59,13 +70,13 @@ public class PullGlove : GloveItem {
 				moveDir.Normalize ();
 				*/
 
-				if (pushingOnTarget) {
+				if (targetIsHeavier) {
 					//Heavier object, so the player gets moved
 					//moveDir *= force;
 
 
 					if (Mathf.Abs(hitNormal.y) <= 0.1f) {
-						moveDir += player.TrueAim.YVector ();
+						moveDir += player.TrueAim.YVector () * 1.15f;
 					}  
 					if (Mathf.Abs (hitNormal.x) <= 0.1f) {
 						Vector2 xv = player.TrueAim.XVector ();
@@ -101,8 +112,8 @@ public class PullGlove : GloveItem {
 		if (target) {
 			target.GetComponent<SpriteRenderer> ().color = Color.white;
 		}
-
-		pushingOnTarget = true;
+        playerBody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
+		targetIsHeavier = true;
 		lineRenderer.enabled = false;
 		itemActive = false;
 		player.HideMagnetRange ();

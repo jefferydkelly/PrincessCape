@@ -7,42 +7,54 @@ using System;
 //Blocks don't move anymore ? / Can't pull or push them
 public class BlockController : ResettableObject, InteractiveObject {
 	bool beingPushed = false;
-	SpriteRenderer myRenderer;
+	protected SpriteRenderer myRenderer;
+	protected Rigidbody2D myRigidbody;
+    [SerializeField]
+    protected Color regularColor = Color.white;
+    [SerializeField]
+    protected Color highlightedColor = Color.blue;
+
+	void Awake() {
+		myRigidbody = GetComponent<Rigidbody2D> ();
+	}
     public void Dehighlight()
     {
 		UIManager.Instance.HideInteraction ();
-		myRenderer.color = Color.white;
+		myRenderer.color = regularColor;
     }
 
     public void Highlight()
     {
 		UIManager.Instance.ShowInteraction ("Move");
-		myRenderer.color = Color.blue;
+		myRenderer.color = highlightedColor;
     }
 
 	void OnMouseEnter() {
-		if (!GameManager.Instance.IsPaused && !beingPushed) {
+		if (GameManager.Instance.Player.CanInteract) {
 			Highlight ();
 		}
 	}
 
 	void OnMouseExit() {
-		if (!GameManager.Instance.IsPaused && !beingPushed) {
+		if (GameManager.Instance.Player.CanInteract) {
 			Dehighlight ();
 		}
 	}
 
 	void OnMouseOver() {
-		if (!GameManager.Instance.IsPaused) {
+		if (GameManager.Instance.Player.CanInteract) {
 			if (Highlighted) {
 				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
 					if (GameManager.Instance.Player.Controller.Interact) {
-						Interact ();
 						Input.ResetInputAxes ();
+						Interact ();
+
 					}
 				} else if (!beingPushed) {
 					Dehighlight ();
 				}
+			} else {
+				Highlight ();
 			}
 		}
 	}
@@ -51,17 +63,19 @@ public class BlockController : ResettableObject, InteractiveObject {
     {
 		if (!GameManager.Instance.IsPaused) {
 			UIManager.Instance.ShowInteraction ("Let Go");
-			myRenderer.color = Color.white;
+			myRenderer.color = regularColor;
         
 
 			if (!GameManager.Instance.Player.IsPushing) { //if we are pushing
 				beingPushed = true;
-				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation;
+				myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
 				GameManager.Instance.Player.Push (this);
 			} else {
-				GameManager.Instance.Player.IsPushing = false;
+				
 				beingPushed = false;
-				GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+				myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
+				GameManager.Instance.Player.IsPushing = false;
+				//GameManager.Instance.Player.Freeze (0.1f);
 			}
 		}
     }
@@ -70,12 +84,13 @@ public class BlockController : ResettableObject, InteractiveObject {
     void Start () {
         startPosition = transform.position;
 		myRenderer = GetComponent<SpriteRenderer> ();
+        myRenderer.color = regularColor;
 	}
 
 	void Update() {
 
 		if (beingPushed) {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2 (0,-1), 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
+			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (1f, 1f), 0, Vector2.down, 1.5f, 1 << LayerMask.NameToLayer ("Platforms"));
 
 			if (hit.collider == null) { // we stop running into things
 				LetGo();
@@ -88,12 +103,39 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 	void LetGo() {
 		GameManager.Instance.Player.IsPushing = false;
-		GetComponent<Rigidbody2D> ().constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
+		myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 		beingPushed = false;
 	}
 	bool Highlighted {
 		get {
-			return myRenderer.color == Color.blue;
+			return myRenderer.color == highlightedColor;
 		}
 	}
+
+	void OnCollisionEnter2D(Collision2D collision) {
+        Collider2D col = collision.collider;
+		if (col.CompareTag ("Slider") && !beingPushed) {
+			myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
+		}
+	}
+
+	void OnCollisionExit2D(Collision2D collision) {
+		if (collision.collider.CompareTag ("Slider") && !beingPushed) {
+			myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
+		}
+	}
+
+    public Vector3 Move(Vector3 movement)
+    {
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(1.0f, 1.0f), 0, movement, movement.magnitude, 1 << (LayerMask.NameToLayer("Platforms") | LayerMask.NameToLayer("Interactive") | LayerMask.NameToLayer("Background")));
+        if (hit && (hit.collider.OnLayer("Platforms") || hit.collider.CompareTag("Launcher") || hit.collider.CompareTag("Block")))
+        {
+            transform.position = hit.point - Mathf.Sign(movement.x) * new Vector2(0.5f, 0);
+        } else
+        {
+            transform.position += movement;
+        }
+
+        return transform.position;
+    }
 }

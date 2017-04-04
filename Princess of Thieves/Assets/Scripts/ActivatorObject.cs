@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ActivatorObject : MonoBehaviour {
+public class ActivatorObject : ResettableObject {
 	[SerializeField]
 	protected List<GameObject> connectedObjects;
 	protected List<ActivateableObject> activators;
@@ -19,7 +19,7 @@ public class ActivatorObject : MonoBehaviour {
 			}
 		}
 	}
-	protected void Activate()
+	protected virtual void Activate()
 	{
 		foreach (ActivateableObject a in activators)
 		{
@@ -31,7 +31,7 @@ public class ActivatorObject : MonoBehaviour {
 		}
 	}
 
-	protected void Deactivate()
+	protected virtual void Deactivate()
 	{
 		foreach (ActivateableObject a in activators)
 		{
@@ -41,5 +41,10 @@ public class ActivatorObject : MonoBehaviour {
 				a.Deactivate ();
 			}
 		}
+	}
+
+	public override void Reset ()
+	{
+		Deactivate ();
 	}
 }
