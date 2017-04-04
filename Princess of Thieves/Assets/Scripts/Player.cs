@@ -37,13 +37,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
     List<UsableItem> inventory;
     private bool usedItem;
 
-    private bool inWater = false;
-    private float percInWater = 0f; 
-
-
-    //InteractiveObject highlighted;
     Rigidbody2D highlightedBody;
-	//bool collidingWithHighlighted = false;
 
 	float interactDistance = 2.0f;
 
@@ -135,17 +129,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 						Input.ResetInputAxes ();
 					}
 				}//end climbing
-                else if (inWater)
-                {
-                    myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
-                    myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
-                    myRigidBody.ClampVelocity( 5, VelocityType.Y);
-                    if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
-                    {
-                        fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
-                        myRenderer.flipX = (fwdX == -1);
-                    }
-                }
                 else
                 {
 					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
@@ -156,31 +139,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 						if (tryingToJump) {
                         
 							Jump ();
-						} /*else if (!collidingWithHighlighted) {
-                     
-							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3 (0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 1, 1 << LayerMask.NameToLayer ("Interactive"));
-
-							if (hit.collider != null) {
-								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
-
-								if (io != null) {
-									if (io != highlighted) {
-										if (highlighted != null) {
-											highlighted.Dehighlight ();
-										}
-
-										highlighted = io;
-                               
-										highlighted.Highlight ();
-									}
-								}
-                            
-							} else if (highlighted != null) {
-								highlighted.Dehighlight ();
-								highlighted = null;
-							}
-                        
-						}*/
+						} 
 
 						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
 							fwdX = (int)Mathf.Sign (controller.Horizontal);
@@ -189,37 +148,20 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 					}
 
 				} 
-				/*
-				if (highlighted != null) {
-					if (controller.Interact) {
-						highlighted.Interact ();
-					}
-				}*/
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
             } else if (IsPushing && highlightedBody)
             {
-				/*
-                if (Controller.Interact)
-                {
-                    highlightedBody.gameObject.GetComponent<InteractiveObject>().Interact();
-                }*/
 
                 Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
                 
-                //highlightedBody.Translate(blockMove);
-                //myRigidBody.Translate(blockMove);
                 Vector3 move = highlightedBody.GetComponent<BlockController>().Move(blockMove);
                 move.x -= fwdX *(HalfWidth + highlightedBody.gameObject.HalfWidth());
                 move.y = transform.position.y;
                 transform.position = move;
-                /*
-                Vector2 pos = highlightedBody.position;
-				pos.x = transform.position.x + fwdX * (HalfWidth + highlightedBody.gameObject.HalfWidth ());
-				highlightedBody.position = pos;
-                */
+               
                 Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;
 				highlightedBody.velocity = vel;
@@ -309,7 +251,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
             }
 
 			if (ShowAimArrow) {
-				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle ().ToDegrees(), Vector3.forward);
+				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle().ToDegrees(), Vector3.forward);
 			}
             
 		}
@@ -397,8 +339,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 	{
 		if (col.CompareTag ("Fire")) {
 			IsDead = true;
-		} else if (col.CompareTag ("Water")) {
-			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
 			Projectile p = col.GetComponent<Projectile> ();
 			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(TrueAim.normalized))
@@ -445,20 +385,6 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 				}
 			}
 		}
-		if (col.CompareTag ("Water")) {
-			inWater = false;
-		} 
-
-		/*
-		if (col.OnLayer("Interactive")){
-			InteractiveObject io = col.GetComponent<InteractiveObject> ();
-
-			if (io == highlighted) {
-				highlighted.Dehighlight ();
-				highlighted = null;
-				collidingWithHighlighted = false;
-			}
-		}*/
     }
 
     void OnTriggerStay2D(Collider2D col)
@@ -759,7 +685,7 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
     {
         get
         {
-            int vert = controller.Vertical;
+			int vert = (int)controller.Vertical;
 
             if (vert == 0)
             {
@@ -1111,6 +1037,13 @@ public class Player : ResettableObject, DamageableObject, ReflectiveObject
 			return Vector2.zero;
 		}
 	}
+
+	public bool IsReflecting {
+		get {
+			return IsUsingReflectCape;
+		}
+	}
+		
     #endregion gets
 
 	public void Freeze(float time) {

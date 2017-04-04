@@ -40,7 +40,7 @@ public class MenuController : MonoBehaviour {
 		if (TheController.Submit) {
 			Selected.onClick.Invoke ();
 		}
-		int vert = TheController.Vertical;
+		int vert = (int)TheController.Vertical;
 
 		if (vert != 0) {
 			IndexOfSelected -= vert;

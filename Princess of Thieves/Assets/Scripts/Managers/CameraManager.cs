@@ -176,4 +176,12 @@ public class CameraManager : MonoBehaviour {
 			velocity = value;
 		}
 	}
+
+	public Vector3 MouseWorldPos {
+		get {
+			Vector3 mousePos = Input.mousePosition;
+			mousePos.z = 10;
+			return Camera.main.ScreenToWorldPoint (mousePos);
+		}
+	}
 }

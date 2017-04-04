@@ -53,31 +53,31 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 		case AimDirection.UpRight:
 			fwd = new Vector2 (sqrtHalf, sqrtHalf);
 			myRenderer.flipX = true;
-			transform.Rotate (Vector3.fwd, 45);
+			transform.Rotate (Vector3.forward, 45);
 			break;
 		case AimDirection.Up:
 			fwd = new Vector2(0, 1);
-			transform.Rotate (Vector3.fwd, -90);
+			transform.Rotate (Vector3.forward, -90);
 			break;
 		case AimDirection.UpLeft:
 			fwd = new Vector2(-sqrtHalf, sqrtHalf);
-			transform.Rotate (Vector3.fwd, -45);
+			transform.Rotate (Vector3.forward, -45);
 			break;
 		case AimDirection.Left:
 			fwd = new Vector2(-1, 0);
 			break;
 		case AimDirection.DownLeft:
 			fwd = new Vector2(-sqrtHalf, -sqrtHalf);
-			transform.Rotate (Vector3.fwd, 45);
+			transform.Rotate (Vector3.forward, 45);
 			break;
 		case AimDirection.Down:
 			fwd = new Vector2(0, -1);
-			transform.Rotate (Vector3.fwd, 90);
+			transform.Rotate (Vector3.forward, 90);
 			break;
 		case AimDirection.DownRight:
 			fwd = new Vector2(sqrtHalf, -sqrtHalf);
 			myRenderer.flipX = true;
-			transform.Rotate (Vector3.fwd, -45);
+			transform.Rotate (Vector3.forward, -45);
 			break;
 		}
 

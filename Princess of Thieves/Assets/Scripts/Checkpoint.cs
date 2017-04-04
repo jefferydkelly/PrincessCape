@@ -39,6 +39,7 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
 			foreach (GameObject cp in checkpoints) {
 				cp.GetComponent<Checkpoint> ().Deactivate ();
 			}
+			activated = true;
 			myRenderer.sprite = activatedSprite;
 		}
     }

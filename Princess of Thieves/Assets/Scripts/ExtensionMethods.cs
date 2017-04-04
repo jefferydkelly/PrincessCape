@@ -186,13 +186,30 @@ public static class ExtensionMethods{
 
     public static float ToRadians(this float f)
     {
-        return f * Mathf.Deg2Rad;
+		float ang = f * Mathf.Deg2Rad;
+		while (ang < 0) {
+			ang += Mathf.PI * 2;
+		}
+		return ang;
     }
 
     public static float ToDegrees(this float f)
     {
-        return f * Mathf.Rad2Deg;
+		float ang = f * Mathf.Rad2Deg;
+		while (ang < 0) {
+			ang += 360;
+		}
+		return ang;
     }
+
+	public static Vector2 FromDegToVec2(this float f) {
+		float rad = f.ToRadians ();
+		return new Vector2 (Mathf.Cos (rad), Mathf.Sin (rad));
+	}
+
+	public static Vector2 FromRadToVec2(this float rad) {
+		return new Vector2 (Mathf.Cos (rad), Mathf.Sin (rad));
+	}
 
 	public static string ToXString(this Vector2 v)
 	{
@@ -207,6 +224,10 @@ public static class ExtensionMethods{
     {
         return new Vector2(0, v.y);
     }
+
+	public static bool VectorsEqual(this Vector2 v1, Vector2 v2) {
+		return v1.x == v2.x && v1.y == v2.y;
+	}
 
 	/// <summary>
 	/// Rotate the specified Vector2 by the given angle.
@@ -259,6 +280,10 @@ public static class ExtensionMethods{
     {
         return new Vector3(0, 0, v.z);
     }
+
+	public static bool VectorsEqual(this Vector3 v1, Vector3 v2) {
+		return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
+	}
 }
 
 public enum VelocityType

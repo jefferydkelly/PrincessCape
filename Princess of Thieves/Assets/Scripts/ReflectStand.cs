@@ -58,6 +58,18 @@ public class ReflectStand : BlockController, ReflectiveObject {
 			return reflectionForward;
 		}
 	}
+
+	public GameObject GameObject {
+		get {
+			return gameObject;
+		}
+	}
+
+	public bool IsReflecting {
+		get {
+			return true;
+		}
+	}
 }
 
 public enum AimDirection

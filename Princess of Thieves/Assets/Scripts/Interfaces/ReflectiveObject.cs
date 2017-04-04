@@ -4,4 +4,6 @@ using UnityEngine;
 
 public interface ReflectiveObject{
 	Vector2 SurfaceForward{get;}
+	GameObject GameObject{get;}
+	bool IsReflecting{get;}
 }

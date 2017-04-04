@@ -7,85 +7,92 @@ public class LightBeam : MonoBehaviour {
 	float closestDistance = Mathf.Infinity;
 	GameObject closest;
 	LightBeam myChild = null;
+	Vector3 source;
 	Vector2 reflectDirection = Vector2.zero;
-	// Use this for initialization
-	void Start () {
-		
-	}
 
 	void OnTriggerEnter2D(Collider2D col) {
 		ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
-		if (ro != null && !(col.OnLayer("Player") && !GameManager.Instance.Player.IsUsingReflectCape)) {
-			Vector2 dif = col.transform.position - transform.position;
+		if (ro != null && ro.IsReflecting) {
+			Vector2 dif = col.transform.position - source;
 			float dot = fwd.Dot (dif);
-
 			if (dot < closestDistance) {
 				closest = col.gameObject;
 				closestDistance = dot;
-				RemoveChildren ();
-				myChild = Instantiate (gameObject).GetComponent<LightBeam>();
-				reflectDirection = ro.SurfaceForward;
-
-				float rot = (reflectDirection.GetAngle() - fwd.GetAngle()) * 2;
-				myChild.transform.position = col.transform.position + new Vector3 (Mathf.Cos (fwd.GetAngle() - rot), Mathf.Sin (fwd.GetAngle() - rot)) * 10.5f;
-				myChild.transform.Rotate (Vector3.forward, rot.ToDegrees());
+				Reflect (ro);
 			}
 
 		}
 	}
 
+
 	void OnTriggerStay2D(Collider2D col) {
 		ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
+	
 		if (ro != null) {
-			if (closest != null && col.CompareTag("Player") && closest.CompareTag("Player")) {
-				if (GameManager.Instance.Player.IsUsingReflectCape && ro.SurfaceForward != reflectDirection) {
-					RemoveChildren ();
-					myChild = Instantiate (gameObject).GetComponent<LightBeam> ();
-					reflectDirection = ro.SurfaceForward;
-
-					float rot = fwd.GetAngle () + (reflectDirection.GetAngle () - fwd.GetAngle ()) * 2;
-					myChild.transform.position = col.transform.position + new Vector3 (Mathf.Cos (rot), Mathf.Sin (rot)) * 11;
-					myChild.transform.Rotate (Vector3.forward, rot.ToDegrees ());
-					Debug.Break ();
-				} else if (!GameManager.Instance.Player.IsUsingReflectCape) {
+			if (closest == col.gameObject) {
+				if (ro.IsReflecting) {
+					if (ro.SurfaceForward.GetAngle () != reflectDirection.GetAngle ()) {
+						Reflect (ro);
+					}
+				} else {
 					RemoveChildren ();
 					closestDistance = Mathf.Infinity;
 					closest = null;
+					reflectDirection = Vector2.zero;
 				}
-
-			} else if (!(col.OnLayer ("Player") && !GameManager.Instance.Player.IsUsingReflectCape)) {
-				Vector2 dif = col.transform.position - transform.position;
+			} else {
+				Vector2 dif = col.transform.position - source;
 				float dot = fwd.Dot (dif);
 
-				if (dot < closestDistance && dot > 0) {
+				if (dot < closestDistance) {
 					closest = col.gameObject;
 					closestDistance = dot;
-					RemoveChildren ();
-					myChild = Instantiate (gameObject).GetComponent<LightBeam> ();
-					reflectDirection = ro.SurfaceForward;
-
-					float rot = fwd.GetAngle () + (reflectDirection.GetAngle () - fwd.GetAngle ()) * 2;
-					myChild.transform.position = col.transform.position + new Vector3 (Mathf.Cos (rot), Mathf.Sin (rot)) * 11;
-					myChild.transform.Rotate (Vector3.forward, rot.ToDegrees ());
+					Reflect (ro);
 				}
-
 			}
 		}
 	}
 
 	void OnTriggerExit2D(Collider2D col) {
-		if (col.gameObject.Equals (closest)) {
+		if (col.gameObject == closest) {
 			RemoveChildren ();
 			closestDistance = Mathf.Infinity;
 			closest = null;
+			reflectDirection = Vector2.zero;
 		}
 	}
 
+	void Reflect(ReflectiveObject ro) {
+		if (ro.IsReflecting) {
+			RemoveChildren ();
+			myChild = Instantiate (gameObject).GetComponent<LightBeam> ();
+			reflectDirection = ro.SurfaceForward;
+
+			float rot = (reflectDirection.GetAngle () - fwd.GetAngle ());
+			rot *= 2;
+			myChild.transform.parent = transform.parent;
+			myChild.transform.Rotate (Vector3.forward, rot.ToDegrees ());
+			rot -= fwd.GetAngle ();
+			myChild.Forward = new Vector3 (Mathf.Cos (rot), Mathf.Sin (rot));
+
+			myChild.Source = ro.GameObject.transform.position;
+		
+			Vector3 cPos = ro.GameObject.transform.position + (Vector3)myChild.Forward * 11f;
+			cPos.z = 1;
+			myChild.transform.position = cPos;
+		} else {
+			RemoveChildren ();
+			closestDistance = Mathf.Infinity;
+			closest = null;
+			reflectDirection = Vector2.zero;
+		}
+	}
 
 	void RemoveChildren() {
 		if (myChild != null) {
 			myChild.RemoveChildren ();
 			Destroy (myChild.gameObject);
+			myChild = null;
 		}
 	}
 
@@ -96,6 +103,16 @@ public class LightBeam : MonoBehaviour {
 
 		set {
 			fwd = value;
+		}
+	}
+
+	public Vector3 Source {
+		get {
+			return source;
+		}
+
+		set {
+			source = value;
 		}
 	}
 }
