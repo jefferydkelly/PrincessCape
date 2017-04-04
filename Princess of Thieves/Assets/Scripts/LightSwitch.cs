@@ -8,10 +8,12 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 	protected List<GameObject> connectedObjects;
 	protected List<ActivateableObject> activators;
     GameObject light;
+    Animator myAnimator;
 
 	bool isActive;
 
 	void Start() {
+        myAnimator = GetComponent<Animator>();
 		activators = new List<ActivateableObject> ();
 		foreach (GameObject go in connectedObjects) {
 			ActivateableObject ao = go.GetComponent<ActivateableObject> ();
@@ -23,6 +25,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 	public void Activate()
 	{
 		isActive = true;
+        myAnimator.SetTrigger("Activated");
 		foreach (ActivateableObject a in activators)
 		{
 			a.Activate();
@@ -31,7 +34,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 
     private void Update()
     {
-        if (!light)
+        if (!light && isActive)
         {
             Deactivate();
         }
@@ -57,7 +60,8 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 
     public void Deactivate()
 	{
-		isActive = false;
+        myAnimator.SetTrigger("Deactivated");
+        isActive = false;
 		foreach (ActivateableObject a in activators)
 		{
 			a.Deactivate();
