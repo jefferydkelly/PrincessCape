@@ -7,6 +7,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 	[SerializeField]
 	protected List<GameObject> connectedObjects;
 	protected List<ActivateableObject> activators;
+    GameObject light;
 
 	bool isActive;
 
@@ -28,7 +29,33 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 		}
 	}
 
-	public void Deactivate()
+    private void Update()
+    {
+        if (!light)
+        {
+            Deactivate();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.OnLayer("Light"))
+        {
+            light = collision.gameObject;
+            Activate();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.OnLayer("Light"))
+        {
+            light = null;
+            Deactivate();
+        }
+    }
+
+    public void Deactivate()
 	{
 		isActive = false;
 		foreach (ActivateableObject a in activators)
