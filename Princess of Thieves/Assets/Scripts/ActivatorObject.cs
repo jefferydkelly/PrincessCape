@@ -4,23 +4,28 @@ using System.Collections.Generic;
 
 public class ActivatorObject : ResettableObject {
 	[SerializeField]
-	protected List<GameObject> connectedObjects;
-	protected List<ActivateableObject> activators;
+	protected List<ActivatorConnection> connectedObjects;
+	//protected List<ActivateableObject> activators;
 
 	protected void Initialize() {
-		
+        /*
 		activators = new List<ActivateableObject> ();
 		if (connectedObjects.Count > 0) {
-			foreach (GameObject go in connectedObjects) {
-				ActivateableObject ao = go.GetComponent<ActivateableObject> ();
+			foreach (ActivatorConnection ac in connectedObjects) {
+                ActivateableObject ao = ac.activated.GetComponent<ActivateableObject>();
 				if (ao != null) {
 					activators.Add (ao);
 				}
 			}
-		}
-	}
+		}*/
+    }
 	protected virtual void Activate()
 	{
+        foreach(ActivatorConnection ac in connectedObjects)
+        {
+            ac.Activate();
+        }
+        /*
 		foreach (ActivateableObject a in activators)
 		{
 			if (a.IsInverted) {
@@ -28,19 +33,24 @@ public class ActivatorObject : ResettableObject {
 			} else {
 				a.Activate ();
 			}
-		}
+		}*/
 	}
 
 	protected virtual void Deactivate()
 	{
-		foreach (ActivateableObject a in activators)
+        foreach (ActivatorConnection ac in connectedObjects)
+        {
+            ac.Dectivate();
+        }
+        /*
+        foreach (ActivateableObject a in activators)
 		{
 			if (a.IsInverted) {
 				a.Activate ();
 			} else {
 				a.Deactivate ();
 			}
-		}
+		}*/
 	}
 
 	public override void Reset ()

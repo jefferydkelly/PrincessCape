@@ -10,3 +10,44 @@ public interface ActivateableObject
 	float ActivationTime{get;}
 	bool IsInverted{get;}
 }
+
+[System.Serializable]
+public struct ActivatorConnection
+{
+    public GameObject activatedObject;
+    ActivateableObject activated;
+    public bool inverted;
+
+    public void Activate()
+    {
+        ActivateableObject activated = activatedObject.GetComponent<ActivateableObject>();
+        if (activated != null)
+        {
+            
+            if (inverted)
+            {
+                activated.Deactivate();
+            }
+            else
+            {
+                activated.Activate();
+            }
+        }
+    }
+
+    public void Dectivate()
+    {
+        ActivateableObject activated = activatedObject.GetComponent<ActivateableObject>();
+        if (activated != null)
+        {
+            if (inverted)
+            {
+                activated.Activate();
+            }
+            else
+            {
+                activated.Deactivate();
+            }
+        }
+    }
+}
