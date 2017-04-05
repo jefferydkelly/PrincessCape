@@ -69,12 +69,13 @@ public class LightBeam : MonoBehaviour {
 	}
 
 	void Reflect(ReflectiveObject ro) {
-		if (ro.IsReflecting) {
+        float rot = (ro.SurfaceForward.GetAngle() - fwd.GetAngle());
+        if (ro.IsReflecting) {
 			RemoveChildren ();
 			myChild = Instantiate (gameObject).GetComponent<LightBeam> ();
 			reflectDirection = ro.SurfaceForward;
 
-			float rot = (reflectDirection.GetAngle () - fwd.GetAngle ());
+			
 			rot *= 2;
 			myChild.transform.parent = transform.parent;
 			myChild.transform.Rotate (Vector3.forward, rot.ToDegrees ());
@@ -83,7 +84,7 @@ public class LightBeam : MonoBehaviour {
 
 			myChild.Source = ro.GameObject.transform.position;
 		
-			Vector3 cPos = ro.GameObject.transform.position + (Vector3)myChild.Forward * 11f;
+			Vector3 cPos = ro.GameObject.transform.position + (Vector3)myChild.Forward * (transform.localScale.y / 2.0f + 0.85f);
 			cPos.z = 1;
 			myChild.transform.position = cPos;
 		} else {
