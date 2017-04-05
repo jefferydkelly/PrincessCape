@@ -55,6 +55,15 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
         }
     }
 
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.OnLayer("Light") && !isActive)
+        {
+            light = collision.gameObject;
+            Activate();
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.OnLayer("Light"))

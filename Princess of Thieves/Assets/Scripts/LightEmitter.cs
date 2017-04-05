@@ -58,6 +58,7 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 		light.Source = transform.position;
 		isActive = startActive;
 		light.gameObject.SetActive (startActive);
+        light.maxRange = range;
 	}
 
 	public void Activate() {
