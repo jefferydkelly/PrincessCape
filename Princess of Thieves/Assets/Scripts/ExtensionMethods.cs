@@ -229,6 +229,11 @@ public static class ExtensionMethods{
 		return v1.x == v2.x && v1.y == v2.y;
 	}
 
+    public static float AngleBetween(this Vector2 v1, Vector2 v2)
+    {
+        return (v2.GetAngle() - v1.GetAngle()).ToDegrees();
+    }
+
 	/// <summary>
 	/// Rotate the specified Vector2 by the given angle.
 	/// </summary>

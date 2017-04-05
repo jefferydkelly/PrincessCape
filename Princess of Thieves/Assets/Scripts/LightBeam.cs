@@ -21,10 +21,16 @@ public class LightBeam : MonoBehaviour {
     {
         if (closest && reflectedOff.IsReflecting)
         {
-            float angDif = Mathf.Abs(reflectedOff.SurfaceForward.GetAngle() - fwd.GetAngle()).ToDegrees();
-        
-            if (!reflectedOff.SurfaceForward.VectorsEqual(reflectDirection)) {
-                Reflect(reflectedOff);
+            if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
+            {
+
+                if (!reflectedOff.SurfaceForward.VectorsEqual(reflectDirection))
+                {
+                    Reflect(reflectedOff);
+                }
+            } else
+            {
+                RemoveChildren();
             }
         } else
         {
@@ -33,14 +39,19 @@ public class LightBeam : MonoBehaviour {
     }
     void OnTriggerEnter2D(Collider2D col) {
 		ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
+       
 		if (ro != null && ro.IsReflecting) {
-			Vector2 dif = col.transform.position - source;
-			float dot = fwd.Dot (dif);
-			if (dot > 0 && dot < closestDistance) {
-				closest = col.gameObject;
-                reflectedOff = closest.GetComponent<ReflectiveObject>();
-                closestDistance = dot;
-                Resize();
+            if (fwd.Dot(ro.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
+            {
+                Vector2 dif = col.transform.position - source;
+                float dot = fwd.Dot(dif);
+                if (dot > 0 && dot < closestDistance)
+                {
+                    closest = col.gameObject;
+                    reflectedOff = closest.GetComponent<ReflectiveObject>();
+                    closestDistance = dot;
+                    Resize();
+                }
             }
 
 		}
@@ -52,14 +63,17 @@ public class LightBeam : MonoBehaviour {
 	
 		if (ro != null && ro.IsReflecting) {
 			if (closest != col.gameObject) {
-				Vector2 dif = col.transform.position - source;
-				float dot = fwd.Dot (dif);
+                if (fwd.Dot(ro.SurfaceForward) < Mathf.Cos(Mathf.PI / 4)) { 
+                    Vector2 dif = col.transform.position - source;
+				    float dot = fwd.Dot (dif);
 
-				if (dot > 0 && dot < closestDistance) {
-					closest = col.gameObject;
-                    reflectedOff = closest.GetComponent<ReflectiveObject>();
-                    closestDistance = dot;
-                    Resize();
+                    if (dot > 0 && dot < closestDistance)
+                    {
+                        closest = col.gameObject;
+                        reflectedOff = closest.GetComponent<ReflectiveObject>();
+                        closestDistance = dot;
+                        Resize();
+                    }
                 }
 			}
 		}
