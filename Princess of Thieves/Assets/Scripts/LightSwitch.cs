@@ -5,8 +5,8 @@ using UnityEngine;
 public class LightSwitch : MonoBehaviour, LightActivatedObject {
 
 	[SerializeField]
-	protected List<GameObject> connectedObjects;
-	protected List<ActivateableObject> activators;
+	protected List<ActivatorConnection> connectedObjects;
+	//protected List<ActivateableObject> activators;
     GameObject light;
     Animator myAnimator;
 
@@ -14,22 +14,28 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 
 	void Start() {
         myAnimator = GetComponent<Animator>();
-		activators = new List<ActivateableObject> ();
-		foreach (GameObject go in connectedObjects) {
-			ActivateableObject ao = go.GetComponent<ActivateableObject> ();
-			if (ao != null) {
-				activators.Add (ao);
-			}
-		}
-	}
+            /*
+            activators = new List<ActivateableObject> ();
+            foreach (GameObject go in connectedObjects) {
+                ActivateableObject ao = go.GetComponent<ActivateableObject> ();
+                if (ao != null) {
+                    activators.Add (ao);
+                }
+            }*/
+        }
 	public void Activate()
 	{
 		isActive = true;
         myAnimator.SetTrigger("Activated");
+        foreach(ActivatorConnection ac in connectedObjects)
+        {
+            ac.Activate();
+        }
+        /*
 		foreach (ActivateableObject a in activators)
 		{
 			a.Activate();
-		}
+		}*/
 	}
 
     private void Update()
@@ -62,10 +68,16 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 	{
         myAnimator.SetTrigger("Deactivated");
         isActive = false;
-		foreach (ActivateableObject a in activators)
+
+        foreach (ActivatorConnection ac in connectedObjects)
+        {
+            ac.Dectivate();
+        }
+        /*
+        foreach (ActivateableObject a in activators)
 		{
 			a.Deactivate();
-		}
+		}*/
 	}
 
 	public bool IsActive {
