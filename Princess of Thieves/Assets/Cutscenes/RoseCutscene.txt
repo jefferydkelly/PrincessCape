@@ -1,6 +1,8 @@
 character Elwynn Sprites/Elwynn
-pan 3	 0 0
+pan 3 0 0
 create Prefabs/DoorTemp 4 3.5 0
+character Cloud Prefabs/Cloud
+character Cloud2 Prefabs/Cloud2
 wait 0.5
 create Prefabs/DragonClosed 2 3.5 0
 wait 0.5
