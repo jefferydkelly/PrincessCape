@@ -54,11 +54,22 @@ public class LightBeam : MonoBehaviour {
                 }
             }
 
-		}
+		} else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
+        {
+            Vector2 dif = col.transform.position - source;
+            float dot = fwd.Dot(dif);
+            if (dot > 0 && dot < closestDistance)
+            {
+                closest = null;
+                reflectedOff = null;
+                closestDistance = dot;
+                Resize();
+            }
+        }
 	}
 
 
-	void OnTriggerStay2D(Collider2D col) {
+    void OnTriggerStay2D(Collider2D col) {
 		ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
 	
 		if (ro != null && ro.IsReflecting) {
@@ -77,7 +88,19 @@ public class LightBeam : MonoBehaviour {
                 }
 			}
 		}
-	}
+        else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
+        {
+            Vector2 dif = col.transform.position - source;
+            float dot = fwd.Dot(dif);
+            if (dot > 0 && dot < closestDistance)
+            {
+                closest = null;
+                reflectedOff = null;
+                closestDistance = dot;
+                Resize();
+            }
+        }
+    }
 
 	void OnTriggerExit2D(Collider2D col) {
 		if (col.gameObject == closest) {
