@@ -9,7 +9,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-   // private Animator myAnimator;
+    private Animator myAnimator;
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
@@ -84,7 +84,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
-        //myAnimator = GetComponent<Animator>();
+        myAnimator = GetComponent<Animator>();
 		curHP = maxHP;
 		curMP = maxMP;
 		DontDestroyOnLoad(gameObject);
@@ -328,26 +328,32 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         //Awful code, but it works
         if (IsUsingMagnetGloves)
         {
+          //  myAnimator.SetBool("CapeUse", false);
+            myAnimator.SetBool("PullUse",true);
             switch ((int)TrueAim.x)
             {
                 case 0:
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPullGloves[2];
+                            myAnimator.SetInteger("Direction", 1);
+                            // myRenderer.sprite = magPullGloves[2];
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
+                                // myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPullGloves[6];
+                            myAnimator.SetInteger("Direction", 5);
+                            // myRenderer.sprite = magPullGloves[6];
                             break;
                     }//end of internal Switch
                     break; // end of x = 0
@@ -355,20 +361,24 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPullGloves[3];
+                            myAnimator.SetInteger("Direction", 2);
+                            //myRenderer.sprite = magPullGloves[3];
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
+                                // myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPullGloves[5];
+                            myAnimator.SetInteger("Direction", 4);
+                            // myRenderer.sprite = magPullGloves[5];
                             break;
                     }//end of internal Switch
                     break;
@@ -376,20 +386,24 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPullGloves[1];
+                            myAnimator.SetInteger("Direction", 8);
+                            // myRenderer.sprite = magPullGloves[1];
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
+                                // myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPullGloves[7];
+                            myAnimator.SetInteger("Direction", 6);
+                            //myRenderer.sprite = magPullGloves[7];
                             break;
                     }//end of internal Switch
                     break;
@@ -397,26 +411,27 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else if (IsUsingPushGloves)
         {
+            myAnimator.SetBool("PushUse", true);
             switch ((int)TrueAim.x)
             {
                 case 0:
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPushGloves[2];
+                            myAnimator.SetInteger("Direction", 1);
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPushGloves[6];
+                            myAnimator.SetInteger("Direction", 5);
                             break;
                     }//end of internal Switch
                     break; // end of x = 0
@@ -424,20 +439,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPushGloves[3];
+                            myAnimator.SetInteger("Direction",2);
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPushGloves[5];
+                            myAnimator.SetInteger("Direction", 4);
                             break;
                     }//end of internal Switch
                     break;
@@ -445,20 +460,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPushGloves[1];
+                            myAnimator.SetInteger("Direction", 8);
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPushGloves[7];
+                            myAnimator.SetInteger("Direction", 6);
                             break;
                     }//end of internal Switch
                     break;
@@ -466,26 +481,36 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else if (IsUsingReflectCape)
         {
+            Debug.Log("My aim is what? : " + TrueAim);
+           // myAnimator.SetBool("PullUse", false);
+            myAnimator.SetBool("CapeUse", true);
             switch ((int)TrueAim.x)
             {
                 case 0:
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = capeSprites[2];
+                            myAnimator.SetInteger("Direction",1);
+                            //myRenderer.sprite = capeSprites[2];
                             break;
                         case 0: //forward
-                            if (fwdX == 1)
+                            if (fwdX <= 0)
                             {
-                                myRenderer.sprite = capeSprites[0];
+                              //  myAnimator.SetTrigger("Left");
+                                myAnimator.SetInteger("Direction", 4);
+                                // myRenderer.sprite = capeSprites[0];
                             }
                             else
                             {
-                                myRenderer.sprite = capeSprites[4];
+                            //    myAnimator.SetTrigger("Right");
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = capeSprites[4];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[2];
+                            //myAnimator.SetTrigger("Up");
+                            myAnimator.SetInteger("Direction", 1);
+                            // myRenderer.sprite = capeSprites[2];
                             break;
                     }//end of internal Switch
                     break; // end of x = 0
@@ -493,14 +518,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = capeSprites[3];
+                           // myAnimator.SetTrigger("LeftUp");
+                            myAnimator.SetInteger("Direction", 5);
+                            // myRenderer.sprite = capeSprites[3];
                             break;
                         case 0: //forward
-                                myRenderer.sprite = capeSprites[4];
+                           // myAnimator.SetTrigger("Left");
+                            myAnimator.SetInteger("Direction", 4);
+                            //myRenderer.sprite = capeSprites[4];
 
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[0];
+                          //  myAnimator.SetTrigger("Left");
+                            myAnimator.SetInteger("Direction", 4);
+                            //myRenderer.sprite = capeSprites[0];
                             break;
                     }//end of internal Switch
                     break;
@@ -508,14 +539,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = capeSprites[1];
+                          //  myAnimator.SetTrigger("RightUp");
+                            myAnimator.SetInteger("Direction", 2);
+                            //myRenderer.sprite = capeSprites[1];
                             break;
                         case 0: //forward
-                            myRenderer.sprite = capeSprites[0];
+                           // myAnimator.SetTrigger("Right");
+                            myAnimator.SetInteger("Direction", 3);
+                            // myRenderer.sprite = capeSprites[0];
 
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[0];
+                           // myAnimator.SetTrigger("Right");
+                            myAnimator.SetInteger("Direction", 3);
+                            //myRenderer.sprite = capeSprites[0];
                             break;
                     }//end of internal Switch
                     break;
@@ -523,6 +560,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else
         {
+            myAnimator.SetBool("PushUse", false);
+            myAnimator.SetBool("PullUse", false);
+            myAnimator.SetBool("CapeUse", false);
             myRenderer.sprite = basicSprite;
         }
 
