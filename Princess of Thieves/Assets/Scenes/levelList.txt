@@ -4,3 +4,4 @@ JDLauncherTestScene, Ready To Launch
 JDGloveTestScene, The Alchemy Labs
 JDPullCapeScene, Challenge: Cape + Glove
 JDPushGloveTestScene, By Your Bootstraps
+RoseChoiceScene, The Choice
