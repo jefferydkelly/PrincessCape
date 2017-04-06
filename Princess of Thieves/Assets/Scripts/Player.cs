@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public class Player : ResettableObject, DamageableObject, CasterObject, ReflectiveObject
+public class Player : ResettableObject, CasterObject, ReflectiveObject
 {
     private Transform startPos;
 	private Controller controller;
@@ -481,7 +481,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else if (IsUsingReflectCape)
         {
-            Debug.Log("My aim is what? : " + TrueAim);
            // myAnimator.SetBool("PullUse", false);
             myAnimator.SetBool("CapeUse", true);
             switch ((int)TrueAim.x)
@@ -575,21 +574,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         float ji = IsDashing ? jumpImpulse * 1.5f : jumpImpulse;
 		myRigidBody.AddForce(new Vector2(0, ji * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
 		AudioManager.Instance.PlaySound (jumpClip);
-	}
-
-	/// <summary>
-	/// Handles the Player taking damage.
-	/// </summary>
-	/// <returns><c>true</c>, if the player is killed, <c>false</c> otherwise.</returns>
-	/// <param name="ds">Ds.</param>
-	public bool TakeDamage(DamageSource ds)
-	{
-		if (ds.allegiance != Allegiance.Player)
-		{
-			curHP -= ds.damage;
-		}
-
-		return curHP <= 0;
 	}
 
 	#region CollisionHandling
@@ -759,18 +743,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	}
 
 	/// <summary>
-	/// Gets the allegiance.
-	/// </summary>
-	/// <value>The allegiance.</value>
-	public Allegiance Allegiance
-	{
-		get
-		{
-			return Allegiance.Player;
-		}
-	}
-
-	/// <summary>
 	/// Gets half of the width.
 	/// </summary>
 	/// <value>The half of the width.</value>
@@ -803,45 +775,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	public Vector3 TopCenter {
 		get {
 			return transform.position + new Vector3 (0, HalfHeight);
-		}
-	}
-	/// <summary>
-	/// Gets the percent of HP the player has.
-	/// </summary>
-	/// <value>The percent of HP the player has.</value>
-	public float HPPercent
-	{
-		get
-		{
-			return (float)curHP / (float)maxHP;
-		}
-	}
-
-	/// <summary>
-	/// Gets the mp the player has.
-	/// </summary>
-	/// <value>The mp the player has.</value>
-	public float MP
-	{
-		get
-		{
-			return curMP;
-		}
-
-		set {
-			curMP = value;
-		}
-	}
-
-	/// <summary>
-	/// Gets the percent of MP the player has.
-	/// </summary>
-	/// <value>The percent of MP the player has.</value>
-	public float MPPercent
-	{
-		get
-		{
-			return curMP / maxMP;
 		}
 	}
 
