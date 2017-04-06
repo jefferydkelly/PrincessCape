@@ -123,15 +123,25 @@ public class LightBeam : MonoBehaviour {
 
 			
 			rot *= 2;
-			myChild.transform.parent = transform.parent;
+            Vector3 newSource = ro.GameObject.transform.position;
+
+            myChild.transform.parent = transform.parent;
 			myChild.transform.Rotate (Vector3.forward, rot.ToDegrees ());
 			rot -= fwd.GetAngle ();
-			myChild.Forward = new Vector3 (Mathf.Cos (rot), Mathf.Sin (rot));
-
-            myChild.Source = ro.GameObject.transform.position;
-
+            Vector3 newFwd = new Vector3(Mathf.Cos(rot), Mathf.Sin(rot));
+            myChild.Forward = newFwd;
+            
+            myChild.Source = newSource;
             myChild.scale = scale;
             myChild.closestDistance = maxRange;
+            RaycastHit2D hit = Physics2D.BoxCast(myChild.source, Vector2.one, 0, myChild.fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
+            if (hit && !hit.collider.gameObject.name.Contains("Sign"))
+            {
+                myChild.scale.y = hit.distance;
+                myChild.closestDistance = hit.distance;
+            }
+
+            
             myChild.Resize();
         } else {
 			RemoveChildren ();
