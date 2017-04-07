@@ -229,7 +229,7 @@ public static class ExtensionMethods{
     }
 
 	public static bool VectorsEqual(this Vector2 v1, Vector2 v2) {
-		return v1.x == v2.x && v1.y == v2.y;
+        return v1.Dot(v2) == v1.SqrMagnitude();
 	}
 
     public static float AngleBetween(this Vector2 v1, Vector2 v2)

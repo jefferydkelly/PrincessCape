@@ -56,7 +56,7 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 
 		myLight = GetComponentInChildren<LightBeam> ();
 		myLight.transform.localScale = new Vector3 (range, 1, 1);
-		myLight.transform.localPosition = new Vector3 ((range + 1) / 2f, 1 , 1);
+		myLight.transform.localPosition = new Vector3 ((range + 1) / 2f, 0, 1);
 		myLight.Forward = fwd;
 		myLight.Source = transform.position;
 		isActive = startActive;
