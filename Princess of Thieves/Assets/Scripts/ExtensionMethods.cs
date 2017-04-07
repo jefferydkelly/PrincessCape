@@ -187,18 +187,21 @@ public static class ExtensionMethods{
     public static float ToRadians(this float f)
     {
 		float ang = f * Mathf.Deg2Rad;
+        /*
 		while (ang < 0) {
 			ang += Mathf.PI * 2;
-		}
+		}*/
 		return ang;
     }
 
     public static float ToDegrees(this float f)
     {
 		float ang = f * Mathf.Rad2Deg;
+
+        /*
 		while (ang < 0) {
 			ang += 360;
-		}
+		}*/
 		return ang;
     }
 
