@@ -144,6 +144,9 @@ public class LightBeam : MonoBehaviour {
 	}
 
 	public void RemoveChildren() {
+        closest = null;
+        closestDistance = maxRange;
+        reflectDirection = Vector2.zero;
 		if (myChild != null) {
 			myChild.RemoveChildren ();
 			Destroy (myChild.gameObject);
@@ -154,6 +157,11 @@ public class LightBeam : MonoBehaviour {
         }
 	}
 
+    public void Reset()
+    {
+        closestDistance = maxRange;
+        Resize();
+    }
     void Resize()
     {
         scale.x = closestDistance;

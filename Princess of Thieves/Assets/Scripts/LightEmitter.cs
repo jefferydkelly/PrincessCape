@@ -78,7 +78,9 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 	public void Activate() {
 		isActive = true;
         myLight.gameObject.SetActive(true);
+        myLight.Reset();
         myAnimator.SetTrigger("Activated");
+
     }
 
 	public void Deactivate() {
