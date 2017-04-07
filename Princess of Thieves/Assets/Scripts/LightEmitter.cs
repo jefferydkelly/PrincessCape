@@ -15,9 +15,20 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	bool isActivationInverted = false;
 	LightBeam myLight;
+
+    Animator myAnimator;
 	// Use this for initialization
 	void Start () {
-		float sqrtHalf = 1 / Mathf.Sqrt (2);
+        myAnimator = GetComponent<Animator>();
+        
+        if (startActive)
+        {
+            myAnimator.SetTrigger("Activated");
+        } else
+        {
+            myAnimator.SetTrigger("Deactivated");
+        }
+        float sqrtHalf = 1 / Mathf.Sqrt (2);
     
 		switch (direction)
 		{
@@ -67,12 +78,14 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 	public void Activate() {
 		isActive = true;
         myLight.gameObject.SetActive(true);
+        myAnimator.SetTrigger("Activated");
     }
 
 	public void Deactivate() {
 		isActive = false;
         myLight.RemoveChildren();
         myLight.gameObject.SetActive(false);
+        myAnimator.SetTrigger("Deactivated");
     }
 
 	public bool IsActive {

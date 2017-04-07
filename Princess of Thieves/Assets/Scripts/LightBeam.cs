@@ -25,9 +25,10 @@ public class LightBeam : MonoBehaviour {
         {
             if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
             {
-
-                if (reflectedOff.SurfaceForward != reflectDirection)
+                float dot = fwd.Dot(closest.transform.position - source);
+                if (reflectedOff.SurfaceForward != reflectDirection || dot != closestDistance)
                 {
+                    closestDistance = dot;
                     Reflect(reflectedOff);
                 }
             } else
