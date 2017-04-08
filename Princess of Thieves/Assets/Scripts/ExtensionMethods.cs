@@ -187,18 +187,21 @@ public static class ExtensionMethods{
     public static float ToRadians(this float f)
     {
 		float ang = f * Mathf.Deg2Rad;
+        /*
 		while (ang < 0) {
 			ang += Mathf.PI * 2;
-		}
+		}*/
 		return ang;
     }
 
     public static float ToDegrees(this float f)
     {
 		float ang = f * Mathf.Rad2Deg;
+
+        /*
 		while (ang < 0) {
 			ang += 360;
-		}
+		}*/
 		return ang;
     }
 
@@ -226,7 +229,7 @@ public static class ExtensionMethods{
     }
 
 	public static bool VectorsEqual(this Vector2 v1, Vector2 v2) {
-		return v1.x == v2.x && v1.y == v2.y;
+        return v1.Dot(v2) == v1.SqrMagnitude();
 	}
 
     public static float AngleBetween(this Vector2 v1, Vector2 v2)

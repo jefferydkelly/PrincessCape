@@ -1,6 +1,7 @@
 JDCapeTestScene, The Princess Escapes
 JDSwitchTestScene, Switching Things Up
 JDLauncherTestScene, Ready To Launch
+JDLightScene, The Light Illumine You
 JDGloveTestScene, The Alchemy Labs
 JDPullCapeScene, Challenge: Cape + Glove
 JDPushGloveTestScene, By Your Bootstraps

@@ -22,7 +22,6 @@ public class UIManager : MonoBehaviour
     StealthMeter stealthMeter;
 	//The HP and MP bars
 	//public PlayerBarController hpBar, mpBar;
-	HPMPBars bars;
 
     GameObject itemManager;
 
@@ -76,9 +75,6 @@ public class UIManager : MonoBehaviour
 
 			nameBox = new ImageTextCombo("NameBox");
 			nameBox.Enabled = false;
-
-			bars = GameObject.Find("Bars").GetComponent<HPMPBars>();
-			bars.enabled = false;
 
 			dialogBox = new ImageTextCombo("DialogBox");
 			dialogBox.Enabled = false;

@@ -63,7 +63,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 			}
 
 			yield return null;
-		} while(transform.position.x < openPos.x);
+		} while((openHorizontally && transform.position.x < openPos.x) || transform.position.x < openPos.y);
 		transform.position = openPos;
 		status = SliderStatus.Open;
 	}
@@ -83,7 +83,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 				transform.position -= new Vector3(0, gameObject.HalfHeight() * 2.0f * Time.deltaTime / travelTime);
 			}
 			yield return null;
-		} while(transform.position.x > closePos.x);
+		} while((openHorizontally && transform.position.x > closePos.x) || transform.position.y > closePos.y);
 		foreach (Rigidbody2D rb in attachedBodies) {
 			rb.velocity = Vector2.zero;
 		}
