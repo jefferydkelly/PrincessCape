@@ -79,7 +79,7 @@ public class PushGlove : GloveItem{
 				moveDir = distance.normalized;
 
 				if (hitNormal.y == 0) {
-					moveDir += player.TrueAim.YVector ();
+					moveDir += player.KeyAim.YVector ();
 				}
 				moveDir.Normalize ();
 				if (targetIsHeavier) {

@@ -287,7 +287,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
             }
 
 			if (ShowAimArrow) {
-				arrowRenderer.transform.rotation = Quaternion.AngleAxis (TrueAim.GetAngle ().ToDegrees(), Vector3.forward);
+				arrowRenderer.transform.rotation = Quaternion.AngleAxis (MouseAim.GetAngle ().ToDegrees(), Vector3.forward);
 			}
             
 		}
@@ -301,10 +301,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         {
           //  myAnimator.SetBool("CapeUse", false);
             myAnimator.SetBool("PullUse",true);
-            switch ((int)TrueAim.x)
+            switch ((int)MouseAim.x)
             {
                 case 0:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction", 1);
@@ -329,7 +329,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     }//end of internal Switch
                     break; // end of x = 0
                 case 1:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction", 2);
@@ -354,7 +354,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     }//end of internal Switch
                     break;
                 case -1:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction", 8);
@@ -383,10 +383,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         else if (IsUsingPushGloves)
         {
             myAnimator.SetBool("PushUse", true);
-            switch ((int)TrueAim.x)
+            switch ((int)MouseAim.x)
             {
                 case 0:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction", 1);
@@ -407,7 +407,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     }//end of internal Switch
                     break; // end of x = 0
                 case 1:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction",2);
@@ -428,7 +428,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     }//end of internal Switch
                     break;
                 case -1:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction", 8);
@@ -454,10 +454,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         {
            // myAnimator.SetBool("PullUse", false);
             myAnimator.SetBool("CapeUse", true);
-            switch ((int)TrueAim.x)
+            switch ((int)MouseAim.x)
             {
                 case 0:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                             myAnimator.SetInteger("Direction",1);
@@ -485,7 +485,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     }//end of internal Switch
                     break; // end of x = 0
                 case 1:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                            // myAnimator.SetTrigger("LeftUp");
@@ -506,7 +506,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     }//end of internal Switch
                     break;
                 case -1:
-                    switch ((int)TrueAim.y)
+                    switch ((int)MouseAim.y)
                     {
                         case 1: //up
                           //  myAnimator.SetTrigger("RightUp");
@@ -643,7 +643,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 			IsDead = true;
 		} else if (col.CompareTag ("Projectile")) {
 			Projectile p = col.GetComponent<Projectile> ();
-			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(TrueAim.normalized))
+			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(MouseAim))
             {
                 Die();
             } else if (!p.Reflected)
@@ -940,7 +940,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	/// Gets the true aim.  Unlike aiming, it doesn't make an assumption about the player aiming forward.
 	/// </summary>
 	/// <value>The true aim.</value>
-	public Vector2 TrueAim {
+	public Vector2 MouseAim {
 		get
 		{
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -948,6 +948,14 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 			return (mousePos - (Vector2)transform.position).normalized;
 		}
 	}
+
+    public Vector2 KeyAim
+    {
+        get
+        {
+            return new Vector2(controller.Horizontal, controller.Vertical).normalized;
+        }
+    }
     /// <summary>
     /// Getter and setter for whether or not the Player is able to move
     /// </summary>
@@ -1330,7 +1338,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 
 	public Vector2 SurfaceForward {
 		get {
-			return TrueAim;
+			return MouseAim;
 		}
 	}
 }
