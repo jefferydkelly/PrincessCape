@@ -46,15 +46,16 @@ public class Projectile : MonoBehaviour {
             Vector2 vel = myRigidbody.velocity;
             float dot = vel.normalized.Dot(fwd.normalized);
 
-            if (dot == -1)
+            if (dot <= -0.8f)
             {
                 myRigidbody.velocity = vel.Rotated(Mathf.PI);
                 transform.Rotate(Vector3.forward, 180);
                 return true;
-            } else if (vel.Dot(fwd) <= 0)
+            } else if (dot <= 0)
             {
                 float rot = (vel.GetAngle() - fwd.GetAngle()) * 2;
-                
+                rot = (Mathf.Round(vel.Rotated(rot).GetAngle() * 4 / Mathf.PI) * Mathf.PI / 4) - vel.GetAngle();
+               
                 myRigidbody.velocity = vel.Rotated(rot);
                 transform.Rotate(Vector3.forward, rot.ToDegrees());
                 return true;
