@@ -9,7 +9,6 @@ public class LadderSpawn : MonoBehaviour, ActivateableObject {
 	GameObject[] segments;
 	[SerializeField]
 	int numSegments = 2;
-	int segmentsSpawned = 0;
 	[SerializeField]
 	float spawnTime = 1.0f;
 

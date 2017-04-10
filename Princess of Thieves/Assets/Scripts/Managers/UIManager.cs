@@ -313,16 +313,6 @@ public class UIManager : MonoBehaviour
         dialogBox.Enabled = false;
     }
 
-	public bool InCutscene
-	{
-		set
-		{
-			bool val = !value;
-			//bars.enabled = val;
-            //stealthMeter.Enabled = val;
-		}
-	}
-
 	public void EnterArea(string s)
 	{
 		if (s != areaNameBox.text)
@@ -332,19 +322,6 @@ public class UIManager : MonoBehaviour
 			Invoke("StartFadeOut", fadeOutDelay);
 		}
 	}
-    /*
-    public float LightLevel
-    {
-        get
-        {
-            return stealthMeter.LightLevel;
-        }
-
-        set
-        {
-            stealthMeter.LightLevel = value;
-        }
-    }*/
 
 	void StartFadeOut()
 	{

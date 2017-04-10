@@ -2,50 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LadderController : JDMappableObject, InteractiveObject {
-	SpriteRenderer myRenderer;
-	Collider2D myCollider;
+public class LadderController : JDMappableObject {
 	bool ladderAbove;
 	bool ladderBelow;
 	bool collidingWithPlayer;
 	void Start() {
-		myRenderer = GetComponent<SpriteRenderer> ();
 		CheckForConnections ();
-		myCollider = GetComponent<Collider2D> ();
-
-	}
-	public void Interact() {
-		Player player = GameManager.Instance.Player;
-		if (!player.IsClimbing) {
-			myRenderer.color = Color.white;
-			player.IsClimbing = true;
-            Vector3 pos;
-			pos = player.transform.position;
-			pos.x = transform.position.x;
-		
-			if (pos.y >= transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 0.15f) {
-				myCollider.isTrigger = true;
-				pos.y = transform.position.y + gameObject.HalfHeight () + player.HalfHeight - 1f;
-			}
-            pos.z = 0;
-			player.transform.position = pos;
-			myRenderer.color = Color.white;
-			UIManager.Instance.ShowInteraction ("Get Off");
-			Input.ResetInputAxes ();
-		}
-
-	}
-
-	public void Highlight() {
-		myRenderer.color = Color.blue;
-		UIManager.Instance.ShowInteraction ("Climb");
-	}
-
-	public void Dehighlight() {
-		myRenderer.color = Color.white;
-		if (GameManager.Instance.Player.CanInteract) {
-			UIManager.Instance.HideInteraction ();
-		}
 	}
 
 	public void CheckForConnections() {
@@ -103,45 +65,11 @@ public class LadderController : JDMappableObject, InteractiveObject {
 		}
 	}
 
-	bool Highlighted {
-		get {
-			return myRenderer.color == Color.blue;
-		}
-	}
-
-	void OnMouseEnter() {
-		if (GameManager.Instance.Player.CanInteract) {
-			Highlight ();
-		}
-	}
-
-	void OnMouseExit() {
-		if (GameManager.Instance.Player.CanInteract || GameManager.Instance.Player.IsClimbing) {
-			Dehighlight ();
-		}
-	}
-
 	void LinkLadder(bool above) {
 		if (above) {
 			ladderAbove = true;
 		} else {
 			ladderBelow = true;
-		}
-	}
-	void OnMouseOver() {
-		if (!GameManager.Instance.IsPaused) {
-			if (Highlighted) {
-				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-					if (GameManager.Instance.Player.Controller.Interact) {
-						Interact ();
-						Input.ResetInputAxes ();
-					}
-				} else {
-					Dehighlight ();
-				}
-			} else {
-				Highlight ();
-			}
 		}
 	}
 }

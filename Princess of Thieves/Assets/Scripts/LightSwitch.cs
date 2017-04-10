@@ -7,7 +7,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 	[SerializeField]
 	protected List<ActivatorConnection> connectedObjects;
 	//protected List<ActivateableObject> activators;
-    GameObject light;
+    GameObject myLight;
     Animator myAnimator;
 
 	bool isActive;
@@ -40,7 +40,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
 
     private void Update()
     {
-        if (!light && isActive)
+        if (!myLight && isActive)
         {
             Deactivate();
         }
@@ -50,7 +50,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
     {
         if (collision.OnLayer("Light"))
         {
-            light = collision.gameObject;
+            myLight = collision.gameObject;
             Activate();
         }
     }
@@ -59,7 +59,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
     {
         if (collision.OnLayer("Light") && !isActive)
         {
-            light = collision.gameObject;
+            myLight = collision.gameObject;
             Activate();
         }
     }
@@ -68,7 +68,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
     {
         if (collision.OnLayer("Light"))
         {
-            light = null;
+            myLight = null;
             Deactivate();
         }
     }

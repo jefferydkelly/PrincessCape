@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System;
 public class Player : ResettableObject, CasterObject, ReflectiveObject
 {
-    private Transform startPos;
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
@@ -16,12 +15,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	public float sneakSpeed = 0.5f;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
-
-	private int curHP = 0;
-	public int maxHP = 100;
-
-	public float curMP = 0;
-	public float maxMP = 100;
 
 	PlayerState state = PlayerState.Normal;
     bool tryingToJump = false;
@@ -36,9 +29,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     List<GameObject> startInventory;
     List<UsableItem> inventory;
     private bool usedItem;
-
-    private bool inWater = false;
-    private float percInWater = 0f; 
 
 
     //InteractiveObject highlighted;
@@ -66,8 +56,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	GameManager manager;
     void Awake()
     {
-       // transform.position = Vector2.zero;
-        startPos = transform;
 		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
 		arrowRenderer.enabled = false;
 		rangeRenderer = GetComponentsInChildren<SpriteRenderer> ()[2];
@@ -79,14 +67,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	// Use this for initialization
 	void Start()
 	{
-        
-        startPos = transform;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
         myAnimator = GetComponent<Animator>();
-		curHP = maxHP;
-		curMP = maxMP;
 		DontDestroyOnLoad(gameObject);
         basicSprite = myRenderer.sprite;
         UIManager.Instance.UpdateUI(controller);
@@ -108,8 +92,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	{
         if (!manager.IsPaused)
         {
-           
-            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP); //Should this be maxMP?
             lastYVel = myRigidBody.velocity.y;
 
             if (!IsFrozen)
@@ -142,17 +124,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 						Input.ResetInputAxes ();
 					}
 				}//end climbing
-                else if (inWater)
-                {
-                    myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
-                    myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
-                    myRigidBody.ClampVelocity( 5, VelocityType.Y);
-                    if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
-                    {
-                        fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
-                        myRenderer.flipX = (fwdX == -1);
-                    }
-                }
                 else
                 {
 					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
@@ -576,6 +547,39 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		AudioManager.Instance.PlaySound (jumpClip);
 	}
 
+    void HandleLadder(LadderController lc, Collider2D col)
+    {
+        if (!IsClimbing)
+        {
+            if (BottomCenter.y >= lc.transform.position.y + lc.gameObject.HalfHeight() * 0.8f)
+            {
+                if (controller.Vertical < 0)
+                {
+                    col.isTrigger = true;
+                    IsClimbing = true;
+                    Vector3 pos = transform.position;
+                    pos.x = lc.transform.position.x;
+                    transform.position = pos;
+                }
+                else
+                {
+                    col.isTrigger = lc.LadderAbove;
+                }
+            }
+            else
+            {
+                col.isTrigger = true;
+
+                if (controller.Vertical > 0)
+                {
+                    IsClimbing = true;
+                    Vector3 pos = transform.position;
+                    pos.x = lc.transform.position.x;
+                    transform.position = pos;
+                }
+            }
+        }
+    }
 	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
 	{
@@ -613,17 +617,20 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		} else if (col.collider.CompareTag ("Spike")) {
 			IsDead = true;
 		} else if (col.collider.CompareTag ("Ladder")) {
-			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
-				LadderController lc = col.collider.GetComponent<LadderController> ();
-				col.collider.isTrigger = lc.LadderAbove;
-			} else {
-				col.collider.isTrigger = true;
-			}
+            HandleLadder(col.collider.GetComponent<LadderController>(), col.collider);
 		}
        
 	}
 
-	void OnCollisionExit2D(Collision2D col) {
+    private void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.collider.CompareTag("Ladder"))
+        {
+            HandleLadder(col.collider.GetComponent<LadderController>(), col.collider);
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D col) {
 		if (col.collider.CompareTag ("Ladder")) {
 			col.collider.isTrigger = true;
 		}
@@ -634,8 +641,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	{
 		if (col.CompareTag ("Fire")) {
 			IsDead = true;
-		} else if (col.CompareTag ("Water")) {
-			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
 			Projectile p = col.GetComponent<Projectile> ();
 			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(TrueAim.normalized))
@@ -646,16 +651,19 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                 p.Reflected = true;
             }
 		} else if (col.CompareTag ("Ladder")) {
-			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
-				LadderController lc = col.GetComponent<LadderController> ();
-				col.isTrigger = lc.LadderAbove;
-			} else {
-				col.isTrigger = true;
-			}
+            HandleLadder(col.GetComponent<LadderController>(), col);
 		} 
     }
 
-	void OnTriggerExit2D(Collider2D col)
+    private void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.CompareTag("Ladder"))
+        {
+            HandleLadder(col.GetComponent<LadderController>(), col);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
 	{
 		if (col.CompareTag ("Ladder")) {
 			if (IsClimbing) {
@@ -681,35 +689,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 					}
 				}
 			}
-		}
-		if (col.CompareTag ("Water")) {
-			inWater = false;
 		} 
-
-		/*
-		if (col.OnLayer("Interactive")){
-			InteractiveObject io = col.GetComponent<InteractiveObject> ();
-
-			if (io == highlighted) {
-				highlighted.Dehighlight ();
-				highlighted = null;
-				collidingWithHighlighted = false;
-			}
-		}*/
-    }
-
-    void OnTriggerStay2D(Collider2D col)
-    {
-        //http://answers.unity3d.com/questions/879712/making-an-object-float-in-water.html
-        if (col.CompareTag("Water"))
-        {
-            //get percentage of collider under water. Apply a force opposite of that upwards. use 50% of the collider
-            if (col.transform.position.y + col.bounds.extents.y >= transform.position.y /*+GetComponent<BoxCollider2D>().bounds.center.y*/)
-            {
-                myRigidBody.AddForce(new Vector2(0, Mathf.Sign(myRigidBody.gravityScale)/8), ForceMode2D.Impulse);
-                Debug.Log("I'm less than halfway in");
-            }
-        }
     }
 	#endregion
  
@@ -1342,8 +1322,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		transform.rotation = Quaternion.Euler(0, 0, 0);// (Vector3.forward, -90);
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
-        curHP = maxHP;
-        curMP = maxMP;
 
     }
 
