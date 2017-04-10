@@ -22,7 +22,6 @@ public class UIManager : MonoBehaviour
     StealthMeter stealthMeter;
 	//The HP and MP bars
 	//public PlayerBarController hpBar, mpBar;
-	HPMPBars bars;
 
     GameObject itemManager;
 
@@ -76,9 +75,6 @@ public class UIManager : MonoBehaviour
 
 			nameBox = new ImageTextCombo("NameBox");
 			nameBox.Enabled = false;
-
-			bars = GameObject.Find("Bars").GetComponent<HPMPBars>();
-			bars.enabled = false;
 
 			dialogBox = new ImageTextCombo("DialogBox");
 			dialogBox.Enabled = false;
@@ -317,16 +313,6 @@ public class UIManager : MonoBehaviour
         dialogBox.Enabled = false;
     }
 
-	public bool InCutscene
-	{
-		set
-		{
-			bool val = !value;
-			//bars.enabled = val;
-            //stealthMeter.Enabled = val;
-		}
-	}
-
 	public void EnterArea(string s)
 	{
 		if (s != areaNameBox.text)
@@ -336,19 +322,6 @@ public class UIManager : MonoBehaviour
 			Invoke("StartFadeOut", fadeOutDelay);
 		}
 	}
-    /*
-    public float LightLevel
-    {
-        get
-        {
-            return stealthMeter.LightLevel;
-        }
-
-        set
-        {
-            stealthMeter.LightLevel = value;
-        }
-    }*/
 
 	void StartFadeOut()
 	{

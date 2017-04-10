@@ -216,15 +216,11 @@ public class Controller
 			if (key.StartsWith ("mouse")) {
 				string mouseKey = "";
 				if (key.EndsWith ("0")) {
-					mouseKey = "Left";
+					mouseKey = "LMB";
 				} else if (key.EndsWith ("1")) {
-					mouseKey = "Right";
+					mouseKey = "RMB";
 				} else if (key.EndsWith ("2")) {
-					mouseKey = "Middle";
-				}
-
-				if (leftOrUp) {
-					mouseKey += " Mouse";
+					mouseKey = "MMB";
 				}
 				return mouseKey;
 			} else if (key.Length > 1) {
@@ -232,8 +228,6 @@ public class Controller
 			} else {
 				return key.ToUpper ();
 			}
-
-			return key;
 		} else {
 			return gamepad.Translate (key, leftOrUp);
 		}

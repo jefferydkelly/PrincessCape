@@ -84,7 +84,6 @@ public class GameManager {
 
 		set
 		{
-			UIManager.Instance.InCutscene = value;
 
 			if (value)
 			{

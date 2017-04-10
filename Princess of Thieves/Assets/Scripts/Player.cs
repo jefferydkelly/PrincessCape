@@ -3,25 +3,18 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public class Player : ResettableObject, DamageableObject, CasterObject, ReflectiveObject
+public class Player : ResettableObject, CasterObject, ReflectiveObject
 {
-    private Transform startPos;
 	private Controller controller;
 	private Rigidbody2D myRigidBody;
 	private SpriteRenderer myRenderer;
-   // private Animator myAnimator;
+    private Animator myAnimator;
 
 	private int fwdX = 1;
 	public float maxSpeed = 1;
 	public float sneakSpeed = 0.5f;
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
-
-	private int curHP = 0;
-	public int maxHP = 100;
-
-	public float curMP = 0;
-	public float maxMP = 100;
 
 	PlayerState state = PlayerState.Normal;
     bool tryingToJump = false;
@@ -36,9 +29,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
     List<GameObject> startInventory;
     List<UsableItem> inventory;
     private bool usedItem;
-
-    private bool inWater = false;
-    private float percInWater = 0f; 
 
 
     //InteractiveObject highlighted;
@@ -66,8 +56,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	GameManager manager;
     void Awake()
     {
-       // transform.position = Vector2.zero;
-        startPos = transform;
 		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
 		arrowRenderer.enabled = false;
 		rangeRenderer = GetComponentsInChildren<SpriteRenderer> ()[2];
@@ -79,14 +67,10 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	// Use this for initialization
 	void Start()
 	{
-        
-        startPos = transform;
 		controller = new Controller();
 		myRigidBody = GetComponent<Rigidbody2D>();
 		myRenderer = GetComponent<SpriteRenderer>();
-        //myAnimator = GetComponent<Animator>();
-		curHP = maxHP;
-		curMP = maxMP;
+        myAnimator = GetComponent<Animator>();
 		DontDestroyOnLoad(gameObject);
         basicSprite = myRenderer.sprite;
         UIManager.Instance.UpdateUI(controller);
@@ -108,8 +92,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	{
         if (!manager.IsPaused)
         {
-           
-            curMP = Mathf.Min(curMP + Time.deltaTime * 5, maxHP); //Should this be maxMP?
             lastYVel = myRigidBody.velocity.y;
 
             if (!IsFrozen)
@@ -142,17 +124,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 						Input.ResetInputAxes ();
 					}
 				}//end climbing
-                else if (inWater)
-                {
-                    myRigidBody.AddForce(new Vector2(controller.Horizontal * 15, controller.Vertical * 25));
-                    myRigidBody.ClampVelocity(( maxSpeed  ), VelocityType.X);
-                    myRigidBody.ClampVelocity( 5, VelocityType.Y);
-                    if (Mathf.Abs(controller.Horizontal/*myRigidBody.velocity.x*/) > float.Epsilon)
-                    {
-                        fwdX = (int)Mathf.Sign(controller.Horizontal/*myRigidBody.velocity.x*/);
-                        myRenderer.flipX = (fwdX == -1);
-                    }
-                }
                 else
                 {
 					myRigidBody.AddForce (new Vector2 (controller.Horizontal * 35, 0));
@@ -328,26 +299,32 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         //Awful code, but it works
         if (IsUsingMagnetGloves)
         {
+          //  myAnimator.SetBool("CapeUse", false);
+            myAnimator.SetBool("PullUse",true);
             switch ((int)TrueAim.x)
             {
                 case 0:
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPullGloves[2];
+                            myAnimator.SetInteger("Direction", 1);
+                            // myRenderer.sprite = magPullGloves[2];
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
+                                // myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPullGloves[6];
+                            myAnimator.SetInteger("Direction", 5);
+                            // myRenderer.sprite = magPullGloves[6];
                             break;
                     }//end of internal Switch
                     break; // end of x = 0
@@ -355,20 +332,24 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPullGloves[3];
+                            myAnimator.SetInteger("Direction", 2);
+                            //myRenderer.sprite = magPullGloves[3];
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
+                                // myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPullGloves[5];
+                            myAnimator.SetInteger("Direction", 4);
+                            // myRenderer.sprite = magPullGloves[5];
                             break;
                     }//end of internal Switch
                     break;
@@ -376,20 +357,24 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPullGloves[1];
+                            myAnimator.SetInteger("Direction", 8);
+                            // myRenderer.sprite = magPullGloves[1];
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPullGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = magPullGloves[4];
                             }
                             else
                             {
-                                myRenderer.sprite = magPullGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
+                                // myRenderer.sprite = magPullGloves[0];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPullGloves[7];
+                            myAnimator.SetInteger("Direction", 6);
+                            //myRenderer.sprite = magPullGloves[7];
                             break;
                     }//end of internal Switch
                     break;
@@ -397,26 +382,27 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else if (IsUsingPushGloves)
         {
+            myAnimator.SetBool("PushUse", true);
             switch ((int)TrueAim.x)
             {
                 case 0:
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPushGloves[2];
+                            myAnimator.SetInteger("Direction", 1);
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPushGloves[6];
+                            myAnimator.SetInteger("Direction", 5);
                             break;
                     }//end of internal Switch
                     break; // end of x = 0
@@ -424,20 +410,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPushGloves[3];
+                            myAnimator.SetInteger("Direction",2);
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPushGloves[5];
+                            myAnimator.SetInteger("Direction", 4);
                             break;
                     }//end of internal Switch
                     break;
@@ -445,20 +431,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = magPushGloves[1];
+                            myAnimator.SetInteger("Direction", 8);
                             break;
                         case 0: //forward
                             if (fwdX == 1)
                             {
-                                myRenderer.sprite = magPushGloves[4];
+                                myAnimator.SetInteger("Direction", 3);
                             }
                             else
                             {
-                                myRenderer.sprite = magPushGloves[0];
+                                myAnimator.SetInteger("Direction", 7);
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = magPushGloves[7];
+                            myAnimator.SetInteger("Direction", 6);
                             break;
                     }//end of internal Switch
                     break;
@@ -466,26 +452,35 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else if (IsUsingReflectCape)
         {
+           // myAnimator.SetBool("PullUse", false);
+            myAnimator.SetBool("CapeUse", true);
             switch ((int)TrueAim.x)
             {
                 case 0:
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = capeSprites[2];
+                            myAnimator.SetInteger("Direction",1);
+                            //myRenderer.sprite = capeSprites[2];
                             break;
                         case 0: //forward
-                            if (fwdX == 1)
+                            if (fwdX <= 0)
                             {
-                                myRenderer.sprite = capeSprites[0];
+                              //  myAnimator.SetTrigger("Left");
+                                myAnimator.SetInteger("Direction", 4);
+                                // myRenderer.sprite = capeSprites[0];
                             }
                             else
                             {
-                                myRenderer.sprite = capeSprites[4];
+                            //    myAnimator.SetTrigger("Right");
+                                myAnimator.SetInteger("Direction", 3);
+                                // myRenderer.sprite = capeSprites[4];
                             }
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[2];
+                            //myAnimator.SetTrigger("Up");
+                            myAnimator.SetInteger("Direction", 1);
+                            // myRenderer.sprite = capeSprites[2];
                             break;
                     }//end of internal Switch
                     break; // end of x = 0
@@ -493,14 +488,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = capeSprites[3];
+                           // myAnimator.SetTrigger("LeftUp");
+                            myAnimator.SetInteger("Direction", 5);
+                            // myRenderer.sprite = capeSprites[3];
                             break;
                         case 0: //forward
-                                myRenderer.sprite = capeSprites[4];
+                           // myAnimator.SetTrigger("Left");
+                            myAnimator.SetInteger("Direction", 4);
+                            //myRenderer.sprite = capeSprites[4];
 
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[0];
+                          //  myAnimator.SetTrigger("Left");
+                            myAnimator.SetInteger("Direction", 4);
+                            //myRenderer.sprite = capeSprites[0];
                             break;
                     }//end of internal Switch
                     break;
@@ -508,14 +509,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                     switch ((int)TrueAim.y)
                     {
                         case 1: //up
-                            myRenderer.sprite = capeSprites[1];
+                          //  myAnimator.SetTrigger("RightUp");
+                            myAnimator.SetInteger("Direction", 2);
+                            //myRenderer.sprite = capeSprites[1];
                             break;
                         case 0: //forward
-                            myRenderer.sprite = capeSprites[0];
+                           // myAnimator.SetTrigger("Right");
+                            myAnimator.SetInteger("Direction", 3);
+                            // myRenderer.sprite = capeSprites[0];
 
                             break;
                         case -1: //down
-                            myRenderer.sprite = capeSprites[0];
+                           // myAnimator.SetTrigger("Right");
+                            myAnimator.SetInteger("Direction", 3);
+                            //myRenderer.sprite = capeSprites[0];
                             break;
                     }//end of internal Switch
                     break;
@@ -523,6 +530,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
         }
         else
         {
+            myAnimator.SetBool("PushUse", false);
+            myAnimator.SetBool("PullUse", false);
+            myAnimator.SetBool("CapeUse", false);
             myRenderer.sprite = basicSprite;
         }
 
@@ -537,21 +547,39 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 		AudioManager.Instance.PlaySound (jumpClip);
 	}
 
-	/// <summary>
-	/// Handles the Player taking damage.
-	/// </summary>
-	/// <returns><c>true</c>, if the player is killed, <c>false</c> otherwise.</returns>
-	/// <param name="ds">Ds.</param>
-	public bool TakeDamage(DamageSource ds)
-	{
-		if (ds.allegiance != Allegiance.Player)
-		{
-			curHP -= ds.damage;
-		}
+    void HandleLadder(LadderController lc, Collider2D col)
+    {
+        if (!IsClimbing)
+        {
+            if (BottomCenter.y >= lc.transform.position.y + lc.gameObject.HalfHeight() * 0.8f)
+            {
+                if (controller.Vertical < 0)
+                {
+                    col.isTrigger = true;
+                    IsClimbing = true;
+                    Vector3 pos = transform.position;
+                    pos.x = lc.transform.position.x;
+                    transform.position = pos;
+                }
+                else
+                {
+                    col.isTrigger = lc.LadderAbove;
+                }
+            }
+            else
+            {
+                col.isTrigger = true;
 
-		return curHP <= 0;
-	}
-
+                if (controller.Vertical > 0)
+                {
+                    IsClimbing = true;
+                    Vector3 pos = transform.position;
+                    pos.x = lc.transform.position.x;
+                    transform.position = pos;
+                }
+            }
+        }
+    }
 	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
 	{
@@ -589,17 +617,20 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 		} else if (col.collider.CompareTag ("Spike")) {
 			IsDead = true;
 		} else if (col.collider.CompareTag ("Ladder")) {
-			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
-				LadderController lc = col.collider.GetComponent<LadderController> ();
-				col.collider.isTrigger = lc.LadderAbove;
-			} else {
-				col.collider.isTrigger = true;
-			}
+            HandleLadder(col.collider.GetComponent<LadderController>(), col.collider);
 		}
        
 	}
 
-	void OnCollisionExit2D(Collision2D col) {
+    private void OnCollisionStay2D(Collision2D col)
+    {
+        if (col.collider.CompareTag("Ladder"))
+        {
+            HandleLadder(col.collider.GetComponent<LadderController>(), col.collider);
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D col) {
 		if (col.collider.CompareTag ("Ladder")) {
 			col.collider.isTrigger = true;
 		}
@@ -610,8 +641,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	{
 		if (col.CompareTag ("Fire")) {
 			IsDead = true;
-		} else if (col.CompareTag ("Water")) {
-			inWater = true;
 		} else if (col.CompareTag ("Projectile")) {
 			Projectile p = col.GetComponent<Projectile> ();
 			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(TrueAim.normalized))
@@ -622,16 +651,19 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
                 p.Reflected = true;
             }
 		} else if (col.CompareTag ("Ladder")) {
-			if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
-				LadderController lc = col.GetComponent<LadderController> ();
-				col.isTrigger = lc.LadderAbove;
-			} else {
-				col.isTrigger = true;
-			}
+            HandleLadder(col.GetComponent<LadderController>(), col);
 		} 
     }
 
-	void OnTriggerExit2D(Collider2D col)
+    private void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.CompareTag("Ladder"))
+        {
+            HandleLadder(col.GetComponent<LadderController>(), col);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D col)
 	{
 		if (col.CompareTag ("Ladder")) {
 			if (IsClimbing) {
@@ -657,35 +689,7 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 					}
 				}
 			}
-		}
-		if (col.CompareTag ("Water")) {
-			inWater = false;
 		} 
-
-		/*
-		if (col.OnLayer("Interactive")){
-			InteractiveObject io = col.GetComponent<InteractiveObject> ();
-
-			if (io == highlighted) {
-				highlighted.Dehighlight ();
-				highlighted = null;
-				collidingWithHighlighted = false;
-			}
-		}*/
-    }
-
-    void OnTriggerStay2D(Collider2D col)
-    {
-        //http://answers.unity3d.com/questions/879712/making-an-object-float-in-water.html
-        if (col.CompareTag("Water"))
-        {
-            //get percentage of collider under water. Apply a force opposite of that upwards. use 50% of the collider
-            if (col.transform.position.y + col.bounds.extents.y >= transform.position.y /*+GetComponent<BoxCollider2D>().bounds.center.y*/)
-            {
-                myRigidBody.AddForce(new Vector2(0, Mathf.Sign(myRigidBody.gravityScale)/8), ForceMode2D.Impulse);
-                Debug.Log("I'm less than halfway in");
-            }
-        }
     }
 	#endregion
  
@@ -716,18 +720,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 			}
 			return false;
 		} // end Get
-	}
-
-	/// <summary>
-	/// Gets the allegiance.
-	/// </summary>
-	/// <value>The allegiance.</value>
-	public Allegiance Allegiance
-	{
-		get
-		{
-			return Allegiance.Player;
-		}
 	}
 
 	/// <summary>
@@ -763,45 +755,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	public Vector3 TopCenter {
 		get {
 			return transform.position + new Vector3 (0, HalfHeight);
-		}
-	}
-	/// <summary>
-	/// Gets the percent of HP the player has.
-	/// </summary>
-	/// <value>The percent of HP the player has.</value>
-	public float HPPercent
-	{
-		get
-		{
-			return (float)curHP / (float)maxHP;
-		}
-	}
-
-	/// <summary>
-	/// Gets the mp the player has.
-	/// </summary>
-	/// <value>The mp the player has.</value>
-	public float MP
-	{
-		get
-		{
-			return curMP;
-		}
-
-		set {
-			curMP = value;
-		}
-	}
-
-	/// <summary>
-	/// Gets the percent of MP the player has.
-	/// </summary>
-	/// <value>The percent of MP the player has.</value>
-	public float MPPercent
-	{
-		get
-		{
-			return curMP / maxMP;
 		}
 	}
 
@@ -990,12 +943,9 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 	public Vector2 TrueAim {
 		get
 		{
-			Vector2 aim = new Vector2 (controller.Horizontal, controller.Vertical);
-			if (Vector2.Equals (aim, Vector2.zero)) {
-				return new Vector2(fwdX, 0);
-			}
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-			return aim;
+			return (mousePos - (Vector2)transform.position).normalized;
 		}
 	}
     /// <summary>
@@ -1369,8 +1319,6 @@ public class Player : ResettableObject, DamageableObject, CasterObject, Reflecti
 		transform.rotation = Quaternion.Euler(0, 0, 0);// (Vector3.forward, -90);
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;
-        curHP = maxHP;
-        curMP = maxMP;
 
     }
 

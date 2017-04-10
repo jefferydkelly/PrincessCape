@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class SwitchController : ActivatorObject {
     private bool activated;
-    public Sprite activatedSprite;
-    public Sprite deactivatedSprite;
-    private SpriteRenderer myRenderer;
+    Animator myAnimator;
 	public AudioClip switchSound;
 
     public void Start()
     {
 		Initialize ();
-        myRenderer = GetComponent<SpriteRenderer>();
+        myAnimator = GetComponent<Animator>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -40,15 +38,15 @@ public class SwitchController : ActivatorObject {
 	protected override void Activate ()
 	{
 		base.Activate ();
-		myRenderer.sprite = activatedSprite;
+        myAnimator.SetTrigger("Activated");
 		activated = true;
 	}
 
 	protected override void Deactivate ()
 	{
 		base.Deactivate ();
-		myRenderer.sprite = deactivatedSprite;
-		activated = false;
+        myAnimator.SetTrigger("Deactivated");
+        activated = false;
 	}
     private bool Activated
     {

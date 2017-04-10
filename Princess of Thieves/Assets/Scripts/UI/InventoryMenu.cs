@@ -7,8 +7,6 @@ public class InventoryMenu : MonoBehaviour {
 
     
     int curSelected = 0;
-    [SerializeField]
-    float waitTime = 0.25f;
 	List<InventoryItem> childImages;
 
     bool leftItemDown = false;
@@ -19,21 +17,10 @@ public class InventoryMenu : MonoBehaviour {
     {
 		childImages = GetComponentsInChildren<InventoryItem>().ToList();
         UpdateUI();
-        if (UIManager.Instance) { 
-			/*
-            InvokeRepeating("HandleInput", waitTime, waitTime);
-
-            leftItemDown = false;
-            rightItemDown = false;
-            interactDown = false;
-            showingInfo = false;
-            */
-        }
     }
 
     private void OnDisable()
     {
-        CancelInvoke();
         UIManager.Instance.HideMessage();
     }
 
@@ -41,35 +28,7 @@ public class InventoryMenu : MonoBehaviour {
     {
         if (GameManager.Instance.IsPaused)
         {
-			/*
-            if (controller.ActivateLeftItem)
-            {
-                leftItemDown = true;
-                rightItemDown = false;
-                interactDown = false;
-            }
-            else if (controller.DeactivateLeftItem)
-            {
-                leftItemDown = false;
-            }
-
-            if (controller.ActivateRightItem)
-            {
-                rightItemDown = true;
-                leftItemDown = false;
-                interactDown = false;
-            }
-            else if (controller.DeactivateRightItem)
-            {
-                rightItemDown = false;
-            }
-
-            if (controller.Interact)
-            {
-                interactDown = true;
-                leftItemDown = false;
-                rightItemDown = false;
-            }*/
+			
         }
     }
     private void HandleInput()

@@ -5,12 +5,8 @@ using System.Collections.Generic;
 
 public class PressureSwitch : ActivatorObject {
 
-	private int numberOfThingsWeighingThisDown = 0;
-    [SerializeField]
-    Sprite[] switchSprites;
+    private int numberOfThingsWeighingThisDown = 0;
     public bool triggered = false;
-
-    public bool needsHeavy = false;
 
 	[SerializeField]
 	AudioClip activatedSoundEffect;
@@ -19,10 +15,6 @@ public class PressureSwitch : ActivatorObject {
 	void Start () {
 		Initialize ();
 		anim = GetComponent<Animator> ();
-        if (triggered)
-        {
-            GetComponent<SpriteRenderer>().sprite = switchSprites[1];
-        }
 	}
 
 
@@ -30,31 +22,18 @@ public class PressureSwitch : ActivatorObject {
 	{
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
 
-        if (!needsHeavy)
+        if (rb && rb.mass >= 1 && !col.isTrigger)
         {
-            if (rb && rb.mass >= 1)
-            {
-                NumberOfThingsWeighingThisDown++;
-            }
-        }
-        else
-        {
-            if(rb && rb.gravityScale >= 4)
-            {
-                NumberOfThingsWeighingThisDown++;
-            }
+            NumberOfThingsWeighingThisDown++;
         }
 	}
 
 	void OnTriggerExit2D(Collider2D col)
 	{
 		Rigidbody2D rb = col.gameObject.GetComponent<Rigidbody2D>();
-        if (!needsHeavy)
+        if (rb && rb.mass >= 1 && !col.isTrigger)
         {
-            if (rb && rb.mass >= 1 && !needsHeavy)
-            {
-                NumberOfThingsWeighingThisDown--;
-            }
+            NumberOfThingsWeighingThisDown--;
         }
 	}
 
@@ -62,15 +41,16 @@ public class PressureSwitch : ActivatorObject {
 	{
 		set
 		{
-			anim.SetInteger ("ItemsOnTop", value);
+			
 
-			if (value == 0 && numberOfThingsWeighingThisDown > 0) {
+			if (value <= 0 && numberOfThingsWeighingThisDown > 0) {
 				Deactivate ();
 			} else if (numberOfThingsWeighingThisDown == 0 && value > 0) {
 				Activate ();
 			}
-			numberOfThingsWeighingThisDown = Mathf.Max(value, 0);
-		}
+            numberOfThingsWeighingThisDown = Mathf.Max(value, 0);
+            anim.SetInteger("ItemsOnTop", numberOfThingsWeighingThisDown);
+        }
 
 		get
 		{
