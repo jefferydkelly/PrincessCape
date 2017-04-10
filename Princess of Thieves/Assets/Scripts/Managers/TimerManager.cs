@@ -54,8 +54,7 @@ public class TimerManager : MonoBehaviour {
 				return null;
 			}
 			if (instance == null) {
-				GameObject gameObj = new GameObject ("Timer Manager");
-				DontDestroyOnLoad (gameObj);
+                GameObject gameObj = GameObject.Find("Canvas");
 				instance = gameObj.AddComponent<TimerManager> ();
 			}
 			return instance;

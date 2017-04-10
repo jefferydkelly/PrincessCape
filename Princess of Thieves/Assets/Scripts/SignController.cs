@@ -5,6 +5,10 @@ using UnityEngine;
 public class SignController : MonoBehaviour, InteractiveObject {
 	[SerializeField]
 	TextAsset sourceFile;
+    [SerializeField]
+    Texture2D readCursor;
+    [SerializeField]
+    Texture2D regMouseCursor;
 	SpriteRenderer myRenderer;
 
 	public void Start() {
@@ -17,12 +21,14 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	}
 
 	public void Highlight() {
+        CursorManager.Instance.State = CursorState.Sign;
 		UIManager.Instance.ShowInteraction ("Read");
 		myRenderer.material.color = Color.blue;
 	}
 
 	public void Dehighlight() {
-		UIManager.Instance.HideInteraction ();
+        CursorManager.Instance.State = CursorState.Normal;
+        UIManager.Instance.HideInteraction ();
 		myRenderer.material.color = Color.white;
 	}
 

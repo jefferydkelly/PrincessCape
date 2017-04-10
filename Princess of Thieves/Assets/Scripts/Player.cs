@@ -1321,7 +1321,9 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		if (rightItem && rightItem.IsActive) {
 			rightItem.Deactivate ();
 		}
-		myRigidBody.gravityScale = 1.5f;
+
+        UIManager.Instance.HideInteraction();
+        myRigidBody.gravityScale = 1.5f;
 		myRenderer.material.color = Color.white;
 		state = PlayerState.Normal;
 		transform.rotation = Quaternion.Euler(0, 0, 0);// (Vector3.forward, -90);
@@ -1341,6 +1343,22 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 			return MouseAim;
 		}
 	}
+
+    public bool HasPushGloveEquipped
+    {
+        get
+        {
+            return (leftItem && leftItem is PushGlove) || (rightItem && rightItem is PushGlove);
+        }
+    }
+
+    public bool HasPullGloveEquipped
+    {
+        get
+        {
+            return (leftItem && leftItem is PullGlove) || (rightItem && rightItem is PullGlove);
+        }
+    }
 }
 
 

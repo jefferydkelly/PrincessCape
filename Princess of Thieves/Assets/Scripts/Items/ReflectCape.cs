@@ -35,7 +35,7 @@ public class ReflectCape : UsableItem
     {
 		//GameManager.Instance.Player.Animator.SetBool("Floating", false);
         if (IsActive) {
-            
+            itemActive = false;
             GameManager.Instance.Player.ShowAimArrow = false;
 			GameManager.Instance.Player.IsUsingReflectCape = false;
 			StartCooldown ();
