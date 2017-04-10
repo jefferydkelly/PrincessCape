@@ -943,12 +943,9 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	public Vector2 TrueAim {
 		get
 		{
-			Vector2 aim = new Vector2 (controller.Horizontal, controller.Vertical);
-			if (Vector2.Equals (aim, Vector2.zero)) {
-				return new Vector2(fwdX, 0);
-			}
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-			return aim;
+			return (mousePos - (Vector2)transform.position).normalized;
 		}
 	}
     /// <summary>
