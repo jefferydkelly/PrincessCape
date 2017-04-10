@@ -7,7 +7,6 @@ using UnityEngine;
 //Cooldown coroutine doesn't run
 public class ReflectCape : UsableItem
 {
-	Timer deactivateTimer;
 	[SerializeField]
 	float timeActive = 1.0f;
 	[SerializeField]
@@ -15,9 +14,6 @@ public class ReflectCape : UsableItem
     // Use this for initialization
     void Start () {
 		CreateCooldownTimer ();
-		deactivateTimer = new Timer (() => {
-			Deactivate ();
-		}, timeActive); 
 	}
 
     // We assume that projectiles are tagged as such
