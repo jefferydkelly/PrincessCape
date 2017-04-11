@@ -258,18 +258,17 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
            
             if (leftItem != null)
             {
-				if (!UIManager.Instance.IsShowingInteraction) {
-					if (controller.ActivateLeftItem) {
+				if (controller.ActivateLeftItem) {
 
-						leftItem.Activate ();
-					} else if (leftItem.Continuous && leftItem.IsActive) {
-						if (controller.LeftItemDown) {
-							leftItem.Use ();
-						} else if (controller.DeactivateLeftItem) {
-							leftItem.Deactivate ();
-						}
+					leftItem.Activate ();
+				} else if (leftItem.Continuous && leftItem.IsActive) {
+					if (controller.LeftItemDown) {
+						leftItem.Use ();
+					} else if (controller.DeactivateLeftItem) {
+						leftItem.Deactivate ();
 					}
 				}
+				
             }
 
             if (rightItem != null)

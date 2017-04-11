@@ -15,7 +15,14 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 		startColor = myRenderer.color;
 	}
 
-	public void Interact()
+    private void Update()
+    {
+        if (!GameManager.Instance.IsPaused && GameManager.Instance.Player.Controller.Interact && Highlighted)
+        {
+            Interact();
+        }
+    }
+    public void Interact()
 	{
 		myRenderer.color = startColor;
 		UIManager.Instance.ShowInteraction("");
@@ -24,6 +31,7 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 
 	public void Highlight()
 	{
+        CursorManager.Instance.State = CursorState.Sign;
 		UIManager.Instance.ShowInteraction("Loot");
 		myRenderer.color = Color.blue;
 		//myRenderer.sprite = highlightedSprite;
@@ -31,7 +39,8 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 
 	public void Dehighlight()
 	{
-		UIManager.Instance.ShowInteraction("");
+        CursorManager.Instance.State = CursorState.Normal;
+        UIManager.Instance.ShowInteraction("");
 		myRenderer.color = startColor;
 		//myRenderer.sprite = closedSprite;
 	}
@@ -42,28 +51,33 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 		}
 	}
 
-	void OnMouseEnter() {
-		if (!GameManager.Instance.IsPaused) {
-			Highlight ();
-		}
-	}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (!GameManager.Instance.IsPaused)
+            {
+                Highlight();
+            }
+        }
+    }
 
-	void OnMouseExit() {
-		if (!GameManager.Instance.IsPaused) {
-			Dehighlight ();
-		}
-	}
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (!GameManager.Instance.IsPaused)
+        {
+            Dehighlight();
+        }
+    }
 
-	void OnMouseOver() {
-		if (Highlighted) {
-			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-				if (GameManager.Instance.Player.Controller.Interact) {
-					Interact ();
-					Input.ResetInputAxes ();
-				}
-			} else {
-				Dehighlight ();
-			}
-		}
-	}
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (!GameManager.Instance.IsPaused && !Highlighted)
+            {
+                Highlight();
+            }
+        }
+    }
 }
