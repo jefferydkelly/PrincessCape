@@ -37,6 +37,7 @@ public class MetalBlock : ResettableObject {
 
     void Highlight()
     {
+        CursorManager.Instance.State = CursorState.Metal;
         myRenderer.color = Color.blue;
         GloveItem.Highlighted = this;
     }
@@ -45,6 +46,7 @@ public class MetalBlock : ResettableObject {
     {
         if (myRenderer.color == Color.blue)
         {
+            CursorManager.Instance.State = CursorState.Normal;
             myRenderer.color = Color.white;
             GloveItem.Highlighted = null;
         }

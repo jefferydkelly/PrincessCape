@@ -52,6 +52,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 	IEnumerator Open() {
 		StopCoroutine ("Close");
 		status = SliderStatus.Opening;
+ 
 		do {
 			if (openHorizontally) {
 				transform.position += new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);
@@ -63,7 +64,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 			}
 
 			yield return null;
-		} while((openHorizontally && transform.position.x < openPos.x) || transform.position.x < openPos.y);
+		} while((openHorizontally && transform.position.x < openPos.x) || (!openHorizontally && transform.position.x < openPos.y));
 		transform.position = openPos;
 		status = SliderStatus.Open;
 	}
@@ -83,7 +84,7 @@ public class SideSlider : ResettableObject,ActivateableObject {
 				transform.position -= new Vector3(0, gameObject.HalfHeight() * 2.0f * Time.deltaTime / travelTime);
 			}
 			yield return null;
-		} while((openHorizontally && transform.position.x > closePos.x) || transform.position.y > closePos.y);
+		} while((openHorizontally && transform.position.x > closePos.x) || (!openHorizontally && transform.position.y > closePos.y));
 		foreach (Rigidbody2D rb in attachedBodies) {
 			rb.velocity = Vector2.zero;
 		}

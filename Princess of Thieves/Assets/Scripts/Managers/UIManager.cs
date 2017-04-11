@@ -18,11 +18,6 @@ public class UIManager : MonoBehaviour
 	//The text box that shows messages at the top of the screen
 	ImageTextCombo messageBox, dialogBox, nameBox;
 
-    //The Stealth Meter that displays how much light is currently shining on the player
-    StealthMeter stealthMeter;
-	//The HP and MP bars
-	//public PlayerBarController hpBar, mpBar;
-
     GameObject itemManager;
 
 	//public Image itemLeft, itemCenter, itemRight;
@@ -32,7 +27,7 @@ public class UIManager : MonoBehaviour
 	bool done = false;
 
 	ItemBox rightBox;
-    ComboBox leftBox;
+    ItemBox leftBox;
     InteractionBox interactionBox;
 
     GameObject inventoryMenu;
@@ -82,12 +77,12 @@ public class UIManager : MonoBehaviour
 			areaNameBox = GameObject.Find("AreaName").GetComponent<Text>();
 			areaNameBox.enabled = false;
 
-            leftBox = new ComboBox("LeftBox");
+            leftBox = new ItemBox("LeftBox");
 			leftBox.Enabled = true;
             rightBox = new ItemBox("RightBox");
 			rightBox.Enabled = true;
             interactionBox = new InteractionBox("InteractBox");
-			interactionBox.Enabled = false;
+            interactionBox.Enabled = true;
             
           
             inventoryMenu = GameObject.Find("InventoryMenu");
@@ -104,12 +99,6 @@ public class UIManager : MonoBehaviour
 		get
 		{
 			return instance;
-		}
-	}
-
-	public bool IsShowingInteraction {
-		get {
-			return leftBox.IsShowingInteraction;
 		}
 	}
 
@@ -162,7 +151,7 @@ public class UIManager : MonoBehaviour
 			lettersRevealed += opening.Length;
 			msg = opening + msg;
 		}
-		//interactionBox.Interaction = "Skip";
+		
 		while (lettersRevealed < msg.Length)
 		{
 			if (Input.anyKeyDown) {
@@ -175,7 +164,6 @@ public class UIManager : MonoBehaviour
 			}
 		}
 		done = true;
-		//interactionBox.Interaction = "Next";
 
 	}
 
@@ -184,7 +172,7 @@ public class UIManager : MonoBehaviour
 		yield return null;
         done = false;
         int lettersRevealed = 0;
-        //interactionBox.Interaction = "";
+        
         while (lettersRevealed < msg.Length)
         {
 			if (GameManager.Instance.Player.Controller.Interact) {
@@ -197,19 +185,18 @@ public class UIManager : MonoBehaviour
 			}
         }
 		yield return null;
-        //interactionBox.Interaction = "Next";
+  
         while (!GameManager.Instance.Player.Controller.Interact)
         {
             
             yield return null;
         }
-        //interactionBox.Interaction = "";
+        
         done = true;
     }
 
 	IEnumerator NextElement()
 	{
-		//interactionBox.Interaction = "";
 		yield return new WaitForEndOfFrame();
 		revealing = false;
 		GameManager.Instance.Cutscene.NextElement();
@@ -245,9 +232,6 @@ public class UIManager : MonoBehaviour
 	 */
 	public void ShowMessage(string msg)
 	{
-        //bars.enabled = false;
-        //stealthMeter.Enabled = false;
-
         messageBox.Enabled = true;
 		messageBox.Text = msg;
 	}
@@ -270,7 +254,6 @@ public class UIManager : MonoBehaviour
     public void ShowMessage(string msg, float time)
 	{   
         GameManager.Instance.IsInCutscene = true;
-        //stealthMeter.Enabled = false;
        
         messageBox.Enabled = true;
         messageBox.Text = msg;
@@ -300,8 +283,6 @@ public class UIManager : MonoBehaviour
 	//Hides the message in the message box
 	public void HideMessage()
 	{
-		//bars.enabled = true;
-        //stealthMeter.Enabled = true;
         messageBox.Enabled = false;
         dialogBox.Enabled = false;
         HideInteraction();
@@ -358,25 +339,18 @@ public class UIManager : MonoBehaviour
             rightBox.ItemSprite = p.RightItem;
         }
         rightBox.Key = c.RightItemKey;
-        //interactionBox.Key = c.InteractKey.ToUpper();
+        interactionBox.Key = c.InteractKey.ToUpper();
         inventoryMenu.GetComponent<InventoryMenu>().UpdateUI();
     }
 
     public void ShowInteraction(string s)
     {
-		if (s.Length > 0) {
-			leftBox.ShowInteraction (s);
-		} else {
-			leftBox.HideInteraction ();
-		}
-		/*
         interactionBox.Enabled = true;
         interactionBox.Interaction = s;
-        */
     }
 
 	public void HideInteraction() {
-		leftBox.HideInteraction ();
+        ShowInteraction("");
 	}
 
 	public ItemBox LeftItemBox {
@@ -399,7 +373,7 @@ public class UIManager : MonoBehaviour
 		set {
 			rightBox.Enabled = value;
 			leftBox.Enabled = value;
-			//interactionBox.Enabled = value;
+			interactionBox.Enabled = value;
 		}
 	}
 
@@ -407,11 +381,9 @@ public class UIManager : MonoBehaviour
 		set {
 			leftAligned = value;
 			if (value) {
-				//dialogBox.txt.alignment = TextAnchor.UpperLeft;
 				nameBox.bg.rectTransform.anchoredPosition = new Vector2 (-1190, -600);
 			} else {
 				nameBox.bg.rectTransform.anchoredPosition= new Vector2(1190, -600);
-				//dialogBox.txt.alignment = TextAnchor.UpperRight;
 			}
 		}
 	}

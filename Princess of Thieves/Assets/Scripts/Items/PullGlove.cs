@@ -85,10 +85,10 @@ public override void Activate()
 
 
 					if (Mathf.Abs(hitNormal.y) <= 0.1f) {
-						moveDir += player.TrueAim.YVector () * 1.15f;
+						moveDir += player.KeyAim.YVector () * 1.15f;
 					}  
 					if (Mathf.Abs (hitNormal.x) <= 0.1f) {
-						Vector2 xv = player.TrueAim.XVector ();
+						Vector2 xv = player.KeyAim.XVector ();
 
 						if (Vector2.Dot (moveDir, xv) >= 0) {
 							moveDir += xv * 5;
@@ -101,7 +101,7 @@ public override void Activate()
 						ForceMode2D.Force);
 				} else {
 					if (Mathf.Abs (hitNormal.y) <= 0.1f) {
-						moveDir -= player.TrueAim.YVector ();
+						moveDir -= player.KeyAim.YVector ();
 					}
 						
 					moveDir.Normalize ();

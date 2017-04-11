@@ -13,9 +13,6 @@ public abstract class UsableItem : MonoBehaviour {
 	/// The name of the item.
 	/// </summary>
     public string itemName;
-    
-	public int activationManaCost;
-	public int manaPerSecondCost;
 
 	/// <summary>
 	/// The description.

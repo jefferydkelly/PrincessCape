@@ -119,10 +119,17 @@ public class LightBeam : MonoBehaviour {
             myChild.Source = ro.GameObject.transform.position;
             
             myChild.transform.parent = transform.parent;
-      
-            myChild.Forward = ro.SurfaceForward.Rotated(rot);
-         
-            myChild.transform.Rotate(Vector3.forward,  myChild.Forward.GetAngle().ToDegrees());
+
+            if (ro.GameObject.CompareTag("Player"))
+            {
+                myChild.Forward = ro.SurfaceForward;
+                myChild.transform.rotation = Quaternion.AngleAxis(ro.SurfaceForward.GetAngle().ToDegrees(), Vector3.forward);
+            }
+            else
+            {
+                myChild.Forward = ro.SurfaceForward.Rotated(rot);
+                myChild.transform.Rotate(Vector3.forward, myChild.Forward.GetAngle().ToDegrees());
+            }
             
             myChild.scale = scale;
             myChild.closestDistance = maxRange;
@@ -167,7 +174,7 @@ public class LightBeam : MonoBehaviour {
         scale.x = closestDistance;
         transform.localScale = scale;
         
-        Vector3 pos = source + (Vector3)(fwd * (scale.x + 1) / 2);
+        Vector3 pos = source + (Vector3)(fwd * (scale.x) / 2);
         pos.z = 1;
         transform.position = pos;
     }
