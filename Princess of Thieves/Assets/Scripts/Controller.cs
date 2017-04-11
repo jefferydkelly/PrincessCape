@@ -57,7 +57,7 @@ public class Controller
             upKey = "w";
             downKey = "s";
             jumpKey = "space";
-            interactKey = "mouse 0";
+            interactKey = "f";
             rightItemKey = "mouse 1";
 			leftItemKey = "mouse 0";
 			pauseKey = "p";

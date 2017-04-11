@@ -29,36 +29,6 @@ public class BlockController : ResettableObject, InteractiveObject {
 		myRenderer.color = highlightedColor;
     }
 
-	void OnMouseEnter() {
-		if (GameManager.Instance.Player.CanInteract) {
-			Highlight ();
-		}
-	}
-
-	void OnMouseExit() {
-		if (GameManager.Instance.Player.CanInteract) {
-			Dehighlight ();
-		}
-	}
-
-	void OnMouseOver() {
-		if (GameManager.Instance.Player.CanInteract) {
-			if (Highlighted) {
-				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-					if (GameManager.Instance.Player.Controller.Interact) {
-						Input.ResetInputAxes ();
-						Interact ();
-
-					}
-				} else if (!beingPushed) {
-					Dehighlight ();
-				}
-			} else {
-				Highlight ();
-			}
-		}
-	}
-
     public void Interact()
     {
 		if (!GameManager.Instance.IsPaused) {
@@ -94,11 +64,14 @@ public class BlockController : ResettableObject, InteractiveObject {
 
 			if (hit.collider == null) { // we stop running into things
 				LetGo();
-			} else if (Input.GetMouseButtonDown (0)) {
+			} else if (GameManager.Instance.Player.Controller.Interact) {
 				LetGo ();
 				Input.ResetInputAxes ();
 			}
-		}
+		} else if (Highlighted && !GameManager.Instance.IsPaused && GameManager.Instance.Player.Controller.Interact)
+        {
+            Interact();
+        }
 	}
 
 	void LetGo() {
@@ -116,14 +89,29 @@ public class BlockController : ResettableObject, InteractiveObject {
         Collider2D col = collision.collider;
 		if (col.CompareTag ("Slider") && !beingPushed) {
 			myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
-		}
+		} else if (col.CompareTag("Player"))
+        {
+            Highlight();
+        }
 	}
 
 	void OnCollisionExit2D(Collision2D collision) {
 		if (collision.collider.CompareTag ("Slider") && !beingPushed) {
 			myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 		}
-	}
+        else if (collision.collider.CompareTag("Player"))
+        {
+            Dehighlight();
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player") && !Highlighted)
+        {
+            Highlight();
+        }
+    }
 
     public Vector3 Move(Vector3 movement)
     {

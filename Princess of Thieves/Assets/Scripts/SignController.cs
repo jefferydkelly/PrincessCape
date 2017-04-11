@@ -5,12 +5,25 @@ using UnityEngine;
 public class SignController : MonoBehaviour, InteractiveObject {
 	[SerializeField]
 	TextAsset sourceFile;
+    [SerializeField]
+    Texture2D readCursor;
+    [SerializeField]
+    Texture2D regMouseCursor;
 	SpriteRenderer myRenderer;
 
 	public void Start() {
 		myRenderer = GetComponent<SpriteRenderer> ();
 	}
-	public void Interact() {
+
+    private void Update()
+    {
+        if (!GameManager.Instance.IsPaused && GameManager.Instance.Player.Controller.Interact && Highlighted)
+        {
+            Interact();
+        }
+    }
+
+    public void Interact() {
 		myRenderer.material.color = Color.white;
         UIManager.Instance.HideMessage();
 		GameManager.Instance.StartCutscene (sourceFile);
@@ -22,40 +35,42 @@ public class SignController : MonoBehaviour, InteractiveObject {
 	}
 
 	public void Dehighlight() {
-		UIManager.Instance.HideInteraction ();
+        UIManager.Instance.HideInteraction ();
 		myRenderer.material.color = Color.white;
 	}
 
-	void OnMouseEnter() {
-		if (!GameManager.Instance.IsPaused) {
-			if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-				Highlight ();
-			}
-		}
-	}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (!GameManager.Instance.IsPaused)
+            {
+                Highlight();
+            }
+        }
+    }
 
-	void OnMouseExit() {
-		if (!GameManager.Instance.IsPaused) {
-			Dehighlight ();
-		}
-	}
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (!GameManager.Instance.IsPaused && !Highlighted)
+            {
+                Highlight();
+            }
+        }
+    }
 
-	void OnMouseOver() {
-		if (!GameManager.Instance.IsPaused) {
-			if (Highlighted) {
-				if (GameManager.Instance.InPlayerInteractRange (gameObject)) {
-					if (GameManager.Instance.Player.Controller.Interact) {
-						Interact ();
-						Input.ResetInputAxes ();
-					}
-				} else {
-					Dehighlight ();
-				}
-			} else {
-				Highlight ();
-			}
-		}
-	}
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (!GameManager.Instance.IsPaused)
+            {
+                Dehighlight();
+            }
+        }
+    }
 
 	bool Highlighted {
 		get {
