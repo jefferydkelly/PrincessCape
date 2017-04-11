@@ -31,7 +31,6 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 
 	public void Highlight()
 	{
-        CursorManager.Instance.State = CursorState.Sign;
 		UIManager.Instance.ShowInteraction("Loot");
 		myRenderer.color = Color.blue;
 		//myRenderer.sprite = highlightedSprite;
@@ -39,7 +38,6 @@ public class KnightCorpse : JDMappableObject, InteractiveObject {
 
 	public void Dehighlight()
 	{
-        CursorManager.Instance.State = CursorState.Normal;
         UIManager.Instance.ShowInteraction("");
 		myRenderer.color = startColor;
 		//myRenderer.sprite = closedSprite;

@@ -20,7 +20,13 @@ public class CameraManager : MonoBehaviour {
 	static bool isClosing = false;
 	static bool addedFunction = false;
 	GameManager manager;
-
+    [SerializeField]
+    Texture2D fadeTexture;
+    bool fading = false;
+    int fadeDir = 1;
+    float fadeTime = 4.0f;
+    float alpha = 1.0f;
+    string sceneToLoad = "";
 	void Awake() {
 		if (!addedFunction) {
 			SceneManager.sceneLoaded += DetermineCameraInstance;
@@ -51,6 +57,7 @@ public class CameraManager : MonoBehaviour {
 				instance = null;
 			}
 		} else {
+            fwd = (int)target.Forward.x;
 			CenterCamera ();
 		}
 	}
@@ -184,4 +191,55 @@ public class CameraManager : MonoBehaviour {
 			return Camera.main.ScreenToWorldPoint (mousePos);
 		}
 	}
+
+    private void OnGUI()
+    {
+        if (fading)
+        {
+            Color guiColor = GUI.color;
+            alpha -= fadeDir * Time.deltaTime / fadeTime;
+            alpha = Mathf.Clamp01(alpha);
+            guiColor.a -= alpha;
+
+            GUI.color = guiColor;
+            GUI.depth = -1000;
+           
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), fadeTexture);
+
+            if (alpha == 1)
+            {
+                GameManager.Instance.Player.IsFrozen = false;
+            } else if (alpha == 0)
+            {
+                SceneManager.LoadScene(sceneToLoad);
+                fadeDir = 0;
+                SceneManager.sceneLoaded += FadeIntoScene;
+            }
+        }
+    }
+
+    private void FadeIntoScene(Scene arg0, LoadSceneMode arg1)
+    {
+        fadeDir = -1;
+        SceneManager.sceneLoaded -= FadeIntoScene;
+    }
+
+    public void FadeOutToNewScene(string sceneName)
+    {
+        if (!fading || fadeDir == 1)
+        {
+            GameManager.Instance.Player.IsFrozen = true;
+            sceneToLoad = sceneName;
+            fading = true;
+            fadeDir = 1;
+        }
+    }
+}
+
+public enum CameraState
+{
+    NotFading,
+    FadingIn,
+    FadingOut,
+    FadePaused
 }
