@@ -9,7 +9,8 @@ public class GloveItem : UsableItem {
 			GloveItem.target.GetComponent<SpriteRenderer> ().color = Color.white;
 			GloveItem.target = null;
 		}}, 0.5f);
-	protected static int range = 10;
+
+    protected static int range = 10;
     protected static MetalBlock highlighted;
 	public float maxTargetSpeed = 60f;
 	public float force = 100;
@@ -23,13 +24,15 @@ public class GloveItem : UsableItem {
 	protected static GloveItem activeGlove;
 	protected Vector2 hitNormal;
 	protected Vector2 hitPos;
-
-	[SerializeField]
+    [SerializeField]
+    GameObject waveSprite;
+    [SerializeField]
 	protected float difWeight = 0.5f;
 	[SerializeField]
 	protected float aimWeight = 0.5f;
 
-	public override void Activate ()
+
+    public override void Activate ()
 	{
 		
 	}
@@ -44,6 +47,22 @@ public class GloveItem : UsableItem {
 		
 	}
 
+    /// <summary>
+    /// Creates a wave that will move to target
+    /// </summary>
+    /// <param name="tar">The target that the waves will move to</param>
+    public void ProjectWave(GameObject tar)
+    {
+        //float xDiff = tar.transform.position.x - transform.position.x;
+        //float yDiff = tar.transform.position.y - transform.position.y;
+        //double temp =  Mathf.Atan2(yDiff, xDiff) * 180.0 / Mathf.PI;
+        //Quaternion tempQ = transform.rotation;
+        GameObject wave = Instantiate(waveSprite, GameManager.Instance.Player.transform.position, transform.rotation);
+        // (mousePos - (Vector2)transform.position).normalized;
+        wave.transform.rotation = Quaternion.AngleAxis(
+            ((Vector2)(tar.transform.position-GameManager.Instance.Player.transform.position).normalized).GetAngle().ToDegrees() - 90, Vector3.forward);
+        wave.GetComponent<tempWaveScript>().target = tar;
+    }
 	protected void FindTarget() {
         /*
         if (highlighted == null)
@@ -83,10 +102,10 @@ public class GloveItem : UsableItem {
 				targetBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 			}
 			target.GetComponent<SpriteRenderer> ().color = lineColor;
-			lineRenderer.enabled = true;
-            lineRenderer.startColor = lineColor;
-            lineRenderer.endColor = lineColor;
-			lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
+			//lineRenderer.enabled = true;
+   //         lineRenderer.startColor = lineColor;
+   //         lineRenderer.endColor = lineColor;
+			//lineRenderer.SetPositions (new Vector3[]{ player.transform.position, target.transform.position });
 			player.HideMagnetRange ();
 		} else {
 			targetIsHeavier = false;
