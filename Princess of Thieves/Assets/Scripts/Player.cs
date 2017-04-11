@@ -1324,7 +1324,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         UIManager.Instance.HideInteraction();
         myRigidBody.gravityScale = 1.5f;
 		myRenderer.material.color = Color.white;
-		state = PlayerState.Normal;
+		state = PlayerState.CanFloat;
 		transform.rotation = Quaternion.Euler(0, 0, 0);// (Vector3.forward, -90);
         myRigidBody.velocity = Vector2.zero;
         transform.position = Checkpoint.ActiveCheckpointPosition;

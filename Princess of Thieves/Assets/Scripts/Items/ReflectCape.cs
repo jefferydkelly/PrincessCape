@@ -38,7 +38,10 @@ public class ReflectCape : UsableItem
             itemActive = false;
             GameManager.Instance.Player.ShowAimArrow = false;
 			GameManager.Instance.Player.IsUsingReflectCape = false;
-			StartCooldown ();
+            if (!GameManager.Instance.Player.IsDead)
+            {
+                StartCooldown();
+            }
 		}
 
     }
