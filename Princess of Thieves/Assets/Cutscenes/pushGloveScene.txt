@@ -1,8 +1,5 @@
-character Liam Knights/NewSirLiam-1
+character Liam Knights/MuscleKnight
 show Liam -0.5 2.5
-flip-x Liam
-scalex Liam 0.25 0
-scaley Liam 0.15 0
 alpha Liam 0
 fade Liam 0.5 0.5
 Sir Liam: By the night's sky, you are alive.

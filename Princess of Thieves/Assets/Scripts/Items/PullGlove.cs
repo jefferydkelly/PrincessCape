@@ -6,7 +6,7 @@ public class PullGlove : GloveItem {
 
 	// Use this for initialization
 	PushPullDirection direction;
-
+    Timer ProjectWaveTimer;
 	private void Start()
 	{
 		player = GameManager.Instance.Player;
@@ -14,12 +14,19 @@ public class PullGlove : GloveItem {
 		lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.enabled = false;
 		lineColor = Color.blue;
-	}
+        ProjectWaveTimer = new Timer(() => {
+            if (GloveItem.target)
+            {
+                ProjectWave(GloveItem.target);
+            }
+        }, 0.25f, true);
+
+}
 
 
-	public override void Activate()
+public override void Activate()
 	{
-		
+      
 		player.IsUsingMagnetGloves = true;
 
 		if (activeGlove && activeGlove.IsActive) {
@@ -30,9 +37,12 @@ public class PullGlove : GloveItem {
 
 		itemActive = true;
 		FindTarget ();
-
-		if (target) {
-			ResetTargetTimer.Stop ();
+        
+       // InvokeRepeating("ProjectWave", 0, 0.5f);
+        if (target) {
+            ProjectWaveTimer.Reset();
+            ProjectWaveTimer.Start();
+            ResetTargetTimer.Stop ();
 
 			if (!targetIsHeavier)
 			{
@@ -43,8 +53,7 @@ public class PullGlove : GloveItem {
 					}
 				}
 			}
-		}
-			
+		}	
 	}
 
 	public override void Use()
@@ -101,25 +110,27 @@ public class PullGlove : GloveItem {
 						ForceMode2D.Force);
 					targetBody.ClampVelocity (maxTargetSpeed);
 				}
-				lineRenderer.SetPositions (new Vector3[] { player.transform.position, target.transform.position });
+				//lineRenderer.SetPositions (new Vector3[] { player.transform.position, target.transform.position });
 			}
 		}
 	}
 		
 	public override void Deactivate()
 	{
-		player.IsUsingMagnetGloves = false;
+        
+        player.IsUsingMagnetGloves = false;
 		if (target) {
 			target.GetComponent<SpriteRenderer> ().color = Color.white;
 		}
         playerBody.constraints &= ~RigidbodyConstraints2D.FreezePosition;
 		targetIsHeavier = true;
-		lineRenderer.enabled = false;
+		//lineRenderer.enabled = false;
 		itemActive = false;
 		player.HideMagnetRange ();
 		ResetTargetTimer.Reset ();
 		ResetTargetTimer.Start ();
-	}
+        ProjectWaveTimer.Stop();
+    }
 
 }
 

@@ -24,8 +24,12 @@ public class LevelEndDoor : MonoBehaviour {
                 GameObject pgo = GameManager.Instance.Player.gameObject;
                 Destroy(pgo);
                 GameManager.Instance.EndGame();
+                SceneManager.LoadScene(nextScene);
+            } else
+            {
+                CameraManager.Instance.FadeOutToNewScene(nextScene);
             }
-            SceneManager.LoadScene (nextScene);
+            
 		}
 	}
 }
