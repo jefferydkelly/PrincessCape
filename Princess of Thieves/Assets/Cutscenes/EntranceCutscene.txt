@@ -44,12 +44,12 @@ Sir Matthew: Hot!
 move-x Matthew -13 2.0
 flip-x Matthew
 move-x Matthew -5 1
-move-x Matthew -3 0.25
+move-x Matthew -4 0.25
 rotate Matthew -90 0.25
-move Matthew -1.75 0.5 0.25
+move Matthew -2.75 0.5 0.25
 Sir Matthew: I'm....so...sorry!
 fade-out Matthew 0.5
-create Prefabs/MatthewCorpse -1.75 0.75 0.25
+create Prefabs/MatthewCorpse -2.75 2.00 0.25
 Elwynn: What do I do now?
 move-x Elwynn -2 0.5
 Elwynn: What is that?  His cape is still intact.
