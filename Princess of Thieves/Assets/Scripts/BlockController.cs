@@ -19,7 +19,10 @@ public class BlockController : ResettableObject, InteractiveObject {
 	}
     public void Dehighlight()
     {
-		UIManager.Instance.HideInteraction ();
+        if (!beingPushed)
+        {
+            UIManager.Instance.HideInteraction();
+        }
 		myRenderer.color = regularColor;
     }
 
@@ -75,6 +78,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 	}
 
 	void LetGo() {
+        UIManager.Instance.HideInteraction();
 		GameManager.Instance.Player.IsPushing = false;
 		myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 		beingPushed = false;

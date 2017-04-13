@@ -14,7 +14,7 @@ italics true
 You took the Magic Cape from Sir Matthew!
 Press [[LeftItemKey]] to activate it.
 In the air, you'll float for a short time.
-On the ground, aim with the [[AimKeys]] and you'll reflect anything that hits you in that direction.
+On the ground, aim with the Mouse and you'll reflect light and projectiles.
 destroy MatthewCorpse
 wait 0.5
 italics false
