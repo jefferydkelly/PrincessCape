@@ -996,8 +996,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 					rightItem.Deactivate ();
 				}
 				state = PlayerState.IsClimbing;
-				myRigidBody.gravityScale = 0;
-				UIManager.Instance.ShowInteraction ("Get Off");
+                myRigidBody.gravityScale = 0;
 
 			}else
 			{
@@ -1069,8 +1068,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				//myAnimator.SetBool ("FWD", false);
             }
             else
-            {
-				UIManager.Instance.HideInteraction ();
+            { 
                 state &= ~PlayerState.Pushing;
                 state &= ~PlayerState.Frozen;
             }
