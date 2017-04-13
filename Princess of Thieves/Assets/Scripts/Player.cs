@@ -85,11 +85,14 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		resetTimer = new Timer (() => {
 			manager.Reset();
 		}, 0.33f);
-      
 	}
 
 	void FixedUpdate()
 	{
+        if (myRenderer.flipX)
+        {
+            Debug.Break();
+        }
         if (!manager.IsPaused)
         {
             lastYVel = myRigidBody.velocity.y;
