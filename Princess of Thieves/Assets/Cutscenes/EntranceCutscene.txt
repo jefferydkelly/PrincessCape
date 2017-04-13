@@ -5,7 +5,7 @@ pan to Player 0
 pan -6 2 0
 disable Player
 align right
-show Elwynn -1 1.25
+show Elwynn -1 1.5
 swap-sprite Elwynn ElwynnSprites/ElwynnNewCurious
 Elwynn: Kidnapped by another dragon?
 move-x Elwynn -3 1.5

@@ -89,10 +89,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 
 	void FixedUpdate()
 	{
-        if (myRenderer.flipX)
-        {
-            Debug.Break();
-        }
         if (!manager.IsPaused)
         {
             lastYVel = myRigidBody.velocity.y;
@@ -165,7 +161,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 
 						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
 							fwdX = (int)Mathf.Sign (controller.Horizontal);
-							myRenderer.flipX = (fwdX == -1);
+							myRenderer.flipX = (fwdX == 1);
 						}
 					}
 
@@ -237,11 +233,13 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		if (!manager.IsPaused) {
 			tryingToInteract = controller.Interact;
 			if (!IsFrozen) {
+                /*
 				if (fwdX < 0) {
                     myRenderer.flipX = false;
-				} else {
+				} else if (fwdX > 0) {
+                    Debug.Log("Flippendo");
                     myRenderer.flipX = true;
-                }
+                }*/
 			}
 
 			/*
@@ -1045,7 +1043,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		highlightedBody = bc.GetComponent<Rigidbody2D>();
 		float dx = Mathf.Sign ((highlightedBody.transform.position - transform.position).x);
 		fwdX = (int)dx;
-		myRenderer.flipX = (fwdX == -1);
+		myRenderer.flipX = (fwdX == 1);
 		transform.position = highlightedBody.transform.position - dx * new Vector3(HalfWidth + bc.gameObject.HalfWidth (), 0);
 		IsPushing = true;
 	}
