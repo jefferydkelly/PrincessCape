@@ -16,6 +16,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	public float jumpImpulse = 10;
 	private float lastYVel = 0;
 
+    [SerializeField]
 	PlayerState state = PlayerState.Normal;
     bool tryingToJump = false;
 	bool tryingToInteract = false;
@@ -1061,14 +1062,16 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         {
 			if (value /*&& highlighted != null*/ && !IsPushing && !IsFrozen)
             {
-
+                Debug.Log("I'm pushing");
                 UIManager.Instance.ShowInteraction("Let Go");
-                state |= PlayerState.Pushing;
+                state = PlayerState.Pushing;
                 state |= PlayerState.Frozen;
+                state |= PlayerState.CanFloat;
 				//myAnimator.SetBool ("FWD", false);
             }
             else
-            { 
+            {
+                Debug.Log("I'm not");
                 state &= ~PlayerState.Pushing;
                 state &= ~PlayerState.Frozen;
             }
@@ -1218,6 +1221,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		}
 	}
 
+    public void ResetStatus()
+    {
+        state = PlayerState.CanFloat;
+    }
 	public bool IsDead {
 		get {
 			return (state & PlayerState.Dead) > 0;

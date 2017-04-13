@@ -128,6 +128,10 @@ public class BlockController : ResettableObject, InteractiveObject {
             transform.position += movement;
         }
 
+        Player p = GameManager.Instance.Player;
+        Vector3 pos = p.transform.position;
+        pos.x = transform.position.x + p.Forward.x * (p.HalfWidth + gameObject.HalfWidth());
+        p.transform.position = pos;
         return transform.position;
     }
 }
