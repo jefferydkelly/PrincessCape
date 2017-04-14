@@ -104,7 +104,10 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	}
 
 	void OnDestroy() {
-		fireTimer.Stop ();
+        if (fireTimer != null)
+        {
+            fireTimer.Stop();
+        }
 	}
 	public void Activate() {
 		if (!fireTimer.Activated || cooled) {

@@ -5,10 +5,7 @@ using UnityEngine;
 public class SignController : MonoBehaviour, InteractiveObject {
 	[SerializeField]
 	TextAsset sourceFile;
-    [SerializeField]
-    Texture2D readCursor;
-    [SerializeField]
-    Texture2D regMouseCursor;
+  
 	SpriteRenderer myRenderer;
 
 	public void Start() {
