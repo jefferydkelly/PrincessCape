@@ -305,7 +305,7 @@ public class Controller
 
 	public string ResetKey {
 		get {
-			return Translate (pauseKey);
+			return Translate (restartKey);
 		}
 	}
 
