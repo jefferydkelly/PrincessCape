@@ -355,8 +355,8 @@ public class Controller
            // {
                 controls += "Jump: " + JumpKey + "\n";
                 controls += "Interact: " + InteractKey + "\n";
-				controls += "Left Item: " + Translate(leftKey, true) + "\n";
-				controls += "Right Item: " + Translate(rightKey, true) + "\n";
+				controls += "Left Item: " + Translate(leftItemKey, true) + "\n";
+				controls += "Right Item: " + Translate(rightItemKey, true) + "\n";
                 controls += "Pause/Inventory: " + PauseKey + "\n";
                 controls += "Reset: " + ResetKey + "\n";
             //}
