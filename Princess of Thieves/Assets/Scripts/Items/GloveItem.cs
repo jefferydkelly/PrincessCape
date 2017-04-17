@@ -53,15 +53,9 @@ public class GloveItem : UsableItem {
     /// <param name="tar">The target that the waves will move to</param>
     public void ProjectWave(GameObject tar)
     {
-        //float xDiff = tar.transform.position.x - transform.position.x;
-        //float yDiff = tar.transform.position.y - transform.position.y;
-        //double temp =  Mathf.Atan2(yDiff, xDiff) * 180.0 / Mathf.PI;
-        //Quaternion tempQ = transform.rotation;
-        GameObject wave = Instantiate(waveSprite, GameManager.Instance.Player.transform.position, transform.rotation);
-        // (mousePos - (Vector2)transform.position).normalized;
-        wave.transform.rotation = Quaternion.AngleAxis(
-            ((Vector2)(tar.transform.position-GameManager.Instance.Player.transform.position).normalized).GetAngle().ToDegrees() - 90, Vector3.forward);
-        wave.GetComponent<tempWaveScript>().target = tar;
+        tempWaveScript wave = Instantiate(waveSprite, GameManager.Instance.Player.transform.position, transform.rotation).GetComponent<tempWaveScript>();
+        
+        wave.target = tar;
     }
 	protected void FindTarget() {
         /*
