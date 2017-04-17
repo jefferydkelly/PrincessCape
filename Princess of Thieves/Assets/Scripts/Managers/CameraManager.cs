@@ -49,8 +49,6 @@ public class CameraManager : MonoBehaviour {
 
 					CenterCamera ();
 
-				} else {
-					Destroy (gameObject);
 				}
 			} else {
 				isClosing = true;
@@ -208,7 +206,8 @@ public class CameraManager : MonoBehaviour {
 
             if (alpha == 1)
             {
-                //GameManager.Instance.Player.IsFrozen = false;
+                GameManager.Instance.Player.ResetStatus();
+                fading = false;
             } else if (alpha == 0)
             {
                 SceneManager.LoadScene(sceneToLoad);

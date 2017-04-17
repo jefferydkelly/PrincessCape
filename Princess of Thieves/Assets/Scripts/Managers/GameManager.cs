@@ -172,8 +172,6 @@ public class GameManager {
                     go.GetComponent<Player>().Remove();
 				}
 			}
-
-            player.ResetStatus();
 		}
 		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag ("Checkpoint");
 
