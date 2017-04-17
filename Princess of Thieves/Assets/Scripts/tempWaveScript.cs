@@ -5,7 +5,7 @@ using UnityEngine;
 public class tempWaveScript : MonoBehaviour
 {
     public GameObject target;
-    float curScaleY;
+    float curScaleX;
     // Use this for initialization
     void Start()
     {
@@ -23,8 +23,8 @@ public class tempWaveScript : MonoBehaviour
         //0.2
         transform.position = Vector3.MoveTowards(transform.position, target.transform.position, 0.25f);
         transform.rotation = Quaternion.AngleAxis(((Vector2)(target.transform.position - transform.position)).GetAngle().ToDegrees() - 90, Vector3.forward);
-        //transform.localScale = new Vector3(0, curScaleY+0.1f, 0);
-        //curScaleY = transform.localScale.y;
+        transform.localScale = new Vector3(curScaleX + 0.1f, 1, 1);
+        curScaleX = transform.localScale.x;
     }
 
 
