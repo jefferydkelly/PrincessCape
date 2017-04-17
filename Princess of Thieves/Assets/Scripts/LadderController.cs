@@ -30,9 +30,13 @@ public class LadderController : JDMappableObject {
 
 	void OnDestroy() {
 
-		if (collidingWithPlayer && GameManager.Instance.Player.IsClimbing) {
-			GameManager.Instance.Player.IsClimbing = false;
-		}
+        if (GameManager.Instance.Player != null)
+        {
+            if (collidingWithPlayer && GameManager.Instance.Player.IsClimbing)
+            {
+                GameManager.Instance.Player.IsClimbing = false;
+            }
+        }
 	}
 
 	void OnTriggerEnter2D(Collider2D col) {

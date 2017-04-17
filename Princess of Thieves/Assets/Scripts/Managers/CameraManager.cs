@@ -10,7 +10,7 @@ public class CameraManager : MonoBehaviour {
     int fwd = 1;
     private Camera cam;
 	public Canvas canvas;
-    public float playerOffsetPercent = 0.08f;
+    public float playerOffsetPercent = 0.25f;
     Vector3 screenSize;
     Vector3 vel = Vector3.zero;
 	Vector3 playerPos = new Vector3 ();
@@ -34,25 +34,26 @@ public class CameraManager : MonoBehaviour {
 	}
 
     void DetermineCameraInstance(Scene scene, LoadSceneMode lsm) {
-		if (instance != this) {
-			if (scene.name.StartsWith ("JD") || (scene.name.StartsWith ("Rose"))) {
-				if (instance == null || isClosing) {
-					isClosing = false;
-					instance = this;
-					manager = GameManager.Instance;
-					DontDestroyOnLoad (gameObject);
+        if (instance != this) {
+            if (instance == null)
+            {
+                if (scene.name.StartsWith("JD") || (scene.name.StartsWith("Rose")))
+                {
+                    isClosing = false;
+                    instance = this;
+                    manager = GameManager.Instance;
+                    DontDestroyOnLoad(gameObject);
 
-					cam = GetComponent<Camera> ();
-					canvas.gameObject.SetActive (true);
+                    cam = GetComponent<Camera>();
+                    canvas.gameObject.SetActive(true);
 
-					DontDestroyOnLoad (AudioManager.Instance.AttachedObject);
+                    DontDestroyOnLoad(AudioManager.Instance.AttachedObject);
 
-					CenterCamera ();
-
-				}
+                    CenterCamera();
+                }
 			} else {
-				isClosing = true;
-				instance = null;
+                SceneManager.sceneLoaded -= DetermineCameraInstance;
+                Destroy(gameObject);
 			}
 		} else {
             fwd = (int)target.Forward.x;
