@@ -5,15 +5,21 @@ using UnityEngine;
 public class PushGlove : GloveItem{
 
 	PushPullDirection direction;
-
-	private void Start()
+    Timer ProjectWaveTimer;
+    private void Start()
 	{
 		player = GameManager.Instance.Player;
 		playerBody = player.GetComponent<Rigidbody2D>();
 		lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.enabled = false;
 		lineColor = Color.red;
-	}
+        ProjectWaveTimer = new Timer(() => {
+            if (target)
+            {
+                ProjectWave(target);
+            }
+        }, 0.25f, true);
+    }
 
 
 	public override void Activate()
@@ -30,8 +36,11 @@ public class PushGlove : GloveItem{
 		FindTarget ();
 
 		if (target) {
-			ResetTargetTimer.Stop ();
-			if (!targetIsHeavier)
+            ProjectWave(target);
+            ProjectWaveTimer.Reset();
+            ProjectWaveTimer.Start();
+            ResetTargetTimer.Stop();
+            if (!targetIsHeavier)
 			{
 				if (!Physics2D.BoxCast (target.transform.position, Vector2.one, 0, Vector2.up, 1.0f, 1 << LayerMask.NameToLayer ("Player"))) {
 					playerBody.constraints |= RigidbodyConstraints2D.FreezePositionX;
@@ -113,9 +122,10 @@ public class PushGlove : GloveItem{
 		targetIsHeavier = true;
 		lineRenderer.enabled = false;
 		itemActive = false;
-		ResetTargetTimer.Reset ();
-		ResetTargetTimer.Start ();
-		player.HideMagnetRange ();
+        player.HideMagnetRange();
+        ResetTargetTimer.Reset();
+        ResetTargetTimer.Start();
+        ProjectWaveTimer.Stop();
         playerBody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }
