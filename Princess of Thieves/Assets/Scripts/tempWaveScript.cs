@@ -29,7 +29,8 @@ public class tempWaveScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.name.Contains("Metal"))
+        
+        if (col.OnLayer("Metal"))
         {
             Destroy(gameObject);
         }
