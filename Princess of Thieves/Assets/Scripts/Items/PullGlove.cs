@@ -15,9 +15,9 @@ public class PullGlove : GloveItem {
 		lineRenderer.enabled = false;
 		lineColor = Color.blue;
         ProjectWaveTimer = new Timer(() => {
-            if (GloveItem.target)
+            if (target)
             {
-                ProjectWave(GloveItem.target);
+                ProjectWave(target);
             }
         }, 0.25f, true);
 
@@ -40,6 +40,7 @@ public override void Activate()
         
        // InvokeRepeating("ProjectWave", 0, 0.5f);
         if (target) {
+            ProjectWave(target);
             ProjectWaveTimer.Reset();
             ProjectWaveTimer.Start();
             ResetTargetTimer.Stop ();
