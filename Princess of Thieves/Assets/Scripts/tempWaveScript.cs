@@ -9,7 +9,7 @@ public class tempWaveScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        curScaleY = transform.localScale.y;
+        curScaleX = transform.localScale.x;
     }
 
     // Update is called once per frame
