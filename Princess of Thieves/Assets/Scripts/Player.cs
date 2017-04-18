@@ -25,7 +25,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     [SerializeField]
     GameObject startItemObject;
     UsableItem leftItem;
-    public UsableItem rightItem;
+    UsableItem rightItem;
     [SerializeField]
     List<GameObject> startInventory;
     List<UsableItem> inventory;
@@ -857,11 +857,27 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		}
 	}
 
+    public UsableItem LeftItem
+    {
+        get
+        {
+            return leftItem;
+        }
+    }
+
+    public UsableItem RightItem
+    {
+        get
+        {
+            return rightItem;
+        }
+    }
+
 	/// <summary>
 	/// Gets the sprite for the left item.
 	/// </summary>
 	/// <value>The left item's sprite.  Null otherwise.</value>
-    public Sprite LeftItem
+    public Sprite LeftItemSprite
     {
         get
         {
@@ -873,7 +889,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	/// Gets the sprite for the right item.
 	/// </summary>
 	/// <value>The right item's sprite if there is one.  Null otherwise.</value>
-    public Sprite RightItem
+    public Sprite RightItemSprite
     {
         get
         {
@@ -1324,7 +1340,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		if (rightItem && rightItem.IsActive) {
 			rightItem.Deactivate ();
 		}
-
+        inventory = Checkpoint.OldInventory;
+        leftItem = Checkpoint.OldLeft;
+        rightItem = Checkpoint.OldRight;
+        UIManager.Instance.UpdateUI();
         UIManager.Instance.HideInteraction();
         myRigidBody.gravityScale = 1.5f;
 		myRenderer.material.color = Color.white;

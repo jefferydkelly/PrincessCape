@@ -52,15 +52,30 @@ public class CameraManager : MonoBehaviour {
                     CenterCamera();
                 }
 			} else {
-                SceneManager.sceneLoaded -= DetermineCameraInstance;
                 Destroy(gameObject);
 			}
 		} else {
-            fwd = (int)target.Forward.x;
-			CenterCamera ();
+            if (scene.name.StartsWith("JD") || (scene.name.StartsWith("Rose")))
+            {
+                fwd = (int)target.Forward.x;
+                CenterCamera();
+            } else
+            {
+                fading = false;
+                
+                isClosing = true;
+                instance = null;
+                Destroy(gameObject);
+            }
+            
 		}
 	}
-	void CenterCamera() {
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= DetermineCameraInstance;
+    }
+    void CenterCamera() {
 		target = GameManager.Instance.Player;
 		Vector3 camPos = target.transform.position;
 		camPos.z = -10;
@@ -234,12 +249,4 @@ public class CameraManager : MonoBehaviour {
             fadeDir = 1;
         }
     }
-}
-
-public enum CameraState
-{
-    NotFading,
-    FadingIn,
-    FadingOut,
-    FadePaused
 }
