@@ -39,16 +39,19 @@ public struct ActivatorConnection
 
     public void Dectivate()
     {
-        ActivateableObject activated = activatedObject.GetComponent<ActivateableObject>();
-        if (activated != null)
+        if (activatedObject)
         {
-            if (inverted)
+            ActivateableObject activated = activatedObject.GetComponent<ActivateableObject>();
+            if (activated != null)
             {
-                activated.Activate();
-            }
-            else
-            {
-                activated.Deactivate();
+                if (inverted)
+                {
+                    activated.Activate();
+                }
+                else
+                {
+                    activated.Deactivate();
+                }
             }
         }
     }
