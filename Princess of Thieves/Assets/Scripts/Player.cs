@@ -134,31 +134,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 						if (tryingToJump) {
                         
 							Jump ();
-						} /*else if (!collidingWithHighlighted) {
-                     
-							RaycastHit2D hit = Physics2D.BoxCast (transform.position - fwdX * new Vector3 (0.5f, 0), new Vector2 (1.0f, 1.5f), 0, Forward, 1, 1 << LayerMask.NameToLayer ("Interactive"));
-
-							if (hit.collider != null) {
-								InteractiveObject io = hit.collider.GetComponent<InteractiveObject> ();
-
-								if (io != null) {
-									if (io != highlighted) {
-										if (highlighted != null) {
-											highlighted.Dehighlight ();
-										}
-
-										highlighted = io;
-                               
-										highlighted.Highlight ();
-									}
-								}
-                            
-							} else if (highlighted != null) {
-								highlighted.Dehighlight ();
-								highlighted = null;
-							}
-                        
-						}*/
+						} 
 
 						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
 							fwdX = (int)Mathf.Sign (controller.Horizontal);
@@ -167,37 +143,20 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 					}
 
 				} 
-				/*
-				if (highlighted != null) {
-					if (controller.Interact) {
-						highlighted.Interact ();
-					}
-				}*/
+			
             }
             else if (IsDashing && IsOnGround && tryingToJump)
             {
                 Jump();
             } else if (IsPushing && highlightedBody)
             {
-				/*
-                if (Controller.Interact)
-                {
-                    highlightedBody.gameObject.GetComponent<InteractiveObject>().Interact();
-                }*/
-
                 Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
                 
-                //highlightedBody.Translate(blockMove);
-                //myRigidBody.Translate(blockMove);
                 Vector3 move = highlightedBody.GetComponent<BlockController>().Move(blockMove);
                 move.x -= fwdX *(HalfWidth + highlightedBody.gameObject.HalfWidth());
                 move.y = transform.position.y;
                 transform.position = move;
-                /*
-                Vector2 pos = highlightedBody.position;
-				pos.x = transform.position.x + fwdX * (HalfWidth + highlightedBody.gameObject.HalfWidth ());
-				highlightedBody.position = pos;
-                */
+          
                 Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;
 				highlightedBody.velocity = vel;
@@ -233,30 +192,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         }
 		if (!manager.IsPaused) {
 			tryingToInteract = controller.Interact;
-			if (!IsFrozen) {
-                /*
-				if (fwdX < 0) {
-                    myRenderer.flipX = false;
-				} else if (fwdX > 0) {
-                    Debug.Log("Flippendo");
-                    myRenderer.flipX = true;
-                }*/
-			}
-
-			/*
-            if (controller.PeerDown)
-            {
-                Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y-0.5f, Camera.main.transform.position.z));
-            }
-            else if (controller.PeerUp)
-            {
-                Camera.main.transform.position = (new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y + 0.5f, Camera.main.transform.position.z));
-            }
-            else if(!controller.PeerUp && !controller.PeerDown)
-            {
-                //of course this wouldn't work
-                Camera.main.transform.Rotate(new Vector3(0, 0, 0));
-            }*/
            
             if (leftItem != null)
             {
@@ -1104,10 +1039,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         }
         set
         {
-			if (value && !IsUsingReflectCape && !IsFrozen)
+            if (value && !IsUsingReflectCape && !IsFrozen)
 			{
-				state |= PlayerState.UsingReflectCape;
-
+                state |= PlayerState.UsingReflectCape;
+                
 				if (!IsOnGround && CanFloat) {
 					CanFloat = false;
 					myRigidBody.velocity = myRigidBody.velocity.XVector();
@@ -1118,7 +1053,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				//	myAnimator.SetBool ("FWD", false);
 				}
 			}
-			else
+			else if (!value && IsUsingReflectCape)
 			{
 				state &= ~PlayerState.UsingReflectCape;
 				state &= ~PlayerState.Frozen;
@@ -1263,14 +1198,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		set {
 			arrowRenderer.enabled = value;
 		}
-	}
-
-	public void HighlightedDestroyed(InteractiveObject io) {
-		/*
-		if (io == highlighted) {
-			highlighted = null;
-			highlightedBody = null;
-		}*/
 	}
 
 	public void ShowMagnetRange(Color c) {

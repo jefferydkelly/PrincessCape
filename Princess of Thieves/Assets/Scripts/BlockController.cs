@@ -44,7 +44,7 @@ public class BlockController : ResettableObject, InteractiveObject {
 				myRigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
 				GameManager.Instance.Player.Push (this);
 			} else {
-				
+                Debug.Log("Let it go");
 				beingPushed = false;
 				myRigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
 				GameManager.Instance.Player.IsPushing = false;
