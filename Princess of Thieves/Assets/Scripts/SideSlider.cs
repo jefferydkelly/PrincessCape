@@ -14,15 +14,8 @@ public class SideSlider : ResettableObject,ActivateableObject {
 	Vector3 openPos;
 	Vector3 closePos;
 
-	List<Rigidbody2D> attachedBodies;
-	[SerializeField]
-	float frictionForce = 0.025f;
-	[SerializeField]
-	bool isActivationInverted = false;
-
 	// Use this for initialization
 	void Start () {
-		attachedBodies = new List<Rigidbody2D> ();
 		startPosition = transform.position;
 		if (startOpen) {
 			openPos = transform.position;
@@ -56,9 +49,6 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		do {
 			if (openHorizontally) {
 				transform.position += new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);
-				foreach (Rigidbody2D rb in attachedBodies) {
-					rb.AddForce(new Vector2(frictionForce, 0));
-				}
 			} else {
 				transform.position += new Vector3(0, gameObject.HalfHeight() * 2.0f * Time.deltaTime / travelTime);
 			}
@@ -76,18 +66,12 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		do {
 			if (openHorizontally) {
 				transform.position -= new Vector3(gameObject.HalfWidth() * 2.0f * Time.deltaTime / travelTime, 0);;
-
-				foreach (Rigidbody2D rb in attachedBodies) {
-					rb.AddForce(new Vector2(-frictionForce, 0));
-				}
 			} else {
 				transform.position -= new Vector3(0, gameObject.HalfHeight() * 2.0f * Time.deltaTime / travelTime);
 			}
 			yield return null;
 		} while((openHorizontally && transform.position.x > closePos.x) || (!openHorizontally && transform.position.y > closePos.y));
-		foreach (Rigidbody2D rb in attachedBodies) {
-			rb.velocity = Vector2.zero;
-		}
+		
 		transform.position = closePos;
 		status = SliderStatus.Closed;
 	}
@@ -118,20 +102,6 @@ public class SideSlider : ResettableObject,ActivateableObject {
 		get {
 			return travelTime;
 		}
-	}
-
-	public bool IsInverted {
-		get {
-			return isActivationInverted;
-		}
-	}
-
-	void OnCollisionEnter2D(Collision2D collision) {
-		attachedBodies.Add (collision.rigidbody);
-	}
-
-	void OnCollisionExit2D(Collision2D collision) {
-		attachedBodies.Remove (collision.rigidbody);
 	}
 }
 
