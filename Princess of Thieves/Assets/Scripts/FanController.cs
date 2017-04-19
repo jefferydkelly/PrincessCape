@@ -13,10 +13,10 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	float range = 10;
 	[SerializeField]
 	bool isActive = false;
-	bool isPushingPlayer = false;
+	
 	[SerializeField]
 	bool isActivationInverted = false;
-	LineRenderer lineRenderer;
+
 	FanBlast blast;
 	// Use this for initialization
 	void Start () {
@@ -70,7 +70,6 @@ public class FanController : MonoBehaviour, ActivateableObject {
 	public void Deactivate() {
 		isActive = false;
 		blast.gameObject.SetActive (false);
-		lineRenderer.enabled = false;
 	}
 
 	public bool IsActive {

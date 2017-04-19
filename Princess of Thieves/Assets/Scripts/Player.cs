@@ -150,12 +150,28 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                 Jump();
             } else if (IsPushing && highlightedBody)
             {
-                Vector2 blockMove = controller.InputDirection.XVector() * maxSpeed * Time.deltaTime / 2;
-                
-                Vector3 move = highlightedBody.GetComponent<BlockController>().Move(blockMove);
-                move.x -= fwdX *(HalfWidth + highlightedBody.gameObject.HalfWidth());
-                move.y = transform.position.y;
-                transform.position = move;
+                Vector2 input = controller.InputDirection.XVector();
+                if (input.x / fwdX < 0)
+                {
+                    Vector3 move = new Vector3(-fwdX * maxSpeed * Time.deltaTime / 2, 0);
+                    RaycastHit2D hit = Physics2D.BoxCast(transform.position, new Vector2(1, 1), 0, new Vector2(-fwdX, 0), move.x);
+
+                    if (hit)
+                    {
+                        move.x = hit.distance * -fwdX;
+                    }
+                    transform.position += move;
+                    highlightedBody.GetComponent<BlockController>().Move(move);
+                }
+                else
+                {
+                    Vector2 blockMove = input * maxSpeed * Time.deltaTime / 2;
+
+                    Vector3 move = highlightedBody.GetComponent<BlockController>().Move(blockMove);
+                    move.x -= fwdX * (HalfWidth + highlightedBody.gameObject.HalfWidth());
+                    move.y = transform.position.y;
+                    transform.position = move;
+                }
           
                 Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;

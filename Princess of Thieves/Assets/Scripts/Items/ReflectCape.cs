@@ -8,8 +8,6 @@ using UnityEngine;
 public class ReflectCape : UsableItem
 {
 	[SerializeField]
-	float timeActive = 1.0f;
-	[SerializeField]
 	AudioClip capeFX;
     // Use this for initialization
     void Start () {
