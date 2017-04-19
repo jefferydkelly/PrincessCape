@@ -21,7 +21,7 @@ public class LightBeam : MonoBehaviour {
     }
     private void Update()
     {
-        if (closest && reflectedOff.IsReflecting)
+        if (closest && reflectedOff != null && reflectedOff.IsReflecting)
         {
             if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
             {
@@ -31,13 +31,11 @@ public class LightBeam : MonoBehaviour {
                     closestDistance = dot;
                     Reflect(reflectedOff);
                 }
-            } else
-            {
-                RemoveChildren();
             }
-        } else
+        } else if (myChild)
         {
             RemoveChildren();
+            Resize();
         }
     }
     void OnTriggerEnter2D(Collider2D col) {
@@ -76,8 +74,8 @@ public class LightBeam : MonoBehaviour {
 
             if (ro != null && ro.IsReflecting)
             {
-                if (closest != col.gameObject)
-                {
+                //if (closest != col.gameObject)
+                //{
                     if (fwd.Dot(ro.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
                     {
                         closest = col.gameObject;
@@ -85,7 +83,7 @@ public class LightBeam : MonoBehaviour {
                         closestDistance = dot;
                         Resize();
                     }
-                }
+                //}
             }
             else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
             {
@@ -99,6 +97,7 @@ public class LightBeam : MonoBehaviour {
 
 	void OnTriggerExit2D(Collider2D col) {
         if (col.gameObject == closest) {
+
 			RemoveChildren ();
 			closestDistance = maxRange;
 			closest = null;
@@ -144,22 +143,23 @@ public class LightBeam : MonoBehaviour {
             myChild.Resize();
         } else {
 			RemoveChildren ();
-			closestDistance = Mathf.Infinity;
+			closestDistance = maxRange;
 			closest = null;
 			reflectDirection = Vector2.zero;
 		}
 	}
 
 	public void RemoveChildren() {
-        closest = null;
-        closestDistance = maxRange;
-        reflectDirection = Vector2.zero;
+        
+        //closest = null;
+        //closestDistance = maxRange;
+        //reflectDirection = Vector2.zero;
 		if (myChild != null) {
 			myChild.RemoveChildren ();
 			Destroy (myChild.gameObject);
 			myChild = null;
-            closest = null;
-            closestDistance = maxRange;
+            //closest = null;
+            //closestDistance = maxRange;
             Resize();
         }
 	}
@@ -171,6 +171,22 @@ public class LightBeam : MonoBehaviour {
     }
     void Resize()
     {
+        RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
+        if (hit && !(hit.collider.name.Contains("Sign") || hit.collider.name.Contains("Ladder")))
+        {
+            ReflectiveObject ro = hit.collider.GetComponent<ReflectiveObject>();
+            if (ro != null && ro.IsReflecting)
+            {
+                reflectDirection = ro.SurfaceForward;
+                reflectedOff = ro;
+                closest = hit.collider.gameObject;
+                closestDistance = hit.distance;
+            }
+
+        } else
+        {
+            closestDistance = maxRange;
+        }
         scale.x = closestDistance;
         transform.localScale = scale;
         
