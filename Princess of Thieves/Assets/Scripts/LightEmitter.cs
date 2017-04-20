@@ -12,8 +12,7 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 	[SerializeField]
 	bool startActive = false;
 	bool isActive = false;
-	[SerializeField]
-	bool isActivationInverted = false;
+	
 	LightBeam myLight;
 
     Animator myAnimator;
@@ -99,12 +98,6 @@ public class LightEmitter : MonoBehaviour, ActivateableObject {
 	public float ActivationTime {
 		get {
 			return 0;
-		}
-	}
-
-	public bool IsInverted {
-		get {
-			return isActivationInverted;
 		}
 	}
 }

@@ -43,10 +43,10 @@ public class LightBeam : MonoBehaviour {
         Vector2 dif = col.transform.position - source;
         
         float dot = fwd.Dot(dif);
-
+    
         if (dot > 0.01 && dot < closestDistance) {
             if (ro != null && ro.IsReflecting) {
-                if (fwd.Dot(ro.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
+                if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
                 {
                     closest = col.gameObject;
                     reflectedOff = closest.GetComponent<ReflectiveObject>();
@@ -76,7 +76,7 @@ public class LightBeam : MonoBehaviour {
             {
                 //if (closest != col.gameObject)
                 //{
-                    if (fwd.Dot(ro.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
+                    if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
                     {
                         closest = col.gameObject;
                         reflectedOff = closest.GetComponent<ReflectiveObject>();
@@ -107,7 +107,7 @@ public class LightBeam : MonoBehaviour {
 	}
 
 	void Reflect(ReflectiveObject ro) {
-        
+      
         float rot = (ro.SurfaceForward.GetAngle() - (-fwd).GetAngle());
         if (ro.IsReflecting) {
             RemoveChildren ();
