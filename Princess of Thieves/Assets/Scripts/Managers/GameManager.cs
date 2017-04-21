@@ -8,15 +8,11 @@ public class GameManager {
 	GameState state;
 	Player player;
 	Cutscene cutscene;
+    public string lastSceneName = "";
 
 	private GameManager()
-	{
-		state = GameState.Play;
-        GameObject pObj = GameObject.FindWithTag("Player");
-        if (pObj) {
-            player = pObj.GetComponent<Player>();
-        }
-		SceneManager.sceneLoaded += OnSceneLoaded;
+	{	
+	    SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     /// <summary>
@@ -161,32 +157,52 @@ public class GameManager {
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode ls)
 	{
-		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Player");
-		if (gos.Length > 1) {
-			if (player == null) {
-				player = gos [0].GetComponent<Player>();
-			}
+        if (scene.name.Contains("JD") || scene.name.Contains("Rose"))
+        {
+            state = GameState.Play;
 
-			foreach (GameObject go in gos) {
-				if (go != player.gameObject) {
-                    go.GetComponent<Player>().Remove();
-				}
-			}
-		}
-		GameObject[] checkpoints = GameObject.FindGameObjectsWithTag ("Checkpoint");
+            if (lastSceneName.Contains("JD") || lastSceneName.Contains("Rose")) { 
+            GameObject[] gos = GameObject.FindGameObjectsWithTag("Player");
+                if (gos.Length > 1)
+                {
+                    if (player == null)
+                    {
+                        player = gos[0].GetComponent<Player>();
+                    }
 
-		if (checkpoints.Length > 0) {
-			foreach (GameObject go in checkpoints) {
-				if (go.GetComponent<Checkpoint> ().IsFirst) {
-					Vector3 pos = go.transform.position;
-					pos.z = 0;
-					Player.transform.position = pos;
-					break;
-				}
-			}
-		
-		}
+                    foreach (GameObject go in gos)
+                    {
+                        if (go != player.gameObject)
+                        {
+                            go.GetComponent<Player>().Remove();
+                        }
+                    }
+                }
+            } else
+            {
+                player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            }
+            GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
 
+            if (checkpoints.Length > 0)
+            {
+                foreach (GameObject go in checkpoints)
+                {
+                    if (go.GetComponent<Checkpoint>().IsFirst)
+                    {
+                        Vector3 pos = go.transform.position;
+                        pos.z = 0;
+                        Player.transform.position = pos;
+                        break;
+                    }
+                }
+
+            }
+        } else
+        {
+            player.Remove();
+        }
+        lastSceneName = scene.name;
 	}
 
     public void Reset()
