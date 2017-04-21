@@ -173,9 +173,8 @@ public class LightBeam : MonoBehaviour {
     void Resize()
     {
         RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
-        if (hit && !(hit.collider.name.Contains("Sign") || hit.collider.name.Contains("Ladder")))
+        if (hit)
         {
-            Debug.Log("I hit something");
             ReflectiveObject ro = hit.collider.GetComponent<ReflectiveObject>();
             if (ro != null && ro.IsReflecting)
             {
