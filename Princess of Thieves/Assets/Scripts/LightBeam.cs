@@ -28,12 +28,13 @@ public class LightBeam : MonoBehaviour {
                 float dot = fwd.Dot(closest.transform.position - source);
                 if (reflectedOff.SurfaceForward != reflectDirection || (dot != closestDistance && dot < maxRange))
                 {
+                    Debug.Log("Reflecting");
                     closestDistance = dot;
                     Reflect(reflectedOff);
                 }
             }
         } else if (myChild)
-        {
+        {   
             RemoveChildren();
             Resize();
         }
@@ -174,6 +175,7 @@ public class LightBeam : MonoBehaviour {
         RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
         if (hit && !(hit.collider.name.Contains("Sign") || hit.collider.name.Contains("Ladder")))
         {
+            Debug.Log("I hit something");
             ReflectiveObject ro = hit.collider.GetComponent<ReflectiveObject>();
             if (ro != null && ro.IsReflecting)
             {

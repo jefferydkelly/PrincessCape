@@ -68,6 +68,7 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
     {
         if (collision.OnLayer("Light"))
         {
+            Debug.Break();
             myLight = null;
             Deactivate();
         }
