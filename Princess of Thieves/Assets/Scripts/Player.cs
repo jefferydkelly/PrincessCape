@@ -659,7 +659,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 
 			int finalMask = mask | mask2;
 			if (!IsClimbing) {
-				finalMask |= (1 << LayerMask.NameToLayer ("Interactive"));
+				finalMask |= (1 << LayerMask.NameToLayer ("Ladder"));
 			}
             Vector2 down = new Vector2(0, -Mathf.Sign(myRigidBody.gravityScale));
 			RaycastHit2D hit = Physics2D.BoxCast (transform.position, new Vector2 (HalfWidth, HalfHeight + 0.1f), 0, down, 0.5f, finalMask); 

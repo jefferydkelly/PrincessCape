@@ -1,12 +1,13 @@
-character Liam Knights/MuscleKnight
-show Liam -0.5 2.5
-alpha Liam 0
-fade Liam 0.5 0.5
-Sir Liam: By the night's sky, you are alive.
-Sir Liam: In life, I was known as Sir Liam of House Brien, the Sneak Knight.
-Sir Liam: Thanks to my magic item, I was known for being wherever my enemies least suspected me.
-Sir Liam: With my magnetic Push Glove, I would push myself and my enemies around making sure no one could get to me.
-Sir Liam: I have no more need of it.  Please take it and escape this dragon's lair.
+character Christopher Knights/MuscleKnight
+show Christopher -0.5 2.5
+alpha Christopher 0
+fade Christopher 0.5 0.5
+Sir Christopher: Princess?  You're alive.  The gods truely are strong.
+Sir Christopher: In life, I was known as Sir Christopher of House Strongarm, the Brawn Knight.
+Sir Christopher: Everyone thought my ability to move myself and my enemies around was from my muscles...
+Sir Chrisopher: But, no, it was truely from a magic item that has been passed down the Strongarm line for generations!
+Sir Christopher: With my magnetic Push Glove, I would push myself and my enemies around making sure no one could get to me.
+Sir Christopher: I have no more need of it.  Please take my true strength and use it to escape this dragon's lair.
 add Prefabs/PushGlove
 italics true
 You got the Push Glove.
