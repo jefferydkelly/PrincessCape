@@ -28,7 +28,6 @@ public class LightBeam : MonoBehaviour {
                 float dot = fwd.Dot(closest.transform.position - source);
                 if (reflectedOff.SurfaceForward != reflectDirection || (dot != closestDistance && dot < maxRange))
                 {
-                    Debug.Log("Reflecting");
                     closestDistance = dot;
                     Reflect(reflectedOff);
                 }
@@ -40,13 +39,18 @@ public class LightBeam : MonoBehaviour {
         }
     }
     void OnTriggerEnter2D(Collider2D col) {
-		ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
+       
+        ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
         Vector2 dif = col.transform.position - source;
         
         float dot = fwd.Dot(dif);
     
         if (dot > 0.01 && dot < closestDistance) {
             if (ro != null && ro.IsReflecting) {
+                if (name.Contains("Clone"))
+                {
+                    print("I am a clone and I hit " + col.name);
+                }
                 if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
                 {
                     closest = col.gameObject;
@@ -66,18 +70,26 @@ public class LightBeam : MonoBehaviour {
 	}
 
     void OnTriggerStay2D(Collider2D col) {
+       
         Vector2 dif = col.transform.position - source;
         float dot = fwd.Dot(dif);
-        
+        if (name.Contains("Clone"))
+        {
+            print(closestDistance);
+        }
         if (dot > 0.01 && dot < closestDistance)
         {
             ReflectiveObject ro = col.GetComponent<ReflectiveObject>();
 
             if (ro != null && ro.IsReflecting)
             {
+                if (name.Contains("Clone"))
+                {
+                    print("I am a clone and I hit " + col.name);
+                }
                 //if (closest != col.gameObject)
                 //{
-                    if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
                     {
                         closest = col.gameObject;
                         reflectedOff = closest.GetComponent<ReflectiveObject>();
@@ -127,6 +139,8 @@ public class LightBeam : MonoBehaviour {
             }
             else
             {
+                rot = Mathf.Round(rot.ToDegrees()).ToRadians();
+                
                 myChild.Forward = ro.SurfaceForward.Rotated(rot);
                 myChild.transform.Rotate(Vector3.forward, myChild.Forward.GetAngle().ToDegrees());
             }
@@ -136,7 +150,7 @@ public class LightBeam : MonoBehaviour {
             RaycastHit2D hit = Physics2D.BoxCast(myChild.source, Vector2.one, 0, myChild.fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
             if (hit && !hit.collider.gameObject.name.Contains("Sign") && hit.collider.gameObject != closest)
             { 
-                myChild.scale.x = hit.distance;
+                myChild.scale.x = hit.distance + 1;
                 myChild.closestDistance = hit.distance;
             }
 
@@ -188,10 +202,10 @@ public class LightBeam : MonoBehaviour {
         {
             closestDistance = maxRange;
         }
-        scale.x = closestDistance;
+        scale.x = closestDistance + 1;
         transform.localScale = scale;
         
-        Vector3 pos = source + (Vector3)(fwd * (scale.x) / 2);
+        Vector3 pos = source + (Vector3)(fwd * scale.x / 2);
         pos.z = 1;
         transform.position = pos;
     }
@@ -203,7 +217,33 @@ public class LightBeam : MonoBehaviour {
 
 		set {
 			fwd = value;
-		}
+
+            if (fwd.x > .99 && fwd.x < 1)
+            {
+                fwd.x = 1;
+            }
+            else if (fwd.x < -0.99 && fwd.x > -1)
+            {
+                fwd.x = -1;
+            }
+            else if ((fwd.x < 0.01 && fwd.x > 0) || (fwd.x > 0.01 && fwd.x < 0))
+            {
+                fwd.x = 0;
+            }
+
+            if (fwd.y > .99 && fwd.y < 1)
+            {
+                fwd.y = 1;
+            }
+            else if (fwd.y < -0.99 && fwd.y > -1)
+            {
+                fwd.y = -1;
+            }
+            else if ((fwd.y < 0.01 && fwd.y > 0) || (fwd.y > 0.01 && fwd.y < 0))
+            {
+                fwd.y = 0;
+            }
+        }
 	}
 
 	public Vector3 Source {
