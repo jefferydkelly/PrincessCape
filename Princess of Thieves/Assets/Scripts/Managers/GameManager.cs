@@ -200,7 +200,10 @@ public class GameManager {
             }
         } else
         {
-            player.Remove();
+            if (player != null)
+            {
+                player.Remove();
+            }
         }
         lastSceneName = scene.name;
 	}

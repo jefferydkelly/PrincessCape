@@ -1240,7 +1240,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 
     public void Remove()
     {
-        Destroy(gameObject);
+        if (gameObject)
+        {
+            Destroy(gameObject);
+        }
     }
 
     /// <summary>
@@ -1283,9 +1286,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		if (rightItem && rightItem.IsActive) {
 			rightItem.Deactivate ();
 		}
-        inventory = Checkpoint.OldInventory;
-        leftItem = Checkpoint.OldLeft;
-        rightItem = Checkpoint.OldRight;
+        
         UIManager.Instance.UpdateUI();
         UIManager.Instance.HideInteraction();
         myRigidBody.gravityScale = 1.5f;
