@@ -13,7 +13,7 @@ public class LightBeam : MonoBehaviour {
 	Vector2 reflectDirection = Vector2.zero;
     public float maxRange = 0;
     Vector3 scale;
-
+    bool playerWasReflectingBefore = false;
     private void Start()
     {
         scale = new Vector3(transform.localScale.x, 1, 1);
@@ -25,8 +25,8 @@ public class LightBeam : MonoBehaviour {
         {
             if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
             {
-                float dot = fwd.Dot(closest.transform.position - source);
-                if (reflectedOff.SurfaceForward != reflectDirection || (dot != closestDistance && dot < maxRange))
+                float dot = Mathf.Round(fwd.Dot(closest.transform.position - source) * 100) / 100;
+                if (reflectedOff.SurfaceForward != reflectDirection || (Mathf.Abs(dot - closestDistance) > 0.1f && dot < maxRange))
                 {
                     closestDistance = dot;
                     Reflect(reflectedOff);
@@ -39,71 +39,84 @@ public class LightBeam : MonoBehaviour {
         }
     }
     void OnTriggerEnter2D(Collider2D col) {
-       
-        ReflectiveObject ro = col.GetComponent<ReflectiveObject> ();
-        Vector2 dif = col.transform.position - source;
-        
-        float dot = fwd.Dot(dif);
-    
-        if (dot > 0.01 && dot < closestDistance) {
-            if (ro != null && ro.IsReflecting) {
-                if (name.Contains("Clone"))
+        if (!col.OnLayer("Light"))
+        {
+           
+            ReflectiveObject ro = col.GetComponent<ReflectiveObject>();
+            Vector2 dif = col.transform.position - source;
+
+            float dot = fwd.Dot(dif);
+          
+            if (dot > 0.01 && dot < closestDistance)
+            {
+                if (col.CompareTag("Player"))
                 {
-                    print("I am a clone and I hit " + col.name);
+                    playerWasReflectingBefore = ro.IsReflecting;
                 }
-                if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                if (ro != null && ro.IsReflecting)
+                {
+
+                    if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                    { 
+                        closest = col.gameObject;
+                        reflectedOff = closest.GetComponent<ReflectiveObject>();
+                        closestDistance = Mathf.Round(dot * 100) / 100;
+                        Resize();
+                        Reflect(reflectedOff);
+                    }
+
+                }
+                else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
                 {
                     closest = col.gameObject;
-                    reflectedOff = closest.GetComponent<ReflectiveObject>();
-                    closestDistance = dot;
+                    reflectedOff = null;
+                    closestDistance = Mathf.Round(dot * 100) / 100;
                     Resize();
                 }
-
-            } else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
-            {
-                closest = null;
-                reflectedOff = null;
-                closestDistance = dot;
-                Resize();
             }
         }
 	}
 
     void OnTriggerStay2D(Collider2D col) {
-       
-        Vector2 dif = col.transform.position - source;
-        float dot = fwd.Dot(dif);
-        if (name.Contains("Clone"))
-        {
-            print(closestDistance);
-        }
-        if (dot > 0.01 && dot < closestDistance)
-        {
-            ReflectiveObject ro = col.GetComponent<ReflectiveObject>();
 
-            if (ro != null && ro.IsReflecting)
+        if (!col.OnLayer("Light"))
+        {
+            Vector2 dif = col.transform.position - source;
+            float dot = fwd.Dot(dif);
+
+            if (dot > 0.01 && dot < closestDistance)
             {
-                if (name.Contains("Clone"))
+                ReflectiveObject ro = col.GetComponent<ReflectiveObject>();
+
+                if (ro != null && ro.IsReflecting)
                 {
-                    print("I am a clone and I hit " + col.name);
-                }
-                //if (closest != col.gameObject)
-                //{
-                if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                    
+                    if (closest != col.gameObject || (col.CompareTag("Player") && !playerWasReflectingBefore))
                     {
-                        closest = col.gameObject;
-                        reflectedOff = closest.GetComponent<ReflectiveObject>();
-                        closestDistance = dot;
-                        Resize();
+                        if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                        {
+                            closest = col.gameObject;
+                            reflectedOff = ro;
+                            closestDistance = Mathf.Round(dot * 100) / 100;
+                            Resize();
+                            Reflect(reflectedOff);
+                        }
                     }
-                //}
-            }
-            else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
-            {
-                closest = null;
-                reflectedOff = null;
-                closestDistance = dot;
-                Resize();
+
+
+                }
+
+                if (col.CompareTag("Player"))
+                {
+                    playerWasReflectingBefore = ro.IsReflecting;
+                }
+                else if (col.OnLayer("Platforms") || col.CompareTag("Block"))
+                {
+                    closest = col.gameObject;
+                    reflectedOff = null;
+                    closestDistance = Mathf.Round(dot * 100) / 100;
+                    Resize();
+                }
             }
         }
     }
@@ -116,19 +129,23 @@ public class LightBeam : MonoBehaviour {
 			closest = null;
 			reflectDirection = Vector2.zero;
             Resize();
+
+            if (col.CompareTag("Player"))
+            {
+                playerWasReflectingBefore = false;
+            }
         }
 	}
 
 	void Reflect(ReflectiveObject ro) {
       
-        float rot = (ro.SurfaceForward.GetAngle() - (-fwd).GetAngle());
-        if (ro.IsReflecting) {
+        if (ro != null && ro.IsReflecting) {
             RemoveChildren ();
 			myChild = Instantiate (gameObject).GetComponent<LightBeam> ();
             myChild.maxRange = maxRange;
             
 			reflectDirection = ro.SurfaceForward;
-            myChild.Source = ro.GameObject.transform.position;
+            myChild.Source = closest.transform.position;
             
             myChild.transform.parent = transform.parent;
 
@@ -139,22 +156,15 @@ public class LightBeam : MonoBehaviour {
             }
             else
             {
-                rot = Mathf.Round(rot.ToDegrees()).ToRadians();
-                
-                myChild.Forward = ro.SurfaceForward.Rotated(rot);
-                myChild.transform.Rotate(Vector3.forward, myChild.Forward.GetAngle().ToDegrees());
+                float dif = ro.SurfaceForward.GetAngle() - fwd.GetAngle();
+                dif = (dif.ToDegrees() % 90).ToRadians();
+                Vector2 temp = fwd.Rotated(dif * 2);
+                myChild.Forward = temp;
+                myChild.transform.rotation = Quaternion.AngleAxis(temp.GetAngle().ToDegrees(), Vector3.forward);
             }
             
             myChild.scale = scale;
             myChild.closestDistance = maxRange;
-            RaycastHit2D hit = Physics2D.BoxCast(myChild.source, Vector2.one, 0, myChild.fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
-            if (hit && !hit.collider.gameObject.name.Contains("Sign") && hit.collider.gameObject != closest)
-            { 
-                myChild.scale.x = hit.distance + 1;
-                myChild.closestDistance = hit.distance;
-            }
-
-            
             myChild.Resize();
         } else {
 			RemoveChildren ();
@@ -186,23 +196,29 @@ public class LightBeam : MonoBehaviour {
     }
     void Resize()
     {
-        RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Interactive"));
+        RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Player"));
         if (hit)
         {
-            ReflectiveObject ro = hit.collider.GetComponent<ReflectiveObject>();
+            closest = hit.collider.gameObject;
+            closestDistance = Mathf.Round((source - closest.transform.position).magnitude * 100) / 100;
+            ReflectiveObject ro = closest.GetComponent<ReflectiveObject>();
+
             if (ro != null && ro.IsReflecting)
             {
                 reflectDirection = ro.SurfaceForward;
                 reflectedOff = ro;
-                closest = hit.collider.gameObject;
-                closestDistance = hit.distance;
+            } else
+            {
+                reflectedOff = null;
             }
 
         } else
         {
+            closest = null;
+            reflectedOff = null;
             closestDistance = maxRange;
         }
-        scale.x = closestDistance + 1;
+        scale.x = closestDistance;
         transform.localScale = scale;
         
         Vector3 pos = source + (Vector3)(fwd * scale.x / 2);
