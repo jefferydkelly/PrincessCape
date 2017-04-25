@@ -1,4 +1,4 @@
-character Matthew Knights/Temp
+character Matthew Knights/MatthewAttempt
 character Elwynn ElwynnSprites/ElwynnNewIdle
 activate BrazierCheckpoint true
 pan to Player 0

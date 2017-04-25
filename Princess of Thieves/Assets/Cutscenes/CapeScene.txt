@@ -1,7 +1,5 @@
-character Matthew Knights/GhostMAtthew
+character Matthew Knights/MatthewAttempt
 show Matthew -1.75 2.5
-scalex Matthew 0.25 0
-scaley Matthew 0.15 0
 alpha Matthew 0
 fade Matthew 0.5 0.5
 Sir Matthew: Princess?  Oh what a joy it is to behold your beautiful visage again.
