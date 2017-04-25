@@ -1,0 +1,30 @@
+character Elwynn ElwynnSprites/ElwynnNewIdle
+disable Player
+show Elwynn 2 7
+pan to Elwynn 0
+move-y Elwynn 0 1
+rotate Elwynn 90 0
+Elwynn: Owww!
+pan to Elwynn 1
+Elwynn: This day has been nothing but fun and excitement.
+move-y Elwynn 0.5 0.25
+rotate Elwynn -90 0.25
+flip-x Elwynn
+follow Elwynn
+Elwynn: I guess I can't wait for another knight to come and "save" me.
+move-x Elwynn 12 3
+italics true
+Elwynn: Laz's Lab No Girls Allowed
+italics false
+flip-x Elwynn
+Elwynn: Guess I've got to find another way out.
+move-x Elwynn 8 1
+Elwynn: I mean it does say 'No Girls Allowed'.
+move-x Elwynn 4 1
+wait 1
+flip-x Elwynn
+Elwynn: Screw that!
+Elwynn: This is my only way forward.
+Elwynn: I'm not going to let a sign keep me out.
+move-x Elwynn 12 1
+goto JDGloveTestScene
