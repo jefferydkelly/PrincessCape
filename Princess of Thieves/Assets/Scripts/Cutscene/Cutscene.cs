@@ -66,8 +66,20 @@ public class Cutscene
 				c = new CutsceneSpriteChange (parts [1], parts [2]);
 			} else if (p == "pan") {
 				if (parts [1] == "to") {
-					GameObject go = GameObject.Find (parts [2]);
-					c = new CameraPan (go.transform.position, float.Parse (parts [3]));
+                    if (parts.Length == 4)
+                    {
+                        GameObject go = GameObject.Find(parts[2]);
+                        if (go)
+                        {
+                            c = new CameraPan(go.transform.position, float.Parse(parts[3]));
+                        } else
+                        {
+                            c = new CameraPan(parts[2], float.Parse(parts[3]));
+                        }
+                    } else
+                    {
+                        c = new CameraPan(new Vector3(float.Parse(parts[2]), float.Parse(parts[3]), Camera.main.transform.position.z), float.Parse(parts[2]));
+                    }
 				} else {
 					c = new CameraPan (new Vector2 (float.Parse (parts [1]), float.Parse (parts [2])), float.Parse (parts [3]));
 				}
@@ -117,7 +129,13 @@ public class Cutscene
 				c = new CutsceneFontEffect (FontEffects.Bold, parts [1].Trim () == "true");
 			} else if (p == "italics") {
 				c = new CutsceneFontEffect (FontEffects.Italics, parts [1].Trim () == "true");
-			}
+			} else if (p == "follow")
+            {
+                c = new CameraFollow(parts[1].Trim());
+            } else if (p == "goto")
+            {
+                c = new SceneChange(parts[1].Trim());
+            }
 			else
 			{
 				parts = line.Split(':');

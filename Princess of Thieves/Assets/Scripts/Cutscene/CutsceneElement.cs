@@ -77,6 +77,7 @@ public class CameraPan : CutsceneElement
 	float time;
 	Vector3 panEnding;
 	bool panTo;
+    string panToName ="";
 
 	/// <summary>
 	/// Initializes a new <see cref="CameraPan"/>.
@@ -104,13 +105,42 @@ public class CameraPan : CutsceneElement
 		canSkip = true;
 	}
 
+    public CameraPan(string name, float t)
+    {
+        panToName = name;
+        time = t;
+        panTo = true;
+        canSkip = true;
+    }
+
 	public override void Run() {
 		if (panTo)
 		{
+            if (panToName.Length > 0)
+            {
+                panEnding = GameManager.Instance.Cutscene.FindActor(panToName).transform.position;
+            }
 			panDistance = panEnding - Camera.main.transform.position;
 		}
 		CameraManager.Instance.Pan (panDistance, time);
 	}
+}
+
+public class CameraFollow : CutsceneElement
+{
+    public string targetName;
+
+    public CameraFollow(string name)
+    {
+        targetName = name;
+        canSkip = true;
+        autoAdvance = true;
+    }
+
+    public override void Run()
+    {
+        CameraManager.Instance.Target = GameObject.Find(targetName);
+    }
 }
 
 /// <summary>
@@ -331,6 +361,7 @@ public class CutsceneFade: CutsceneElement {
 		}
 	}
 }
+
 public class CutsceneCreation : CutsceneElement {
 	GameObject prefab;
 	Vector3 position;
@@ -524,4 +555,21 @@ public class CutsceneFontEffect : CutsceneElement {
 public enum FontEffects {
 	Bold,
 	Italics
+}
+
+public class SceneChange: CutsceneElement
+{
+    string newScene;
+
+    public SceneChange(string scene)
+    {
+        newScene = scene;
+        canSkip = false;
+        autoAdvance = true;
+    }
+
+    public override void Run()
+    {
+        CameraManager.Instance.FadeOutToNewScene(newScene);
+    }
 }

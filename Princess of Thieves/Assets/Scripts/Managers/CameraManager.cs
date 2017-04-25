@@ -6,7 +6,7 @@ public class CameraManager : MonoBehaviour {
 	static CameraManager instance = null;
     public float dampTime = 0.15f;
     private Vector3 velocity = Vector3.zero;
-    Player target;
+    GameObject target;
     int fwd = 1;
     private Camera cam;
 	public Canvas canvas;
@@ -27,6 +27,7 @@ public class CameraManager : MonoBehaviour {
     float fadeTime = 4.0f;
     float alpha = 1.0f;
     string sceneToLoad = "";
+
 	void Awake() {
 		if (!addedFunction) {
 			SceneManager.sceneLoaded += DetermineCameraInstance;
@@ -57,7 +58,8 @@ public class CameraManager : MonoBehaviour {
 		} else {
             if (scene.name.StartsWith("JD") || (scene.name.StartsWith("Rose")))
             {
-                fwd = (int)target.Forward.x;
+                target = GameManager.Instance.Player.gameObject;
+                fwd = (int)target.GetComponent<Player>().Forward.x;
                 CenterCamera();
             } else
             {
@@ -76,7 +78,7 @@ public class CameraManager : MonoBehaviour {
         SceneManager.sceneLoaded -= DetermineCameraInstance;
     }
     void CenterCamera() {
-		target = GameManager.Instance.Player;
+		target = GameManager.Instance.Player.gameObject;
 		Vector3 camPos = target.transform.position;
 		camPos.z = -10;
 		transform.position = camPos;
@@ -107,22 +109,35 @@ public class CameraManager : MonoBehaviour {
 	// Update is called once per frame
 	void LateUpdate () {
 
-		if (manager != null && !manager.IsPaused) {
-			if (target) {
-				playerPos = cam.WorldToScreenPoint (target.transform.position);
-				newCamPos = cam.transform.position;
-				newCamPos.z = -10;
-				if (target.Forward.x == fwd) {
-					
-					posTarget = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
+		if (manager != null) {
+            if (target && target.activeSelf)
+            {
+                playerPos = cam.WorldToScreenPoint(target.transform.position);
+                newCamPos = cam.transform.position;
+                newCamPos.z = -10;
+                Player player = target.GetComponent<Player>();
+                if (player != null)
+                {
+                    if (player.Forward.x == fwd)
+                    {
 
-				} else if (Mathf.Abs (playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent * 1.25f) {
-					fwd *= -1;
+                        posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
 
-					posTarget = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
-				} else {
-					posTarget = cam.ScreenToWorldPoint (new Vector3 (screenSize.x / 2, playerPos.y + screenSize.y / 6));
-				}
+                    }
+                    else if (Mathf.Abs(playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent * 1.25f)
+                    {
+                        fwd *= -1;
+
+                        posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
+                    }
+                    else
+                    {
+                        posTarget = cam.ScreenToWorldPoint(new Vector3(screenSize.x / 2, playerPos.y + screenSize.y / 6));
+                    }
+                } else
+                {
+                    posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
+                }
 
 				posTarget.z = -10;
 				newCamPos = Vector3.SmoothDamp (cam.transform.position, posTarget, ref vel, dampTime);
@@ -130,12 +145,12 @@ public class CameraManager : MonoBehaviour {
 			} else {
 				GameObject go = GameObject.FindGameObjectWithTag ("Player");
 				if (go) {
-					target = go.GetComponent<Player> ();
+                    target = go;
 				}
 			}
 		} else if (manager == null) {
 			manager = GameManager.Instance;
-			target = manager.Player;
+			target = manager.Player.gameObject;
 			cam = GetComponent<Camera> ();
 		}
     }
@@ -247,6 +262,19 @@ public class CameraManager : MonoBehaviour {
             sceneToLoad = sceneName;
             fading = true;
             fadeDir = 1;
+        }
+    }
+
+    public GameObject Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
         }
     }
 }
