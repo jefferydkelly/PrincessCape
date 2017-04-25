@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/JD/JDLabEntrance.unity
+- path: Assets/Scenes/JD/JDHogiScene.unity
   isLoaded: 1
   isActive: 1

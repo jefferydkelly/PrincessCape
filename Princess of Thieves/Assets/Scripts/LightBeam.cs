@@ -17,9 +17,10 @@ public class LightBeam : MonoBehaviour {
 
     //ideally quicker
     const float mathPi = Mathf.PI / 4;
-    LayerMask layerM = 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Player");
+    LayerMask layerM;
     private void Start()
     {
+        layerM = 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Player");
         scale = new Vector3(transform.localScale.x, 1, 1);
         closest = null;
     }
