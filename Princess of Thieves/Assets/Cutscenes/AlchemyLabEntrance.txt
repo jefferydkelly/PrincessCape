@@ -16,9 +16,15 @@ move-x Elwynn 12 3
 italics true
 Elwynn: Laz's Lab No Girls Allowed
 italics false
-Elwynn: I guess this is the only way forward.
-wait 2
-hide Elwynn
-enable Player
-follow Player
+flip-x Elwynn
+Elwynn: Guess I've got to find another way out.
+move-x Elwynn 8 1
+Elwynn: I mean it does say 'No Girls Allowed'.
+move-x Elwynn 4 1
+wait 1
+flip-x Elwynn
+Elwynn: Screw that!
+Elwynn: This is my only way forward.
+Elwynn: I'm not going to let a sign keep me out.
+move-x Elwynn 12 1
 goto JDGloveTestScene
