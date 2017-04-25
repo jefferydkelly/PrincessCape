@@ -1,5 +1,5 @@
 Dragon: Yes! I'm so happy I could cry.
-Dragon: I just need to finish up a few more paintings before you leave.
+Dragon: I just need to finish up a few more paintings before you leave. I'll be right back.
 Destroy DragonClosed
 Destroy DoorTemp
 create Prefabs/DoorTemp -10 3.5 0
