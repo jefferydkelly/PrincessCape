@@ -6,9 +6,6 @@ using UnityEngine.SceneManagement;
 public class Checkpoint : JDMappableObject, ActivateableObject {
     //Whether or not this checkpoint has been activated
     bool activated = false;
-    static List<UsableItem> checkpointInventory;
-    static UsableItem checkpointLeftItem;
-    static UsableItem checkpointRightItem;
 
     SpriteRenderer myRenderer;
     public Sprite activatedSprite;
@@ -48,10 +45,7 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
 			activated = true;
 			myRenderer.sprite = activatedSprite;
 		}
-        Player player = GameManager.Instance.Player;
-        checkpointInventory = player.Inventory;
-        checkpointLeftItem = player.LeftItem;
-        checkpointRightItem = player.RightItem;
+    
         activated = true;
     }
 
@@ -95,11 +89,6 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
         }
     }
 
-    public static void ResetPlayer()
-    {
-        Player player = GameManager.Instance.Player;
-    }
-
 	public bool IsFirst {
 		get {
 			return isFirst;
@@ -117,28 +106,4 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
 			return false;
 		}
 	}
-
-    public static List<UsableItem> OldInventory
-    {
-        get
-        {
-            return checkpointInventory;
-        }
-    }
-
-    public static UsableItem OldLeft
-    {
-        get
-        {
-            return checkpointLeftItem;
-        }
-    }
-
-    public static UsableItem OldRight
-    {
-        get
-        {
-            return checkpointRightItem;
-        }
-    }
 }
