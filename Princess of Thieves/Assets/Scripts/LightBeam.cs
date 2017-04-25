@@ -14,6 +14,10 @@ public class LightBeam : MonoBehaviour {
     public float maxRange = 0;
     Vector3 scale;
     bool playerWasReflectingBefore = false;
+
+    //ideally quicker
+    const float mathPi = Mathf.PI / 4;
+    LayerMask layerM = 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Player");
     private void Start()
     {
         scale = new Vector3(transform.localScale.x, 1, 1);
@@ -23,9 +27,10 @@ public class LightBeam : MonoBehaviour {
     {
         if (closest && reflectedOff != null && reflectedOff.IsReflecting)
         {
-            if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(Mathf.PI / 4))
+            if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(mathPi))
             {
                 float dot = Mathf.Round(fwd.Dot(closest.transform.position - source) * 100) / 100;
+                //Vector2 result = reflectedOff.SurfaceForward ^ reflectDirection;
                 if (reflectedOff.SurfaceForward != reflectDirection || (Mathf.Abs(dot - closestDistance) > 0.1f && dot < maxRange))
                 {
                     closestDistance = dot;
@@ -56,7 +61,7 @@ public class LightBeam : MonoBehaviour {
                 if (ro != null && ro.IsReflecting)
                 {
 
-                    if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                    if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(mathPi))
                     { 
                         closest = col.gameObject;
                         reflectedOff = closest.GetComponent<ReflectiveObject>();
@@ -93,7 +98,7 @@ public class LightBeam : MonoBehaviour {
                     
                     if (closest != col.gameObject || (col.CompareTag("Player") && !playerWasReflectingBefore))
                     {
-                        if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(Mathf.PI / 4))
+                        if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(mathPi))
                         {
                             closest = col.gameObject;
                             reflectedOff = ro;
@@ -196,7 +201,8 @@ public class LightBeam : MonoBehaviour {
     }
     void Resize()
     {
-        RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, 1 << LayerMask.NameToLayer("Platforms") | 1 << LayerMask.NameToLayer("Reflective") | 1 << LayerMask.NameToLayer("Player"));
+       
+        RaycastHit2D hit = Physics2D.BoxCast(source, Vector2.one, 0, fwd, maxRange, layerM);
         if (hit)
         {
             closest = hit.collider.gameObject;
