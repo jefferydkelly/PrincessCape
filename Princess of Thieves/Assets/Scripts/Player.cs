@@ -99,6 +99,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				
 				if (IsClimbing)
                 {
+                    myRigidBody.gravityScale = 0;
 					Vector2 vel = myRigidBody.velocity;
 					vel.x = 0;
 					myRigidBody.velocity = vel;
@@ -503,7 +504,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     {
         if (!IsClimbing)
         {
-            if (BottomCenter.y >= lc.transform.position.y + lc.gameObject.HalfHeight() * 0.8f)
+            if (BottomCenter.y >= lc.transform.position.y + lc.gameObject.HalfHeight() * 0.95f)
             {
                 if (controller.Vertical < 0)
                 {
@@ -963,7 +964,9 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				if (rightItem && rightItem.IsActive) {
 					rightItem.Deactivate ();
 				}
-				state = PlayerState.IsClimbing;
+                
+				state |= PlayerState.IsClimbing;
+                state |= PlayerState.CanFloat;
                 myRigidBody.gravityScale = 0;
 
 			}else
@@ -1058,7 +1061,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
             if (value && !IsUsingReflectCape && !IsFrozen)
 			{
                 state |= PlayerState.UsingReflectCape;
-                
+                IsClimbing = false;
 				if (!IsOnGround && CanFloat) {
 					CanFloat = false;
 					myRigidBody.velocity = myRigidBody.velocity.XVector();

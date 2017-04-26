@@ -17,6 +17,7 @@ public class Hogi : MonoBehaviour, LightActivatedObject {
     {
         if (!isActive)
         {
+            GameManager.Instance.Player.IsFrozen = true;
             StartCoroutine(TipOver());
         }
     }
