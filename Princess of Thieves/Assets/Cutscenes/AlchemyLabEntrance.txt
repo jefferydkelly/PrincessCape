@@ -19,6 +19,10 @@ italics false
 flip-x Elwynn
 Elwynn: Guess I've got to find another way out.
 move-x Elwynn 7 1
+wait 0.5
+flip-x Elwynn
+wait 0.5
+flip-x Elwynn
 Elwynn: I mean it does say 'No Girls Allowed'.
 move-x Elwynn 3 1
 wait 1
