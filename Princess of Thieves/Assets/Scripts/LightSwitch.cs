@@ -42,7 +42,6 @@ public class LightSwitch : MonoBehaviour, LightActivatedObject {
     {
         if (!myLight && isActive)
         {
-            print("What happened to the light?");
             Deactivate();
         }
     }
