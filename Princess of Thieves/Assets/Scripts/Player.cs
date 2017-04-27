@@ -504,8 +504,9 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     {
         if (!IsClimbing)
         {
-            if (BottomCenter.y >= lc.transform.position.y + lc.gameObject.HalfHeight() * 0.95f)
+            if (BottomCenter.y >= lc.transform.position.y + lc.gameObject.HalfHeight() * 0.9f)
             {
+                
                 if (controller.Vertical < 0)
                 {
                     col.isTrigger = true;
