@@ -201,7 +201,7 @@ public class Cutscene
 		UIManager.Instance.ShowBoxes = true;
 		GameManager.Instance.IsInCutscene = false;
 		UIManager.Instance.StartCoroutine ("HideDialog");
-
+        CameraManager.Instance.SetToPlayerFwd();
 		foreach (CutsceneActor ca in charactersOnStage) {
 			ca.DestroySelf ();
 		}

@@ -277,4 +277,9 @@ public class CameraManager : MonoBehaviour {
             target = value;
         }
     }
+
+    public void SetToPlayerFwd ()
+    {
+        fwd = (int)GameManager.Instance.Player.Forward.x;
+    }
 }

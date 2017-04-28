@@ -10,7 +10,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	private SpriteRenderer myRenderer;
     private Animator myAnimator;
 
-	private int fwdX = 1;
+	private int fwdX = -1;
 	public float maxSpeed = 1;
 	public float sneakSpeed = 0.5f;
 	public float jumpImpulse = 10;
