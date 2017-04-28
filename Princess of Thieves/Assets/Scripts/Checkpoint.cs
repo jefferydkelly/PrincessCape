@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class Checkpoint : JDMappableObject, ActivateableObject {
     //Whether or not this checkpoint has been activated
     bool activated = false;
-
+    [SerializeField]
+    bool faceRight = true;
     SpriteRenderer myRenderer;
     public Sprite activatedSprite;
     public Sprite inactiveSprite;
@@ -89,6 +90,26 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
         }
     }
 
+    public static Checkpoint ActiveCheckpoint
+    {
+        get
+        {
+            if (checkpoints != null)
+            {
+                foreach (GameObject cp in checkpoints)
+                {
+                    Checkpoint check = cp.GetComponent<Checkpoint>();
+                    if (check.activated)
+                    {
+                        return check;
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
 	public bool IsFirst {
 		get {
 			return isFirst;
@@ -106,4 +127,12 @@ public class Checkpoint : JDMappableObject, ActivateableObject {
 			return false;
 		}
 	}
+
+    public bool FaceRight
+    {
+        get
+        {
+            return faceRight;
+        }
+    }
 }

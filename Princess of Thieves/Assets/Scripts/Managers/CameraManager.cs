@@ -98,6 +98,7 @@ public class CameraManager : MonoBehaviour {
 	{
 		get
 		{
+            
 			if (!isClosing) {
 				return instance;
 			}

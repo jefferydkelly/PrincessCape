@@ -1298,10 +1298,30 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		state = PlayerState.CanFloat;
 		transform.rotation = Quaternion.Euler(0, 0, 0);// (Vector3.forward, -90);
         myRigidBody.velocity = Vector2.zero;
-        transform.position = Checkpoint.ActiveCheckpointPosition;
 
+        MoveToCheckpoint(Checkpoint.ActiveCheckpoint);
+        CameraManager.Instance.SetToPlayerFwd();
     }
 
+    public void MoveToCheckpoint(Checkpoint cp)
+    {
+        transform.position = cp.transform.position;
+        fwdX = cp.FaceRight ? 1 : -1;
+        MyRenderer.flipX = (fwdX == 1);
+    }
+
+    public SpriteRenderer MyRenderer
+    {
+        get
+        {
+            if (myRenderer == null)
+            {
+                myRenderer = GetComponent<SpriteRenderer>();
+            }
+
+            return myRenderer;
+        }
+    }
 	public bool IsReflecting {
 		get {
 			return IsUsingReflectCape;

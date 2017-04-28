@@ -192,11 +192,10 @@ public class GameManager {
             {
                 foreach (GameObject go in checkpoints)
                 {
-                    if (go.GetComponent<Checkpoint>().IsFirst)
+                    Checkpoint cp = go.GetComponent<Checkpoint>();
+                    if (cp.IsFirst)
                     {
-                        Vector3 pos = go.transform.position;
-                        pos.z = 0;
-                        Player.transform.position = pos;
+                        Player.MoveToCheckpoint(cp);
                         break;
                     }
                 }
