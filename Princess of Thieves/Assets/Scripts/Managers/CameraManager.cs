@@ -124,7 +124,7 @@ public class CameraManager : MonoBehaviour {
                         posTarget = cam.ScreenToWorldPoint(playerPos + new Vector3(fwd * screenSize.x * playerOffsetPercent, screenSize.y / 6));
 
                     }
-                    else if (Mathf.Abs(playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent * 1.25f)
+                    else if (Mathf.Abs(playerPos.x - screenSize.x / 2) >= screenSize.x * playerOffsetPercent)
                     {
                         fwd *= -1;
 
