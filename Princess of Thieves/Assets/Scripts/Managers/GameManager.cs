@@ -182,6 +182,10 @@ public class GameManager {
             {
                 player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             }
+            if (UIManager.Instance)
+            {
+                UIManager.Instance.UpdateUI();
+            }
             GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
 
             if (checkpoints.Length > 0)

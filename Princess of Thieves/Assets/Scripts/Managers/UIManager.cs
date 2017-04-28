@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
 			DontDestroyOnLoad(gameObject);
 			instance = this;
 			Reload();
+            UpdateUI();
 		}
 		else {
 			Destroy(gameObject);
