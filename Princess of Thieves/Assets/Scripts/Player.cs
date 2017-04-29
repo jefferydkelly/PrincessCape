@@ -189,6 +189,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	// Update is called once per frame
 	void Update()
 	{
+       
 		if (Controller.Pause)
 		{
             manager.IsInMenu = !manager.IsInMenu;

@@ -53,7 +53,13 @@ public class UIManager : MonoBehaviour
 	}
 
     void Update() {
-		if (revealing && done && Input.anyKeyDown)
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            string dateTime = (System.DateTime.Now.ToShortDateString() + System.DateTime.Now.ToShortTimeString()).Replace('/', '-').Replace(':', '-');
+            Application.CaptureScreenshot("Screenshots/Screenshot-" + dateTime + ".png");
+        }
+        if (revealing && done && Input.anyKeyDown)
 		{
 			StartCoroutine(NextElement());
 		}
