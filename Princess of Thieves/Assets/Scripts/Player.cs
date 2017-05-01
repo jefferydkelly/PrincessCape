@@ -55,6 +55,9 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     SpriteRenderer arrowRenderer;
 	SpriteRenderer rangeRenderer;
 	GameManager manager;
+
+    Vector2 mousePosition;
+    ActivateableLauncher aimingLauncher;
     void Awake()
     {
 		arrowRenderer = GetComponentsInChildren<SpriteRenderer> ()[1];
@@ -90,6 +93,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 
 	void FixedUpdate()
 	{
+        mousePosition = Input.mousePosition;
         if (!manager.IsPaused)
         {
             lastYVel = myRigidBody.velocity.y;
@@ -141,10 +145,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				} 
 			
             }
-            else if (IsDashing && IsOnGround && tryingToJump)
-            {
-                Jump();
-            } else if (IsPushing && highlightedBody)
+            else if (IsPushing && highlightedBody)
             {
                 Vector2 input = controller.InputDirection.XVector();
                 if (input.x / fwdX < 0)
@@ -172,6 +173,18 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                 Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;
 				highlightedBody.velocity = vel;
+            } else if (IsUsingReflectCape)
+            {
+                float ang = MouseAim.GetAngle().ToDegrees();
+                if (aimingLauncher)
+                {
+                    float lang = aimingLauncher.Angle;
+                    lang = Mathf.Round(lang / 45) * 45;
+                    float dif = (ang - lang) % 90;
+                    ang = Mathf.Round((lang + dif * 2) / 45) * 45;
+                }
+
+                arrowRenderer.transform.rotation = Quaternion.AngleAxis(ang, Vector3.forward);
             }
             
         }
@@ -234,10 +247,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 					}
 				}
             }
-
-			if (ShowAimArrow) {
-				arrowRenderer.transform.rotation = Quaternion.AngleAxis (MouseAim.GetAngle ().ToDegrees(), Vector3.forward);
-			}
             
 		}
         
@@ -602,7 +611,11 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
             }
 		} else if (col.CompareTag ("Ladder")) {
             HandleLadder(col.GetComponent<LadderController>(), col);
-		} 
+		}
+        else if (col.CompareTag("Launcher"))
+        {
+            aimingLauncher = col.GetComponent<ActivateableLauncher>();
+        }
     }
 
     private void OnTriggerStay2D(Collider2D col)
@@ -610,7 +623,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
         if (col.CompareTag("Ladder"))
         {
             HandleLadder(col.GetComponent<LadderController>(), col);
-        }
+        } 
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -643,7 +656,13 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 					}
 				}
 			}
-		} 
+		} else if (col.CompareTag("Launcher"))
+        {
+            if (col.GetComponent<ActivateableLauncher>() == aimingLauncher)
+            {
+                aimingLauncher = null;
+            }
+        } 
     }
 	#endregion
  
@@ -912,8 +931,8 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	/// <value>The true aim.</value>
 	public Vector2 MouseAim {
 		get
-		{
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        { 
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(mousePosition);
 
 			return (mousePos - (Vector2)transform.position).normalized;
 		}
@@ -1126,7 +1145,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                 state &= ~PlayerState.UsingMagnetGloves;
                 state &= ~PlayerState.Frozen;
             }
-			ShowAimArrow = IsUsingMagnetGloves;
+			//ShowAimArrow = IsUsingMagnetGloves;
         }
     }
     public bool IsUsingPushGloves
@@ -1148,7 +1167,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                 state &= ~PlayerState.UsingPushGloves;
                 state &= ~PlayerState.Frozen;
             }
-            ShowAimArrow = IsUsingPushGloves;
+            //ShowAimArrow = IsUsingPushGloves;
         }
     }
     public bool IsPushedVerticallyByTheWind {

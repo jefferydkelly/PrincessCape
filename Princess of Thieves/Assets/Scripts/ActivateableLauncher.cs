@@ -14,12 +14,13 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 	public float timeToFire = 1f;
 	[SerializeField]
 	AimDirection direction;
-	Vector3 fwd = new Vector3(1,0);
+	Vector2 fwd = new Vector2(1,0);
 	Timer fireTimer;
 	SpriteRenderer myRenderer;
 	[SerializeField]
 	bool isActivationInverted = false;
 	bool cooled = false;
+    float angle = 0;
 	// Use this for initialization
 	void Start () {
 		myRenderer = GetComponent<SpriteRenderer> ();
@@ -80,7 +81,7 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 			transform.Rotate (Vector3.forward, -45);
 			break;
 		}
-
+        angle = fwd.GetAngle().ToDegrees();
 	}
 
 	void Update() {
@@ -142,4 +143,12 @@ public class ActivateableLauncher : MonoBehaviour, ActivateableObject {
 			return isActivationInverted;
 		}
 	}
+
+    public float Angle
+    {
+        get
+        {
+            return angle;
+        }
+    }
 }
