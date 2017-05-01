@@ -99,15 +99,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				
 				if (IsClimbing)
                 {
-                    myRigidBody.gravityScale = 0;
-					Vector2 vel = myRigidBody.velocity;
-					vel.x = 0;
-					myRigidBody.velocity = vel;
-					float vert = controller.Vertical;
-					if (vert != 0)
+					if (controller.InputDirection.sqrMagnitude > 0)
                     {
-						myRigidBody.AddForce (new Vector2 (0, controller.Vertical * 10));
-						myRigidBody.ClampVelocity (5, VelocityType.Y);
+						myRigidBody.AddForce (new Vector2 (controller.Horizontal, controller.Vertical) * 10);
+						myRigidBody.ClampVelocity (5, VelocityType.Full);
 					}
                     else
                     {
@@ -622,7 +617,11 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	{
 		if (col.CompareTag ("Ladder")) {
 			if (IsClimbing) {
-				if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
+                if (Mathf.Abs(transform.position.x - col.transform.position.x) >= HalfWidth + col.gameObject.HalfWidth())
+                {
+                    IsClimbing = false;
+                    col.isTrigger = true;
+                } else if (BottomCenter.y >= col.transform.position.y + col.gameObject.HalfHeight () * 0.8f) {
 					if (!col.GetComponent<LadderController> ().LadderAbove) {
 						
 						IsClimbing = false;
@@ -634,7 +633,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 						col.isTrigger = false;
 					}
 				} else if (BottomCenter.y <= col.transform.position.y - col.gameObject.HalfHeight () * 0.8f) {
-					if (!col.GetComponent<LadderController> ().LadderBelow) {
+                    if (!col.GetComponent<LadderController> ().LadderBelow) {
 						IsClimbing = false;
 						Vector3 pos = transform.position;
 						pos.y = col.transform.position.y - col.gameObject.HalfHeight () + HalfHeight;
@@ -970,6 +969,9 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 				state |= PlayerState.IsClimbing;
                 state |= PlayerState.CanFloat;
                 myRigidBody.gravityScale = 0;
+                Vector2 vel = myRigidBody.velocity;
+                vel.x = 0;
+                myRigidBody.velocity = vel;
 
 			}else
 			{
