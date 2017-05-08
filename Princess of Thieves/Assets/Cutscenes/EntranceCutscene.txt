@@ -24,7 +24,7 @@ flip-x Elwynn
 move-x Matthew -12 1
 pan 2.5 0 1
 activate SlideDoor true
-play dragon-roar
+play PrincessCape-Dragon
 create Prefabs/DragonClosed 2 5.5 0
 Slog: Raaaaaaaaaaaaaaaw!
 Sir Matthew: There you are!

@@ -44,9 +44,14 @@ public class PressureSwitch : ActivatorObject {
 			
 
 			if (value <= 0 && numberOfThingsWeighingThisDown > 0) {
-				Deactivate ();
+                GetComponent<AudioSource>().clip = activatedSoundEffect;
+                GetComponent<AudioSource>().Play();
+
+                Deactivate ();
 			} else if (numberOfThingsWeighingThisDown == 0 && value > 0) {
-				Activate ();
+                GetComponent<AudioSource>().clip = activatedSoundEffect;
+                GetComponent<AudioSource>().Play();
+                Activate ();
 			}
             numberOfThingsWeighingThisDown = Mathf.Max(value, 0);
             anim.SetInteger("ItemsOnTop", numberOfThingsWeighingThisDown);
