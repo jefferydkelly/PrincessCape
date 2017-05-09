@@ -8,6 +8,7 @@ public class PushGlove : GloveItem{
     Timer ProjectWaveTimer;
     private void Start()
 	{
+        myAudio = GetComponent<AudioSource>();
 		player = GameManager.Instance.Player;
 		playerBody = player.GetComponent<Rigidbody2D>();
 		lineRenderer = GetComponent<LineRenderer>();
@@ -24,6 +25,7 @@ public class PushGlove : GloveItem{
 
 	public override void Activate()
 	{
+        myAudio.Play();
         player.IsUsingPushGloves = true;
        // player.IsUsingMagnetGloves = true;
 
@@ -112,6 +114,7 @@ public class PushGlove : GloveItem{
 		
 	public override void Deactivate()
 	{
+        myAudio.Stop();
         player.IsUsingPushGloves = false;
         //player.IsUsingMagnetGloves = false;
 		if (target) {

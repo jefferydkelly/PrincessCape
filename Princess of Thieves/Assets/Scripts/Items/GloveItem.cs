@@ -31,6 +31,10 @@ public class GloveItem : UsableItem {
 	[SerializeField]
 	protected float aimWeight = 0.5f;
 
+    [SerializeField]
+    AudioClip soundEffect;
+    protected AudioSource myAudio;
+
 
     public override void Activate ()
 	{
