@@ -18,12 +18,11 @@ public class ReflectCape : UsableItem
 
     public override void Activate()
     {
-		if (!GameManager.Instance.Player.IsUsingReflectCape && !onCooldown)
+		if (!GameManager.Instance.Player.IsUsingCape && !onCooldown)
         {
 			//GameManager.Instance.Player.Animator.SetBool("Floating", true);
 
-            GameManager.Instance.Player.ShowAimArrow = true;
-            GameManager.Instance.Player.IsUsingReflectCape = true;
+            GameManager.Instance.Player.IsUsingCape = true;
 			itemActive = true;
 			AudioManager.Instance.PlaySound (capeFX);
         }
@@ -34,8 +33,7 @@ public class ReflectCape : UsableItem
 		//GameManager.Instance.Player.Animator.SetBool("Floating", false);
         if (IsActive) {
             itemActive = false;
-            GameManager.Instance.Player.ShowAimArrow = false;
-			GameManager.Instance.Player.IsUsingReflectCape = false;
+			GameManager.Instance.Player.IsUsingCape = false;
             if (!GameManager.Instance.Player.IsDead)
             {
                 StartCooldown();

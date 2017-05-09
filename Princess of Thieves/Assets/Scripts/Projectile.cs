@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour {
 	Timer lifeTimer;
     Rigidbody2D myRigidbody;
     bool immuneToLauncher = true;
+    float maxCos = -1;
 	// Use this for initialization
 	void Awake () {
 		lifeTimer = new Timer (() => {
@@ -17,10 +18,12 @@ public class Projectile : MonoBehaviour {
 
 		lifeTimer.Start ();
         myRigidbody = GetComponent<Rigidbody2D>();
+
+        maxCos = Mathf.Cos(-Mathf.PI / 4);
 	}
 	
 	void OnTriggerEnter2D(Collider2D col) {
-		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsUsingReflectCape) || (col.CompareTag("Launcher") && !immuneToLauncher)|| (!col.CompareTag("Player") && !(col.OnLayer ("Background") || (col.OnLayer ("Interactive") && !col.CompareTag("Block")) || col.CompareTag("Reflective")))) {
+		if ((col.CompareTag ("Player") && !GameManager.Instance.Player.IsReflecting) || (col.CompareTag("Launcher") && !immuneToLauncher)|| (!col.CompareTag("Player") && !(col.OnLayer ("Background") || (col.OnLayer ("Interactive") && !col.CompareTag("Block")) || col.CompareTag("Reflective")))) {
 			Destroy (gameObject);
 		}
 	}
@@ -45,13 +48,13 @@ public class Projectile : MonoBehaviour {
         {
             Vector2 vel = myRigidbody.velocity;
             float dot = vel.normalized.Dot(fwd.normalized);
-
-            if (dot <= 0 || dot <= -0.8f)
+         
+            if (dot <= 0)
             {
-                float rot = (fwd.GetAngle() - vel.GetAngle()).ToDegrees() % 90 * 2;
-                rot = Mathf.Round(rot / 45) * 45;
-                transform.Rotate(Vector3.forward, rot);
-                myRigidbody.velocity = vel.Rotated(rot.ToRadians());
+
+                float rot = Mathf.Round(fwd.GetAngle().ToDegrees() / 45) * 45;
+                transform.rotation = Quaternion.AngleAxis(rot, Vector3.forward);
+                myRigidbody.velocity = new Vector2(Mathf.Cos(rot.ToRadians()),  Mathf.Sin(rot.ToRadians())) * vel.magnitude;
                 return true;
             }
         }

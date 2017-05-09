@@ -6,6 +6,7 @@ public class ReflectStand : BlockController, ReflectiveObject {
     [SerializeField]
     AimDirection direction;
     Vector2 reflectionForward = new Vector2(1, 0);
+    Vector2 rfTwo = new Vector2(1, 0);
     static Sprite[] sprites;
 
 	void Awake() {
@@ -17,29 +18,21 @@ public class ReflectStand : BlockController, ReflectiveObject {
         float sqrtHalf = 1.0f / Mathf.Sqrt(2);
 		switch (direction)
         {
-            case AimDirection.Right:
-                reflectionForward = new Vector2(1, 0);
-                break;
             case AimDirection.UpRight:
-                reflectionForward = new Vector2(sqrtHalf, sqrtHalf);
-                break;
-            case AimDirection.Up:
                 reflectionForward = new Vector2(0, 1);
+                rfTwo = new Vector2(1, 0);
                 break;
             case AimDirection.UpLeft:
-                reflectionForward = new Vector2(-sqrtHalf, sqrtHalf);
-                break;
-            case AimDirection.Left:
-                reflectionForward = new Vector2(-1, 0);
+                reflectionForward = new Vector2(0, 1);
+                rfTwo = new Vector2(-1, 0);
                 break;
             case AimDirection.DownLeft:
-                reflectionForward = new Vector2(-sqrtHalf, -sqrtHalf);
-                break;
-            case AimDirection.Down:
                 reflectionForward = new Vector2(0, -1);
+                rfTwo = new Vector2(-1, 0);
                 break;
             case AimDirection.DownRight:
-                reflectionForward = new Vector2(sqrtHalf, -sqrtHalf);
+                reflectionForward = new Vector2(0, -1);
+                rfTwo = new Vector2(1, 0);
                 break;
         }
 
@@ -53,10 +46,13 @@ public class ReflectStand : BlockController, ReflectiveObject {
 		}
 	}
 
-	public Vector2 SurfaceForward {
-		get {
-			return reflectionForward;
-		}
+	public Vector2 GetSurfaceForward(Vector2 fwd) {
+		if (reflectionForward.Dot(fwd) == -1)
+        {
+            return rfTwo;
+        }
+
+        return reflectionForward;
 	}
 
 	public GameObject GameObject {

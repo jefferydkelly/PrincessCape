@@ -10,9 +10,7 @@ fade-out Matthew 0.5
 add Prefabs/ReflectionCape
 italics true
 You took the Magic Cape from Sir Matthew!
-Press [[LeftItemKey]] to activate it.
-In the air, you'll float for a short time.
-On the ground, aim with the Mouse and you'll reflect light and projectiles.
+Press the Left Mouse Button to float for a short time.
 destroy MatthewCorpse
 wait 0.5
 italics false

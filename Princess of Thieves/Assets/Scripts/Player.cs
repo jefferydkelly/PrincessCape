@@ -173,17 +173,10 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                 Vector2 vel = highlightedBody.velocity;
 				vel.x = 0;
 				highlightedBody.velocity = vel;
-            } else if (IsUsingReflectCape)
+            } else if (IsUsingShield)
             {
                 float ang = MouseAim.GetAngle().ToDegrees();
-                if (aimingLauncher)
-                {
-                    float lang = aimingLauncher.Angle;
-                    lang = Mathf.Round(lang / 45) * 45;
-                    float dif = (ang - lang) % 90;
-                    ang = Mathf.Round((lang + dif * 2) / 45) * 45;
-                }
-
+               
                 arrowRenderer.transform.rotation = Quaternion.AngleAxis(ang, Vector3.forward);
             }
             
@@ -408,84 +401,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
                     break;
             }
         }
-        else if (IsUsingReflectCape)
-        {
-           // myAnimator.SetBool("PullUse", false);
-            myAnimator.SetBool("CapeUse", true);
-            switch ((int)MouseAim.x)
-            {
-                case 0:
-                    switch ((int)MouseAim.y)
-                    {
-                        case 1: //up
-                            myAnimator.SetInteger("Direction",1);
-                            //myRenderer.sprite = capeSprites[2];
-                            break;
-                        case 0: //forward
-                            if (fwdX <= 0)
-                            {
-                              //  myAnimator.SetTrigger("Left");
-                                myAnimator.SetInteger("Direction", 4);
-                                // myRenderer.sprite = capeSprites[0];
-                            }
-                            else
-                            {
-                            //    myAnimator.SetTrigger("Right");
-                                myAnimator.SetInteger("Direction", 3);
-                                // myRenderer.sprite = capeSprites[4];
-                            }
-                            break;
-                        case -1: //down
-                            //myAnimator.SetTrigger("Up");
-                            myAnimator.SetInteger("Direction", 1);
-                            // myRenderer.sprite = capeSprites[2];
-                            break;
-                    }//end of internal Switch
-                    break; // end of x = 0
-                case 1:
-                    switch ((int)MouseAim.y)
-                    {
-                        case 1: //up
-                           // myAnimator.SetTrigger("LeftUp");
-                            myAnimator.SetInteger("Direction", 5);
-                            // myRenderer.sprite = capeSprites[3];
-                            break;
-                        case 0: //forward
-                           // myAnimator.SetTrigger("Left");
-                            myAnimator.SetInteger("Direction", 4);
-                            //myRenderer.sprite = capeSprites[4];
-
-                            break;
-                        case -1: //down
-                          //  myAnimator.SetTrigger("Left");
-                            myAnimator.SetInteger("Direction", 4);
-                            //myRenderer.sprite = capeSprites[0];
-                            break;
-                    }//end of internal Switch
-                    break;
-                case -1:
-                    switch ((int)MouseAim.y)
-                    {
-                        case 1: //up
-                          //  myAnimator.SetTrigger("RightUp");
-                            myAnimator.SetInteger("Direction", 2);
-                            //myRenderer.sprite = capeSprites[1];
-                            break;
-                        case 0: //forward
-                           // myAnimator.SetTrigger("Right");
-                            myAnimator.SetInteger("Direction", 3);
-                            // myRenderer.sprite = capeSprites[0];
-
-                            break;
-                        case -1: //down
-                           // myAnimator.SetTrigger("Right");
-                            myAnimator.SetInteger("Direction", 3);
-                            //myRenderer.sprite = capeSprites[0];
-                            break;
-                    }//end of internal Switch
-                    break;
-            }// end of External Switch
-        }
         else
         {
             myAnimator.SetBool("PushUse", false);
@@ -499,9 +414,7 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     }
 	void Jump()
 	{
-        
-        float ji = IsDashing ? jumpImpulse * 1.5f : jumpImpulse;
-		myRigidBody.AddForce(new Vector2(0, ji * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
+		myRigidBody.AddForce(new Vector2(0, jumpImpulse * Mathf.Sign(myRigidBody.gravityScale)), ForceMode2D.Impulse);
 		AudioManager.Instance.PlaySound (jumpClip);
 	}
 
@@ -542,10 +455,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	#region CollisionHandling
 	void OnCollisionEnter2D(Collision2D col)
 	{
-        if (!col.collider.CompareTag("Platform") && IsDashing)
-        {
-            IsDashing = false;
-        }
 		if (col.collider.CompareTag ("Platform")) {
 			if (lastYVel < 0) {
 				CanFloat = true;
@@ -553,13 +462,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 					myRigidBody.velocity = Vector2.zero;
 				} else if (IsClimbing) {
 					IsClimbing = false;
-				}
-			} else if (IsDashing) {
-				foreach (ContactPoint2D cp in col.contacts) {
-					if (cp.normal.y == 0) {
-						IsDashing = false;
-						break;
-					}
 				}
 			}
 		} else if (col.collider.CompareTag ("Enemy")) {
@@ -601,13 +503,17 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		if (col.CompareTag ("Fire")) {
 			IsDead = true;
 		} else if (col.CompareTag ("Projectile")) {
-			Projectile p = col.GetComponent<Projectile> ();
-			if (!IsUsingReflectCape || !p.Reflected && !p.Reflect(MouseAim))
+            if (IsUsingShield)
+            {
+                Projectile p = col.GetComponent<Projectile>();
+                p.Reflect(MouseAim);
+                if (!p.Reflected)
+                {
+                    p.Reflected = true;
+                }
+            } else
             {
                 Die();
-            } else if (!p.Reflected)
-            {
-                p.Reflected = true;
             }
 		} else if (col.CompareTag ("Ladder")) {
             HandleLadder(col.GetComponent<LadderController>(), col);
@@ -1002,35 +908,6 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 			}
 		}
 	}
-    /// <summary>
-    /// Getter and setter for if the player is using the Dash Boots
-    /// </summary>
-    public bool IsDashing
-    {
-        get
-        {
-            return (state & PlayerState.Dashing) > 0;
-        }
-        set
-        {
-            if (value && !IsDashing && !IsFrozen) //if true, we aren't already dashing, and we aren't frozen
-            {
-                state |= PlayerState.Dashing;
-                state |= PlayerState.Frozen;
-				//myAnimator.SetBool ("FWD", false);
-                myRigidBody.AddForce(new Vector2(fwdX * maxSpeed * 10,0), ForceMode2D.Impulse); //yes we are dashing now
-
-               
-            }
-            else
-            {
-                state &= ~PlayerState.Dashing;
-                state &= ~PlayerState.Frozen;
-				UsableItem curItem = leftItem is DashBoots ? leftItem : rightItem;
-				curItem.Deactivate();
-            }
-        }
-    }
 
 	public void Push(BlockController bc) {
 		highlightedBody = bc.GetComponent<Rigidbody2D>();
@@ -1073,35 +950,31 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is using reflect cape.
 	/// </summary>
 	/// <value><c>true</c> if is using reflect cape; otherwise, <c>false</c>.</value>
-    public bool IsUsingReflectCape
+    public bool IsUsingCape
     {
         get
         {
-			return (state & PlayerState.UsingReflectCape) > 0;;
+			return (state & PlayerState.UsingCape) > 0;;
         }
         set
         {
-            if (value && !IsUsingReflectCape && !IsFrozen)
+            if (value && !IsUsingCape && !IsFrozen)
 			{
-                state |= PlayerState.UsingReflectCape;
+                state |= PlayerState.UsingCape;
                 IsClimbing = false;
-				if (!IsOnGround && CanFloat) {
+				if (CanFloat) {
 					CanFloat = false;
 					myRigidBody.velocity = myRigidBody.velocity.XVector();
 					myRigidBody.gravityScale = 0;//0.75f;
 					TimerManager.Instance.AddTimer(new Timer(()=>{StopFloat();}, 1.0f));
-				} else {
-					state |= PlayerState.Frozen;
-				//	myAnimator.SetBool ("FWD", false);
 				}
 			}
-			else if (!value && IsUsingReflectCape)
+			else if (!value && IsUsingCape)
 			{
-				state &= ~PlayerState.UsingReflectCape;
-				state &= ~PlayerState.Frozen;
+				state &= ~PlayerState.UsingCape;
 				myRigidBody.gravityScale = 1.5f;
 			}
-			ShowAimArrow = IsUsingReflectCape;
+			
         }
     }
 
@@ -1114,13 +987,40 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 		}
 
 		set {
-			if (value) {
-				state |= PlayerState.CanFloat;
-			} else {
-				state &= ~PlayerState.CanFloat;
-			}
-		}
+            if (value)
+            {
+                state |= PlayerState.CanFloat;
+            }
+            else
+            {
+                state &= ~PlayerState.CanFloat;
+            }
+
+        }
 	}
+
+    public bool IsUsingShield
+    {
+        get
+        {
+            return (state & PlayerState.UsingShield) > 0;
+        }
+
+        set
+        {
+            if (value)
+            {
+                state |= PlayerState.UsingShield;
+                state |= PlayerState.Frozen;
+            } else
+            {
+                state &= ~PlayerState.UsingShield;
+                state &= ~PlayerState.Frozen;
+            }
+
+            ShowAimArrow = value;
+        }
+    }
 
 	/// <summary>
 	/// Gets or sets a value indicating whether this <see cref="T:Player"/> is using magnet gloves.
@@ -1346,14 +1246,12 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
     }
 	public bool IsReflecting {
 		get {
-			return IsUsingReflectCape;
+			return IsUsingShield;
 		}
 	}
 
-	public Vector2 SurfaceForward {
-		get {
-			return MouseAim;
-		}
+	public Vector2 GetSurfaceForward(Vector2 fwd) {
+		return MouseAim;
 	}
 
     public bool HasPushGloveEquipped
@@ -1378,11 +1276,11 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 public enum PlayerState
 {
 	Normal = 0,
-	Dashing = 1,
+	UsingShield = 1,
 	Frozen = 2,
     Pushing = 4,
     UsingMagnetGloves = 8,
-	UsingReflectCape = 16,
+	UsingCape = 16,
 	CanFloat = 32,
 	PushedByTheWindHorz = 64,
 	PushedByTheWindVert = 128,

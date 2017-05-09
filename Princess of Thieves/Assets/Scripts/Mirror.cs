@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mirror : MonoBehaviour, ReflectiveObject {
+public class Mirror : MonoBehaviour {
     [SerializeField]
     AimDirection direction;
     Vector2 reflectionForward = new Vector2(1, 0);

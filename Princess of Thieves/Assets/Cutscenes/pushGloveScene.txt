@@ -11,8 +11,8 @@ Sir Christopher: I have no more need of it.  Please take my true strength and us
 add Prefabs/PushGlove
 italics true
 You got the Push Glove.
-Press [[PauseKey]] to open the Inventory Menu and use [[LeftItemKey]] or [[RightItemKey]] to assign it to an Item Slot.  Press [[PauseKey]] again to close the menu.
-Put the Mouse Cursor over a metal block and press the ItemKey to activate.
+Press [[PauseKey]] to open the Inventory Menu and left or right click to assign it to an Item Slot.  Press [[PauseKey]] again to close the menu.
+Put the Mouse Cursor over a metal block and click to activate.
 You'll push light items away from you but if you push against immovable objects, you'll be the one pushed.
 destroy LiamCorpse
 italics false

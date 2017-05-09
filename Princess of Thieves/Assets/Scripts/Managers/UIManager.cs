@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
             string dateTime = (System.DateTime.Now.ToShortDateString() + System.DateTime.Now.ToShortTimeString()).Replace('/', '-').Replace(':', '-');
             Application.CaptureScreenshot("Screenshots/Screenshot-" + dateTime + ".png");
         }
-        if (revealing && done && Input.anyKeyDown)
+        if (revealing && done && Input.GetMouseButtonDown(0))
 		{
 			StartCoroutine(NextElement());
 		}

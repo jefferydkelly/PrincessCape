@@ -28,11 +28,12 @@ public class LightBeam : MonoBehaviour {
     {
         if (closest && reflectedOff != null && reflectedOff.IsReflecting)
         {
-            if (fwd.Dot(reflectedOff.SurfaceForward) < Mathf.Cos(mathPi))
+            Vector2 sFwd = reflectedOff.GetSurfaceForward(fwd);
+            if (fwd.Dot(reflectedOff.GetSurfaceForward(sFwd)) < Mathf.Cos(mathPi))
             {
                 float dot = Mathf.Round(fwd.Dot(closest.transform.position - source) * 100) / 100;
                 //Vector2 result = reflectedOff.SurfaceForward ^ reflectDirection;
-                if (reflectedOff.SurfaceForward != reflectDirection || (Mathf.Abs(dot - closestDistance) > 0.1f && dot < maxRange))
+                if (sFwd != reflectDirection || (Mathf.Abs(dot - closestDistance) > 0.1f && dot < maxRange))
                 {
                     closestDistance = dot;
                     Reflect(reflectedOff);
@@ -53,7 +54,7 @@ public class LightBeam : MonoBehaviour {
 
             float dot = fwd.Dot(dif);
           
-            if (dot > 0.01 && dot < closestDistance)
+            if (dot < closestDistance)
             {
                 if (col.CompareTag("Player"))
                 {
@@ -62,7 +63,7 @@ public class LightBeam : MonoBehaviour {
                 if (ro != null && ro.IsReflecting)
                 {
 
-                    if (fwd.Dot(ro.SurfaceForward) <= Mathf.Cos(mathPi))
+                    if (fwd.Dot(ro.GetSurfaceForward(fwd)) <= Mathf.Cos(mathPi))
                     { 
                         closest = col.gameObject;
                         reflectedOff = closest.GetComponent<ReflectiveObject>();
@@ -90,26 +91,34 @@ public class LightBeam : MonoBehaviour {
             Vector2 dif = col.transform.position - source;
             float dot = fwd.Dot(dif);
 
-            if (dot > 0.01 && dot < closestDistance)
+            if (dot < closestDistance)
             {
                 ReflectiveObject ro = col.GetComponent<ReflectiveObject>();
 
-                if (ro != null && ro.IsReflecting)
+                if (ro != null)
                 {
-                    
-                    if (closest != col.gameObject || (col.CompareTag("Player") && !playerWasReflectingBefore))
+                    if (ro.IsReflecting)
                     {
-                        if (fwd.normalized.Dot(ro.SurfaceForward) <= Mathf.Cos(mathPi))
+
+                        if (closest != col.gameObject || (col.CompareTag("Player") && !playerWasReflectingBefore))
                         {
-                            closest = col.gameObject;
-                            reflectedOff = ro;
-                            closestDistance = Mathf.Round(dot * 100) / 100;
-                            Resize();
-                            Reflect(reflectedOff);
-                        }
+                            if (fwd.normalized.Dot(ro.GetSurfaceForward(fwd)) <= Mathf.Cos(mathPi))
+                            {
+                                closest = col.gameObject;
+                                reflectedOff = ro;
+                                closestDistance = Mathf.Round(dot * 100) / 100;
+                                Resize();
+                                Reflect(reflectedOff);
+                            }
+                        } 
+                    } else if (col.gameObject == closest)
+                    {
+                        RemoveChildren();
+                        closestDistance = maxRange;
+                        closest = null;
+                        reflectDirection = Vector2.zero;
+                        Resize();
                     }
-
-
                 }
 
                 if (col.CompareTag("Player"))
@@ -150,24 +159,14 @@ public class LightBeam : MonoBehaviour {
 			myChild = Instantiate (gameObject).GetComponent<LightBeam> ();
             myChild.maxRange = maxRange;
             
-			reflectDirection = ro.SurfaceForward;
+			reflectDirection = ro.GetSurfaceForward(fwd);
             myChild.Source = closest.transform.position;
             
             myChild.transform.parent = transform.parent;
-
-            if (ro.GameObject.CompareTag("Player"))
-            {
-                myChild.Forward = ro.SurfaceForward;
-                myChild.transform.rotation = Quaternion.AngleAxis(ro.SurfaceForward.GetAngle().ToDegrees(), Vector3.forward);
-            }
-            else
-            {
-                float dif = ro.SurfaceForward.GetAngle() - fwd.GetAngle();
-                dif = (dif.ToDegrees() % 90).ToRadians();
-                Vector2 temp = fwd.Rotated(dif * 2);
-                myChild.Forward = temp;
-                myChild.transform.rotation = Quaternion.AngleAxis(temp.GetAngle().ToDegrees(), Vector3.forward);
-            }
+            Vector2 ang = ro.GetSurfaceForward(fwd);
+            myChild.Forward = ang;
+           
+            myChild.transform.rotation = Quaternion.AngleAxis(ang.GetAngle().ToDegrees(), Vector3.forward);
             
             myChild.scale = scale;
             myChild.closestDistance = maxRange;
@@ -212,10 +211,12 @@ public class LightBeam : MonoBehaviour {
 
             if (ro != null && ro.IsReflecting)
             {
-                reflectDirection = ro.SurfaceForward;
+                reflectDirection = ro.GetSurfaceForward(fwd);
                 reflectedOff = ro;
             } else
             {
+                closestDistance = maxRange;
+                closest = null;
                 reflectedOff = null;
             }
 

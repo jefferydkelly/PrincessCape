@@ -15,11 +15,6 @@ public abstract class UsableItem : MonoBehaviour {
     public string itemName;
 
 	/// <summary>
-	/// The description.
-	/// </summary>
-    public string[] description;
-
-	/// <summary>
 	/// The info of the item to be displayed in the inventory menu
 	/// </summary>
     public string info;

@@ -1,0 +1,19 @@
+character Travis Knights/NewSirLiam
+show Travis -17 2
+scalex Travis 0.25 0
+scaley Travis 0.15 0
+alpha Travis 0
+fade Travis 0.5 0.5
+Sir Travis: Princess?  Gods shield you.  You're alive.
+Sir Travis: I am Sir Travis, the Bright Knight of House Bailey.
+Sir Travis: With my shiny Reflection Shield, I could reflect any projectile back at my opponents.
+Sir Travis: I could even reflect the light of the Sun stronger than ever into their eyes but the door closed as soon as Sir Matthew went through it.
+Sir Travis: For a second I was stunned and a projectile hit my back before I could raise my shield.
+Sir Travis: Take it and escape.  May the light illumine you.
+add Prefabs/ReflectShield
+italics true
+You got the Reflection Shield!
+It's so shiny you can see yourself in it.
+Hold the Right Mouse Button down and aim with the mouse to reflect projectiles and light.
+destroy TravisCorpse
+italics false
