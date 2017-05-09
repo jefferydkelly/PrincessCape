@@ -10,6 +10,7 @@ Sir Travis: With my shiny Reflection Shield, I could reflect any projectile back
 Sir Travis: I could even reflect the light of the Sun stronger than ever into their eyes but the door closed as soon as Sir Matthew went through it.
 Sir Travis: For a second I was stunned and a projectile hit my back before I could raise my shield.
 Sir Travis: Take it and escape.  May the light illumine you.
+fade-out Travis 0.5
 add Prefabs/ReflectShield
 italics true
 You got the Reflection Shield!

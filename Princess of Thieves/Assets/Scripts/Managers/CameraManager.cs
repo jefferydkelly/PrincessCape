@@ -86,6 +86,8 @@ public class CameraManager : MonoBehaviour {
 
 		screenSize = new Vector2 (Screen.width, Screen.height);
 		Vector3 playerPos = cam.WorldToScreenPoint (target.transform.position);
+
+
 		camPos = cam.ScreenToWorldPoint (playerPos + new Vector3 (fwd * screenSize.x * playerOffsetPercent, -screenSize.y));
 		camPos.z = -10;
 		cam.transform.position = camPos;
@@ -115,6 +117,7 @@ public class CameraManager : MonoBehaviour {
             {
                 playerPos = cam.WorldToScreenPoint(target.transform.position);
                 newCamPos = cam.transform.position;
+
                 newCamPos.z = -10;
                 Player player = target.GetComponent<Player>();
                 if (player != null)

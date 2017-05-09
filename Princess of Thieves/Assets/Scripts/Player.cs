@@ -136,10 +136,12 @@ public class Player : ResettableObject, CasterObject, ReflectiveObject
 							Jump ();
 						} 
 
-						if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
-							fwdX = (int)Mathf.Sign (controller.Horizontal);
-							myRenderer.flipX = (fwdX == 1);
-						}
+
+					}
+
+					if (Mathf.Abs (controller.Horizontal) > float.Epsilon) {
+						fwdX = (int)Mathf.Sign (controller.Horizontal);
+						myRenderer.flipX = (fwdX == 1);
 					}
 
 				} 

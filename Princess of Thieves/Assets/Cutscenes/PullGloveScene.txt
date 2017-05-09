@@ -10,6 +10,7 @@ Sir Samuel: In life, I was known as Sir Samuel of House Acaba, the Bard Knight.
 Sir Samuel: I was famous for my ability to attract people to my side but what they didn't know was my secret item.
 Sir Samuel: With my magnetic Pull Glove, I could draw enemies towards me and occasionally myself towards them.
 Sir Samuel: I have no more need of it.  Please take it and escape this dragon's lair.
+fade-out Samuel 0.5
 add Prefabs/PullGlove
 italics true
 You got the Pull Glove!
